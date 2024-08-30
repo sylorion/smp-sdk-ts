@@ -1,6 +1,6 @@
 
 import { SMPClient } from "../src/smp/SMPClient";
-import { HttpClient } from "../src/utils/HttpClient";
+import { SMPAPIClient } from "../src/api/SMPAPIClient.js";
 import { GET_SERVICE_BY_AUTHOR_ID } from "../src/api/graphql/queries/servicesQueries";
 
 const appId = "your-app-id";
@@ -15,8 +15,8 @@ const password = "password";
   // Authenticate the user
   await smpClient.authenticateUser(username, password);
 
-  const apiClient = new HttpClient();
-  const posts = await apiClient.graphql(GET_SERVICE_BY_AUTHOR_ID, { userId: "user-id" });
+  const apiClient = smpClient.httpClient;
+  const posts = await apiClient.query(GET_SERVICE_BY_AUTHOR_ID, { userId: "user-id" });
 
   console.log("Posts:", posts);
 })();

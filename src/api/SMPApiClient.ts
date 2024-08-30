@@ -3,13 +3,11 @@ import { GraphQLClient, Variables, ClientError } from 'graphql-request';
 import { AuthTokenManager } from '../auth/AuthTokenManager.js';
 import { ConfigManager } from '../config/ConfigManager.js';
 import { ErrorHandler } from "../utils/ErrorHandler.js";
-import { AppTokenResponse } from "../types/index.js";
-import { url } from 'inspector';
 
 /**
  * Interface unifiée pour interagir avec les API REST et GraphQL.
  */
-export class SMPApiClient {
+export class SMPAPIClient {
   private restClient: AxiosInstance;
   private graphqlClient: GraphQLClient; 
   private config: ConfigManager ;

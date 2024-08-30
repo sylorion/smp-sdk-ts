@@ -1,5 +1,5 @@
 
-import { HttpClient } from "../utils/HttpClient.js";
+import { SMPAPIClient } from "../api/SMPAPIClient.js";
 import { AuthTokenManager } from "../auth/AuthTokenManager.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
 import { MUTATION_AUTH_APP, MUTATION_AUTH_USER, MUTATION_REFRESH_APP_TOKEN, MUTATION_REFRESH_USER_TOKEN } from "../api/graphql/mutations/authMutations.js";
@@ -7,20 +7,20 @@ import { UserTokenResponse } from "../types/index.js";
 import { AppTokenResponse } from "../types/index.js";
 
 export class SMPClient {
-  private httpClient: HttpClient;
+  public httpClient: SMPAPIClient;
   private appId: string;
   private appSecret: string;
 
   constructor(appId: string, appSecret: string) {
     this.appId = appId;
     this.appSecret = appSecret;
-    this.httpClient = new HttpClient();
+    this.httpClient = new SMPAPIClient();
   }
 
   async authenticateApp(): Promise<void> {
     try {
       const appLogin = { appId: this.appId, appSecret: this.appSecret };
-      const response = await this.httpClient.graphql<AppTokenResponse>(MUTATION_AUTH_APP, appLogin);
+      const response = await this.httpClient.query<AppTokenResponse>(MUTATION_AUTH_APP, appLogin);
 
       AuthTokenManager.getAppATManager().setToken(response.token);
       AuthTokenManager.getAppATManager().setRefreshToken(response.refreshToken);
@@ -32,7 +32,7 @@ export class SMPClient {
 
   async authenticateUser(username: string, password: string): Promise<void> {
     try {
-      const response = await this.httpClient.graphql<UserTokenResponse>(MUTATION_AUTH_USER, { username, password });
+      const response = await this.httpClient.query<UserTokenResponse>(MUTATION_AUTH_USER, { username, password });
       AuthTokenManager.getUserATManager().setToken(response.token);
       AuthTokenManager.getUserATManager().setRefreshToken(response.refreshToken);
       this.scheduleUserTokenRefresh();
@@ -43,7 +43,7 @@ export class SMPClient {
 
   async refreshAppToken(): Promise<void> {
     try {
-      const response = await this.httpClient.graphql<{ token: string }>(MUTATION_REFRESH_APP_TOKEN, {});
+      const response = await this.httpClient.query<{ token: string }>(MUTATION_REFRESH_APP_TOKEN, {});
       AuthTokenManager.getAppATManager().setToken(response.token);
       this.scheduleAppTokenRefresh();
     } catch (error) {
@@ -57,7 +57,7 @@ export class SMPClient {
       const refreshToken = AuthTokenManager.getUserATManager().getRefreshToken();
       if (!refreshToken) throw new Error("No refresh token available");
 
-      const response = await this.httpClient.graphql<{ token: string }>(MUTATION_REFRESH_USER_TOKEN, { refreshToken });
+      const response = await this.httpClient.query<{ token: string }>(MUTATION_REFRESH_USER_TOKEN, { refreshToken });
       AuthTokenManager.getUserATManager().setToken(response.token);
       this.scheduleUserTokenRefresh();
     } catch (error) {

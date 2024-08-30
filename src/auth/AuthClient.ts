@@ -1,29 +1,29 @@
 
-import { HttpClient } from "../utils/HttpClient";
+import { SMPAPIClient } from "../api/SMPAPIClient.js";
 import { AuthTokenManager } from "./AuthTokenManager";
 import { ErrorHandler } from "../utils/ErrorHandler";
 import { MUTATION_AUTH_APP, MUTATION_AUTH_USER, MUTATION_REFRESH_APP_TOKEN, MUTATION_REFRESH_USER_TOKEN } from "../api/graphql/mutations/authMutations";
 import { UserTokenResponse  } from "../types";
 import { AppTokenResponse } from "../types";
 
-export class AuthClient {
-  private httpClient: HttpClient;
-  private userAuthManager: AuthTokenManager;
-  private appAuthManager: AuthTokenManager;
+export class SMPAuthClient {
+  private httpClient: SMPAPIClient;
+  private appId: string;
+  private appSecret: string;
 
-  constructor(private appId: string, private appSecret: string) {
-    this.httpClient = new HttpClient();
-    this.userAuthManager = new AuthTokenManager(AuthTokenManager.defaultTokenExpiry);
-    this.appAuthManager = new AuthTokenManager(AuthTokenManager.defaultTokenExpiry * 24);
+  constructor(appId: string, appSecret: string) {
+    this.appId = appId;
+    this.appSecret = appSecret;
+    this.httpClient = new SMPAPIClient();
   }
 
   async authenticateApp(): Promise<void> {
     try {
-      const appLogin = { appId: this.appId, appSecret: this.appSecret } ;
-      const response = await this.httpClient.graphql<AppTokenResponse>(MUTATION_AUTH_APP, appLogin);
+      const appLogin = { appId: this.appId, appSecret: this.appSecret };
+      const response = await this.httpClient.query<AppTokenResponse>(MUTATION_AUTH_APP, appLogin);
 
-      this.appAuthManager.setToken(response.token);
-      this.appAuthManager.setRefreshToken(response.refreshToken);
+      AuthTokenManager.getAppATManager().setToken(response.token);
+      AuthTokenManager.getAppATManager().setRefreshToken(response.refreshToken);
       this.scheduleAppTokenRefresh();
     } catch (error) {
       ErrorHandler.handleError(error, "APP_AUTH_FAILED");
@@ -32,9 +32,9 @@ export class AuthClient {
 
   async authenticateUser(username: string, password: string): Promise<void> {
     try {
-      const response = await this.httpClient.graphql<UserTokenResponse>(MUTATION_AUTH_USER, { username, password });
-      this.userAuthManager.setToken(response.token);
-      this.userAuthManager.setRefreshToken(response.refreshToken);
+      const response = await this.httpClient.query<UserTokenResponse>(MUTATION_AUTH_USER, { username, password });
+      AuthTokenManager.getUserATManager().setToken(response.token);
+      AuthTokenManager.getUserATManager().setRefreshToken(response.refreshToken);
       this.scheduleUserTokenRefresh();
     } catch (error) {
       ErrorHandler.handleError(error, "USER_AUTH_FAILED");
@@ -43,26 +43,26 @@ export class AuthClient {
 
   async refreshAppToken(): Promise<void> {
     try {
-      const response = await this.httpClient.graphql<{ token: string }>(MUTATION_REFRESH_APP_TOKEN, {});
-      this.appAuthManager.setToken(response.token); 
+      const response = await this.httpClient.query<{ token: string }>(MUTATION_REFRESH_APP_TOKEN, {});
+      AuthTokenManager.getAppATManager().setToken(response.token);
       this.scheduleAppTokenRefresh();
     } catch (error) {
       ErrorHandler.handleError(error, "APP_TOKEN_REFRESH_FAILED");
-      this.appAuthManager.clearTokens();
+      AuthTokenManager.getAppATManager().clearTokens();
     }
   }
 
   async refreshUserToken(): Promise<void> {
     try {
-      const refreshToken = this.userAuthManager.getRefreshToken();
+      const refreshToken = AuthTokenManager.getUserATManager().getRefreshToken();
       if (!refreshToken) throw new Error("No refresh token available");
-      
-      const response = await this.httpClient.graphql<{ token: string }>(MUTATION_REFRESH_USER_TOKEN, { refreshToken });
-      this.userAuthManager.setToken(response.token);
+
+      const response = await this.httpClient.query<{ token: string }>(MUTATION_REFRESH_USER_TOKEN, { refreshToken });
+      AuthTokenManager.getUserATManager().setToken(response.token);
       this.scheduleUserTokenRefresh();
     } catch (error) {
       ErrorHandler.handleError(error, "USER_TOKEN_REFRESH_FAILED");
-      this.userAuthManager.clearTokens();
+      AuthTokenManager.getUserATManager().clearTokens();
     }
   }
 
@@ -72,8 +72,7 @@ export class AuthClient {
   }
 
   private scheduleUserTokenRefresh() {
-    setTimeout(() => this.refreshUserToken(), this.userAuthManager.getTokenExpiry() - 60000); // Refresh 1 minute before expiration
+    setTimeout(() => this.refreshUserToken(), AuthTokenManager.getUserATManager().getTokenExpiry() - 60000); // Refresh 1 minute before expiration
   }
-  
-}
 
+}

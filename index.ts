@@ -1,9 +1,9 @@
-import { SMPApiClient } from "./src/api/SMPApiClient.js";
+import { SMPAPIClient } from "./src/api/SMPAPIClient.js";
 import { statusByServices } from './src/api/graphql/queries/index.js';
 import { GET_SERVICE_BY_AUTHOR_ID } from "./src/api/graphql/queries/index.js"; 
 
-export { SMPApiClient, statusByServices, GET_SERVICE_BY_AUTHOR_ID };
-const smpApi = new SMPApiClient();
+export { SMPAPIClient, statusByServices, GET_SERVICE_BY_AUTHOR_ID };
+const smpApi = new SMPAPIClient();
 
 // async function fn() {
 //   return await smpApi.query(statusByServices("accounting"), {})
