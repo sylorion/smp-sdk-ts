@@ -1,0 +1,35 @@
+name: Continue Delevery Pipeline
+on: [push]
+jobs:
+  install-and-deploy:
+    strategy:
+      matrix:
+        node-version: ['22.6.0']
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }} 
+    - name: Install dependencies
+      run: |
+        npm install   
+        npm run build --if-present
+    - name: RSYNC Folder
+      uses: burnett01/rsync-deployments@7.0.1
+      with:
+        switches: -vzr --delete --exclude="" --include="" --filter=""
+        path: ./
+        remote_path: ${{ vars.HIDO_CD_SSH_HOST_DESTDIR }}
+        remote_host: ${{ vars.HIDO_CD_SSH_HOSTNAME }}
+        remote_port: ${{ vars.HIDO_CD_SSH_PORT }}
+        remote_user: ${{ vars.HIDO_CD_SSH_HOST_USER }}
+        remote_key: ${{ secrets.HIDO_CD_SSH_PRIVATE_KEY }}
+    - name: Run tests
+      env:
+        NODE_ENV: test
+      run: |
+        npm test --if-present || echo "No tests present"
+
