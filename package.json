@@ -9,7 +9,9 @@
   "scripts": {
     "build": "tsc ",
     "lint": "eslint 'src/**/*.ts'",
-    "test": "jest"
+    "test": "jest",
+    "prepack": "tsc --outDir ./dist",
+    "postinstall": "tsc --outDir ./build"
   },
   "repository": {
     "type": "git",
