@@ -10,8 +10,7 @@
     "build": "tsc ",
     "lint": "eslint 'src/**/*.ts'",
     "test": "jest",
-    "prepack": "tsc --outDir ./dist",
-    "postinstall": "tsc --outDir ./build"
+    "prepare": "tsc --outDir ./dist"
   },
   "repository": {
     "type": "git",
