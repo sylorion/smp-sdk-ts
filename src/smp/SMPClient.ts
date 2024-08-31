@@ -2,9 +2,9 @@
 import { SMPAPIClient } from "../api/SMPAPIClient.js";
 import { AuthTokenManager } from "../auth/AuthTokenManager.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
-import { MUTATION_AUTH_APP, MUTATION_AUTH_USER, MUTATION_REFRESH_APP_TOKEN, MUTATION_REFRESH_USER_TOKEN } from "../api/graphql/mutations/authMutations.js";
 import { UserTokenResponse } from "../types/index.js";
 import { AppTokenResponse } from "../types/index.js";
+import { MUTATION_AUTH_APP, MUTATION_AUTH_USER, MUTATION_REFRESH_APP_TOKEN, MUTATION_REFRESH_USER_TOKEN } from "../api/graphql/mutations/authMutations.js";
 
 export class SMPClient {
   public httpClient: SMPAPIClient;

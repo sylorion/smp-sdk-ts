@@ -1,7 +1,7 @@
-import { SMPAPIClient } from "./src/api/SMPAPIClient.js";
+
 import { statusByServices } from './src/api/graphql/queries/index.js';
 import { GET_SERVICE_BY_AUTHOR_ID } from "./src/api/graphql/queries/index.js"; 
-
+import { SMPAPIClient } from "./src/api/SMPAPIClient.js"
 export { SMPAPIClient, statusByServices, GET_SERVICE_BY_AUTHOR_ID };
 const smpApi = new SMPAPIClient();
 

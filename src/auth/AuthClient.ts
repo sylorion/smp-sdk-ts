@@ -11,10 +11,10 @@ export class SMPAuthClient {
   private appId: string;
   private appSecret: string;
 
-  constructor(appId: string, appSecret: string) {
+  constructor(appId: string, appSecret: string, httpClient: SMPAPIClient = new SMPAPIClient()) {
     this.appId = appId;
     this.appSecret = appSecret;
-    this.httpClient = new SMPAPIClient();
+    this.httpClient = httpClient;
   }
 
   async authenticateApp(): Promise<void> {
