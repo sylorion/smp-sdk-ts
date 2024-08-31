@@ -2,14 +2,15 @@
 export const MUTATION_AUTH_APP = `
   mutation AuthenticateApp($appId: String!, $appSecret: String!) {
     authenticateApp(appId: $appId, appSecret: $appSecret) {
-      appToken
+      token
+      refreshToken
     }
   }
 `;
 
 export const MUTATION_AUTH_USER = `
   mutation AuthenticateUser($username: String!, $password: String!) {
-    authenticateUser(username: $username, password: $password) {
+    login(username: $username, password: $password) {
       token
       refreshToken
     }

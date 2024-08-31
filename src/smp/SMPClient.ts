@@ -1,5 +1,6 @@
 
 import { SMPAPIClient } from "../api/SMPAPIClient.js";
+import { SMPAuthClient } from "../auth/AuthClient.js";
 import { AuthTokenManager } from "../auth/AuthTokenManager.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
 import { UserTokenResponse } from "../types/index.js";
@@ -8,6 +9,8 @@ import { MUTATION_AUTH_APP, MUTATION_AUTH_USER, MUTATION_REFRESH_APP_TOKEN, MUTA
 
 export class SMPClient {
   public httpClient: SMPAPIClient;
+  public authClient: SMPAuthClient;
+  public authTokenManager: AuthTokenManager = new AuthTokenManager(5000);
   private appId: string;
   private appSecret: string;
 
@@ -15,6 +18,7 @@ export class SMPClient {
     this.appId = appId;
     this.appSecret = appSecret;
     this.httpClient = new SMPAPIClient();
+    this.authClient = new SMPAuthClient(appId, appSecret, this.httpClient);
   }
 
   async authenticateApp(): Promise<void> {
