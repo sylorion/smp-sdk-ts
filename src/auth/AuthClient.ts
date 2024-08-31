@@ -1,7 +1,7 @@
 
-import { SMPAPIClient } from "../api/SMPAPIClient.js";
-import { AuthTokenManager } from "./AuthTokenManager";
-import { ErrorHandler } from "../utils/ErrorHandler";
+import { SMPAPIClient } from "./../";
+import { AuthTokenManager } from "./AuthTokenManager.js";
+import { ErrorHandler } from "../utils/ErrorHandler.js";
 import { MUTATION_AUTH_APP, MUTATION_AUTH_USER, MUTATION_REFRESH_APP_TOKEN, MUTATION_REFRESH_USER_TOKEN } from "../api/graphql/mutations/authMutations";
 import { UserTokenResponse  } from "../types";
 import { AppTokenResponse } from "../types";
