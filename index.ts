@@ -1,9 +1,5 @@
 
-export { statusByServices } from './src/api/graphql/queries/index.js';
-export { GET_SERVICE_BY_AUTHOR_ID } from "./src/api/graphql/queries/index.js"; 
-export { SMPAPIClient } from "./src/api/SMPAPIClient.js"
-export { SMPClient } from "./src/smp/SMPClient.js"
-
+export * from './src/index.js'; 
 // export { SMPAPIClient, statusByServices, GET_SERVICE_BY_AUTHOR_ID };
 
 // const smpApi = new SMPAPIClient();
