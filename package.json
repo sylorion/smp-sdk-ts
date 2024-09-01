@@ -5,11 +5,14 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
-  "files": ["/dist"],
+  "files": [
+    "/dist"
+  ],
   "scripts": {
     "build": "tsc ",
     "lint": "eslint 'src/**/*.ts'",
     "test": "jest",
+    "start": "npm run build ; node  --trace-deprecation dist/index.js ",
     "prepare": "tsc --outDir ./dist"
   },
   "repository": {
@@ -38,6 +41,7 @@
   },
   "dependencies": {
     "@graphql-codegen/typescript-graphql-request": "^6.2.0",
-    "axios": "^1.7.5"
+    "axios": "^1.7.5",
+    "whatwg-url": "^14.0.0"
   }
 }

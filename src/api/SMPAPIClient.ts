@@ -33,7 +33,9 @@ export class SMPAPIClient {
 
   async query<T>(query: string, variables?: any): Promise<T> {
     try {
+      console.log("ClientResponse: QUERY");
       const response = await this.graphqlClient.request<T>(query, variables);
+      console.log("ClientResponse:@@@@@@@@@@@-----%%%%%%%% ", response);
       return response;
     } catch (error: any) {
       // ErrorHandler.handleError(error, "GRAPHQL_ERROR");
