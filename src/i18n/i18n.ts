@@ -1,35 +1,25 @@
-// src/i18n/i18n.ts
-// src/i18n/i18n.ts
+// src/i18n/i18n.ts 
 import en_US from './locales/en_US.js';
 import fr_FR from './locales/fr_FR.js';
+
+import { defaultLanguage, SupportedLang, TranslationResources } from './languages.js';
 
 const messagesMapping = {
   en_US,
   fr_FR,
 };
 
-import { defineMessage } from '@formatjs/intl';
-import IntlMessageFormat from 'intl-messageformat';
-
-import { DateTimeFormat } from '@formatjs/intl-datetimeformat';
-import { NumberFormat } from '@formatjs/intl-numberformat';
-import { PluralRules } from '@formatjs/intl-pluralrules';
-// src/i18n/i18n.ts
-type TranslationResources = { [key: string]: string ; };
- 
-type SupportedLang = 'en_US' | 'fr_FR';
-
 export class I18n {
   private lang: SupportedLang;
   private messages: TranslationResources = {};
   private langModule: any;
 
-  constructor(lang: SupportedLang = 'en_US') {
+  constructor(lang: SupportedLang = defaultLanguage) {
     this.lang = lang;
     this.loadLanguage(lang);
   }
 
-  async loadLanguage(lang: SupportedLang) {
+  async loadLanguage(lang: SupportedLang = defaultLanguage) {
     try {
       const module = messagesMapping[lang] ; //await import(`./locales/${lang}.ts`);
       this.langModule = module ;
@@ -37,8 +27,8 @@ export class I18n {
       if (this.messages) {
         this.lang = lang;
       } else {
-        console.warn(`Unsupported language: ${lang}. Falling back to English.`);
-        this.lang = 'en_US';
+        console.warn(`Unsupported language: ${lang}. Falling back to default ${defaultLanguage}.`);
+        this.lang = defaultLanguage;
       }
     } catch (error) {
       console.error(`Failed to load translations for language: ${lang}`, error);

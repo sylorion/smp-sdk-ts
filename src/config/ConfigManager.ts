@@ -1,7 +1,9 @@
+import { SupportedLang, defaultLanguage } from '../i18n/languages.js';
+
 export type SMPConfig = {
   apiUrl: string;
   graphqlUrl: string;
-  defaultLanguage: string;
+  defaultLanguage: SupportedLang;
 };
 
 /**
@@ -17,9 +19,9 @@ export class ConfigManager {
    */
   static loadConfig(customConfig?: Partial<SMPConfig>): SMPConfig {
     const defaultConfig: SMPConfig = {
-      apiUrl: 'https://api.example.com',
-      graphqlUrl: 'https://dev-gateway.sh1.hidora.net/graphql',
-      defaultLanguage: 'en',
+      apiUrl: 'https://api.smp.cm',
+      graphqlUrl: 'https://api.smp.cm/graphql',
+      defaultLanguage: defaultLanguage,
     };
     
     ConfigManager.defaultConfig = { ...defaultConfig, ...customConfig };
@@ -33,7 +35,9 @@ export class ConfigManager {
     return ConfigManager.defaultConfig;
   }
 
-  constructor(url: string, gqlUrl: string, lang: string) {
+  constructor(url: string = ConfigManager.defaultConfig.apiUrl, 
+    gqlUrl: string = ConfigManager.defaultConfig.graphqlUrl, 
+    lang: SupportedLang = ConfigManager.defaultConfig.defaultLanguage) {
     this.config = {
       apiUrl: url,
       graphqlUrl: gqlUrl,

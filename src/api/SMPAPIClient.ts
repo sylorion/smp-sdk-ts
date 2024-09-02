@@ -3,6 +3,8 @@ import { GraphQLClient, Variables, ClientError } from 'graphql-request';
 import { AuthTokenManager } from '../auth/AuthTokenManager.js';
 import { ConfigManager } from '../config/ConfigManager.js';
 import { ErrorHandler } from "../utils/ErrorHandler.js";
+import { defaultLanguage } from '../i18n/languages.js';
+import { logger } from '../utils/Logger.js';
 
 /**
  * Interface unifiée pour interagir avec les API REST et GraphQL.
@@ -15,7 +17,7 @@ export class SMPAPIClient {
   private appATM: AuthTokenManager;
 
   constructor(private apiUrl: string = ConfigManager.loadConfig().apiUrl, gqlUrl: string = ConfigManager.loadConfig().graphqlUrl) {
-    this.config = new ConfigManager(apiUrl, gqlUrl, 'en');
+    this.config = new ConfigManager(apiUrl, gqlUrl, defaultLanguage);
     this.userATM = AuthTokenManager.getUserATManager();
     this.appATM = AuthTokenManager.getAppATManager();
     this.restClient = axios.create({
@@ -33,17 +35,16 @@ export class SMPAPIClient {
 
   async query<T>(query: string, variables?: any): Promise<T> {
     try {
-      console.log("ClientResponse: QUERY");
+      logger.info("Client: QUERY");
       const response = await this.graphqlClient.request<T>(query, variables);
-      console.log("ClientResponse:@@@@@@@@@@@-----%%%%%%%% ", response);
+      logger.info("ClientResponse:@@@@@@@@@@@-----%%%%%%%% ", response);
       return response;
     } catch (error: any) {
       // ErrorHandler.handleError(error, "GRAPHQL_ERROR");
       const ce: ClientError = error;
-      if (ce.response) {
-        console.log("Client Error Request ####################: ", Error(ce.response.errors?.map((e) => e.message).join(", ")));
-      }
-      console.log("Client Error Message:@@@@@@@@@@@-----%%%%%%%% ", ce.message);
+      // if (ce.response) {
+      //   console.log("Client Error Request ####################: ", Error(ce.response.errors?.map((e) => e.message).join(", ")));
+      // } 
       throw ce;
     }
   }
