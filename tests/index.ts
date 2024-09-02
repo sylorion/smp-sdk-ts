@@ -3,6 +3,9 @@ import { SMPClient } from "../src/smp/SMPClient";
 import { SMPAPIClient } from "../src/api/SMPAPIClient.js";
 import { GET_SERVICE_BY_AUTHOR_ID } from "../src/api/graphql/queries/servicesQueries";
 
+// SMP_API_URL=https://api.smp.ceo
+// SMP_GRAPHQL_URL = https://graphql.smp.ceo
+// SMP_DEFAULT_LANGUAGE = en
 const appId = "your-app-id";
 const appSecret = "your-app-secret";
 const username = "user";

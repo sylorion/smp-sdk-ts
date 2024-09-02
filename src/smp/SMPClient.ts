@@ -1,11 +1,14 @@
 
 import { SMPAPIClient } from "../api/SMPAPIClient.js";
-import { SMPAuthClient } from "../auth/AuthClient.js";
+import { SMPAuthClient } from "../auth/SMPAuthClient.js";
 import { AuthTokenManager } from "../auth/AuthTokenManager.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
 import { UserTokenResponse } from "../types/index.js";
 import { AppTokenResponse } from "../types/index.js";
 import { MUTATION_AUTH_APP, MUTATION_AUTH_USER, MUTATION_REFRESH_APP_TOKEN, MUTATION_REFRESH_USER_TOKEN } from "../api/graphql/mutations/authMutations.js";
+import { logger } from '../utils/Logger.js';
+import { i18n } from '../i18n/index.js';
+import { log } from "console";
 
 export class SMPClient {
   public httpClient: SMPAPIClient;
@@ -19,6 +22,7 @@ export class SMPClient {
     this.appSecret = appSecret;
     this.httpClient = new SMPAPIClient();
     this.authClient = new SMPAuthClient(appId, appSecret, this.httpClient);
+    logger.info(i18n.t('smp_client_init'));
   }
 
   async authenticateApp(): Promise<void> {

@@ -1,13 +1,13 @@
 
-import { SMPAPIClient } from "./../index.js";
+import { SMPAPIClient } from "../index.js";
 import { AuthTokenManager } from "./AuthTokenManager.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
 import { MUTATION_AUTH_APP, 
   MUTATION_AUTH_USER, 
   MUTATION_REFRESH_APP_TOKEN, 
   MUTATION_REFRESH_USER_TOKEN } from "../api/graphql/mutations/authMutations.js";
-import { UserTokenResponse  } from "../types";
-import { AppTokenResponse } from "../types";
+import { UserTokenResponse  } from "../types/index.js";
+import { AppTokenResponse } from "../types/index.js";
 
 export class SMPAuthClient {
   private httpClient: SMPAPIClient;
@@ -20,9 +20,9 @@ export class SMPAuthClient {
     this.httpClient = httpClient;
   }
 
-  async authenticateApp(): Promise<void> {
+  async authenticateApp(appId: string = this.appId, appSecret: string = this.appSecret): Promise<void> {
     try {
-      const appLogin = { appId: this.appId, appSecret: this.appSecret };
+      const appLogin = { appId: appId, appSecret: appSecret };
       const response = await this.httpClient.query<AppTokenResponse>(MUTATION_AUTH_APP, appLogin);
 
       AuthTokenManager.getAppATManager().setToken(response.token);
