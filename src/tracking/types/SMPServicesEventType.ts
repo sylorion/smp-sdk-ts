@@ -38,8 +38,6 @@ export type ViewCapturedEvent = {
 export type ButtonClickCapturedEvent = {
   elementId: string; // ID du bouton ou élément cliqué
   timestamp: string;
-  page: string;
-  device: any;
 };
 
 export type SectionTimeSpentCapturedEvent = {
