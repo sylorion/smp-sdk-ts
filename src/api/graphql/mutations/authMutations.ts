@@ -11,8 +11,32 @@ export const MUTATION_AUTH_APP = `
 export const MUTATION_AUTH_USER = `
   mutation AuthenticateUser($username: String!, $password: String!) {
     login(username: $username, password: $password) {
-      token
-      refreshToken
+      user {
+        accessToken  
+        refreshToken  
+        accessValidityDuration
+        details {
+          userID        
+          uniqRef       
+          slug          
+          username      
+          email         
+          plan          
+          profileID?     
+          lastLogin     
+          loginDuration  
+          state         
+          createdAt     
+          updatedAt     
+          twoFactorEnabled 
+        }
+      }
+      message 
+      errors {
+        code
+        field
+        message
+      }
     }
   }
 `;
@@ -27,9 +51,28 @@ export const MUTATION_REFRESH_APP_TOKEN = `
 
 export const MUTATION_REFRESH_USER_TOKEN = `
   mutation RefreshUserToken($refreshToken: String!) {
-    refreshUserToken(refreshToken: $refreshToken) {
-      token
-    }
+    refreshUserToken(refreshUserToken: $refreshToken) {
+      accessToken
+      expiresIn
+    } 
+  }
+`;
+
+export const MUTATION_AUTH_LOGOUT_USER = `
+  mutation LogoutUser($userID: ID!) {
+    logoutUser(userID: $userID) {
+      message
+      success
+    } 
+  }
+`;
+
+export const MUTATION_AUTH_LOGOUT_APP = `
+  mutation LogoutApp($appID: ID!) {
+    logoutApp(appID: $appID) {
+      message
+      success
+    } 
   }
 `;
 

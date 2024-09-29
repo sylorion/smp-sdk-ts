@@ -5,36 +5,75 @@ import { ConfigManager } from '../config/ConfigManager.js';
 import { ErrorHandler } from "../utils/ErrorHandler.js";
 import { defaultLanguage } from '../i18n/languages.js';
 import { logger } from '../utils/Logger.js';
-
+import { Config } from 'winston/lib/winston/config/index.js';
+import { appConfig } from 'smp-core-tools';
 /**
  * Interface unifiée pour interagir avec les API REST et GraphQL.
  */
-export class SMPAPIClient {
+export class APIClient {
   private restClient: AxiosInstance;
   private graphqlClient: GraphQLClient;
-  private config: ConfigManager;
-  private userATM: AuthTokenManager;
-  private appATM: AuthTokenManager;
-
-  constructor(private apiUrl: string = ConfigManager.loadConfig().apiUrl, gqlUrl: string = ConfigManager.loadConfig().graphqlUrl) {
-    this.config = new ConfigManager(apiUrl, gqlUrl, defaultLanguage);
-    this.userATM = AuthTokenManager.getUserATManager();
-    this.appATM = AuthTokenManager.getAppATManager();
+  private config: ConfigManager; 
+  constructor(config: ConfigManager, gqUrl:string, restUrl: string) {
+    this.config = config; 
     this.restClient = axios.create({
-      baseURL: ConfigManager.loadConfig().apiUrl,
-    });
-    this.userATM = AuthTokenManager.getUserATManager();
-    this.appATM = AuthTokenManager.getAppATManager();
-    this.graphqlClient = new GraphQLClient(ConfigManager.loadConfig().graphqlUrl, {
-      headers: {
-        Authorization: `Bearer ${this.userATM.getToken()}`,
-        XsmpAppAuth: `Token ${this.appATM.getToken()}`
-      },
-    });
+      baseURL: restUrl,
+    }); 
+    this.graphqlClient = new GraphQLClient(gqUrl);
+  }
+
+  /**
+   * updateHeaderAppSecret  
+  */
+  public updateHeaderAppSecret(secret: string): GraphQLClient {
+    this.graphqlClient = this.graphqlClient.setHeader("x-smp-app-token",  `Token ${secret}`);
+    return this.graphqlClient;
+  }
+
+  public updateHeaderAppID(secret: string): GraphQLClient {
+    this.graphqlClient = this.graphqlClient.setHeader("x-smp-app-id", `Token ${secret}`);
+    return this.graphqlClient;
+  }
+
+  public updateHeaderAppAccessToken(secret: string): GraphQLClient {
+    this.graphqlClient = this.graphqlClient.setHeader("x-smp-app-access", `Token ${secret}`);
+    return this.graphqlClient;
+  }
+
+    public resetHeaderAppSecret(): void {
+    this.graphqlClient = this.graphqlClient.setHeader("x-smp-app-token", "");
+  }
+
+  public resetHeaderAppID(): void {
+    this.graphqlClient = this.graphqlClient.setHeader("x-smp-app-id", "");
+  }
+
+  public resetHeaderAppAccessToken(): void {
+    this.graphqlClient = this.graphqlClient.setHeader("x-smp-app-access", "");
+  }
+
+  public resetHeadersForApplication(): void {
+    this.resetHeaderAppAccessToken();
+    this.resetHeaderAppID();
+    this.resetHeaderAppSecret();
+  }
+
+  /**
+  * updateHeaderAppAuthN
+  */
+  public updateHeaderUserAccessToken(accesToken: string): GraphQLClient {
+    this.graphqlClient = this.graphqlClient.setHeader("Authorization", `Bearer ${accesToken}`);
+    return this.graphqlClient;
+  }
+
+
+  public resetHeadersForUser(): void {
+    this.graphqlClient = this.graphqlClient.setHeader("Authorization", "");
   }
 
   async query<T>(query: string, variables?: any): Promise<T> {
     try {
+      
       logger.info("Client: QUERY");
       const response = await this.graphqlClient.request<T>(query, variables);
       logger.info("ClientResponse:@@@@@@@@@@@-----%%%%%%%% ", response);
