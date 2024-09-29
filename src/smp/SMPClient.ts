@@ -28,7 +28,7 @@ export class SMPClient {
     this.config.apiUrl = apiUrl;
     this.config.defaultLanguage = lang;
     this.config.persistence    = persistence;
-    
+    this.config.storage        =  new Persistence(persistence);
     this.configManager    = new ConfigManager(this.config);
     console.log("End configuration Manager............ ", this.configManager);
 

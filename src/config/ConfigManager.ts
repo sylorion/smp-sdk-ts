@@ -54,8 +54,8 @@ export class ConfigManager {
       userAccessDuration: 3600, // 1 heure
       minUserAccessDuration: 3600, // 1 heure
       minAppAccessDuration: 3600, // 1 heure
-      persistence: Persistence.LocalStorageKind,
-      storage: new Persistence(),
+      persistence: Persistence.MemoryKind,
+      storage: new Persistence(Persistence.MemoryKind),
     };
     
     ConfigManager.defaultConfig = { ...defaultConfig, ...customConfig };
