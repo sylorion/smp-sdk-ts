@@ -27,12 +27,11 @@ export class AuthTokenManager {
 
   constructor(configManager: ConfigManager, apiClient: APIClient) { 
     this.apiClient = apiClient;
-    this.configManager = configManager;
-    const config = configManager.getConfig();
-    this.appTokenStorage = new AuthTokenStorage(AuthTokenStorage.AppKind, configManager.getStorage());
-    this.userTokenStorage = new AuthTokenStorage(AuthTokenStorage.UserKind, configManager.getStorage());
-    this.apiClient.updateHeaderAppID(config.appId);
-    this.apiClient.updateHeaderAppSecret(config.appSecret);
+    this.configManager = configManager; 
+    this.appTokenStorage = new AuthTokenStorage(AuthTokenStorage.AppKind, configManager.storage!);
+    this.userTokenStorage = new AuthTokenStorage(AuthTokenStorage.UserKind, configManager.storage!);
+    this.apiClient.updateHeaderAppID(this.configManager.appId);
+    this.apiClient.updateHeaderAppSecret(this.configManager.appSecret);
   }
 
   private isUserTokenExpired(): boolean {
