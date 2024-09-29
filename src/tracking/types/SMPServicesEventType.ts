@@ -1,5 +1,5 @@
 
-export type EventType = "click" | "view" | "purchase" | "scroll" | "form_submit" | "hover" | "section_time_spent" | "inactivity" | "abandon_form_event" | "submission_form_event" | "submit_form_event" | ;
+export type EventType = "click" | "view" | "purchase" | "scroll" | "form_submit" | "hover" | "section_time_spent" | "inactivity" | "abandon_form_event" | "submission_form_event" | "submit_form_event" ;
 
 export type FormField = {
   fieldName: string;
