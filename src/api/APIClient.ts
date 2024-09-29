@@ -11,12 +11,18 @@ export class APIClient {
   private restClient: AxiosInstance;
   private graphqlClient: GraphQLClient;
   private config: ConfigManager; 
-  constructor(config: ConfigManager, gqUrl:string, restUrl: string) {
+  private requestCount: number = 0;
+  private requestWindowStart: number = Date.now(); 
+  private dataSent: number = 0;
+  private dataReceived: number = 0;
+  private dataWindowStart: number = Date.now();
+  private dataRate: number = 0;
+  constructor(config: ConfigManager) {
     this.config = config; 
     this.restClient = axios.create({
-      baseURL: restUrl,
+      baseURL: config.apiUrl,
     }); 
-    this.graphqlClient = new GraphQLClient(gqUrl);
+    this.graphqlClient = new GraphQLClient(config.graphqlUrl);
   }
 
   /**
@@ -70,7 +76,7 @@ export class APIClient {
 
   async query<T>(query: string, variables?: any): Promise<T> {
     try {
-      
+      this.checkRateLimit(); // Check rate limit before making the request
       logger.info("CALL TO APIClient.QUERY Method");
       const response = await this.graphqlClient.request<T>(query, variables);
       logger.info(`ClientResponse:@@@@@@@@@@@-----%%%%%%%% ${JSON.stringify(response) }`);
@@ -85,7 +91,7 @@ export class APIClient {
     }
   }
 
-  async post<T>(url: string = this.config.getConfig().apiUrl, data: any, config?: AxiosRequestConfig): Promise<T> {
+  async post<T>(url: string = this.config.apiUrl, data: any, config?: AxiosRequestConfig): Promise<T> {
     try {
       const response = await this.restClient.post<T>(url, data, config);
       return response.data;
@@ -95,7 +101,7 @@ export class APIClient {
     }
   }
 
-  async get<T>(url: string = this.config.getConfig().apiUrl, config?: AxiosRequestConfig): Promise<T> {
+  async get<T>(url: string = this.config.apiUrl, config?: AxiosRequestConfig): Promise<T> {
     try {
       const response = await this.restClient.get<T>(url, config);
       return response.data;
@@ -103,6 +109,58 @@ export class APIClient {
       ErrorHandler.handleError(error, 'NETWORK_ERROR');
       throw error;
     }
+  }
+
+  // Méthode pour vérifier la limite de débit avant d'effectuer une requête
+  private checkRateLimit(): boolean {
+    const now = Date.now();
+
+    if (this.config.rateLimits && now - this.requestWindowStart > this.config.rateLimits!.windowMs) {
+      this.requestCount = 0;
+      this.requestWindowStart = now;
+    }
+
+    if (this.config.rateLimits && this.requestCount >= this.config.rateLimits!.maxRequests) {
+      throw new Error(this.config.rateLimits!.message || 'Rate limit exceeded');
+    }
+
+    this.requestCount += 1;
+    return true;
+  }
+
+  // Méthode pour suivre la quantité de données envoyées
+  private trackDataSent(dataSize: number): boolean {
+    const now = Date.now();
+
+    if (this.config.dataLimits && now - this.dataWindowStart > this.config.dataLimits!.windowMs) {
+      this.dataSent = 0;
+      this.dataWindowStart = now;
+    }
+
+    if (this.config.dataLimits && this.dataSent + dataSize > this.config.dataLimits!.maxDataSent) {
+      this.dataSent += dataSize;
+      throw new Error('Data sent limit exceeded');
+    }
+
+    this.dataSent += dataSize;
+    return true;
+  }
+
+  // Méthode pour suivre la quantité de données reçues
+  private trackDataReceived(dataSize: number): boolean {
+    const now = Date.now();
+
+    if (this.config.dataLimits && now - this.dataWindowStart > this.config.dataLimits!.windowMs) {
+      this.dataReceived = 0;
+      this.dataWindowStart = now;
+    }
+
+    if (this.config.dataLimits && this.dataReceived + dataSize > this.config.dataLimits!.maxDataReceived) {
+      throw new Error('Data received limit exceeded');
+    }
+
+    this.dataReceived += dataSize;
+    return true;
   }
 
 }
