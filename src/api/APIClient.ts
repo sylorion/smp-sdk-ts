@@ -1,12 +1,9 @@
 import axios, { AxiosResponse, AxiosRequestConfig, AxiosInstance, RawAxiosRequestHeaders } from 'axios';
-import { GraphQLClient, Variables, ClientError } from 'graphql-request';
-import { AuthTokenManager } from '../auth/AuthTokenManager.js';
+import { GraphQLClient, ClientError } from 'graphql-request'; 
 import { ConfigManager } from '../config/ConfigManager.js';
 import { ErrorHandler } from "../utils/ErrorHandler.js";
-import { defaultLanguage } from '../i18n/languages.js';
 import { logger } from '../utils/Logger.js';
-import { Config } from 'winston/lib/winston/config/index.js';
-import { appConfig } from 'smp-core-tools';
+
 /**
  * Interface unifiée pour interagir avec les API REST et GraphQL.
  */
