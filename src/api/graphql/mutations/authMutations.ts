@@ -9,8 +9,8 @@ export const MUTATION_AUTH_APP = `
 `;
 
 export const MUTATION_AUTH_USER = `
-  mutation AuthenticateUser($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
+  mutation AuthenticateUser($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
       user {
         accessToken  
         refreshToken  
@@ -22,11 +22,10 @@ export const MUTATION_AUTH_USER = `
           username      
           email         
           plan          
-          profileID?     
+          profileID    
           lastLogin     
           loginDuration  
           state         
-          createdAt     
           updatedAt     
           twoFactorEnabled 
         }

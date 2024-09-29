@@ -58,12 +58,14 @@ export class AuthTokenManager {
   public async authenticateUser(username: string, password: string): Promise<void> {
     const config = this.configManager.getConfig();
     try {
-      const response = await this.apiClient.query<LoginResponse>(MUTATION_AUTH_USER, { username, password });
-      const { accessToken, refreshToken, accessValidityDuration } = response.user;
+      const response = await this.apiClient.query<LoginResponse>(MUTATION_AUTH_USER, { email: username, password });
+      // const { accessToken, refreshToken, accessValidityDuration } = response.user;
+      const accessToken = response.user?.accessToken;
+      const refreshToken = response.user?.refreshToken;
+      const expiresInMilli = 1000 * response.user?.accessValidityDuration;
       this.userTokenStorage.saveRefreshToken(refreshToken);
       this.userTokenStorage.saveAccessToken(accessToken);
 
-      const expiresInMilli  = accessValidityDuration * 1000;
       const refreshDuration = config.userAccessDuration < expiresInMilli ? config.userAccessDuration : expiresInMilli;
 
       this.userTokenExpiresAt = Date.now() + expiresInMilli;

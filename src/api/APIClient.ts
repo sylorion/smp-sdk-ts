@@ -71,9 +71,9 @@ export class APIClient {
   async query<T>(query: string, variables?: any): Promise<T> {
     try {
       
-      logger.info("Client: QUERY");
+      logger.info("CALL TO APIClient.QUERY Method");
       const response = await this.graphqlClient.request<T>(query, variables);
-      logger.info("ClientResponse:@@@@@@@@@@@-----%%%%%%%% ", response);
+      logger.info(`ClientResponse:@@@@@@@@@@@-----%%%%%%%% ${JSON.stringify(response) }`);
       return response;
     } catch (error: any) {
       // ErrorHandler.handleError(error, "GRAPHQL_ERROR");

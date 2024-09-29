@@ -2,6 +2,7 @@ import { statusByServices } from './api/graphql/queries/index.js';
 import { GET_SERVICE_BY_AUTHOR_ID } from "./api/graphql/queries/index.js";
 import { APIClient } from "./api/APIClient.js"
 import { SMPClient } from "./smp/SMPClient.js"
+import { Persistence } from './config/Persistence.js';
 export { SMPClient, APIClient, GET_SERVICE_BY_AUTHOR_ID, statusByServices } ;
 
 
@@ -16,12 +17,20 @@ const password = "password";
 (async () => {
   console.log("appID: ", appId);
   console.log("appSecret: ", appSecret);
-  const smpClient = new SMPClient(appId, appSecret, "http://api.dev.services.ceo/graphql");
-  await smpClient.authenticateApp();
+  const smpClient = new SMPClient(appId, appSecret, "https://dev-authentication.sh1.hidora.net/graphql", Persistence.MemoryKind, 'fr_FR');
+  // await smpClient.authenticateApp();
 
   // // Authenticate the user
-  // await smpClient.authenticateUser(username, password);
-
+  const timeA = new Date();
+  await smpClient.authenticateUser(username, password).then(
+    (response) => {
+      console.log("User authenticated: ", response);
+    }
+  )
+  const timeB = new Date();
+  console.log("##############################\n##############################");
+  console.log("time to authenticate user: ", (timeB.getTime() - timeA.getTime()));
+  console.log(`Start Auth :  ${timeA} - End auth at ${timeA}`);
   // const apiClient = smpClient.httpClient;
   // const posts = await apiClient.query(GET_SERVICE_BY_AUTHOR_ID, { userId: "user-id" });
 

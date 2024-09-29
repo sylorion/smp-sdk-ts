@@ -31,7 +31,7 @@ type UserDetails = {
   lastLogin     : Date,
   loginDuration : number,
   state         : string,
-  createdAt     : Date,
+  createdAt?     : Date,
   updatedAt     : Date,
   twoFactorEnabled: Boolean,
 }

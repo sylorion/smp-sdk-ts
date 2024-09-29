@@ -19,12 +19,20 @@ export class Persistence implements PersistenceType {
     }
 
     set(key: string, value: any) {
+        let localStorage = undefined;
+        let sessionStorage = undefined;
+        if (typeof window !== 'undefined' && window.localStorage){
+            localStorage = window.localStorage;
+        }
+        if (typeof window !== 'undefined' && window.sessionStorage){
+            sessionStorage = window.sessionStorage;
+        }
         if (this.persistenceKind === 'cookie') {
             document.cookie = `${key}=${value}; Secure; HttpOnly;`;
         } else if (this.persistenceKind === 'localStorage') {
-            localStorage.setItem(key, JSON.stringify(value));
+            localStorage?.setItem(key, JSON.stringify(value));
         } else if (this.persistenceKind === 'sessionStorage') {
-            sessionStorage.setItem(key, JSON.stringify(value));
+            sessionStorage?.setItem(key, JSON.stringify(value));
         } else {
             this.memoryStore[key] = value;
         }
@@ -32,14 +40,22 @@ export class Persistence implements PersistenceType {
     }
 
     get(key: string): any {
+        let localStorage = undefined;
+        let sessionStorage = undefined;
+        if (typeof window !== 'undefined' && window.localStorage){
+            localStorage = window.localStorage;
+        }
+        if (typeof window !== 'undefined' && window.sessionStorage){
+            sessionStorage = window.sessionStorage;
+        }
         if (this.persistenceKind === 'cookie') {
             const cookies = document.cookie.split('; ');
             const cookie = cookies.find((c) => c.startsWith(key));
             return cookie ? cookie.split('=')[1] : null;
         } else if (this.persistenceKind === 'localStorage') {
-            return JSON.parse(localStorage.getItem(key) || 'null');
+            return JSON.parse(localStorage?.getItem(key) || 'null');
         } else if (this.persistenceKind === 'sessionStorage') {
-            return JSON.parse(sessionStorage.getItem(key) || 'null');
+            return JSON.parse(sessionStorage?.getItem(key) || 'null');
         } else {
             return this.memoryStore[key] || null;
         }
