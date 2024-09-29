@@ -12,24 +12,24 @@ export class ConfigManager {
   apiUrl                : string = "";
   graphqlUrl            : string = "";
   defaultLanguage       : SupportedLang = "fr_FR";
-  rateLimits?: RateLimitOptions;
-  dataLimits?: DataLimitOptions; // Limites de quantité de données échangées
-  requestCount: number = 0;
-  requestWindowStart: number = Date.now();
-  wsEnabled: boolean = false;
-  wsClient?: WebSocket;
-  dataSent: number = 0;
-  dataReceived: number = 0;
-  dataWindowStart: number = Date.now();
-  appAccessDuration     : number = 0; // configurable duration for app token refresh
-  userAccessDuration    : number = 0; // configurable duration for user token refresh
-  minUserAccessDuration : number = 0; // enforced by backend
-  minAppAccessDuration  : number = 0; // enforced by backend
   persistence           : PersistenceKind = Persistence.MemoryKind;
+  rateLimits?           : RateLimitOptions;  // Limit de frequentes d'appel de l'API
+  dataLimits?           : DataLimitOptions; // Limites de quantité de données échangées
   storage?              : PersistenceType;
-  appToken?: SMPToken ;
-  userToken?: SMPToken ;
-  loggedUser?: UserLogin ;
+  requestWindowStart    : number  = Date.now();
+  dataWindowStart       : number  = Date.now();
+  wsEnabled             : boolean = false;
+  appToken?             : SMPToken;
+  userToken?            : SMPToken;
+  loggedUser?           : UserLogin;
+  wsClient?             : WebSocket;
+  requestCount          : number  = 0;
+  dataSent              : number  = 0;
+  dataReceived          : number  = 0;
+  appAccessDuration     : number  = 0; // configurable duration for app token refresh
+  userAccessDuration    : number  = 0; // configurable duration for user token refresh
+  minUserAccessDuration : number  = 0; // enforced by backend
+  minAppAccessDuration  : number  = 0; // enforced by backend
 
   constructor(options:SMPClientOptions) {
     this.appId = options.appId;
@@ -84,6 +84,20 @@ export class ConfigManager {
     */
   public setUser(user: UserLogin) {
     this.loggedUser = user;
+  }
+
+  /**
+   * setUserTokens
+    */
+  public setUserTokens(userTokens: SMPToken) {
+    this.userToken = userTokens;
+  }
+
+  /**
+   * setAppTokens
+    */
+  public setAppTokens(appTokens: SMPToken) {
+    this.appToken = appTokens;
   }
 
   public getLoggedUser(): UserLogin | undefined {

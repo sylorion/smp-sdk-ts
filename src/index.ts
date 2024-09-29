@@ -3,21 +3,35 @@ import { GET_SERVICE_BY_AUTHOR_ID } from "./api/graphql/queries/index.js";
 import { APIClient } from "./api/APIClient.js"
 import { SMPClient } from "./smp/SMPClient.js"
 import { Persistence } from './config/Persistence.js';
+import { defaultLanguage } from './i18n/languages.js';
 export { SMPClient, APIClient, GET_SERVICE_BY_AUTHOR_ID, statusByServices } ;
 
 
 const SMP_API_URL="https://api.dev.services.ceo";
 const SMP_GRAPHQL_URL = "https://api.dev.services.ceo/graphql";
-const SMP_DEFAULT_LANGUAGE = "US-en";
+const SMP_DEFAULT_LANGUAGE = 'fr_FR';
 const appId = "f2655ffda8594852";
 const appSecret = "TA7Vin/JY0YIp9sGpiy6d7ade351Ub+Ia3Pj1acdMb7AxKL/t1vVCcXt6NSaEiTfYbCes1b4Qs8l54buR17oQdsP9p0lpx0ojKaSdjzER9ftagPpr/5byPZhyxsQNU/V9dzoIx4eVV2sSiuFq4XFNL48v6wZz3znX4IlLenGji8=";
 const username = "l.yopa@services.ceo";
 const password = "password";
-
+const confOpts = {
+      appId: 'f2655ffda8594852',
+      appSecret: 'TA7Vin/JY0YIp9sGpiy6d7ade351Ub+Ia3Pj1acdMb7AxKL/t1vVCcXt6NSaEiTfYbCes1b4Qs8l54buR17oQdsP9p0lpx0ojKaSdjzER9ftagPpr/5byPZhyxsQNU/V9dzoIx4eVV2sSiuFq4XFNL48v6wZz3znX4IlLenGji8=',
+      apiUrl: '"https://dev-authentication.sh1.hidora.net/graphql"',
+      graphqlUrl: 'https://dev.api.services.ceo/graphql',
+      defaultLanguage: defaultLanguage,
+      appAccessDuration: 3600, // 1 heure
+      userAccessDuration: 3600, // 1 heure
+      minUserAccessDuration: 3600, // 1 heure
+      minAppAccessDuration: 3600, // 1 heure
+      persistence: Persistence.MemoryKind,
+      storage: new Persistence(Persistence.MemoryKind),
+    };
+    const smpClient = new SMPClient(confOpts);
 (async () => {
   console.log("appID: ", appId);
   console.log("appSecret: ", appSecret);
-  const smpClient = new SMPClient(appId, appSecret, "https://dev-authentication.sh1.hidora.net/graphql", Persistence.MemoryKind, 'fr_FR');
+  const smpClient = new SMPClient(confOpts);
   // await smpClient.authenticateApp();
 
   // // Authenticate the user

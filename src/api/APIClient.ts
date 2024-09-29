@@ -129,7 +129,7 @@ export class APIClient {
   }
 
   // Méthode pour vérifier la limite de débit avant d'effectuer une requête
-  private checkRateLimit(): boolean {
+  public checkRateLimit(): boolean {
     const now = Date.now();
     if (this.config.rateLimits && now - this.requestWindowStart > this.config.rateLimits!.windowMs) {
       this.requestCount = 0;
@@ -145,7 +145,7 @@ export class APIClient {
   }
 
   // Méthode pour suivre la quantité de données envoyées
-  private trackDataSent(dataSize: number): boolean {
+  public trackDataSent(dataSize: number): boolean {
     const now = Date.now();
 
     if (this.config.dataLimits && now - this.dataWindowStart > this.config.dataLimits!.windowMs) {
@@ -163,7 +163,7 @@ export class APIClient {
   }
 
   // Méthode pour suivre la quantité de données reçues
-  private trackDataReceived(dataSize: number): boolean {
+  public trackDataReceived(dataSize: number): boolean {
     const now = Date.now();
 
     if (this.config.dataLimits && now - this.dataWindowStart > this.config.dataLimits!.windowMs) {
