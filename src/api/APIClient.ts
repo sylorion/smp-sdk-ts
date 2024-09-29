@@ -77,9 +77,16 @@ export class APIClient {
   async query<T>(query: string, variables?: any): Promise<T> {
     try {
       this.checkRateLimit(); // Check rate limit before making the request
+      const body = JSON.stringify({ query, variables });
+      this.trackDataSent(body.length);
+
       logger.info("CALL TO APIClient.QUERY Method");
       const response = await this.graphqlClient.request<T>(query, variables);
-      logger.info(`ClientResponse:@@@@@@@@@@@-----%%%%%%%% ${JSON.stringify(response) }`);
+      const respJson = JSON.stringify(response);
+      logger.info(`ClientResponse:@@@@@@@@@@@-----%%%%%%%% ${respJson}`);
+
+      this.trackDataReceived(respJson.length);
+
       return response;
     } catch (error: any) {
       // ErrorHandler.handleError(error, "GRAPHQL_ERROR");
@@ -93,7 +100,13 @@ export class APIClient {
 
   async post<T>(url: string = this.config.apiUrl, data: any, config?: AxiosRequestConfig): Promise<T> {
     try {
+      this.checkRateLimit(); // Check rate limit before making the request
+      const body = JSON.stringify(data);
+      this.trackDataSent(body.length);
       const response = await this.restClient.post<T>(url, data, config);
+      const respJson = JSON.stringify(response.data);
+      logger.info(`ClientResponse:@@@@@@@@@@@-----%%%%%%%% ${respJson}`);
+      this.trackDataReceived(respJson.length);
       return response.data;
     } catch (error) {
       ErrorHandler.handleError(error, "POST_ERROR");
@@ -103,7 +116,11 @@ export class APIClient {
 
   async get<T>(url: string = this.config.apiUrl, config?: AxiosRequestConfig): Promise<T> {
     try {
+      this.checkRateLimit(); // Check rate limit before making the request
       const response = await this.restClient.get<T>(url, config);
+      const respJson = JSON.stringify(response.data);
+      logger.info(`ClientResponse:@@@@@@@@@@@-----%%%%%%%% ${respJson}`);
+      this.trackDataReceived(respJson.length);
       return response.data;
     } catch (error) {
       ErrorHandler.handleError(error, 'NETWORK_ERROR');
@@ -114,7 +131,6 @@ export class APIClient {
   // Méthode pour vérifier la limite de débit avant d'effectuer une requête
   private checkRateLimit(): boolean {
     const now = Date.now();
-
     if (this.config.rateLimits && now - this.requestWindowStart > this.config.rateLimits!.windowMs) {
       this.requestCount = 0;
       this.requestWindowStart = now;
