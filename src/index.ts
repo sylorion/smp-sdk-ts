@@ -5,8 +5,8 @@ import { SMPClient } from "./smp/SMPClient.js"
 export { SMPClient, APIClient, GET_SERVICE_BY_AUTHOR_ID, statusByServices } ;
 
 
-const SMP_API_URL="https://dev.api.services.ceo";
-const SMP_GRAPHQL_URL = "https://dev.api.services.ceo/graphql";
+const SMP_API_URL="https://api.dev.services.ceo";
+const SMP_GRAPHQL_URL = "https://api.dev.services.ceo/graphql";
 const SMP_DEFAULT_LANGUAGE = "US-en";
 const appId = "f2655ffda8594852";
 const appSecret = "TA7Vin/JY0YIp9sGpiy6d7ade351Ub+Ia3Pj1acdMb7AxKL/t1vVCcXt6NSaEiTfYbCes1b4Qs8l54buR17oQdsP9p0lpx0ojKaSdjzER9ftagPpr/5byPZhyxsQNU/V9dzoIx4eVV2sSiuFq4XFNL48v6wZz3znX4IlLenGji8=";
@@ -16,7 +16,7 @@ const password = "password";
 (async () => {
   console.log("appID: ", appId);
   console.log("appSecret: ", appSecret);
-  const smpClient = new SMPClient(appId, appSecret, "https://dev.api.services.ceo");
+  const smpClient = new SMPClient(appId, appSecret, "http://api.dev.services.ceo/graphql");
   await smpClient.authenticateApp();
 
   // // Authenticate the user
