@@ -50,7 +50,7 @@ export class AuthTokenManager {
     return now >= this.appTokenExpiresAt;
   }
 
-  public async authenticateApp(appId: string, appSecret: string): Promise<void> { 
+  public async authenticateApp(appId: string, appSecret: string): Promise<TokenDataResponse> { 
     try {
       const appLogin = { appId: appId, appSecret: appSecret };
       const response = await this.apiClient.query<TokenDataResponse>(MUTATION_AUTH_APP, appLogin);
@@ -65,18 +65,19 @@ export class AuthTokenManager {
 
       this.userTokenExpiresAt = Date.now() + expiresInMilli;
       this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
+      return response;
     } catch (error) {
-      ErrorHandler.handleError(error, "APP_AUTH_FAILED");
+      throw ErrorHandler.handleError(error, "APP_AUTH_FAILED");
     }
   }
 
-  public async authenticateUser(username: string, password: string): Promise<void> { 
+  public async authenticateUser(username: string, password: string): Promise<LogIn> { 
     try {
       const response = await this.apiClient.query<LoginResponse>(MUTATION_AUTH_USER, { email: username, password });
       // const { accessToken, refreshToken, accessValidityDuration } = response.user;
-      const accessToken = response.user.accessToken;
-      const refreshToken = response.user.refreshToken;
-      const expiresInMilli = 1000 * response.user.accessValidityDuration;
+      const accessToken = response.login.accessToken;
+      const refreshToken = response.login.refreshToken;
+      const expiresInMilli = 1000 * response.login.accessValidityDuration;
       this.userTokenStorage.saveRefreshToken(refreshToken);
       this.userTokenStorage.saveAccessToken(accessToken);
 
@@ -85,8 +86,9 @@ export class AuthTokenManager {
 
       this.userTokenExpiresAt = Date.now() + expiresInMilli;
       this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
+      return response.login
     } catch (error) {
-      ErrorHandler.handleError(error, "USER_AUTH_FAILED");
+      throw ErrorHandler.handleError(error, "USER_AUTH_FAILED");
     }
   }
 
@@ -183,13 +185,8 @@ export class AuthTokenManager {
     }
 
     // Rafraîchir le token juste avant son expiration
-    const timeOutInterval = setTimeout(() => {
-      if (type === AuthTokenStorage.AppKind) {
-        this.refreshAppAccessToken();
-      } else {
-        this.refreshUserAccessToken();
-      }
-    }, timeUntilExpiration - refreshDuration);
+    const timeOutInterval = setTimeout(() => type === AuthTokenStorage.AppKind ? this.refreshAppAccessToken() : this.refreshUserAccessToken(), 
+    timeUntilExpiration - refreshDuration);
   }
 
     // Déconnexion de l'utilisateur
@@ -200,11 +197,11 @@ export class AuthTokenManager {
 
     this.userTokenStorage.clearTokens();
     this.clearScheduledRefresh(AuthTokenStorage.UserKind);
-    this.apiClient.resetHeadersForUser() 
+    this.apiClient.resetHeadersForUser();
     this.userTokenExpiresAt = undefined;
   }
     // Déconnexion de l'utilisateur
-  public async logoutApp(appID: number): Promise<void> {
+  public async logoutApp(appID: string): Promise<void> {
     const query = MUTATION_AUTH_LOGOUT_APP;
 
     await this.apiClient.query(query, { appID });

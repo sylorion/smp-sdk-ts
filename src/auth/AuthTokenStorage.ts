@@ -9,8 +9,8 @@ export class AuthTokenStorage implements TokenStorage {
   public static UserKind: TokenStorageKind = 'user'
 
   constructor(tokenStorageType: TokenStorageKind, persistence: PersistenceType, stringPrefixKey: string = "smp_") {
-    this.accessTokenKey   = `${stringPrefixKey}${tokenStorageType}_access_token`;
-    this.refreshTokenKey  = `${stringPrefixKey}${tokenStorageType}_refresh_token`;
+    this.accessTokenKey   = `smp_${stringPrefixKey}${tokenStorageType}_access_token`;
+    this.refreshTokenKey  = `smp_${stringPrefixKey}${tokenStorageType}_refresh_token`;
     this.persistence      = persistence;
   }
 

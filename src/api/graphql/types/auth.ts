@@ -9,18 +9,20 @@ type ObjectStatus =
   'archived'
 
 type LoginResponse = {
-  user      : UserLogin,
+  login: LogIn,
+}
+
+type LogIn = {
+  accessToken   : string,
+  refreshToken  : string,
+  refreshValidityDuration: number,
+  accessValidityDuration: number,     
+  user      : UserLoggedIn,
   message   : string,
   errors    : [MutationError],
 }
 
-type UserLogin = {
-  accessToken   : string,
-  refreshToken  : string,
-  details       : UserDetails,
-  accessValidityDuration: number,
-}
-type UserDetails = {
+type UserLoggedIn = {
   userID        : number,
   uniqRef       : string,
   slug          : string,
@@ -50,5 +52,33 @@ type MutationError = {
 type LogoutResponse = {
   success: boolean,
   message: string,
+}
+
+
+type AppLoginResponse = {
+  login: LogIn,
+}
+
+type AppLogIn = {
+  accessToken   : string,
+  refreshToken  : string,
+  refreshValidityDuration: number,
+  accessValidityDuration: number,     
+  app      : AppLoggedIn, 
+  errors    : [MutationError],
+}
+
+
+type AppLoggedIn = {
+  userID        : number,
+  uniqRef       : string,
+  slug          : string,
+  developerID   : string,
+  developerEmail: string,
+  plan          : string, 
+  lastLogin     : Date, 
+  state         : string,
+  createdAt?    : Date,
+  updatedAt     : Date, 
 }
 

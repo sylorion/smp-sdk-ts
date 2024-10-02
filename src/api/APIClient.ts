@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, AxiosRequestConfig, AxiosInstance, RawAxiosRequestHeaders } from 'axios';
+import axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
 import { GraphQLClient, ClientError } from 'graphql-request'; 
 import { ConfigManager } from '../config/ConfigManager.js';
 import { ErrorHandler } from "../utils/ErrorHandler.js";
@@ -16,7 +16,6 @@ export class APIClient {
   private dataSent: number = 0;
   private dataReceived: number = 0;
   private dataWindowStart: number = Date.now();
-  private dataRate: number = 0;
   constructor(config: ConfigManager) {
     this.config = config; 
     this.restClient = axios.create({

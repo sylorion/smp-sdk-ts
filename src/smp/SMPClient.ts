@@ -12,11 +12,12 @@ export class SMPClient {
   public httpApiClient: APIClient; 
   public authTokenManager: AuthTokenManager;
   // public notificationManager: AuthTokenManager;
+  private internalDB: Persistence;
   private wsClient?: WebSocket;
   private configManager: ConfigManager; 
 
   constructor(options: SMPClientOptions) {
-
+    this.internalDB = new Persistence(Persistence.MemoryKind);
     this.configManager = new ConfigManager(options)
 
     this.httpApiClient    = new APIClient(this.configManager);
@@ -25,13 +26,13 @@ export class SMPClient {
     if (this.configManager.wsEnabled) {
       this.initWebSocket();
     }
-
     logger.info(i18n.t('smp_client_init'));
   }
 
   async authenticateApp(): Promise<void> {
     try {
-      this.authTokenManager.authenticateApp(this.configManager.appId, this.configManager.appSecret);
+      const app = await this.authTokenManager.authenticateApp(this.configManager.appId, this.configManager.appSecret);
+      this.internalDB.set("smp_app_0", app);
     } catch (error) {
       ErrorHandler.handleError(error, "APP_AUTH_FAILED");
     }
@@ -39,12 +40,53 @@ export class SMPClient {
 
   async authenticateUser(username: string, password: string): Promise<void> {
     try {
-      await this.authTokenManager.authenticateUser(username, password);
+      const login = await this.authTokenManager.authenticateUser(username, password);
+      this.internalDB.set("smp_user_0", login);
     } catch (error) {
       ErrorHandler.handleError(error, "APP_AUTH_FAILED");
     }
   }
 
+  async getAppAccessToken(){
+    try {
+      return await this.authTokenManager.getAppAccessToken();
+    } catch (error) {
+      ErrorHandler.handleError(error, "APP_RETRIEVED_ACCES_TOKEN_FAILED");
+    }
+  }
+
+  async getUserAccessToken(){
+    try {
+      return await this.authTokenManager.getUserAccessToken();
+    } catch (error) {
+      ErrorHandler.handleError(error, "USER_RETRIEVED_ACCES_TOKEN_FAILED");
+    }
+  }
+
+  async getAppRefreshToken(){
+    try {
+      return await this.authTokenManager.getAppRefreshToken();
+    } catch (error) {
+      ErrorHandler.handleError(error, "APP_RETRIEVED_REFRESH_TOKEN_FAILED");
+    }
+  }
+
+  async getUserRefreshToken(){
+    try {
+      return await this.authTokenManager.getUserRefreshToken();
+    } catch (error) {
+      ErrorHandler.handleError(error, "USER_RETRIEVED_REFRESH_TOKEN_FAILED");
+    }
+  }
+
+  async logoutApp(){
+    try {
+      const app = this.internalDB.get("smp_app_0");
+      return await this.authTokenManager.logoutApp(app.appId);
+    } catch (error) {
+      ErrorHandler.handleError(error, "USER_RETRIEVED_REFRESH_TOKEN_FAILED");
+    }
+  }
 
   // Méthode pour initier une connexion WebSocket pour les notifications
   private initWebSocket() {

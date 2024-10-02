@@ -4,11 +4,13 @@ import { APIClient } from "./api/APIClient.js"
 import { SMPClient } from "./smp/SMPClient.js"
 import { Persistence } from './config/Persistence.js';
 import { defaultLanguage } from './i18n/languages.js';
+import { GraphQLMutationBuilder } from './api/graphql/builder/GraphQLMutationBuilder.js'
+import { GraphQLQueryBuilder } from './api/graphql/builder/GraphQLQueryBuilder.js';
 export { SMPClient, APIClient, GET_SERVICE_BY_AUTHOR_ID, statusByServices } ;
 
 
-const SMP_API_URL="https://api.dev.services.ceo";
-const SMP_GRAPHQL_URL = "https://api.dev.services.ceo/graphql";
+const SMP_API_URL="https://dev-authentication.sh1.hidora.net";
+const SMP_GRAPHQL_URL = "https://dev-gateway.sh1.hidora.net/";
 const SMP_DEFAULT_LANGUAGE = 'fr_FR';
 const appId = "f2655ffda8594852";
 const appSecret = "TA7Vin/JY0YIp9sGpiy6d7ade351Ub+Ia3Pj1acdMb7AxKL/t1vVCcXt6NSaEiTfYbCes1b4Qs8l54buR17oQdsP9p0lpx0ojKaSdjzER9ftagPpr/5byPZhyxsQNU/V9dzoIx4eVV2sSiuFq4XFNL48v6wZz3znX4IlLenGji8=";
@@ -18,12 +20,12 @@ const confOpts = {
       appId: 'f2655ffda8594852',
       appSecret: 'TA7Vin/JY0YIp9sGpiy6d7ade351Ub+Ia3Pj1acdMb7AxKL/t1vVCcXt6NSaEiTfYbCes1b4Qs8l54buR17oQdsP9p0lpx0ojKaSdjzER9ftagPpr/5byPZhyxsQNU/V9dzoIx4eVV2sSiuFq4XFNL48v6wZz3znX4IlLenGji8=',
       apiUrl: '"https://dev-authentication.sh1.hidora.net/graphql"',
-      graphqlUrl: 'https://dev.api.services.ceo/graphql',
+      graphqlUrl: SMP_GRAPHQL_URL,
       defaultLanguage: defaultLanguage,
-      appAccessDuration: 3600, // 1 heure
-      userAccessDuration: 3600, // 1 heure
-      minUserAccessDuration: 3600, // 1 heure
-      minAppAccessDuration: 3600, // 1 heure
+      appAccessDuration: 30, // 1 heure
+      userAccessDuration: 30, // 1 heure
+      minUserAccessDuration: 30, // 1 heure
+      minAppAccessDuration: 30, // 1 heure
       persistence: Persistence.MemoryKind,
       storage: new Persistence(Persistence.MemoryKind),
     };
@@ -34,17 +36,29 @@ const confOpts = {
   const smpClient = new SMPClient(confOpts);
   // await smpClient.authenticateApp();
 
-  // // Authenticate the user
-  const timeA = new Date();
-  await smpClient.authenticateUser(username, password).then(
-    (response) => {
-      console.log("User authenticated: ", response);
-    }
-  )
-  const timeB = new Date();
-  console.log("##############################\n##############################");
-  console.log("time to authenticate user: ", (timeB.getTime() - timeA.getTime()));
-  console.log(`Start Auth :  ${timeA} - End auth at ${timeA}`);
+  const varLogin: LoginInput = { email: 'l.yopa@services.ceo' , name: 'password'}
+  const mutation = new GraphQLMutationBuilder<GraphQLMutationType['login']['variables']>('login', 'Name')
+  .setVariables({ input: varLogin as LoginInput}) // Variables à passer
+  .select('user', 'accessToken', 'refreshToken') // Champs à retourner
+  // .select({ profile: ['title', 'name', {location: ['line1', 'line2', 'number']}] }) // Champs à retourner
+  .build();
+
+  const res = smpClient.httpApiClient.query(mutation, varLogin);
+console.log(mutation); 
+
+console.log(res);
+
+  // Authenticate the user
+  // const timeA = new Date();
+  // await smpClient.authenticateUser(username, password).then(
+  //   (response) => {
+  //     console.log("User authenticated: ", response);
+  //   }
+  // )
+  // const timeB = new Date();
+  // console.log("##############################\n##############################");
+  // console.log("time to authenticate user: ", (timeB.getTime() - timeA.getTime()));
+  // console.log(`Start Auth :  ${timeA} - End auth at ${timeA}`);
   // const apiClient = smpClient.httpClient;
   // const posts = await apiClient.query(GET_SERVICE_BY_AUTHOR_ID, { userId: "user-id" });
 

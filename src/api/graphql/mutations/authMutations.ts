@@ -1,5 +1,5 @@
 
-export const MUTATION_AUTH_APP = `
+export const MUTATION_AUTH_APP = /* GraphQL */`
   mutation AuthenticateApp($appId: String!, $appSecret: String!) {
     authenticateApp(appId: $appId, appSecret: $appSecret) {
       token
@@ -8,14 +8,14 @@ export const MUTATION_AUTH_APP = `
   }
 `;
 
-export const MUTATION_AUTH_USER = `
+export const MUTATION_AUTH_USER = /* GraphQL */ `
   mutation AuthenticateUser($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      user {
+    login(input: {email: $email, password: $password}) {
         accessToken  
         refreshToken  
         accessValidityDuration
-        details {
+        refreshValidityDuration
+        user {
           userID        
           uniqRef       
           slug          
@@ -28,7 +28,6 @@ export const MUTATION_AUTH_USER = `
           state         
           updatedAt     
           twoFactorEnabled 
-        }
       }
       message 
       errors {
@@ -40,7 +39,7 @@ export const MUTATION_AUTH_USER = `
   }
 `;
 
-export const MUTATION_REFRESH_APP_TOKEN = `
+export const MUTATION_REFRESH_APP_TOKEN = /* GraphQL */ `
   mutation RefreshAppToken {
     refreshAppToken {
       appToken
@@ -48,7 +47,7 @@ export const MUTATION_REFRESH_APP_TOKEN = `
   }
 `;
 
-export const MUTATION_REFRESH_USER_TOKEN = `
+export const MUTATION_REFRESH_USER_TOKEN = /* GraphQL */ `
   mutation RefreshUserToken($refreshToken: String!) {
     refreshUserToken(refreshUserToken: $refreshToken) {
       accessToken
@@ -57,7 +56,7 @@ export const MUTATION_REFRESH_USER_TOKEN = `
   }
 `;
 
-export const MUTATION_AUTH_LOGOUT_USER = `
+export const MUTATION_AUTH_LOGOUT_USER = /* GraphQL */ `
   mutation LogoutUser($userID: ID!) {
     logoutUser(userID: $userID) {
       message
@@ -66,7 +65,7 @@ export const MUTATION_AUTH_LOGOUT_USER = `
   }
 `;
 
-export const MUTATION_AUTH_LOGOUT_APP = `
+export const MUTATION_AUTH_LOGOUT_APP = /* GraphQL */ `
   mutation LogoutApp($appID: ID!) {
     logoutApp(appID: $appID) {
       message

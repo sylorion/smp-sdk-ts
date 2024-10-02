@@ -21,7 +21,7 @@ export class ConfigManager {
   wsEnabled             : boolean = false;
   appToken?             : SMPToken;
   userToken?            : SMPToken;
-  loggedUser?           : UserLogin;
+  loggedUser?           : UserLoggedIn;
   wsClient?             : WebSocket;
   requestCount          : number  = 0;
   dataSent              : number  = 0;
@@ -47,11 +47,7 @@ export class ConfigManager {
     this.dataLimits = options.dataLimits || { maxDataSent: 1024 * 1024, maxDataReceived: 1024 * 1024, windowMs: 60000 };
     this.wsEnabled = options.wsEnabled || false;
     const now = new Date();
-    this.loggedUser = {
-      accessToken: '',
-      refreshToken: '',
-      accessValidityDuration: this.userAccessDuration,
-      details: {
+    this.loggedUser = {   
         userID: 0,
         uniqRef: '',
         slug: '',
@@ -64,8 +60,7 @@ export class ConfigManager {
         state: '',
         createdAt: now,
         updatedAt: now,
-        twoFactorEnabled: false,
-      },
+        twoFactorEnabled: false, 
     };  
     this.appToken = {
       accessToken: '',
@@ -82,7 +77,7 @@ export class ConfigManager {
   /**
    * setLoggedUser
     */
-  public setUser(user: UserLogin) {
+  public setUser(user: UserLoggedIn) {
     this.loggedUser = user;
   }
 
@@ -100,7 +95,7 @@ export class ConfigManager {
     this.appToken = appTokens;
   }
 
-  public getLoggedUser(): UserLogin | undefined {
+  public getLoggedUser(): UserLoggedIn | undefined {
     return this.loggedUser;
   }
 
