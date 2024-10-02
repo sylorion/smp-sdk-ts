@@ -73,7 +73,7 @@ export class AuthTokenManager {
 
   public async authenticateUser(username: string, password: string): Promise<LogIn> { 
     try {
-      const response = await this.apiClient.query<LoginResponse>(MUTATION_AUTH_USER, { email: username, password });
+      const response = await this.apiClient.query<LoginResponse>(MUTATION_AUTH_USER, {loginInput: { email: username, password } });
       // const { accessToken, refreshToken, accessValidityDuration } = response.user;
       const accessToken = response.login.accessToken;
       const refreshToken = response.login.refreshToken;
@@ -183,10 +183,12 @@ export class AuthTokenManager {
     if (refreshInterval) {
       clearTimeout(refreshInterval);
     }
-
+    const triggerTime = timeUntilExpiration - refreshDuration;
+    console.error(`tokenExpiresAt: ${tokenExpiresAt} TimeUntilExpiration: ${timeUntilExpiration} Refresh Token ${refreshDuration} milli second`)
+    console.error(`SCHEDULE TO RUN ${triggerTime} milli second`)
     // Rafraîchir le token juste avant son expiration
     const timeOutInterval = setTimeout(() => type === AuthTokenStorage.AppKind ? this.refreshAppAccessToken() : this.refreshUserAccessToken(), 
-    timeUntilExpiration - refreshDuration);
+    triggerTime/10000);
   }
 
     // Déconnexion de l'utilisateur

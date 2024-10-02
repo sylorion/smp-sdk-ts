@@ -9,8 +9,8 @@ export const MUTATION_AUTH_APP = /* GraphQL */`
 `;
 
 export const MUTATION_AUTH_USER = /* GraphQL */ `
-  mutation AuthenticateUser($email: String!, $password: String!) {
-    login(input: {email: $email, password: $password}) {
+  mutation AuthenticateUser($loginInput: LoginInput!) {
+    login(input: $loginInput) {
         accessToken  
         refreshToken  
         accessValidityDuration

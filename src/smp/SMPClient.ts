@@ -41,7 +41,10 @@ export class SMPClient {
   async authenticateUser(username: string, password: string): Promise<void> {
     try {
       const login = await this.authTokenManager.authenticateUser(username, password);
+      console.log("Login succeed");
+      console.log(JSON.stringify(login));
       this.internalDB.set("smp_user_0", login);
+      
     } catch (error) {
       ErrorHandler.handleError(error, "APP_AUTH_FAILED");
     }
