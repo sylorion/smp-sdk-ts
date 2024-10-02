@@ -33,7 +33,12 @@ const confOpts = {
   console.log("appSecret: ", appSecret);
   const smpClient = new SMPClient(confOpts);
   // await smpClient.authenticateApp();
-
+  function wait(n:number) {
+    return new Promise(resolve => {
+      setTimeout(resolve, n * 1000); // Convertir les secondes en millisecondes
+    });
+  }
+  
   // Authenticate the user
   const timeA = new Date();
   await smpClient.authenticateUser(username, password).then(
@@ -45,5 +50,10 @@ const confOpts = {
   console.log("##############################\n##############################");
   console.log("time to authenticate user: ", (timeB.getTime() - timeA.getTime()));
   console.log(`Start Auth :  ${timeA} - End auth at ${timeA}`);
+  let count = 1
+  while (count < 30) {
+    count++;
+    await wait(count);
+  }
 })();
 console.log(`End OF TEST PROGRAM\n\n\n`);

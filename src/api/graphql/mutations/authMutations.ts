@@ -40,18 +40,19 @@ export const MUTATION_AUTH_USER = /* GraphQL */ `
 `;
 
 export const MUTATION_REFRESH_APP_TOKEN = /* GraphQL */ `
-  mutation RefreshAppToken {
-    refreshAppToken {
-      appToken
-    }
+  mutation RefreshAppToken($refreshToken: String!) {
+    refreshAppToken(token: $refreshToken) {
+      accessToken
+      expiresIn 
+    } 
   }
 `;
 
 export const MUTATION_REFRESH_USER_TOKEN = /* GraphQL */ `
   mutation RefreshUserToken($refreshToken: String!) {
-    refreshUserToken(refreshUserToken: $refreshToken) {
+    refreshUserToken(token: $refreshToken) {
       accessToken
-      expiresIn
+      expiresIn 
     } 
   }
 `;
