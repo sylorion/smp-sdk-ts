@@ -4,10 +4,11 @@ import { AuthTokenManager } from "../auth/AuthTokenManager.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
 import { logger } from '../utils/Logger.js';
 import { i18n, SupportedLang } from '../i18n/index.js'; 
-import { SMPClientOptions, SMPConfig } from "../config/SMPConfig.js";
+import { SMPClientOptions } from "../config/SMPConfig.js";
 import { ConfigManager } from "../config/ConfigManager.js";
 import { Persistence, PersistenceKind } from "../config/Persistence.js";
-
+import { AxiosRequestConfig } from "axios";
+import { GraphQLClient, ClientError } from 'graphql-request'; 
 export class SMPClient {
   public httpApiClient: APIClient; 
   public authTokenManager: AuthTokenManager;
@@ -122,6 +123,42 @@ export class SMPClient {
     this.wsClient.onclose = () => {
       console.log('WebSocket connection closed.');
     };
+  }
+
+  public updateHeaderUserAccessToken(accesToken: string): GraphQLClient {
+    return this.httpApiClient.updateHeaderUserAccessToken(accesToken);
+  }
+
+
+  public resetHeadersForUser(): void {
+    this.httpApiClient.resetHeadersForUser();
+  }
+
+  async query<T>(query: string, variables?: any): Promise<T> {
+    return await this.httpApiClient.query<T>(query, variables);
+  }
+
+  async post<T>(url: string = this.configManager.apiUrl, data: any, config?: AxiosRequestConfig): Promise<T> {
+    return await this.httpApiClient.post<T>(url, data, config);
+  }
+
+  async get<T>(url: string = this.configManager.apiUrl, config?: AxiosRequestConfig): Promise<T> {
+    return await this.httpApiClient.get<T>(url, config);
+  }
+
+  // Méthode pour vérifier la limite de débit avant d'effectuer une requête
+  public checkRateLimit(): boolean {
+    return this.httpApiClient.checkRateLimit();
+  }
+
+  // Méthode pour suivre la quantité de données envoyées
+  public trackDataSent(dataSize: number): boolean {
+    return this.httpApiClient.trackDataSent(dataSize);
+  }
+
+  // Méthode pour suivre la quantité de données reçues
+  public trackDataReceived(dataSize: number): boolean {
+    return this.httpApiClient.trackDataReceived(dataSize);
   }
 
   printState(){

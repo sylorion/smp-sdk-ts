@@ -11,7 +11,7 @@ export class ConfigManager {
   appSecret             : string = "";
   apiUrl                : string = "";
   graphqlUrl            : string = "";
-  defaultLanguage       : SupportedLang = "fr_FR";
+  defaultLanguage       : SupportedLang = defaultLanguage;
   persistence           : PersistenceKind = Persistence.MemoryKind;
   rateLimits?           : RateLimitOptions;  // Limit de frequentes d'appel de l'API
   dataLimits?           : DataLimitOptions; // Limites de quantité de données échangées
@@ -40,7 +40,7 @@ export class ConfigManager {
     this.minAppAccessDuration = options.minAppAccessDuration;
     this.apiUrl = options.apiUrl;
     this.graphqlUrl = options.graphqlUrl;
-    this.defaultLanguage = options.defaultLanguage;
+    this.defaultLanguage = options.defaultLanguage ?? defaultLanguage;
     this.persistence = options.persistence;
     this.storage = options.storage; 
     this.rateLimits = options.rateLimits || { maxRequests: 1000, windowMs: 60000 };
