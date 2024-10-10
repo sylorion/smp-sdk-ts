@@ -134,17 +134,20 @@ export class AuthTokenManager {
       logger.info(`Refresh Token USED ${Date.now().toLocaleString()}: ${refreshToken}\n\n`);
     }
 
-    const response = await this.apiClient.query<TokenDataResponse>(MUTATION_REFRESH_USER_TOKEN, {refreshToken});
-    const { accessToken, expiresIn } = response;
-    const expiresInMilli  = expiresIn * 1000;
-    const refreshDuration = this.configManager.userAccessDuration < expiresInMilli ? 
-    this.configManager.userAccessDuration : expiresInMilli;
-
-    this.userTokenStorage.saveAccessToken(accessToken);
-    this.apiClient.updateHeaderAppAccessToken(accessToken);
-    logger.info(`Refresh User token, new token: ${response}`);
-    this.userTokenExpiresAt = Date.now() + expiresInMilli;
-    this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
+    return this.apiClient.query<TokenDataResponse>(MUTATION_REFRESH_USER_TOKEN, {refreshToken}).then((response) => {
+      console.log("REFRESH TOKEN RESPONSE", response);
+      const { accessToken, expiresIn } = response;
+      const expiresInMilli  = expiresIn * 1000;
+      const refreshDuration = this.configManager.userAccessDuration < expiresInMilli ? 
+      this.configManager.userAccessDuration : expiresInMilli;
+  
+      this.userTokenStorage.saveAccessToken(accessToken);
+      this.apiClient.updateHeaderAppAccessToken(accessToken);
+      logger.info(`Refresh User token, new token: ${accessToken}`);
+      this.userTokenExpiresAt = Date.now() + expiresInMilli;
+      this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
+      return;
+    });
   }
 
   /**
