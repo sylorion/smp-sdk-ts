@@ -5,7 +5,7 @@ import { SMPClient } from "./smp/SMPClient.js"
 import { Persistence } from './config/Persistence.js';
 import { defaultLanguage } from './i18n/languages.js';
 export { SMPClient, APIClient, GET_SERVICE_BY_AUTHOR_ID, statusByServices } ;
-
+export { Persistence, defaultLanguage };
 
 const SMP_API_URL="https://dev-authentication.sh1.hidora.net";
 const SMP_GRAPHQL_URL = "https://dev-gateway.sh1.hidora.net/";
