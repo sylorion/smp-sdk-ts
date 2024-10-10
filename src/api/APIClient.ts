@@ -102,7 +102,7 @@ export class APIClient {
       this.trackDataSent(body.length);
       const response = await this.restClient.post<T>(url, data, config);
       const respJson = JSON.stringify(response.data);
-      logger.info(`ClientResponse:@@@@@@@@@@@-----%%%%%%%% ${respJson}`);
+      logger.info(`POST ClientResponse:++++++++++-----%%%%%%%% ${respJson}`);
       this.trackDataReceived(respJson.length);
       return response.data;
     } catch (error) {
@@ -116,7 +116,7 @@ export class APIClient {
       this.checkRateLimit(); // Check rate limit before making the request
       const response = await this.restClient.get<T>(url, config);
       const respJson = JSON.stringify(response.data);
-      logger.info(`ClientResponse:@@@@@@@@@@@-----%%%%%%%% ${respJson}`);
+      logger.info(` GET ClientResponse:##########-----%%%%%%%% ${respJson}`);
       this.trackDataReceived(respJson.length);
       return response.data;
     } catch (error) {
