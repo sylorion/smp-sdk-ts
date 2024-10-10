@@ -82,10 +82,8 @@ export class APIClient {
       logger.info("CALL TO APIClient.QUERY Method");
       const response = await this.graphqlClient.request<T>(query, variables);
       const respJson = JSON.stringify(response);
-      logger.info(`ClientResponse:@@@@@@@@@@@-----%%%%%%%% ${respJson}`);
-
       this.trackDataReceived(respJson.length);
-
+      logger.info(`Total Data received : ${this.dataReceived}`);
       return response;
     } catch (error: any) {
       // ErrorHandler.handleError(error, "GRAPHQL_ERROR");

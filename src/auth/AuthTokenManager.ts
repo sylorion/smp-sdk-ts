@@ -6,6 +6,7 @@ import { APIClient } from "../api/APIClient.js";
 import { MUTATION_AUTH_APP, MUTATION_AUTH_LOGOUT_APP, MUTATION_AUTH_LOGOUT_USER, MUTATION_AUTH_USER, 
   MUTATION_REFRESH_APP_TOKEN, MUTATION_REFRESH_USER_TOKEN } from "../api/graphql/mutations/authMutations.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
+import { logger } from '../utils/Logger.js';
 
 interface TokenDataResponse {
     accessToken: string;
@@ -103,7 +104,7 @@ export class AuthTokenManager {
     // Récupérer le token d'accès actuel ou rafraîchir s'il a expiré
   public async getUserAccessToken(): Promise<string>{
     if (this.isUserTokenExpired()) {
-      console.log('User Access token expired, refreshing...');
+      logger.info('User Access token expired, refreshing...');
       await this.refreshUserAccessToken();
       return this.userTokenStorage.getAccessToken() || '';
     }
@@ -113,7 +114,7 @@ export class AuthTokenManager {
 
   public async getAppAccessToken(): Promise<string> {
      if (this.isAppTokenExpired()) {
-      console.log('App Access token expired, refreshing...');
+      logger.info('App Access token expired, refreshing...');
       await this.refreshAppAccessToken();
       return this.appTokenStorage.getAccessToken() || '';
     }
@@ -129,6 +130,8 @@ export class AuthTokenManager {
 
     if (!refreshToken) {
       throw new Error('No user refresh token available');
+    } else {
+      logger.info(`Refresh Token USED ${Date.now()}: ${refreshToken}`);
     }
 
     const response = await this.apiClient.query<TokenDataResponse>(MUTATION_REFRESH_USER_TOKEN, {refreshToken});
@@ -136,11 +139,10 @@ export class AuthTokenManager {
     const expiresInMilli  = expiresIn * 1000;
     const refreshDuration = this.configManager.userAccessDuration < expiresInMilli ? 
     this.configManager.userAccessDuration : expiresInMilli;
-    
-    console.log(response);
+
     this.userTokenStorage.saveAccessToken(accessToken);
     this.apiClient.updateHeaderAppAccessToken(accessToken);
-    console.log("Refresh User token");
+    logger.info(`Refresh User token, new token: ${accessToken}`);
     this.userTokenExpiresAt = Date.now() + expiresInMilli;
     this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
   }
