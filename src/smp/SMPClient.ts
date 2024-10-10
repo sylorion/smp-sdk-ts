@@ -3,7 +3,7 @@ import { APIClient } from "../api/APIClient.js";
 import { AuthTokenManager } from "../auth/AuthTokenManager.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
 import { logger } from '../utils/Logger.js';
-import { i18n, SupportedLang } from '../i18n/index.js'; 
+import { i18n } from '../i18n/index.js'; 
 import { SMPClientOptions } from "../config/SMPConfig.js";
 import { ConfigManager } from "../config/ConfigManager.js";
 import { Persistence, PersistenceKind } from "../config/Persistence.js";
@@ -32,6 +32,11 @@ export class SMPClient {
 
   async authenticateApp(): Promise<void> {
     try {
+      const access = await this.getAppAccessToken();
+      if (access) {
+        logger.info("App already authenticated");
+        return;
+      }
       const app = await this.authTokenManager.authenticateApp(this.configManager.appId, this.configManager.appSecret);
       this.internalDB.set("smp_app_0", app);
     } catch (error) {
@@ -41,11 +46,15 @@ export class SMPClient {
 
   async authenticateUser(username: string, password: string): Promise<void> {
     try {
+      const access = await this.getUserAccessToken();
+      if (access) {
+        logger.info("User already authenticated");
+        return;
+      }
       const login = await this.authTokenManager.authenticateUser(username, password);
       console.log("Login succeed");
       console.log(JSON.stringify(login));
       this.internalDB.set("smp_user_0", login);
-      
     } catch (error) {
       ErrorHandler.handleError(error, "APP_AUTH_FAILED");
     }
