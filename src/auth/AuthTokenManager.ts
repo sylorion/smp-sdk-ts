@@ -86,7 +86,7 @@ export class AuthTokenManager {
       this.configManager.userAccessDuration : expiresInMilli;
 
       this.userTokenExpiresAt = Date.now() + expiresInMilli;
-      // this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
+      this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
       return response.login
     } catch (error) {
       throw ErrorHandler.handleError(error, "USER_AUTH_FAILED");
@@ -132,9 +132,10 @@ export class AuthTokenManager {
       logger.info(`Refresh Token USED ${Date.now().toLocaleString()}: ${refreshToken}\n\n`);
     }
 
-    return this.apiClient.query<TokenDataResponse>(MUTATION_REFRESH_USER_TOKEN, {refreshToken}).then((response) => {
-      console.log("REFRESH TOKEN RESPONSE", response);
-      const { accessToken, expiresIn } = response;
+    return this.apiClient.query<{refreshUserToken: TokenDataResponse}>(MUTATION_REFRESH_USER_TOKEN, {refreshToken}).then((response) => {
+      console.log("REFRESH TOKEN RESPONSE", response.refreshUserToken);
+      const accessToken  = response.refreshUserToken.accessToken;
+      const expiresIn = response.refreshUserToken.expiresIn;
       const expiresInMilli  = expiresIn * 1000;
       const refreshDuration = this.configManager.userAccessDuration < expiresInMilli ? 
       this.configManager.userAccessDuration : expiresInMilli;
@@ -187,7 +188,7 @@ export class AuthTokenManager {
     if (refreshInterval) {
       clearTimeout(refreshInterval);
     }
-    const triggerTime = 15000 // timeUntilExpiration - refreshDuration;
+    const triggerTime = 3600 // timeUntilExpiration - refreshDuration;
     console.error(`tokenExpiresAt: ${tokenExpiresAt} TimeUntilExpiration: ${timeUntilExpiration} Refresh Token ${refreshDuration} milli second`)
     console.error(`SCHEDULE TO RUN ${triggerTime} milli second`)
     // Rafraîchir le token juste avant son expiration
