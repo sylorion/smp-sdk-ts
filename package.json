@@ -1,5 +1,5 @@
 {
-  "name": "smp-ts-sdk",
+  "name": "smp-sdk-ts",
   "version": "1.0.0",
   "description": "A TypeScript SDK for SMP platform with OAuth2 and user authentication.",
   "main": "dist/index.js",
@@ -28,9 +28,9 @@
   "author": "Services SAS",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/sylorion/smp-ts-sdk/issues"
+    "url": "https://github.com/sylorion/smp-sdk-ts/issues"
   },
-  "homepage": "https://github.com/sylorion/smp-ts-sdk#readme",
+  "homepage": "https://github.com/sylorion/smp-sdk-ts#readme",
   "devDependencies": {
     "@types/node": "^22.5.1",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
