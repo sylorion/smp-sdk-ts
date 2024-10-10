@@ -86,7 +86,7 @@ export class AuthTokenManager {
       this.configManager.userAccessDuration : expiresInMilli;
 
       this.userTokenExpiresAt = Date.now() + expiresInMilli;
-      this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
+      // this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
       return response.login
     } catch (error) {
       throw ErrorHandler.handleError(error, "USER_AUTH_FAILED");
@@ -105,8 +105,7 @@ export class AuthTokenManager {
   public async getUserAccessToken(): Promise<string>{
     if (this.isUserTokenExpired()) {
       logger.info('User Access token expired, refreshing...');
-      await this.refreshUserAccessToken();
-      return this.userTokenStorage.getAccessToken() || '';
+      await this.refreshUserAccessToken(); 
     }
     const accessToken = this.userTokenStorage.getAccessToken() || '';
     return accessToken;
@@ -127,7 +126,6 @@ export class AuthTokenManager {
   */
   private async refreshUserAccessToken(): Promise<void> { 
     const refreshToken = this.userTokenStorage.getRefreshToken();
-
     if (!refreshToken) {
       throw new Error('No user refresh token available');
     } else {
@@ -189,12 +187,12 @@ export class AuthTokenManager {
     if (refreshInterval) {
       clearTimeout(refreshInterval);
     }
-    const triggerTime = timeUntilExpiration - refreshDuration;
+    const triggerTime = 15000 // timeUntilExpiration - refreshDuration;
     console.error(`tokenExpiresAt: ${tokenExpiresAt} TimeUntilExpiration: ${timeUntilExpiration} Refresh Token ${refreshDuration} milli second`)
     console.error(`SCHEDULE TO RUN ${triggerTime} milli second`)
     // Rafraîchir le token juste avant son expiration
     const timeOutInterval = setTimeout(() => type === AuthTokenStorage.AppKind ? console.warn("Refraiching APP TOKEN") : this.refreshUserAccessToken(), 
-    triggerTime/10000);
+    triggerTime);
   }
 
     // Déconnexion de l'utilisateur

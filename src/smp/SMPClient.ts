@@ -72,7 +72,7 @@ export class SMPClient {
     try {
       return await this.authTokenManager.getUserAccessToken();
     } catch (error) {
-      ErrorHandler.handleError(error, "USER_RETRIEVED_ACCES_TOKEN_FAILED");
+      return null
     }
   }
 
