@@ -28,30 +28,30 @@ export class APIClient {
    * updateHeaderAppSecret  
   */
   public updateHeaderAppSecret(secret: string): GraphQLClient {
-    this.graphqlClient = this.graphqlClient.setHeader("x-smp-app-token",  `Token ${secret}`);
+    this.graphqlClient = this.graphqlClient.setHeader("x-services-app-token",  `${secret}`);
     return this.graphqlClient;
   }
 
   public updateHeaderAppID(secret: string): GraphQLClient {
-    this.graphqlClient = this.graphqlClient.setHeader("x-smp-app-id", `Token ${secret}`);
+    this.graphqlClient = this.graphqlClient.setHeader("x-services-app-id", `${secret}`);
     return this.graphqlClient;
   }
 
   public updateHeaderAppAccessToken(secret: string): GraphQLClient {
-    this.graphqlClient = this.graphqlClient.setHeader("x-smp-app-access", `Token ${secret}`);
+    this.graphqlClient = this.graphqlClient.setHeader("x-services-app-access", `${secret}`);
     return this.graphqlClient;
   }
 
     public resetHeaderAppSecret(): void {
-    this.graphqlClient = this.graphqlClient.setHeader("x-smp-app-token", "");
+    this.graphqlClient = this.graphqlClient.setHeader("x-services-app-token", "");
   }
 
   public resetHeaderAppID(): void {
-    this.graphqlClient = this.graphqlClient.setHeader("x-smp-app-id", "");
+    this.graphqlClient = this.graphqlClient.setHeader("x-services-app-id", "");
   }
 
   public resetHeaderAppAccessToken(): void {
-    this.graphqlClient = this.graphqlClient.setHeader("x-smp-app-access", "");
+    this.graphqlClient = this.graphqlClient.setHeader("x-services-app-access", "");
   }
 
   public resetHeadersForApplication(): void {
