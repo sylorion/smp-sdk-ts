@@ -131,7 +131,7 @@ export class AuthTokenManager {
     if (!refreshToken) {
       throw new Error('No user refresh token available');
     } else {
-      logger.info(`Refresh Token USED ${Date.now()}: ${refreshToken}`);
+      logger.info(`Refresh Token USED ${Date.now().toLocaleString()}: ${refreshToken}\n\n`);
     }
 
     const response = await this.apiClient.query<TokenDataResponse>(MUTATION_REFRESH_USER_TOKEN, {refreshToken});
@@ -142,7 +142,7 @@ export class AuthTokenManager {
 
     this.userTokenStorage.saveAccessToken(accessToken);
     this.apiClient.updateHeaderAppAccessToken(accessToken);
-    logger.info(`Refresh User token, new token: ${accessToken}`);
+    logger.info(`Refresh User token, new token: ${response}`);
     this.userTokenExpiresAt = Date.now() + expiresInMilli;
     this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
   }
