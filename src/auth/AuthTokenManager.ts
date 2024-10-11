@@ -51,22 +51,23 @@ export class AuthTokenManager {
     return now >= this.appTokenExpiresAt;
   }
 
-  public async authenticateApp(appId: string, appSecret: string): Promise<TokenDataResponse> { 
+  public async authenticateApp(appId: string, appSecret: string): Promise<AppLogIn> { 
     try {
       const appLogin = { appId: appId, appSecret: appSecret };
-      const response = await this.apiClient.query<TokenDataResponse>(MUTATION_AUTH_APP, appLogin);
+      const response = await this.apiClient.query<AppLoginResponse>(MUTATION_AUTH_APP, { appLoginInput: appLogin });
 
-      const { accessToken, refreshToken, expiresIn } = response;
-      this.userTokenStorage.saveRefreshToken(refreshToken!);
-      this.userTokenStorage.saveAccessToken(accessToken);
+      const accessToken = response.authenticateApp.accessToken;
+      const refreshToken = response.authenticateApp.refreshToken;
+      const expiresInMilli = 1000 * response.authenticateApp.accessValidityDuration;
+      this.appTokenStorage.saveRefreshToken(refreshToken);
+      this.appTokenStorage.saveAccessToken(accessToken);
 
-      const expiresInMilli  = expiresIn * 1000;
       const refreshDuration = this.configManager.appAccessDuration < expiresInMilli ? 
       this.configManager.appAccessDuration : expiresInMilli;
 
-      this.userTokenExpiresAt = Date.now() + expiresInMilli;
-      this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
-      return response;
+      this.appTokenExpiresAt = Date.now() + expiresInMilli;
+      this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.AppKind);
+      return response.authenticateApp;
     } catch (error) {
       throw ErrorHandler.handleError(error, "APP_AUTH_FAILED");
     }
@@ -74,7 +75,7 @@ export class AuthTokenManager {
 
   public async authenticateUser(username: string, password: string): Promise<LogIn> { 
     try {
-      const response = await this.apiClient.query<LoginResponse>(MUTATION_AUTH_USER, {loginInput: { email: username, password } });
+      const response = await this.apiClient.query<LoginResponse>(MUTATION_AUTH_USER, { loginInput: { email: username, password } });
       // const { accessToken, refreshToken, accessValidityDuration } = response.user;
       const accessToken = response.login.accessToken;
       const refreshToken = response.login.refreshToken;

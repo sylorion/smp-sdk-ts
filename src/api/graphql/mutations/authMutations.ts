@@ -1,9 +1,31 @@
 
 export const MUTATION_AUTH_APP = /* GraphQL */`
-  mutation AuthenticateApp($appId: String!, $appSecret: String!) {
-    authenticateApp(appId: $appId, appSecret: $appSecret) {
-      token
+  mutation AuthenticateApp($appLoginInput: AppLoginInput!) {
+    authenticateApp(appLoginInput: $appLoginInput) {
+      accessToken
       refreshToken
+      accessValidityDuration
+      refreshValidityDuration
+      app {
+        applicationID
+        uniqRef
+        slug
+        authKey
+        authID
+        description
+        name
+        email
+        logo
+        url
+        plan
+        isOfficialApp
+        appConfiguration
+        developerID
+        authorID
+        state
+        createdAt
+        updatedAt
+      }
     }
   }
 `;

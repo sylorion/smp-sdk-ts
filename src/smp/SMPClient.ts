@@ -25,7 +25,7 @@ export class SMPClient {
     this.authTokenManager = new AuthTokenManager(this.configManager, this.httpApiClient);
     this.httpApiClient.updateHeaderAppID(this.configManager.appId);
     this.httpApiClient.updateHeaderAppSecret(this.configManager.appSecret);
-    this.httpApiClient.updateHeaderAppAccessToken(this.configManager.appAccessToken);
+    this.httpApiClient.updateHeaderAppAccessToken("");
     if (this.configManager.wsEnabled) {
       this.initWebSocket();
     }
@@ -66,7 +66,7 @@ export class SMPClient {
     try {
       return await this.authTokenManager.getAppAccessToken();
     } catch (error) {
-      ErrorHandler.handleError(error, "APP_RETRIEVED_ACCES_TOKEN_FAILED");
+      return "";
     }
   }
 

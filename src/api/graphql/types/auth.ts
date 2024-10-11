@@ -56,7 +56,7 @@ type LogoutResponse = {
 
 
 type AppLoginResponse = {
-  login: LogIn,
+  authenticateApp: AppLogIn,
 }
 
 type AppLogIn = {
@@ -70,15 +70,22 @@ type AppLogIn = {
 
 
 type AppLoggedIn = {
-  userID        : number,
+  applicationID : number,
   uniqRef       : string,
   slug          : string,
-  developerID   : string,
-  developerEmail: string,
-  plan          : string, 
-  lastLogin     : Date, 
-  state         : string,
-  createdAt?    : Date,
-  updatedAt     : Date, 
+  authKey?       : string,
+  authID?        : string,
+  description?   : string,
+  name?          : string,
+  email?         : string,
+  logo?          : string,
+  url?           : string,
+  plan?          : string,
+  isOfficialApp? : Boolean,
+  appConfiguration? : string,
+  developerID?   : number,
+  authorID?      : number,
+  state         : ObjectStatus,
+  createdAt     : Date,
+  updatedAt     : Date,  
 }
-
