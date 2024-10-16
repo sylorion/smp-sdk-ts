@@ -1,7 +1,7 @@
 
 export const MUTATION_AUTH_APP = /* GraphQL */`
   mutation AuthenticateApp($appLoginInput: AppLoginInput!) {
-    authenticateApp(appLoginInput: $appLoginInput) {
+    authenticateApp(input: $appLoginInput) {
       accessToken
       refreshToken
       accessValidityDuration

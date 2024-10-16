@@ -1,12 +1,12 @@
 
-import { APIClient } from "../api/APIClient.js"; 
-import { AuthTokenManager } from "../auth/AuthTokenManager.js";
-import { ErrorHandler } from "../utils/ErrorHandler.js";
-import { logger } from '../utils/Logger.js';
-import { i18n } from '../i18n/index.js'; 
-import { SMPClientOptions } from "../config/SMPConfig.js";
-import { ConfigManager } from "../config/ConfigManager.js";
-import { Persistence, PersistenceKind } from "../config/Persistence.js";
+import { APIClient } from "./api/APIClient.js"; 
+import { AuthTokenManager } from "./auth/AuthTokenManager.js";
+import { ErrorHandler } from "./utils/ErrorHandler.js";
+import { logger } from './utils/Logger.js';
+import { i18n } from './i18n/index.js'; 
+import { SMPClientOptions } from "./config/SMPConfig.js";
+import { ConfigManager } from "./config/ConfigManager.js";
+import { Persistence, PersistenceKind } from "./config/Persistence.js";
 import { AxiosRequestConfig } from "axios";
 import { GraphQLClient, ClientError } from 'graphql-request'; 
 export class SMPClient {
@@ -179,8 +179,10 @@ export class SMPClient {
     console.log("  AuthToken: ", this.authTokenManager);
     console.log("  Persistence: ", this.configManager.persistence);
     console.log("  Default Language: ", this.configManager.defaultLanguage);
-
   }
   
+  clean(){
+    
+  }
 }
 

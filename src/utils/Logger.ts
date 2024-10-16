@@ -1,42 +1,28 @@
-import winston from 'winston';
-import DailyRotateFile from 'winston-daily-rotate-file';
+// import {createLogger, transports, format} from 'winston'; 
 
-const { combine, timestamp, printf, errors } = winston.format;
+// const logger = createLogger({
+//   level: 'info',
+//   format: format.combine(
+//     format.timestamp(),
+//     format.errors({ stack: true }),
+//     format.label({ label: 'SKD' }),
+//     format.printf(info => `${info.timestamp} [${info.label}] ${info.level}: ${info.stack || info.message}`),
+//   ),
+//   transports: [
+//     new transports.Console(),
+//   ],
+// });
 
-// Définir le format de log personnalisé
-const logFormat = printf(({ level, message, timestamp, stack }) => {
-  return `${timestamp} [${level}]: ${stack || message}`;
-});
-
-// Créer un logger Winston avec rotation des fichiers
-const logger = winston.createLogger({
-  level: 'info', // Niveau par défaut (debug, info, warn, error)
-  format: combine(
-    timestamp(),
-    errors({ stack: true }), // Capture la stack trace pour les erreurs
-    logFormat
-  ),
-  transports: [
-    new winston.transports.Console({
-      format: logFormat, //winston.format.simple(),
-    }),
-    new DailyRotateFile({
-      dirname: 'logs', // Répertoire pour les logs
-      filename: 'smp-application-%DATE%.log',
-      datePattern: 'YYYY-MM-DD',
-      maxFiles: '14d', // Garder les logs pendant 14 jours
-    }),
-  ],
-});
-
-// Capturer les exceptions non gérées
-logger.exceptions.handle(
-  new winston.transports.File({ filename: 'logs/exceptions.log' })
-);
-
-// Capturer les promesses rejetées non gérées
-logger.rejections.handle(
-  new winston.transports.File({ filename: 'logs/rejections.log' })
-);
+const logger  = {
+  info: (...args: any[]) => {
+    console.log(args);
+  },
+  error: (...args: any[]) => {
+    console.error(args);
+  },
+  warn: (...args: any[]) => {
+    console.warn(args);
+  },
+};
 
 export { logger };

@@ -42,10 +42,6 @@
   "dependencies": {
     "@graphql-codegen/typescript-graphql-request": "^6.2.0",
     "axios": "^1.7.5",
-    "intl-messageformat": "^10.5.14",
-    "smp-core-tools": "github:sylorion/smp-core-tools",
-    "whatwg-url": "^14.0.0",
-    "winston": "^3.14.2",
-    "winston-daily-rotate-file": "^5.0.0"
+    "intl-messageformat": "^10.5.14"
   }
 }
