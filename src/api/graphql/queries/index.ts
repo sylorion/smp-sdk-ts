@@ -1,2 +1,2 @@
-export { GET_SERVICE_BY_AUTHOR_ID } from "./servicesQueries.js";
+export { serviceQueries } from "./servicesQueries.js";
 export { statusByServices } from "./statusQueries.js";

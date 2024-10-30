@@ -10,7 +10,7 @@ export class ConfigManager {
   appId                 : string = "";
   appSecret             : string = "";
   apiUrl                : string = "";
-  graphqlUrl            : string = "";
+  graphqlUrl            : string = "https://dev-catalog.sh1.hidora.net/";
   defaultLanguage       : SupportedLang = defaultLanguage;
   persistence           : PersistenceKind = Persistence.MemoryKind;
   rateLimits?           : RateLimitOptions;  // Limit de frequentes d'appel de l'API
