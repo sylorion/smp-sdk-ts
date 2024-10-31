@@ -6,14 +6,14 @@ export const MUTATION_AUTH_APP = /* GraphQL */`
       refreshToken
       accessValidityDuration
       refreshValidityDuration
-      app {
+      application {
         applicationID
         uniqRef
         slug
         authKey
         authID
         description
-        name
+        title
         email
         logo
         url
