@@ -53,7 +53,7 @@ export class AuthTokenManager {
 
   public async authenticateApp(appId: string, appSecret: string): Promise<AppLogIn> { 
     try {
-      const appLogin = { appId: appId, appSecret: appSecret };
+      const appLogin = { appId: appId, appKey: appSecret };
       const response = await this.apiClient.query<AppLoginResponse>(MUTATION_AUTH_APP, { appLoginInput: appLogin });
 
       const accessToken = response.authenticateApp.accessToken;
