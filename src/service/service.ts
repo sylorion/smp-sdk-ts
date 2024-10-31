@@ -20,8 +20,10 @@ export class Service {
       filter,
     };
 
-    const response = await this.client.query(query, variables) as { data: { services: any } };
-    return response.data.services;
+    const response = await this.client.query(query, variables) as {
+        services: any; data: { services: any } 
+};
+    return response.services;
   }
 
   async getById(serviceID: string) {
