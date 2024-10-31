@@ -11,7 +11,7 @@ export class Service {
   }
 
   async list(pagination?: any, sort?: any, filter?: any) {
-    console.log("Service.list() OK"); 
+    console.log("Service.list()"); 
 
     const query = serviceQueries.GET_SERVICES;
     const variables = {
