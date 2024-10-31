@@ -1,37 +1,50 @@
-// smp-sdk-ts/src/service/service.ts
+// smp-sdk-ts/src/controllers/serviceController.ts
 
-import { SMPClient } from './../SMPClient';
-import { serviceQueries } from './../api/graphql/queries/servicesQueries';
+import { QueriesBuilder } from '../api/graphql/queriesBuilder';
+import { serviceQueries } from '../api/graphql/queries/servicesQueries';
 
 export class Service {
-  private client: SMPClient;
+  private queryBuilder: QueriesBuilder;
 
-  constructor(client: SMPClient) {
-    this.client = client;
+  constructor(queryBuilder: QueriesBuilder) {
+    this.queryBuilder = queryBuilder;
   }
 
   async list(pagination?: any, sort?: any, filter?: any) {
-    console.log("Service.list()"); 
-
-    const query = serviceQueries.GET_SERVICES;
-    const variables = {
-      pagination,
-      sort,
-      filter,
-    };
-
-    const response = await this.client.query(query, variables) as {
-        services: any; data: { services: any } 
-};
-    return response.services;
+    return await this.queryBuilder.list(serviceQueries.GET_SERVICES, pagination, sort, filter);
   }
 
   async getById(serviceID: string) {
-    const query = serviceQueries.GET_SERVICE_BY_ID;
-    const variables = { serviceID };
-    const response = await this.client.query(query, variables) as { data: { serviceByID: any } };
-    return response.data.serviceByID;
+    return await this.queryBuilder.getById(serviceQueries.GET_SERVICE_BY_ID, serviceID);
   }
 
+  async getByIDs(serviceIDs: string[]) {
+    return await this.queryBuilder.getByIDs(serviceQueries.GET_SERVICES_BY_IDS, serviceIDs);
+  }
+
+  async getByUniqRef(uniqRef: string) {
+    return await this.queryBuilder.getByUniqRef(serviceQueries.GET_SERVICE_BY_UNIQ_REF, uniqRef);
+  }
+
+  async getBySlug(slug: string) {
+    return await this.queryBuilder.getBySlug(serviceQueries.GET_SERVICE_BY_SLUG, slug);
+  }
+
+  async getBySlugs(slugs: string[]) {
+    return await this.queryBuilder.getBySlugs(serviceQueries.GET_SERVICES_BY_SLUGS, slugs);
+  }
+
+  async listByOrganization(input: any) {
+    const variables = { input };
+    const response = await this.queryBuilder.client.query(serviceQueries.LIST_SERVICES_BY_ORGANIZATION, variables);
+    return response.data.listServicesByOrganization;
+  }
+
+  async search(input: any) {
+    const variables = { input };
+    const response = await this.queryBuilder.client.query(serviceQueries.SEARCH_SERVICES, variables);
+    return response.data.searchServices;
+  }
 }
- 
+
+

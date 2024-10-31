@@ -9,11 +9,13 @@ import { ConfigManager } from "./config/ConfigManager.js";
 import { Persistence, PersistenceKind } from "./config/Persistence.js";
 import { AxiosRequestConfig } from "axios";
 import { GraphQLClient, ClientError } from 'graphql-request'; 
-import { Service } from "./service/service.js";
+import { Service } from "./controllers/serviceController.js";
+import { QueriesBuilder } from "./api/graphql/queriesBuilder.js";
 export class SMPClient {
   public httpApiClient: APIClient; 
   public authTokenManager: AuthTokenManager;
   public service: Service;
+  public queriesBuilder: QueriesBuilder;
 
   // public notificationManager: AuthTokenManager;
   private internalDB: Persistence;
@@ -22,8 +24,9 @@ export class SMPClient {
   constructor(options: SMPClientOptions) {
     this.internalDB = new Persistence(Persistence.MemoryKind);
     this.configManager = new ConfigManager(options)
-    this.service = new Service(this);
     this.httpApiClient    = new APIClient(this.configManager);
+    this.service = new Service(this.httpApiClient);
+    this.queriesBuilder = new QueriesBuilder(this.httpApiClient);
     this.authTokenManager = new AuthTokenManager(this.configManager, this.httpApiClient);
     this.httpApiClient.updateHeaderAppID(this.configManager.appId);
     this.httpApiClient.updateHeaderAppSecret(this.configManager.appSecret);
