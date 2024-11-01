@@ -11,7 +11,7 @@ export const MUTATION_AUTH_APP = /* GraphQL */`
         uniqRef
         slug
         authKey
-        authID
+        appID
         description
         title
         email
