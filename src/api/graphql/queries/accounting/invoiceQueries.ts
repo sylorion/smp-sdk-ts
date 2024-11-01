@@ -3,7 +3,7 @@
 const invoiceQueries = {
     // QUERY TO GET AN INVOICE BY ITS UNIQUE ID
     GET_INVOICE_BY_ID: `
-      query GetInvoiceByID($invoiceID: ID!) {
+      query invoice($invoiceID: ID!) {
         invoice(invoiceID: $invoiceID) {
           invoiceID
           uniqRef
@@ -28,7 +28,7 @@ const invoiceQueries = {
   
     // QUERY TO GET MULTIPLE INVOICES BY AN ARRAY OF INVOICE IDS
     GET_INVOICES_BY_IDS: `
-      query GetInvoicesByIDs($invoiceIDs: [ID!]!) {
+      query invoiceByIDs($invoiceIDs: [ID!]!) {
         invoicesByIDs(invoiceIDs: $invoiceIDs) {
           invoiceID
           uniqRef
@@ -53,7 +53,7 @@ const invoiceQueries = {
   
     // QUERY TO GET AN INVOICE BY ITS UNIQUE REFERENCE
     GET_INVOICE_BY_UNIQ_REF: `
-      query GetInvoiceByUniqRef($uniqRef: String!) {
+      query invoiceByUniqRef($uniqRef: String!) {
         invoiceByUniqRef(uniqRef: $uniqRef) {
           invoiceID
           uniqRef
@@ -78,7 +78,7 @@ const invoiceQueries = {
   
     // QUERY TO GET AN INVOICE BY ITS SLUG
     GET_INVOICE_BY_SLUG: `
-      query GetInvoiceBySlug($slug: String!) {
+      query invoiceBySlug($slug: String!) {
         invoiceBySlug(slug: $slug) {
           invoiceID
           uniqRef
@@ -103,7 +103,7 @@ const invoiceQueries = {
   
     // QUERY TO GET MULTIPLE INVOICES BY SLUGS
     GET_INVOICES_BY_SLUGS: `
-      query GetInvoicesBySlugs($slugs: [String!]!) {
+      query invoiceBySlugs($slugs: [String!]!) {
         invoicesBySlugs(slugs: $slugs) {
           invoiceID
           uniqRef
@@ -128,7 +128,7 @@ const invoiceQueries = {
   
     // QUERY TO LIST INVOICES WITH OPTIONAL PAGINATION, SORTING, AND FILTERING
     GET_INVOICES: `
-      query GetInvoices($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
+      query invoices($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
         invoices(pagination: $pagination, sort: $sort, filter: $filter) {
           invoiceID
           uniqRef

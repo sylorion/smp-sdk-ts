@@ -3,7 +3,7 @@
 const transactionQueries = {
     // QUERY TO GET A LIST OF TRANSACTIONS WITH OPTIONAL PAGINATION, SORTING, AND FILTERING
     GET_TRANSACTIONS: `
-      query GetTransactions($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
+      query transactions($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
         transactions(pagination: $pagination, sort: $sort, filter: $filter) {
           transactionID
           uniqRef
@@ -24,7 +24,7 @@ const transactionQueries = {
   
     // QUERY TO GET A SINGLE TRANSACTION BY ITS UNIQUE ID
     GET_TRANSACTION_BY_ID: `
-      query GetTransactionByID($transactionID: ID!) {
+      query transaction($transactionID: ID!) {
         transactionByID(transactionID: $transactionID) {
           transactionID
           uniqRef
@@ -45,7 +45,7 @@ const transactionQueries = {
   
     // QUERY TO GET MULTIPLE TRANSACTIONS BY AN ARRAY OF TRANSACTION IDS
     GET_TRANSACTIONS_BY_IDS: `
-      query GetTransactionsByIDs($transactionIDs: [ID!]!) {
+      query transactionsByIDs($transactionIDs: [ID!]!) {
         transactionsByIDs(transactionIDs: $transactionIDs) {
           transactionID
           uniqRef
@@ -66,7 +66,7 @@ const transactionQueries = {
   
     // QUERY TO GET A TRANSACTION BY ITS UNIQUE REFERENCE
     GET_TRANSACTION_BY_UNIQ_REF: `
-      query GetTransactionByUniqRef($uniqRef: String!) {
+      query transactionByUniqRef($uniqRef: String!) {
         transactionByUniqRef(uniqRef: $uniqRef) {
           transactionID
           uniqRef
@@ -87,7 +87,7 @@ const transactionQueries = {
   
     // QUERY TO GET A TRANSACTION BY ITS SLUG
     GET_TRANSACTION_BY_SLUG: `
-      query GetTransactionBySlug($slug: String!) {
+      query transactionBySlug($slug: String!) {
         transactionBySlug(slug: $slug) {
           transactionID
           uniqRef
@@ -108,7 +108,7 @@ const transactionQueries = {
   
     // QUERY TO GET MULTIPLE TRANSACTIONS BY SLUGS
     GET_TRANSACTIONS_BY_SLUGS: `
-      query GetTransactionsBySlugs($slugs: [String!]!) {
+      query transactionsBySlugs($slugs: [String!]!) {
         transactionsBySlugs(slugs: $slugs) {
           transactionID
           uniqRef

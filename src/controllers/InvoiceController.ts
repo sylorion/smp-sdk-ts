@@ -27,6 +27,7 @@ export class Invoice {
    * @returns A list of invoices.
    */
   async list(pagination?: any, sort?: any, filter?: any) {
+
     const query = invoiceQueries.GET_INVOICES;
     const variables = { pagination, sort, filter };
     const response = await this.client.query(query, variables) as { data: { invoices: any[] } };

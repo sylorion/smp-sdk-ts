@@ -20,7 +20,6 @@ export class SMPClient {
   public invoice: Invoice;
   public estimateAsset: EstimateAsset;
 
-
   // public notificationManager: AuthTokenManager;
   private internalDB: Persistence;
   private wsClient?: WebSocket;
