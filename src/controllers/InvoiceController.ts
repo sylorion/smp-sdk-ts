@@ -29,7 +29,7 @@ export class Invoice {
   async list(pagination?: any, sort?: any, filter?: any) {
     const query = invoiceQueries.GET_INVOICES;
     const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables);
+    const response = await this.client.query(query, variables) as { data: { invoices: any[] } };
     return response.data.invoices;
   }
 
@@ -41,7 +41,7 @@ export class Invoice {
   async getById(invoiceID: string) {
     const query = invoiceQueries.GET_INVOICE_BY_ID;
     const variables = { invoiceID };
-    const response = await this.client.query(query, variables);
+    const response = await this.client.query(query, variables) as { data: { invoiceByID: any } };
     return response.data.invoiceByID;
   }
 
@@ -53,7 +53,7 @@ export class Invoice {
   async getByIDs(invoiceIDs: string[]) {
     const query = invoiceQueries.GET_INVOICES_BY_IDS;
     const variables = { invoiceIDs };
-    const response = await this.client.query(query, variables);
+    const response = await this.client.query(query, variables) as { data: { invoicesByIDs: any[] } };
     return response.data.invoicesByIDs;
   }
 
@@ -65,7 +65,7 @@ export class Invoice {
   async getByUniqRef(uniqRef: string) {
     const query = invoiceQueries.GET_INVOICE_BY_UNIQ_REF;
     const variables = { uniqRef };
-    const response = await this.client.query(query, variables);
+    const response = await this.client.query(query, variables) as { data: { invoiceByUniqRef: any } };
     return response.data.invoiceByUniqRef;
   }
 
@@ -77,7 +77,7 @@ export class Invoice {
   async getBySlug(slug: string) {
     const query = invoiceQueries.GET_INVOICE_BY_SLUG;
     const variables = { slug };
-    const response = await this.client.query(query, variables);
+    const response = await this.client.query(query, variables) as { data: { invoiceBySlug: any } };
     return response.data.invoiceBySlug;
   }
 
@@ -89,7 +89,7 @@ export class Invoice {
   async getBySlugs(slugs: string[]) {
     const query = invoiceQueries.GET_INVOICES_BY_SLUGS;
     const variables = { slugs };
-    const response = await this.client.query(query, variables);
+    const response = await this.client.query(query, variables) as { data: { invoicesBySlugs: any[] } };
     return response.data.invoicesBySlugs;
   }
 }
