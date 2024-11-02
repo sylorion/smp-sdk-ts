@@ -32,7 +32,7 @@ const estimateQueries = {
   
     GET_ESTIMATE_BY_ID: `
       query GetEstimateByID($estimateID: String!) {
-        estimateByID(estimateID: $estimateID) {
+        estimate(estimateID: $estimateID) {
           estimateID
           uniqRef
           slug
