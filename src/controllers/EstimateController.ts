@@ -20,8 +20,8 @@ export class Estimate {
   async list(pagination?: any, sort?: any, filter?: any): Promise<any[]> {
     const query = estimateQueries.GET_ESTIMATES;
     const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as { data: { estimates: any[] } };
-    return response.data.estimates;
+    const response = await this.client.query(query, variables) as  { estimates: any[] };
+    return response.estimates;
   }
 
   /**
@@ -30,8 +30,8 @@ export class Estimate {
   async getById(estimateID: string): Promise<any> {
     const query = estimateQueries.GET_ESTIMATE_BY_ID;
     const variables = { estimateID };
-    const response = await this.client.query(query, variables) as { data: { estimateByID: any } };
-    return response.data.estimateByID;
+    const response = await this.client.query(query, variables) as  { estimateByID: any } ;
+    return response.estimateByID;
   }
 
   /**

@@ -3,7 +3,7 @@
 const estimateAssetQueries = {
     // QUERY TO GET A LIST OF ESTIMATE ASSETS WITH OPTIONAL PAGINATION, SORTING, AND FILTERING
     GET_ESTIMATE_ASSETS: `
-      query estimateAssets($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
+      query GetEstimateAssets($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
         estimateAssets(pagination: $pagination, sort: $sort, filter: $filter) {
           estimateAssetID
           uniqRef
@@ -24,7 +24,7 @@ const estimateAssetQueries = {
   
     // QUERY TO GET A SINGLE ESTIMATE ASSET BY ITS UNIQUE ID
     GET_ESTIMATE_ASSET_BY_ID: `
-      query estimateAssetByID($estimateAssetID: ID!) {
+      query GetEstimateAssetByID($estimateAssetID: ID!) {
         estimateAssetByID(estimateAssetID: $estimateAssetID) {
           estimateAssetID
           uniqRef
@@ -45,7 +45,7 @@ const estimateAssetQueries = {
   
     // QUERY TO GET MULTIPLE ESTIMATE ASSETS BY AN ARRAY OF ESTIMATE ASSET IDS
     GET_ESTIMATE_ASSETS_BY_IDS: `
-      query estimateAssetsByIDs($estimateAssetIDs: [ID!]!) {
+      query GetEstimateAssetsByIDs($estimateAssetIDs: [ID!]!) {
         estimateAssetsByIDs(estimateAssetIDs: $estimateAssetIDs) {
           estimateAssetID
           uniqRef
@@ -66,7 +66,7 @@ const estimateAssetQueries = {
   
     // QUERY TO GET AN ESTIMATE ASSET BY ITS UNIQUE REFERENCE
     GET_ESTIMATE_ASSET_BY_UNIQ_REF: `
-      query estimateAssetByUniqRef($uniqRef: String!) {
+      query GetEstimateAssetByUniqRef($uniqRef: String!) {
         estimateAssetByUniqRef(uniqRef: $uniqRef) {
           estimateAssetID
           uniqRef
@@ -87,7 +87,7 @@ const estimateAssetQueries = {
   
     // QUERY TO GET AN ESTIMATE ASSET BY ITS SLUG
     GET_ESTIMATE_ASSET_BY_SLUG: `
-      query estimateAssetBySlug($slug: String!) {
+      query GetEstimateAssetBySlug($slug: String!) {
         estimateAssetBySlug(slug: $slug) {
           estimateAssetID
           uniqRef
@@ -108,7 +108,7 @@ const estimateAssetQueries = {
   
     // QUERY TO GET MULTIPLE ESTIMATE ASSETS BY SLUGS
     GET_ESTIMATE_ASSETS_BY_SLUGS: `
-      query estimateAssetsBySlugs($slugs: [String!]!) {
+      query GetEstimateAssetsBySlugs($slugs: [String!]!) {
         estimateAssetsBySlugs(slugs: $slugs) {
           estimateAssetID
           uniqRef

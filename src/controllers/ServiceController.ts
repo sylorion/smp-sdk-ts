@@ -29,8 +29,8 @@ export class Service {
     console.log("Service.list()");
     const query = serviceQueries.GET_SERVICES;
     const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as { data: { services: any } };
-    return response.data.services;
+    const response = await this.client.query(query, variables) as { services: any } ;
+    return response.services;
   }
 
   /**
@@ -41,8 +41,8 @@ export class Service {
   async getById(serviceID: string) {
     const query = serviceQueries.GET_SERVICE_BY_ID;
     const variables = { serviceID };
-    const response = await this.client.query(query, variables) as { data: { serviceByID: any } };
-    return response.data.serviceByID;
+    const response = await this.client.query(query, variables) as  { serviceByID: any } ;
+    return response.serviceByID;
   }
 
   /**
@@ -53,8 +53,8 @@ export class Service {
   async getByAuthorID(authorID: string) {
     const query = serviceQueries.GET_SERVICE_BY_AUTHOR_ID;
     const variables = { authorID };
-    const response = await this.client.query(query, variables) as { data: { servicesByUserId: any } };
-    return response.data.servicesByUserId;
+    const response = await this.client.query(query, variables) as  { servicesByUserId: any } ;
+    return response.servicesByUserId;
   }
 
   /**

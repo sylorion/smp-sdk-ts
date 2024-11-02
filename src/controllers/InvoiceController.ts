@@ -30,8 +30,8 @@ export class Invoice {
 
     const query = invoiceQueries.GET_INVOICES;
     const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as { data: { invoices: any[] } };
-    return response.data.invoices;
+    const response = await this.client.query(query, variables) as   { invoices: any[]  };
+    return response.invoices;
   }
 
   /**
@@ -42,8 +42,8 @@ export class Invoice {
   async getById(invoiceID: string) {
     const query = invoiceQueries.GET_INVOICE_BY_ID;
     const variables = { invoiceID };
-    const response = await this.client.query(query, variables) as { data: { invoiceByID: any } };
-    return response.data.invoiceByID;
+    const response = await this.client.query(query, variables) as  { invoiceByID: any } ;
+    return response.invoiceByID;
   }
 
   /**

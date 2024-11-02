@@ -2,7 +2,7 @@
 
 const estimateQueries = {
     GET_ESTIMATES: `
-      query estimates($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
+      query GetEstimates($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
         estimates(pagination: $pagination, sort: $sort, filter: $filter) {
           estimateID
           uniqRef
@@ -31,7 +31,7 @@ const estimateQueries = {
     `,
   
     GET_ESTIMATE_BY_ID: `
-      query estimate($estimateID: String!) {
+      query GetEstimateByID($estimateID: String!) {
         estimateByID(estimateID: $estimateID) {
           estimateID
           uniqRef
@@ -61,7 +61,7 @@ const estimateQueries = {
     `,
   
     GET_ESTIMATE_BY_UNIQ_REF: `
-      query estimateByUniqRef($uniqRef: String!) {
+      query GetEstimateByUniqRef($uniqRef: String!) {
         estimateByUniqRef(uniqRef: $uniqRef) {
           estimateID
           uniqRef
@@ -91,7 +91,7 @@ const estimateQueries = {
     `,
   
     GET_ESTIMATE_BY_SLUG: `
-      query estimateBySlug($slug: String!) {
+      query GetEstimateBySlug($slug: String!) {
         estimateBySlug(slug: $slug) {
           estimateID
           uniqRef
@@ -121,7 +121,7 @@ const estimateQueries = {
     `,
   
     GET_ESTIMATES_BY_IDS: `
-      query estimatesByIDs($estimateIDs: [String!]!) {
+      query GetEstimatesByIDs($estimateIDs: [String!]!) {
         estimatesByIDs(estimateIDs: $estimateIDs) {
           estimateID
           uniqRef
@@ -151,7 +151,7 @@ const estimateQueries = {
     `,
   
     GET_ESTIMATES_BY_SLUGS: `
-      query estimatesBySlugs($slugs: [String!]!) {
+      query GetEstimatesBySlugs($slugs: [String!]!) {
         estimatesBySlugs(slugs: $slugs) {
           estimateID
           uniqRef
