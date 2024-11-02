@@ -31,33 +31,34 @@ const estimateQueries = {
     `,
   
     GET_ESTIMATE_BY_ID: `
-      query GetEstimateByID($estimateID: String!) {
-        estimate(estimateID: $estimateID) {
-          estimateID
-          uniqRef
-          slug
-          authorID
-          operatorUserID
-          buyerOrganizationID
-          sellerOrganizationID
-          serviceID
-          expirationDueDate
-          expirationTimeLeft
-          referencePrice
-          previewPrice
-          proposedPrice
-          comment
-          negociatedPrice
-          discountID
-          propositionCount
-          lastProposition
-          stage
-          state
-          createdAt
-          updatedAt
-          deletedAt
-        }
-      }
+      query Estimate($estimateId: ID!) {
+  estimate(estimateID: $estimateId) {
+    estimateID
+    uniqRef
+    slug
+    operatorUserID
+    buyerOrganizationID
+    sellerOrganizationID
+    serviceID
+    expirationDueDate
+    expirationTimeLeft
+    referencePrice
+    previewPrice
+    authorID
+    proposedPrice
+    comment
+    negociatedPrice
+    discountID
+    details
+    propositionCount
+    lastProposition
+    stage
+    state
+    createdAt
+    updatedAt
+    deletedAt
+  }
+}
     `,
   
     GET_ESTIMATE_BY_UNIQ_REF: `

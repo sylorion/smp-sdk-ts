@@ -12,7 +12,7 @@
     }
   `,
   GET_SERVICE_BY_ID: `
-    query GetServiceByID($serviceID: String!) {
+    query GetServiceByID($serviceID: ID!) {
       serviceByID(serviceID: $serviceID) {
         serviceID
         uniqRef
