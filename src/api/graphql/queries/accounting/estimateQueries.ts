@@ -31,8 +31,8 @@ const estimateQueries = {
     `,
   
     GET_ESTIMATE_BY_ID: `
-      query Estimate($estimateId: ID!) {
-  estimate(estimateID: $estimateId) {
+      query Estimate($estimateID: ID!) {
+  estimate(estimateID: $estimateID) {
     estimateID
     uniqRef
     slug

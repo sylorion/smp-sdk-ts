@@ -41,8 +41,8 @@ export class Service {
   async getById(serviceID: number) {
     const query = serviceQueries.GET_SERVICE_BY_ID;
     const variables = { serviceID };
-    const response = await this.client.query(query, variables) as  { serviceByID: any } ;
-    return response.serviceByID;
+    const response = await this.client.query(query, variables) as  { service: any } ;
+    return response.service;
   }
 
   /**

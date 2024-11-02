@@ -29,8 +29,8 @@ export class Transaction {
   async list(pagination?: any, sort?: any, filter?: any): Promise<any[]> {
     const query = transactionQueries.GET_TRANSACTIONS;
     const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as { data: { transactions: any[] } };
-    return response.data.transactions;
+    const response = await this.client.query(query, variables) as  { transactions: any[] };
+    return response.transactions;
   }
 
   /**
@@ -41,8 +41,8 @@ export class Transaction {
   async getById(transactionID: string): Promise<any> {
     const query = transactionQueries.GET_TRANSACTION_BY_ID;
     const variables = { transactionID };
-    const response = await this.client.query(query, variables) as { data: { transactionByID: any } };
-    return response.data.transactionByID;
+    const response = await this.client.query(query, variables) as { data: { transaction: any } };
+    return response.data.transaction;
   }
 
   /**

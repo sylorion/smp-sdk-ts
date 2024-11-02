@@ -30,8 +30,8 @@ export class Estimate {
   async getById(estimateID: number): Promise<any> {
     const query = estimateQueries.GET_ESTIMATE_BY_ID;
     const variables = { estimateID };
-    const response = await this.client.query(query, variables) as  { estimateByID: any } ;
-    return response.estimateByID;
+    const response = await this.client.query(query, variables) as  { estimate: any } ;
+    return response.estimate;
   }
 
   /**
