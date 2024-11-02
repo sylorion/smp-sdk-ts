@@ -39,7 +39,7 @@ export class Invoice {
    * @param invoiceID - The ID of the invoice to retrieve.
    * @returns The details of the invoice.
    */
-  async getById(invoiceID: string) {
+  async getById(invoiceID: number) {
     const query = invoiceQueries.GET_INVOICE_BY_ID;
     const variables = { invoiceID };
     const response = await this.client.query(query, variables) as  { invoiceByID: any } ;
