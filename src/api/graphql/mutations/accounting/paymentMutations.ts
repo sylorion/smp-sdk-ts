@@ -62,7 +62,22 @@ const paymentMutations = {
           deletedAt
         }
       }
+    `,
+// MUTATION TO UPDATE THE STAGE OF AN ESTIMATE FOR PAYMENT
+
+    UPDATE_ESTIMATE_STAGE: `
+      mutation UpdateEstimateStage($input: UpdateEstimateStageInput!) {
+        updateEstimateStage(input: $input) {
+          estimateID
+          invoiceID
+          message
+          code
+        }
+      }
     `
+
+  
 };
+
 
 export { paymentMutations };
