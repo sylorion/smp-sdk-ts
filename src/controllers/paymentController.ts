@@ -7,8 +7,8 @@ import { paymentMutations } from '../api/graphql/mutations/accounting/paymentMut
 // Types d'input pour les mutations de paiement
 
  interface CreatePaymentIntentInput {
-    invoiceID: string;
-    customerID: string;
+    invoiceID: number;
+    customerID: number;
   }
   
   export interface ProcessPaymentInput {

@@ -9,7 +9,7 @@ import { ConfigManager } from "./config/ConfigManager.js";
 import { Persistence, PersistenceKind } from "./config/Persistence.js";
 import { AxiosRequestConfig } from "axios";
 import { GraphQLClient, ClientError } from 'graphql-request'; 
-import { Service, EstimateAsset, Organization,Invoice, Estimate, SMPPayment, } from "./controllers/index.js";
+import { Service, EstimateAsset, Organization,Invoice, Estimate, SMPPayment } from "./controllers/index.js";
 export class SMPClient {
   public httpApiClient: APIClient; 
   public authTokenManager: AuthTokenManager;
@@ -28,7 +28,7 @@ export class SMPClient {
   private configManager: ConfigManager; 
   constructor(options: SMPClientOptions) { 
     this.internalDB = new Persistence(Persistence.MemoryKind); 
-    this.configManager = new ConfigManager(options) 
+    this.configManager = new ConfigManager(options)
     this.httpApiClient    = new APIClient(this.configManager);
 
     // [Class]
