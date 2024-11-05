@@ -13,7 +13,7 @@ import { paymentMutations } from '../api/graphql/mutations/accounting/paymentMut
   
   export interface ProcessPaymentInput {
     paymentIntentID: string;
-    invoiceID: string;
+    invoiceID: number;
   }
   
   export interface RefundPaymentInput {
