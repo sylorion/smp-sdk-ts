@@ -9,7 +9,7 @@ const paymentMutations = {
         }
       }
     `,
-
+  
     // MUTATION TO PROCESS A PAYMENT
     PROCESS_PAYMENT: `
       mutation ProcessPayment($input: ProcessPaymentInput!) {
@@ -18,7 +18,7 @@ const paymentMutations = {
         }
       }
     `,
-
+  
     // MUTATION TO REFUND A PAYMENT
     REFUND_PAYMENT: `
       mutation RefundPayment($input: RefundPaymentInput!) {
@@ -32,7 +32,7 @@ const paymentMutations = {
         }
       }
     `,
-
+  
     // MUTATION TO CREATE AN ESTIMATE FOR PAYMENT
     CREATE_ESTIMATE_FOR_PAYMENT: `
       mutation CreateEstimateForPayment($input: CreateEstimateForPaymentInput!) {
@@ -63,8 +63,8 @@ const paymentMutations = {
         }
       }
     `,
-// MUTATION TO UPDATE THE STAGE OF AN ESTIMATE FOR PAYMENT
-
+  
+    // MUTATION TO UPDATE THE STAGE OF AN ESTIMATE FOR PAYMENT
     UPDATE_ESTIMATE_STAGE: `
       mutation UpdateEstimateStage($input: UpdateEstimateStageInput!) {
         updateEstimateStage(input: $input) {
@@ -75,9 +75,7 @@ const paymentMutations = {
         }
       }
     `
-
+  };
   
-};
-
-
-export { paymentMutations };
+  export { paymentMutations };
+    
