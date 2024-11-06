@@ -49,7 +49,7 @@ const paymentMutations = {
           referencePrice
           previewPrice
           proposedPrice
-          commentaire
+          comment
           negociatedPrice
           discountID
           details
