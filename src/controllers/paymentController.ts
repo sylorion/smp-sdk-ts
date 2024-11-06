@@ -77,7 +77,7 @@ import { paymentMutations } from '../api/graphql/mutations/accounting/paymentMut
     referencePrice: number;
     previewPrice: number;
     proposedPrice: number;
-    commentaire: string;
+    comment: string;
     negociatedPrice: number;
     discountID: string;
     details: any;
