@@ -26,14 +26,15 @@ import { paymentMutations } from '../api/graphql/mutations/accounting/paymentMut
   }
   
   export interface CreateEstimateForPaymentInput {
-    authorID: string;
-    sellerOrganizationID: string;
+    authorID: number;
+    sellerOrganizationID: number;
     description: string;
     stage: string;
-    serviceID: string;
-    details: any;
+    serviceID: number;
+    details: [];
   }
-  
+
+
   // Types de réponse pour les mutations de paiement
   
   export interface PaymentIntentResponse {
