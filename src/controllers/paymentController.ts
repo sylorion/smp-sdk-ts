@@ -31,7 +31,7 @@ import { paymentMutations } from '../api/graphql/mutations/accounting/paymentMut
     description: string;
     stage: string;
     serviceID: number;
-    details: [];
+    details: [EstimateDetails];
   }
 
 
@@ -81,7 +81,7 @@ import { paymentMutations } from '../api/graphql/mutations/accounting/paymentMut
     comment: string;
     negociatedPrice: number;
     discountID: string;
-    details: any;
+    details:  EstimateDetails;
     propositionCount: number;
     lastProposition: string;
     stage: string;
@@ -91,8 +91,19 @@ import { paymentMutations } from '../api/graphql/mutations/accounting/paymentMut
     deletedAt?: string;
   }
   
+  interface AssetDetail {
+    assetID: string; 
+    quantity: number; 
+  }
+  interface EstimateDetails {
+  serviceID: string; // ID du service principal
+  authorID: string; 
+  sellerOrganizationID: string; 
+  details: AssetDetail[]; // Liste d'assets associés et leur quantité
+  description?: string;
+  stage?: string; 
+}
 
-  
   export class SMPPayment {
     private client: APIClient;
   
