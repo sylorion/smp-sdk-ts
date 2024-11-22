@@ -118,4 +118,15 @@ export const MUTATION_CREATE_USER = /* GraphQL */ `
       deletedAt
     }
   }
+  
 `;
+
+export const MUTATION_FORGOT_PASSWORD = /* GraphQL */ `
+ mutation CreateUser($email: String!) {
+  forgotPassword(email: $email) {
+    success
+    message
+    code
+  }
+}
+`; 
