@@ -1,0 +1,86 @@
+const serviceMutations = {
+    // MUTATION TO CREATE A SERVICE
+    CREATE_SERVICE: `
+      mutation CreateService($input: CreateServiceInput!) {
+        createService(input: $input) {
+          serviceID
+          uniqRef
+          slug
+          authorID
+          title
+          description
+          mediaBannerID
+          termsAndConditionsID
+          parentServiceID
+          topicID
+          organizationID
+          locationID
+          paymentConfigID
+          price
+          legalVatPercent
+          lowerPrice
+          upperPrice
+          negotiable
+          perimeter
+          supplyType
+          uptakeForm
+          billingPlan
+          onlineService
+          advancedAttributes
+          state
+          createdAt
+          updatedAt
+          deletedAt
+        }
+      }
+    `,
+  
+    // MUTATION TO UPDATE A SERVICE
+    UPDATE_SERVICE: `
+      mutation UpdateService($serviceID: ID!, $input: UpdateServiceInput!) {
+        updateService(serviceID: $serviceID, input: $input) {
+          serviceID
+          uniqRef
+          slug
+          authorID
+          title
+          description
+          mediaBannerID
+          termsAndConditionsID
+          parentServiceID
+          topicID
+          organizationID
+          locationID
+          paymentConfigID
+          price
+          legalVatPercent
+          lowerPrice
+          upperPrice
+          negotiable
+          perimeter
+          supplyType
+          uptakeForm
+          billingPlan
+          onlineService
+          advancedAttributes
+          state
+          createdAt
+          updatedAt
+          deletedAt
+        }
+      }
+    `,
+  
+    // MUTATION TO DELETE A SERVICE
+    DELETE_SERVICE: `
+      mutation DeleteService($serviceID: ID!) {
+        deleteService(serviceID: $serviceID) {
+          success
+          message
+        }
+      }
+    `,
+  };
+  
+  export { serviceMutations };
+  
