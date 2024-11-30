@@ -21,7 +21,7 @@ export class SMPClient {
   public estimateAsset: EstimateAsset;
   public smpPayment:SMPPayment
   public signup: Signup;
-  public Password: Password;
+  public password: Password;
   public profile: Profile;
   
 
@@ -43,7 +43,7 @@ export class SMPClient {
     this.estimateAsset = new EstimateAsset(this.httpApiClient);
     this.smpPayment = new SMPPayment(this.httpApiClient);
     this.signup = new Signup(this.httpApiClient);
-    this.Password = new Password(this.httpApiClient);
+    this.password = new Password(this.httpApiClient);
     this.profile = new Profile(this.httpApiClient);
     
     this.authTokenManager = new AuthTokenManager(this.configManager, this.httpApiClient);
@@ -52,7 +52,7 @@ export class SMPClient {
     this.httpApiClient.updateHeaderAppAccessToken("");
     if (this.configManager.wsEnabled) {
       this.initWebSocket();
-    }
+    } 
     logger.info(i18n.t('smp_client_init'));
   }
 
