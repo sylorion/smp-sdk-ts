@@ -1,8 +1,9 @@
 import { APIClient } from '../api/APIClient';
 import { profileMutations } from './../api/graphql/mutations/user-space/profileMutation';
+import { profileQueries } from './../api/graphql/queries/user-space/profileQueries';
 
 // Types d'entrée pour les mutations des profils
- interface CreateProfileInput {
+interface CreateProfileInput {
   firstName: string;
   lastName: string;
   dateOfBirth: string; // ISO 8601 format
@@ -16,7 +17,7 @@ import { profileMutations } from './../api/graphql/mutations/user-space/profileM
   state: string; // ObjectStatus
 }
 
- interface UpdateProfileInput {
+interface UpdateProfileInput {
   firstName?: string;
   lastName?: string;
   dateOfBirth?: string;
@@ -30,8 +31,8 @@ import { profileMutations } from './../api/graphql/mutations/user-space/profileM
   state?: string; // ObjectStatus
 }
 
-// Types de réponse pour les mutations
- interface ProfileEntity {
+// Types de réponse pour les mutations et les requêtes
+interface ProfileEntity {
   profileID: string;
   uniqRef: string;
   slug: string;
@@ -51,18 +52,20 @@ import { profileMutations } from './../api/graphql/mutations/user-space/profileM
   deletedAt?: string;
 }
 
- interface MutationResponse {
+interface MutationResponse {
   success: boolean;
   message: string;
 }
 
-// Contrôleur des mutations pour les profils
-  export class Profile {
+// Contrôleur des mutations et des requêtes pour les profils
+export class Profile {
   private client: APIClient;
 
   constructor(client: APIClient) {
     this.client = client;
   }
+
+  // ======================= MUTATIONS =======================
 
   async createProfile(input: CreateProfileInput): Promise<ProfileEntity> {
     const mutation = profileMutations.CREATE_PROFILE;
@@ -71,9 +74,9 @@ import { profileMutations } from './../api/graphql/mutations/user-space/profileM
     return response.createProfile;
   }
 
-  async updateProfile(profileID: string, input: UpdateProfileInput): Promise<ProfileEntity> {
+  async updateProfile(profileId: string, input: UpdateProfileInput): Promise<ProfileEntity> {
     const mutation = profileMutations.UPDATE_PROFILE;
-    const variables = { profileID, input };
+    const variables = { profileId, input };
     const response = await this.client.mutate(mutation, variables) as { updateProfile: ProfileEntity };
     return response.updateProfile;
   }
@@ -83,5 +86,20 @@ import { profileMutations } from './../api/graphql/mutations/user-space/profileM
     const variables = { profileID };
     const response = await this.client.mutate(mutation, variables) as { deleteProfile: MutationResponse };
     return response.deleteProfile;
+  }
+
+  // ======================= QUERIES =======================
+
+  async getProfile(profileId: string): Promise<ProfileEntity> {
+    const query = profileQueries.GET_PROFILE;
+    const variables = { profileId };
+    const response = await this.client.query(query, variables) as { profile: ProfileEntity };
+    return response.profile;
+  }
+
+  async list(): Promise<ProfileEntity[]> {
+    const query = profileQueries.GET_PROFILES;
+    const response = await this.client.query(query) as { profiles: ProfileEntity[] };
+    return response.profiles;
   }
 }

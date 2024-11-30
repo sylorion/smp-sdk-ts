@@ -24,30 +24,30 @@ const profileMutations = {
       }
     `,
   
-    // MUTATION TO UPDATE A PROFILE
-    UPDATE_PROFILE: `
-      mutation UpdateProfile($profileID: ID!, $input: UpdateProfileInput!) {
-        updateProfile(profileID: $profileID, input: $input) {
-          profileID
-          uniqRef
-          slug
-          firstName
-          lastName
-          dateOfBirth
-          gender
-          nationality
-          phoneNumber
-          locationID
-          idCardNumber
-          passportNumber
-          socialSecurityNumber
-          state
-          createdAt
-          updatedAt
-          deletedAt
-        }
-      }
-    `,
+   // MUTATION TO UPDATE A PROFILE
+UPDATE_PROFILE: `
+mutation UpdateProfile($input: UpdateProfileInput!, $profileId: ID!) {
+  updateProfile(input: $input, profileID: $profileId) {
+    uniqRef
+    slug
+    firstName
+    lastName
+    dateOfBirth
+    gender
+    nationality
+    phoneNumber
+    locationID
+    idCardNumber
+    passportNumber
+    socialSecurityNumber
+    state
+    createdAt
+    updatedAt
+    deletedAt
+  }
+}
+`,
+
   
     // MUTATION TO DELETE A PROFILE
     DELETE_PROFILE: `
