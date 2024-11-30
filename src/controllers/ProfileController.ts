@@ -76,10 +76,11 @@ export class Profile {
 
   async updateProfile(profileId: string, input: UpdateProfileInput): Promise<ProfileEntity> {
     const mutation = profileMutations.UPDATE_PROFILE;
-    const variables = { profileId, input };
+    const variables = {profileId, input, };
     const response = await this.client.mutate(mutation, variables) as { updateProfile: ProfileEntity };
     return response.updateProfile;
   }
+  
 
   async deleteProfile(profileID: string): Promise<MutationResponse> {
     const mutation = profileMutations.DELETE_PROFILE;
