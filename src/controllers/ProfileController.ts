@@ -31,7 +31,7 @@ export interface UpdateProfileInput {
 }
 
 // Types de réponse pour les mutations
-export interface Profile {
+export interface ProfileEntity {
   profileID: string;
   uniqRef: string;
   slug: string;
@@ -57,24 +57,24 @@ export interface MutationResponse {
 }
 
 // Contrôleur des mutations pour les profils
-export class Profile {
+export class ProfileController {
   private client: APIClient;
 
   constructor(client: APIClient) {
     this.client = client;
   }
 
-  async createProfile(input: CreateProfileInput): Promise<Profile> {
+  async createProfile(input: CreateProfileInput): Promise<ProfileEntity> {
     const mutation = profileMutations.CREATE_PROFILE;
     const variables = { input };
-    const response = await this.client.mutate(mutation, variables) as { createProfile: Profile };
+    const response = await this.client.mutate(mutation, variables) as { createProfile: ProfileEntity };
     return response.createProfile;
   }
 
-  async updateProfile(profileID: string, input: UpdateProfileInput): Promise<Profile> {
+  async updateProfile(profileID: string, input: UpdateProfileInput): Promise<ProfileEntity> {
     const mutation = profileMutations.UPDATE_PROFILE;
     const variables = { profileID, input };
-    const response = await this.client.mutate(mutation, variables) as { updateProfile: Profile };
+    const response = await this.client.mutate(mutation, variables) as { updateProfile: ProfileEntity };
     return response.updateProfile;
   }
 
