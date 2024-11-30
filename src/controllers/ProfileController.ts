@@ -57,7 +57,7 @@ export interface MutationResponse {
 }
 
 // Contrôleur des mutations pour les profils
-export class SMPProfileMutations {
+export class Profile {
   private client: APIClient;
 
   constructor(client: APIClient) {

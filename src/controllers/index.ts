@@ -8,3 +8,4 @@ export {Notification} from './NotificationController';
 export {SMPPayment} from './paymentController';
 export {Signup} from './SignupController';
 export {ForgotPassword} from './ForgotPasswordResolver';  
+export {Profile} from './ProfileController';
