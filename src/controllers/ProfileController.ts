@@ -2,7 +2,7 @@ import { APIClient } from '../api/APIClient';
 import { profileMutations } from './../api/graphql/mutations/user-space/profileMutation';
 
 // Types d'entrée pour les mutations des profils
-export interface CreateProfileInput {
+ interface CreateProfileInput {
   firstName: string;
   lastName: string;
   dateOfBirth: string; // ISO 8601 format
@@ -16,7 +16,7 @@ export interface CreateProfileInput {
   state: string; // ObjectStatus
 }
 
-export interface UpdateProfileInput {
+ interface UpdateProfileInput {
   firstName?: string;
   lastName?: string;
   dateOfBirth?: string;
@@ -31,7 +31,7 @@ export interface UpdateProfileInput {
 }
 
 // Types de réponse pour les mutations
-export interface ProfileEntity {
+ interface ProfileEntity {
   profileID: string;
   uniqRef: string;
   slug: string;
@@ -51,13 +51,13 @@ export interface ProfileEntity {
   deletedAt?: string;
 }
 
-export interface MutationResponse {
+ interface MutationResponse {
   success: boolean;
   message: string;
 }
 
 // Contrôleur des mutations pour les profils
-export class ProfileController {
+  export class Profile {
   private client: APIClient;
 
   constructor(client: APIClient) {

@@ -2,8 +2,8 @@ import { APIClient } from '../api/APIClient';
 import { serviceQueries } from '../api/graphql/queries/index';
 import { serviceMutations } from '../api/graphql/mutations/catalog/serviceMutation';
 
-// Types pour les réponses et les inputs
-export interface Service {
+// Types pour les entités et les inputs
+ interface ServiceEntity {
   serviceID: string;
   uniqRef: string;
   slug: string;
@@ -34,7 +34,7 @@ export interface Service {
   deletedAt?: string; // ISO 8601
 }
 
-export interface CreateServiceInput {
+ interface CreateServiceInput {
   authorID: string;
   title: string;
   description: string;
@@ -59,7 +59,7 @@ export interface CreateServiceInput {
   state: string;
 }
 
-export interface UpdateServiceInput {
+ interface UpdateServiceInput {
   title?: string;
   description?: string;
   mediaBannerID?: string;
@@ -82,8 +82,13 @@ export interface UpdateServiceInput {
   state?: string;
 }
 
+export interface MutationResponse {
+  success: boolean;
+  message: string;
+}
+
 /**
- * THE `Service` CLASS MANAGES SERVICE-RELATED REQUESTS WITHIN THE APPLICATION.
+ * `ServiceController` GÈRE LES REQUÊTES RELATIVES AUX SERVICES DANS L'APPLICATION.
  */
 export class Service {
   private client: APIClient;
@@ -94,89 +99,89 @@ export class Service {
 
   //========================== QUERIES =============================================================
 
-  async list(pagination?: any, sort?: any, filter?: any): Promise<Service[]> {
+  async list(pagination?: any, sort?: any, filter?: any): Promise<ServiceEntity[]> {
     const query = serviceQueries.GET_SERVICES;
     const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as { data: { services: Service[] } };
+    const response = await this.client.query(query, variables) as { data: { services: ServiceEntity[] } };
     return response.data.services;
   }
 
-  async getById(serviceID: string): Promise<Service> {
+  async getById(serviceID: string): Promise<ServiceEntity> {
     const query = serviceQueries.GET_SERVICE_BY_ID;
     const variables = { serviceID };
-    const response = await this.client.query(query, variables) as { data: { service: Service } };
+    const response = await this.client.query(query, variables) as { data: { service: ServiceEntity } };
     return response.data.service;
   }
 
-  async getByAuthorID(authorID: string): Promise<Service[]> {
+  async getByAuthorID(authorID: string): Promise<ServiceEntity[]> {
     const query = serviceQueries.GET_SERVICE_BY_AUTHOR_ID;
     const variables = { authorID };
-    const response = await this.client.query(query, variables) as { data: { servicesByUserId: Service[] } };
+    const response = await this.client.query(query, variables) as { data: { servicesByUserId: ServiceEntity[] } };
     return response.data.servicesByUserId;
   }
 
-  async getByUniqRef(uniqRef: string): Promise<Service> {
+  async getByUniqRef(uniqRef: string): Promise<ServiceEntity> {
     const query = serviceQueries.GET_SERVICE_BY_UNIQ_REF;
     const variables = { uniqRef };
-    const response = await this.client.query(query, variables) as { data: { serviceByUniqRef: Service } };
+    const response = await this.client.query(query, variables) as { data: { serviceByUniqRef: ServiceEntity } };
     return response.data.serviceByUniqRef;
   }
 
-  async getBySlug(slug: string): Promise<Service> {
+  async getBySlug(slug: string): Promise<ServiceEntity> {
     const query = serviceQueries.GET_SERVICE_BY_SLUG;
     const variables = { slug };
-    const response = await this.client.query(query, variables) as { data: { serviceBySlug: Service } };
+    const response = await this.client.query(query, variables) as { data: { serviceBySlug: ServiceEntity } };
     return response.data.serviceBySlug;
   }
 
-  async getByIDs(serviceIDs: string[]): Promise<Service[]> {
+  async getByIDs(serviceIDs: string[]): Promise<ServiceEntity[]> {
     const query = serviceQueries.GET_SERVICES_BY_IDS;
     const variables = { serviceIDs };
-    const response = await this.client.query(query, variables) as { data: { servicesByIDs: Service[] } };
+    const response = await this.client.query(query, variables) as { data: { servicesByIDs: ServiceEntity[] } };
     return response.data.servicesByIDs;
   }
 
-  async getBySlugs(slugs: string[]): Promise<Service[]> {
+  async getBySlugs(slugs: string[]): Promise<ServiceEntity[]> {
     const query = serviceQueries.GET_SERVICES_BY_SLUGS;
     const variables = { slugs };
-    const response = await this.client.query(query, variables) as { data: { servicesBySlugs: Service[] } };
+    const response = await this.client.query(query, variables) as { data: { servicesBySlugs: ServiceEntity[] } };
     return response.data.servicesBySlugs;
   }
 
-  async listByOrganization(input: any): Promise<Service[]> {
+  async listByOrganization(input: any): Promise<ServiceEntity[]> {
     const query = serviceQueries.LIST_SERVICES_BY_ORGANIZATION;
     const variables = { input };
-    const response = await this.client.query(query, variables) as { data: { listServicesByOrganization: Service[] } };
+    const response = await this.client.query(query, variables) as { data: { listServicesByOrganization: ServiceEntity[] } };
     return response.data.listServicesByOrganization;
   }
 
-  async search(input: string): Promise<Service[]> {
+  async search(input: string): Promise<ServiceEntity[]> {
     const query = serviceQueries.SEARCH_SERVICES;
     const variables = { input };
-    const response = await this.client.query(query, variables) as { data: { searchServices: Service[] } };
+    const response = await this.client.query(query, variables) as { data: { searchServices: ServiceEntity[] } };
     return response.data.searchServices;
   }
 
   //========================== MUTATIONS =============================================================
 
-  async createService(input: CreateServiceInput): Promise<Service> {
+  async createService(input: CreateServiceInput): Promise<ServiceEntity> {
     const mutation = serviceMutations.CREATE_SERVICE;
     const variables = { input };
-    const response = await this.client.mutate(mutation, variables) as { createService: Service };
+    const response = await this.client.mutate(mutation, variables) as { createService: ServiceEntity };
     return response.createService;
   }
 
-  async updateService(serviceID: string, input: UpdateServiceInput): Promise<Service> {
+  async updateService(serviceID: string, input: UpdateServiceInput): Promise<ServiceEntity> {
     const mutation = serviceMutations.UPDATE_SERVICE;
     const variables = { serviceID, input };
-    const response = await this.client.mutate(mutation, variables) as { updateService: Service };
+    const response = await this.client.mutate(mutation, variables) as { updateService: ServiceEntity };
     return response.updateService;
   }
 
-  async deleteService(serviceID: string): Promise<{ success: boolean; message: string }> {
+  async deleteService(serviceID: string): Promise<MutationResponse> {
     const mutation = serviceMutations.DELETE_SERVICE;
     const variables = { serviceID };
-    const response = await this.client.mutate(mutation, variables) as { deleteService: { success: boolean; message: string } };
+    const response = await this.client.mutate(mutation, variables) as { deleteService: MutationResponse };
     return response.deleteService;
   }
 }
