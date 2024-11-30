@@ -27,7 +27,7 @@ const profileMutations = {
    // MUTATION TO UPDATE A PROFILE
 UPDATE_PROFILE: `
 mutation UpdateProfile($input: UpdateProfileInput!, $profileId: ID!) {
-  updateProfile(input: $input, profileID: $profileId) {
+  updateProfile(profileID: $profileId ,input: $input) {
     uniqRef
     slug
     firstName
