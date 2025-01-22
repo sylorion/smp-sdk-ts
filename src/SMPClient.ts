@@ -9,7 +9,7 @@ import { ConfigManager } from "./config/ConfigManager.js";
 import { Persistence, PersistenceKind } from "./config/Persistence.js";
 import { AxiosRequestConfig } from "axios";
 import { GraphQLClient, ClientError } from 'graphql-request'; 
-import { Service, EstimateAsset, Organization,Invoice, Estimate, SMPPayment, Signup,ForgotPassword } from "./controllers/index.js";
+import { Service, EstimateAsset, Organization,Invoice, Estimate, SMPPayment, Signup, Password, Profile } from "./controllers/index.js";
 export class SMPClient {
   public httpApiClient: APIClient; 
   public authTokenManager: AuthTokenManager;
@@ -21,7 +21,9 @@ export class SMPClient {
   public estimateAsset: EstimateAsset;
   public smpPayment:SMPPayment
   public signup: Signup;
-  public forgotPassword: ForgotPassword;
+  public password: Password;
+  public profile: Profile;
+  
 
 
   // public notificationManager: AuthTokenManager;
@@ -41,7 +43,8 @@ export class SMPClient {
     this.estimateAsset = new EstimateAsset(this.httpApiClient);
     this.smpPayment = new SMPPayment(this.httpApiClient);
     this.signup = new Signup(this.httpApiClient);
-    this.forgotPassword = new ForgotPassword(this.httpApiClient);
+    this.password = new Password(this.httpApiClient);
+    this.profile = new Profile(this.httpApiClient);
     
     this.authTokenManager = new AuthTokenManager(this.configManager, this.httpApiClient);
     this.httpApiClient.updateHeaderAppID(this.configManager.appId);
@@ -49,7 +52,7 @@ export class SMPClient {
     this.httpApiClient.updateHeaderAppAccessToken("");
     if (this.configManager.wsEnabled) {
       this.initWebSocket();
-    }
+    } 
     logger.info(i18n.t('smp_client_init'));
   }
 
