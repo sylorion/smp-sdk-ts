@@ -130,3 +130,11 @@ export const MUTATION_FORGOT_PASSWORD = /* GraphQL */ `
   }
 }
 `; 
+
+export const MUTATION_RESET_PASSWORD = /* GraphQL */ `
+mutation resetPassword($input: ResetPasswordInput!) {
+  resetPassword(input: $input) {
+    success
+    message
+  }
+}`;
