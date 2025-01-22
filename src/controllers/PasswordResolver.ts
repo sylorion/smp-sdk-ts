@@ -37,7 +37,9 @@ export class Password {
     }
 
     async resetPassword(input: ResetPasswordInput): Promise<ResetPasswordResponse> {
+        console.log(input);
         const mutation = MUTATION_RESET_PASSWORD;
+        console.log(mutation);
         const variables = { input }; 
         const response = await this.client.mutate(mutation, variables) as { resetPassword: ResetPasswordResponse };
         return response.resetPassword;

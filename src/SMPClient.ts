@@ -9,7 +9,7 @@ import { ConfigManager } from "./config/ConfigManager.js";
 import { Persistence, PersistenceKind } from "./config/Persistence.js";
 import { AxiosRequestConfig } from "axios";
 import { GraphQLClient, ClientError } from 'graphql-request'; 
-import { Service, EstimateAsset, Organization,Invoice, Estimate, SMPPayment, Signup,Password, Profile } from "./controllers/index.js";
+import { Service, EstimateAsset, Organization,Invoice, Estimate, SMPPayment, Signup, Password, Profile } from "./controllers/index.js";
 export class SMPClient {
   public httpApiClient: APIClient; 
   public authTokenManager: AuthTokenManager;
