@@ -9,19 +9,40 @@ import { ConfigManager } from "./config/ConfigManager.js";
 import { Persistence, PersistenceKind } from "./config/Persistence.js";
 import { AxiosRequestConfig } from "axios";
 import { GraphQLClient, ClientError } from 'graphql-request'; 
+import { Service, EstimateAsset, Organization,Invoice, Estimate, SMPPayment, Signup,ForgotPassword } from "./controllers/index.js";
 export class SMPClient {
   public httpApiClient: APIClient; 
   public authTokenManager: AuthTokenManager;
+  // [Class]  
+  public service: Service;
+  public organization: Organization;
+  public estimate: Estimate;
+  public invoice: Invoice;
+  public estimateAsset: EstimateAsset;
+  public smpPayment:SMPPayment
+  public signup: Signup;
+  public forgotPassword: ForgotPassword;
+
+
   // public notificationManager: AuthTokenManager;
-  private internalDB: Persistence;
-  private wsClient?: WebSocket;
+  private internalDB: Persistence; 
+  private wsClient?: WebSocket; 
   private configManager: ConfigManager; 
-
-  constructor(options: SMPClientOptions) {
-    this.internalDB = new Persistence(Persistence.MemoryKind);
+  constructor(options: SMPClientOptions) { 
+    this.internalDB = new Persistence(Persistence.MemoryKind); 
     this.configManager = new ConfigManager(options)
-
     this.httpApiClient    = new APIClient(this.configManager);
+     
+    // [Class]
+    this.service = new Service(this.httpApiClient);
+    this.organization = new Organization(this.httpApiClient);
+    this.estimate = new Estimate(this.httpApiClient);
+    this.invoice = new Invoice(this.httpApiClient);
+    this.estimateAsset = new EstimateAsset(this.httpApiClient);
+    this.smpPayment = new SMPPayment(this.httpApiClient);
+    this.signup = new Signup(this.httpApiClient);
+    this.forgotPassword = new ForgotPassword(this.httpApiClient);
+    
     this.authTokenManager = new AuthTokenManager(this.configManager, this.httpApiClient);
     this.httpApiClient.updateHeaderAppID(this.configManager.appId);
     this.httpApiClient.updateHeaderAppSecret(this.configManager.appSecret);

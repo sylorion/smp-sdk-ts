@@ -6,14 +6,14 @@ export const MUTATION_AUTH_APP = /* GraphQL */`
       refreshToken
       accessValidityDuration
       refreshValidityDuration
-      app {
+      application {
         applicationID
         uniqRef
         slug
         authKey
-        authID
+        appID
         description
-        name
+        title
         email
         logo
         url
@@ -97,3 +97,36 @@ export const MUTATION_AUTH_LOGOUT_APP = /* GraphQL */ `
   }
 `;
 
+export const MUTATION_CREATE_USER = /* GraphQL */ `
+  mutation CreateUser($input: CreateUserInput!) {
+    createUser(input: $input) {
+      userID
+      uniqRef
+      slug
+      username
+      email
+      plan
+      profileID
+      userKind
+      lastLogin
+      twoFactorEnabled
+      loginDuration
+      rsaPublicKey
+      state
+      createdAt
+      updatedAt
+      deletedAt
+    }
+  }
+  
+`;
+
+export const MUTATION_FORGOT_PASSWORD = /* GraphQL */ `
+ mutation CreateUser($email: String!) {
+  forgotPassword(email: $email) {
+    success
+    message
+    code
+  }
+}
+`; 

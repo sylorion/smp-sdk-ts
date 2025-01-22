@@ -73,6 +73,24 @@ export class APIClient {
     this.graphqlClient = this.graphqlClient.setHeader("Authorization", "");
   }
 
+  async mutate<T>(mutation: string, variables?: any): Promise<T> {
+    try {
+      this.checkRateLimit(); 
+      const body = JSON.stringify({ mutation, variables });
+      this.trackDataSent(body.length);
+
+      logger.info("CALL TO APIClient.MUTATE Method");
+      const response = await this.graphqlClient.request<T>(mutation, variables);
+      const respJson = JSON.stringify(response);
+      this.trackDataReceived(respJson.length);
+      logger.info(`Total Data received : ${this.dataReceived}`);
+      return response;
+    } catch (error: any) {
+      const ce: ClientError = error;
+      throw ce;
+    }
+  }
+  
   async query<T>(query: string, variables?: any): Promise<T> {
     try {
       this.checkRateLimit(); // Check rate limit before making the request
