@@ -61,6 +61,8 @@ export class AuthTokenManager {
       const expiresInMilli = 1000 * response.authenticateApp.accessValidityDuration;
       this.appTokenStorage.saveRefreshToken(refreshToken);
       this.appTokenStorage.saveAccessToken(accessToken);
+      // Register the new access to the future queries
+      this.apiClient.updateHeaderAppAccessToken(accessToken);
 
       const refreshDuration = this.configManager.appAccessDuration < expiresInMilli ? 
       this.configManager.appAccessDuration : expiresInMilli;
@@ -82,6 +84,8 @@ export class AuthTokenManager {
       const expiresInMilli = 1000 * response.login.accessValidityDuration;
       this.userTokenStorage.saveRefreshToken(refreshToken);
       this.userTokenStorage.saveAccessToken(accessToken);
+      // Register the new access to the future queries
+      this.apiClient.updateHeaderUserAccessToken(accessToken);
 
       const refreshDuration = this.configManager.userAccessDuration < expiresInMilli ? 
       this.configManager.userAccessDuration : expiresInMilli;
@@ -142,7 +146,7 @@ export class AuthTokenManager {
       this.configManager.userAccessDuration : expiresInMilli;
   
       this.userTokenStorage.saveAccessToken(accessToken);
-      this.apiClient.updateHeaderAppAccessToken(accessToken);
+      this.apiClient.updateHeaderUserAccessToken(accessToken);
       logger.info(`Refresh User token, new token: ${accessToken}`);
       this.userTokenExpiresAt = Date.now() + expiresInMilli;
       this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
@@ -168,7 +172,7 @@ export class AuthTokenManager {
 
     this.userTokenStorage.saveAccessToken(accessToken);
     // Register the new access to the future queries
-    this.apiClient.updateHeaderUserAccessToken(accessToken);
+    this.apiClient.updateHeaderAppAccessToken(accessToken);
     this.userTokenExpiresAt = Date.now() + expiresInMilli;
     this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
   }
