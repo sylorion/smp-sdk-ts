@@ -31,7 +31,7 @@ export class SMPClient {
   private wsClient?: WebSocket; 
   private configManager: ConfigManager; 
   constructor(options: SMPClientOptions) { 
-    this.internalDB = new Persistence(Persistence.MemoryKind); 
+    this.internalDB = new Persistence(Persistence.LocalStorageKind); 
     this.configManager = new ConfigManager(options)
     this.httpApiClient    = new APIClient(this.configManager);
      
