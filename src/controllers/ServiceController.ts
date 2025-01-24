@@ -102,8 +102,8 @@ export class Service {
   async list(pagination?: any, sort?: any, filter?: any): Promise<ServiceEntity[]> {
     const query = serviceQueries.GET_SERVICES;
     const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as { data: { services: ServiceEntity[] } };
-    return response.data.services;
+    const response = await this.client.query(query, variables) as { services: ServiceEntity[]  };
+    return response.services;
   }
 
   async getById(serviceID: string): Promise<ServiceEntity> {
