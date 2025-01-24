@@ -103,7 +103,7 @@ export class Service {
     const query = serviceQueries.GET_SERVICES;
     const variables = { pagination, sort, filter };
     const response = await this.client.query(query, variables) as { services: ServiceEntity[]  };
-    return response.services;
+    return response.services; // Renvoie un tableau d'entités de service
   }
 
   async getById(serviceID: string): Promise<ServiceEntity> {
