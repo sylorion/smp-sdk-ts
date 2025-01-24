@@ -126,6 +126,14 @@ export class SMPClient {
       ErrorHandler.handleError(error, "USER_RETRIEVED_REFRESH_TOKEN_FAILED");
     }
   }
+ async logoutUser(){
+    try {
+      const user = this.internalDB.get("smp_user_0");
+      return await this.authTokenManager.logoutUser(user.userID);
+    } catch (error) {
+      ErrorHandler.handleError(error, "USER_RETRIEVED_REFRESH_TOKEN_FAILED");
+    }
+  }
 
   // Méthode pour initier une connexion WebSocket pour les notifications
   private initWebSocket() {
