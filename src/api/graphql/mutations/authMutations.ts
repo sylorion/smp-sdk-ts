@@ -80,12 +80,12 @@ export const MUTATION_REFRESH_USER_TOKEN = /* GraphQL */ `
 `;
 
 export const MUTATION_AUTH_LOGOUT_USER = /* GraphQL */ `
-  mutation LogoutUser($userID: ID!) {
-    logoutUser(userID: $userID) {
-      message
-      success
-    } 
+  mutation logout($input: LogoutInput!) {
+  logout(input: $input) {
+    message
+    success
   }
+}
 `;
 
 export const MUTATION_AUTH_LOGOUT_APP = /* GraphQL */ `

@@ -126,14 +126,25 @@ export class SMPClient {
       ErrorHandler.handleError(error, "USER_RETRIEVED_REFRESH_TOKEN_FAILED");
     }
   }
- async logoutUser(){
+  async logoutUser() {
     try {
-      const user = this.internalDB.get("smp_user_0");
-      return await this.authTokenManager.logoutUser(user.userID);
+        // Récupération des données de l'utilisateur depuis la base interne
+        const storedUser = this.internalDB.get("smp_user_0");
+            const userID = storedUser?.user?.userID;
+        const refreshToken = storedUser?.refreshToken;
+
+        if (!userID || !refreshToken) {
+            throw new Error("User ID ou Refresh Token non trouvé dans les données récupérées !");
+        }
+        console.log("User ID récupéré :", userID);
+        console.log("Refresh Token récupéré :", refreshToken);
+
+        return await this.authTokenManager.logoutUser( userID, refreshToken );
     } catch (error) {
-      ErrorHandler.handleError(error, "USER_RETRIEVED_REFRESH_TOKEN_FAILED");
+        ErrorHandler.handleError(error, "USER_RETRIEVED_REFRESH_TOKEN_FAILED");
+        throw error; 
     }
-  }
+}
 
   // Méthode pour initier une connexion WebSocket pour les notifications
   private initWebSocket() {
