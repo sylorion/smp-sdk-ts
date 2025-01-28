@@ -9,3 +9,4 @@ export {SMPPayment} from './paymentController';
 export {Signup} from './SignupController';
 export {Password} from './PasswordResolver';  
 export {Profile} from './ProfileController';
+export {Location} from './LocationController';
