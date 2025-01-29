@@ -32,7 +32,7 @@ export interface CreatePlaceInput {
   addressLine1?: string | null;
   // coordinates?: string | null;
   city?: string | null;
-  authorID?:  | null;
+  authorID?: number| string;
 }
 
 export interface UpdatePlaceInput {
