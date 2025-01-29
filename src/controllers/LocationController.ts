@@ -29,9 +29,10 @@ export interface CreatePlaceInput {
   postalCode?: string | null;
   placeKind?: string | null;
   country?: string | null;
-  coordinates?: string | null;
+  addressLine1?: string | null;
+  // coordinates?: string | null;
   city?: string | null;
-  authorID?: number | null;
+  authorID?:  | null;
 }
 
 export interface UpdatePlaceInput {
@@ -57,7 +58,7 @@ export class Location {
     this.client = client;
   }
 
-  //========================== QUERIES =============================================================
+  //==========================  QUERIES  =============================================================
 
   /**
    * Fetches a single place by its ID.
