@@ -23,9 +23,9 @@ import { serviceMutations } from '../api/graphql/mutations/catalog/serviceMutati
   upperPrice?: number;
   negotiable?: boolean;
   perimeter?: number;
-  supplyType?: string;
-  uptakeForm?: string;
-  billingPlan?: string;
+  supplyType: string;
+  uptakeForm: string;
+  billingPlan: string;
   onlineService?: boolean;
   advancedAttributes?: string; // JSON stringifié
   state: string;
@@ -55,7 +55,7 @@ import { serviceMutations } from '../api/graphql/mutations/catalog/serviceMutati
   uptakeForm?: string;
   billingPlan?: string;
   onlineService?: boolean;
-  advancedAttributes?: string; // JSON stringifié
+  advancedAttributes?: JSON; 
   state: string;
 }
 
@@ -78,7 +78,7 @@ import { serviceMutations } from '../api/graphql/mutations/catalog/serviceMutati
   uptakeForm?: string;
   billingPlan?: string;
   onlineService?: boolean;
-  advancedAttributes?: string; // JSON stringifié
+  advancedAttributes?: JSON; 
   state?: string;
 }
 
