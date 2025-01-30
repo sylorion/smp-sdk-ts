@@ -137,8 +137,9 @@ export class AuthTokenManager {
       logger.info(`Refresh Token USED ${Date.now().toLocaleString()}: ${refreshToken}\n\n`);
     }
 
-    return this.apiClient.query<{refreshUserToken: TokenDataResponse}>(MUTATION_REFRESH_USER_TOKEN, {refreshToken}).then((response) => {
-      console.log("REFRESH TOKEN RESPONSE", response.refreshUserToken);
+      const response = await this.apiClient.query<{refreshUserToken: TokenDataResponse}>(MUTATION_REFRESH_USER_TOKEN, {refreshToken});
+      
+      console.log("REFRESH TOKEN RESPONSE", JSON.stringify(response.refreshUserToken, null, 2));
       const accessToken  = response.refreshUserToken.accessToken;
       const expiresIn = response.refreshUserToken.expiresIn;
       const expiresInMilli  = expiresIn * 1000;
@@ -151,7 +152,7 @@ export class AuthTokenManager {
       this.userTokenExpiresAt = Date.now() + expiresInMilli;
       this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
       return;
-    });
+
   }
 
   /**

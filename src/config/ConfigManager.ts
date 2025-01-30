@@ -12,7 +12,7 @@ export class ConfigManager {
   apiUrl                : string = "";
   graphqlUrl            : string = "https://dev-catalog.sh1.hidora.net/";
   defaultLanguage       : SupportedLang = defaultLanguage;
-  persistence           : PersistenceKind = Persistence.MemoryKind;
+  persistence           : PersistenceKind = Persistence.LocalStorageKind;
   rateLimits?           : RateLimitOptions;  // Limit de frequentes d'appel de l'API
   dataLimits?           : DataLimitOptions; // Limites de quantité de données échangées
   storage?              : PersistenceType;

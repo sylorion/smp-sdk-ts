@@ -70,7 +70,7 @@ type AppLogIn = {
 
 
 type AppLoggedIn = {
-  applicationID : number,
+  applicationID : string,
   uniqRef       : string,
   slug          : string,
   authKey?       : string,

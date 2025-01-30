@@ -28,11 +28,11 @@ export class SMPClient {
 
 
   // public notificationManager: AuthTokenManager;
-  private internalDB: Persistence; 
+  private loggedUser?: LogIn;  /// A créer account et mettre en loggedUser dedans
+  private loggedApp?: AppLogIn; /// A créer application et mettre en loggedApp dedans
   private wsClient?: WebSocket; 
   private configManager: ConfigManager; 
   constructor(options: SMPClientOptions) { 
-    this.internalDB = new Persistence(Persistence.LocalStorageKind); 
     this.configManager = new ConfigManager(options)
     this.httpApiClient    = new APIClient(this.configManager);
      
@@ -67,7 +67,6 @@ export class SMPClient {
         return;
       }
       const app = await this.authTokenManager.authenticateApp(this.configManager.appId, this.configManager.appSecret);
-      this.internalDB.set("smp_app_0", app);
     } catch (error) {
       ErrorHandler.handleError(error, "APP_AUTH_FAILED");
     }
@@ -83,7 +82,10 @@ export class SMPClient {
       const login = await this.authTokenManager.authenticateUser(username, password);
       console.log("Login succeed");
       console.log(JSON.stringify(login));
-      this.internalDB.set("smp_user_0", login);
+      if (login) {
+        this.loggedUser = login;
+        this.configManager.loggedUser = login.user;
+      }
     } catch (error) {
       ErrorHandler.handleError(error, "APP_AUTH_FAILED");
     }
@@ -123,8 +125,10 @@ export class SMPClient {
 
   async logoutApp(){
     try {
-      const app = this.internalDB.get("smp_app_0");
-      return await this.authTokenManager.logoutApp(app.appId);
+      if (!this.loggedApp?.app?.applicationID) {
+        throw new Error("Application ID non trouvé dans les données récupérées !");
+      }
+      return await this.authTokenManager.logoutApp(this.loggedApp.app.applicationID);
     } catch (error) {
       ErrorHandler.handleError(error, "USER_RETRIEVED_REFRESH_TOKEN_FAILED");
     }
@@ -132,17 +136,13 @@ export class SMPClient {
   async logoutUser() {
     try {
         // Récupération des données de l'utilisateur depuis la base interne
-        const storedUser = this.internalDB.get("smp_user_0");
-            const userID = storedUser?.user?.userID;
-        const refreshToken = storedUser?.refreshToken;
 
-        if (!userID || !refreshToken) {
+        if (!this.loggedUser?.user?.userID || !this.loggedUser?.refreshToken) {
             throw new Error("User ID ou Refresh Token non trouvé dans les données récupérées !");
         }
-        console.log("User ID récupéré :", userID);
-        console.log("Refresh Token récupéré :", refreshToken);
-
-        return await this.authTokenManager.logoutUser( userID, refreshToken );
+        console.log("User ID récupéré :", this.loggedUser.user.userID);
+        console.log("Refresh Token récupéré :", this.loggedUser.refreshToken);
+        return await this.authTokenManager.logoutUser( this.loggedUser.user.userID, this.loggedUser.refreshToken );
     } catch (error) {
         ErrorHandler.handleError(error, "USER_RETRIEVED_REFRESH_TOKEN_FAILED");
         throw error; 
