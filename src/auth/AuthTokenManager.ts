@@ -108,21 +108,21 @@ export class AuthTokenManager {
 
     // Récupérer le token d'accès actuel ou rafraîchir s'il a expiré
   public async getUserAccessToken(): Promise<string>{
-    if (this.isUserTokenExpired()) {
+    const accessToken = this.userTokenStorage.getAccessToken() || '';
+    if (this.isUserTokenExpired() || !accessToken) {
       logger.info('User Access token expired, refreshing...');
       await this.refreshUserAccessToken(); 
     }
-    const accessToken = this.userTokenStorage.getAccessToken() || '';
     return accessToken;
   }
 
   public async getAppAccessToken(): Promise<string> {
-     if (this.isAppTokenExpired()) {
+    const accessToken = this.appTokenStorage.getAccessToken() || '';
+     if (this.isAppTokenExpired() ||  !accessToken) {
       logger.info('App Access token expired, refreshing...');
       await this.refreshAppAccessToken();
       return this.appTokenStorage.getAccessToken() || '';
     }
-    const accessToken = this.appTokenStorage.getAccessToken() || '';
     return accessToken;
   }
 
