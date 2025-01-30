@@ -74,7 +74,11 @@ export const MUTATION_REFRESH_USER_TOKEN = /* GraphQL */ `
   mutation RefreshUserToken($refreshToken: String!) {
     refreshUserToken(token: $refreshToken) {
       accessToken
-      expiresIn 
+      expiresIn
+      message
+      errors {
+        message
+      }
     } 
   }
 `;
