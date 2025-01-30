@@ -75,10 +75,6 @@ export const MUTATION_REFRESH_USER_TOKEN = /* GraphQL */ `
     refreshUserToken(token: $refreshToken) {
       accessToken
       expiresIn
-      message
-      errors {
-        message
-      }
     } 
   }
 `;
