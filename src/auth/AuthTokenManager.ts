@@ -204,22 +204,28 @@ export class AuthTokenManager {
 
     // Déconnexion de l'utilisateur
  // Déconnexion de l'utilisateur
- async logoutUser(userID: Number, refreshToken: string) {
-  const query = MUTATION_AUTH_LOGOUT_USER;
+ async logoutUser(userID: number, refreshToken: string) {
+  try {
+      const query = MUTATION_AUTH_LOGOUT_USER;
+      const variables = {
+          input: { userID, refreshToken },
+      };
 
-  const variables = {
-      input: {
-          userID,
-          refreshToken
-      },
-  };
-  console.log("LOGOUT USER");
-console.log("VAR",variables)
-  await this.apiClient.query(query, variables);
-  this.userTokenStorage.clearTokens();
-  this.clearScheduledRefresh(AuthTokenStorage.UserKind);
-  this.apiClient.resetHeadersForUser();
-  this.userTokenExpiresAt = undefined;
+      console.log("LOGOUT USER - Start of logout ");
+      await this.apiClient.query(query, variables);
+
+      // Suppression des tokens
+      this.userTokenStorage.clearTokens();
+      this.clearScheduledRefresh(AuthTokenStorage.UserKind);
+
+      this.apiClient.resetHeadersForUser();
+      this.userTokenExpiresAt = undefined;
+
+      console.log("logout successful");
+  } catch (error) {
+      console.error("Error during logout", error);
+      throw new Error("logout failed, please try again");
+  }
 }
   
     // Déconnexion de l'app
