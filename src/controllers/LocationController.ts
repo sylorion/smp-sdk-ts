@@ -78,8 +78,8 @@ export class Location {
   async createPlace(input: CreatePlaceInput): Promise<Place> {
     const mutation = placeMutations.CREATE_PLACE;
     const variables = { input };
-    const response = await this.client.mutate(mutation, variables) as { data: { createPlace: Place } };
-    return response.data.createPlace;
+    const response = await this.client.mutate(mutation, variables) as { data: Place  };
+    return response.data;
   }
 
   /**
