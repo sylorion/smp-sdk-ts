@@ -72,24 +72,25 @@ export class SMPClient {
     }
   }
 
-  async authenticateUser(username: string, password: string): Promise<void> {
+  async authenticateUser(username: string, password: string) {
     try {
-      const access = await this.getUserAccessToken();
-      if (access) {
-        logger.info("User already authenticated");
-        return;
-      }
-      const login = await this.authTokenManager.authenticateUser(username, password);
-      console.log("Login succeed");
-      console.log(JSON.stringify(login));
-      if (login) {
-        this.loggedUser = login;
-        this.configManager.loggedUser = login.user;
-      }
-    } catch (error) {
-      ErrorHandler.handleError(error, "APP_AUTH_FAILED");
+        const access = await this.getUserAccessToken();
+        if (access) {
+            logger.info("User already authenticated");
+        }
+        const login = await this.authTokenManager.authenticateUser(username, password);
+        console.log("Login succeed");
+        console.log(JSON.stringify(login));
+        if (login) {
+            this.loggedUser = login;
+            this.configManager.loggedUser = login.user;
+        }
     }
-  }
+    catch (error) {
+        ErrorHandler.handleError(error, "USER_AUTH_FAILED");
+    }
+    return this.loggedUser;
+}
 
   async getAppAccessToken(){
     try {
