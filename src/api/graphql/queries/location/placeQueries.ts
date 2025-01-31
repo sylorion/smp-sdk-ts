@@ -1,5 +1,5 @@
 const placeQueries = {
-    CREATE_PLACE_BY_ID: `
+    GET_PLACE_BY_ID: `
         query Place($placeId: ID!) {
             place(placeID: $placeId) {
                 placeID

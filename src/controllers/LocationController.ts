@@ -7,14 +7,14 @@ export interface Place {
   placeID: string;
   uniqRef: string;
   slug: string;
-  authorID: number;
+  authorID: string ;
   country: string;
   region: string;
   pstate: string;
   city: string;
   postalCode: string;
   placeKind: string;
-  addressLine1: string;
+  addressLine1: string; 
   addressLine2: string;
   coordinates: string;
   state: string;
@@ -64,7 +64,7 @@ export class Location {
    * Fetches a single place by its ID.
    */
   async getById(placeId: string): Promise<Place> {
-    const query = placeQueries.CREATE_PLACE_BY_ID;
+    const query = placeQueries.GET_PLACE_BY_ID;
     const variables = { placeId };
     const response = await this.client.query(query, variables) as { data: { place: Place } };
     return response.data.place;
@@ -78,8 +78,8 @@ export class Location {
   async createPlace(input: CreatePlaceInput): Promise<Place> {
     const mutation = placeMutations.CREATE_PLACE;
     const variables = { input };
-    const response = await this.client.mutate(mutation, variables) as { data: Place  };
-    return response.data;
+    const response = await this.client.mutate(mutation, variables) as { createPlace: Place };
+    return response.createPlace;
   }
 
   /**
@@ -88,8 +88,8 @@ export class Location {
   async updatePlace(placeId: string, input: UpdatePlaceInput): Promise<Place> {
     const mutation = placeMutations.UPDATE_PLACE;
     const variables = { placeId, input };
-    const response = await this.client.mutate(mutation, variables) as { data: { updatePlace: Place } };
-    return response.data.updatePlace;
+    const response = await this.client.mutate(mutation, variables) as  { updatePlace: Place };
+    return response.updatePlace;
   }
 
   /**
