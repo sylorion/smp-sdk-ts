@@ -134,33 +134,30 @@ export class SMPClient {
       ErrorHandler.handleError(error, "USER_RETRIEVED_REFRESH_TOKEN_FAILED");
     }
   }
+
+
   async logoutUser() {
     try {
-        // Récupération des données utilisateur et du refresh token depuis le localStorage
+        // Récupération des données utilisateur  le localStorage
         const storedUser = localStorage.getItem("smp_user_0");
         const refreshToken = localStorage.getItem("smp_user_refresh_token");
 
         if (!storedUser) {
-            throw new Error(" No user data found in local storage !");
+            throw new Error("No user data found in local storage !");
         }
 
         if (!refreshToken) {
             throw new Error("No refresh token found in local storage !");
         }
-
         const parsedUser = JSON.parse(storedUser);
-        const user = parsedUser.user;
 
-        if (!user || !user.userID) {
+        if (!parsedUser || !parsedUser.userID) {
             throw new Error("No user ID found in user data !");
         }
-        await this.authTokenManager.logoutUser(user.userID, refreshToken);
-
+        await this.authTokenManager.logoutUser(parsedUser.userID, refreshToken);
         // Supprime les données utilisateur connecté
         localStorage.removeItem("smp_user_0");
-
         this.loggedUser = undefined;
-
         console.log("Déconnexion réussie");
     } catch (error) {
         ErrorHandler.handleError(error, "USER_RETRIEVED_REFRESH_TOKEN_FAILED");
