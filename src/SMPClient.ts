@@ -135,17 +135,35 @@ export class SMPClient {
   }
   async logoutUser() {
     try {
-        // Récupération des données de l'utilisateur depuis la base interne
+        // Récupération des données utilisateur et du refresh token depuis le localStorage
+        const storedUser = localStorage.getItem("smp_user_0");
+        const refreshToken = localStorage.getItem("smp_user_refresh_token");
 
-        if (!this.loggedUser?.user?.userID || !this.loggedUser?.refreshToken) {
-            throw new Error("User ID ou Refresh Token non trouvé dans les données récupérées !");
+        if (!storedUser) {
+            throw new Error(" No user data found in local storage !");
         }
-        console.log("User ID récupéré :", this.loggedUser.user.userID);
-        console.log("Refresh Token récupéré :", this.loggedUser.refreshToken);
-        return await this.authTokenManager.logoutUser( this.loggedUser.user.userID, this.loggedUser.refreshToken );
+
+        if (!refreshToken) {
+            throw new Error("No refresh token found in local storage !");
+        }
+
+        const parsedUser = JSON.parse(storedUser);
+        const user = parsedUser.user;
+
+        if (!user || !user.userID) {
+            throw new Error("No user ID found in user data !");
+        }
+        await this.authTokenManager.logoutUser(user.userID, refreshToken);
+
+        // Supprime les données utilisateur connecté
+        localStorage.removeItem("smp_user_0");
+
+        this.loggedUser = undefined;
+
+        console.log("Déconnexion réussie");
     } catch (error) {
         ErrorHandler.handleError(error, "USER_RETRIEVED_REFRESH_TOKEN_FAILED");
-        throw error; 
+        throw error;
     }
 }
 
