@@ -99,7 +99,7 @@ export class ManageOrganization {
     const response = await this.client.mutate(mutation, variables) as { createUserOrganization: CreateUserOrganizationResponse };
     return response.createUserOrganization;
   }
-
+  
   /**
    * Verifies an invitation token.
    */
