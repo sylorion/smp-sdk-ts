@@ -1,4 +1,5 @@
 
+
 export {EstimateAsset} from './EstimateAssetController';
 export {Organization} from './OrganizationController';
 export {Invoice} from './InvoiceController';
@@ -10,3 +11,4 @@ export {Signup} from './SignupController';
 export {Password} from './PasswordResolver';  
 export {Profile} from './ProfileController';
 export {Location} from './LocationController';
+export {ManageOrganization} from './ManageOrganisationController';

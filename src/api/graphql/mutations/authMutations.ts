@@ -139,3 +139,17 @@ mutation resetPassword($input: ResetPasswordInput!) {
   }
 }`;
 
+export const MUTATION_SIGNUP_AFTER_INVITATION = /* GraphQL */ `
+mutation SignupAfterInvitation($input: CreateUserInput!, $organizationId: ID!) {
+  signupAfterInvitation(input: $input, organizationID: $organizationId) {
+    username
+    userID
+    email
+    deletedAt
+    profileID
+    state
+  }
+} 
+
+
+`;

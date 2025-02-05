@@ -18,9 +18,9 @@ export interface Place {
   addressLine2: string;
   coordinates: string;
   state: string;
-  createdAt: string; // ISO 8601 format
-  updatedAt: string; // ISO 8601 format
-  deletedAt?: string; // ISO 8601 format
+  createdAt: string;
+  updatedAt: string; 
+  deletedAt?: string; 
 }
 
 // Types des inputs pour les mutations

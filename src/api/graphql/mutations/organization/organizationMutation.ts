@@ -84,7 +84,50 @@ const organizationMutations = {
         deleteOrganization(organizationID: $organizationID)
       }
     `,
-  };
   
+  
+// MUTATION TO VERIFY AN INVITATION TOKEN
+  VERIFY_INVITATION_TOKEN: `
+  mutation VerifyInvitationToken($input: VerifyInvitationTokenInput!) {
+    verifyInvitationToken(input: $input) {
+      success
+      message
+      email
+      organizationID
+      userExists
+    }
+  }
+    `,
+
+// MUTATION TO INVITE A USER TO AN ORGANIZATION
+  INVITE_USER_TO_ORGANIZATION: `
+    mutation InviteUserToOrganization($input: InviteUserToOrganizationInput!) {
+      inviteUserToOrganization(input: $input) {
+        success
+        message
+        
+      }
+    }`,
+
+// MUTATION TO CREATE A USER ORGANIZATION
+  CREATE_USER_ORGANIZATION: `
+    mutation CreateUserOrganization($input: CreateUserOrganizationInput!) {
+      createUserOrganization(input: $input) {
+        userOrganizationID
+        uniqRef
+        slug
+        authorID
+        legend
+        userID
+        roleID
+        organizationID
+        state
+        createdAt
+        updatedAt
+        deletedAt
+      }
+    }
+      `
+};
   export { organizationMutations };
   
