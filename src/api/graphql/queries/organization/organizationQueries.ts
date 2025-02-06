@@ -1,8 +1,8 @@
 // smp-sdk-ts/src/api/graphql/queries/organizationQueries.js
 
 const organizationQueries = {
-    // QUERY TO GET A LIST OF ORGANIZATIONS
-    GET_ORGANIZATIONS: `
+  // QUERY TO GET A LIST OF ORGANIZATIONS
+  GET_ORGANIZATIONS: `
       query GetOrganizations($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
         organizations(pagination: $pagination, sort: $sort, filter: $filter) {
           organizationID
@@ -43,9 +43,9 @@ const organizationQueries = {
         }
       }
     `,
-  
-    // QUERY TO GET A SINGLE ORGANIZATION BY ID
-    GET_ORGANIZATION_BY_ID: `
+
+  // QUERY TO GET A SINGLE ORGANIZATION BY ID
+  GET_ORGANIZATION_BY_ID: `
       query GetOrganizationByID($organizationID: ID!) {
         organizationByID(organizationID: $organizationID) {
           organizationID
@@ -86,9 +86,9 @@ const organizationQueries = {
         }
       }
     `,
-  
-    // QUERY TO GET ORGANIZATIONS BY MULTIPLE IDS
-    GET_ORGANIZATIONS_BY_IDS: `
+
+  // QUERY TO GET ORGANIZATIONS BY MULTIPLE IDS
+  GET_ORGANIZATIONS_BY_IDS: `
       query GetOrganizationsByIDs($organizationIDs: [ID!]!) {
         organizationsByIDs(organizationIDs: $organizationIDs) {
           organizationID
@@ -129,9 +129,9 @@ const organizationQueries = {
         }
       }
     `,
-  
-    // QUERY TO GET AN ORGANIZATION BY ITS UNIQUE REFERENCE
-    GET_ORGANIZATION_BY_UNIQ_REF: `
+
+  // QUERY TO GET AN ORGANIZATION BY ITS UNIQUE REFERENCE
+  GET_ORGANIZATION_BY_UNIQ_REF: `
       query GetOrganizationByUniqRef($uniqRef: String!) {
         organizationByUniqRef(uniqRef: $uniqRef) {
           organizationID
@@ -172,9 +172,9 @@ const organizationQueries = {
         }
       }
     `,
-  
-    // QUERY TO GET AN ORGANIZATION BY ITS SLUG
-    GET_ORGANIZATION_BY_SLUG: `
+
+  // QUERY TO GET AN ORGANIZATION BY ITS SLUG
+  GET_ORGANIZATION_BY_SLUG: `
       query GetOrganizationBySlug($slug: String!) {
         organizationBySlug(slug: $slug) {
           organizationID
@@ -215,9 +215,9 @@ const organizationQueries = {
         }
       }
     `,
-  
-    // QUERY TO GET MULTIPLE ORGANIZATIONS BY SLUGS
-    GET_ORGANIZATIONS_BY_SLUGS: `
+
+  // QUERY TO GET MULTIPLE ORGANIZATIONS BY SLUGS
+  GET_ORGANIZATIONS_BY_SLUGS: `
       query GetOrganizationsBySlugs($slugs: [String!]!) {
         organizationsBySlugs(slugs: $slugs) {
           organizationID
@@ -257,8 +257,25 @@ const organizationQueries = {
           deletedAt
         }
       }
-    `
-  };
-  
-  export { organizationQueries };
-  
+    `,
+
+   // QUERY TO GET A LIST OF ORGANIZATION MEMBERS
+  GET_ORGANIZATION_MEMBERS: `
+  query ListOrganizationMembers($organizationId: ID!) {
+    listOrganizationMembers(organizationID: $organizationId) {
+      members {
+        role
+        userID
+        joinedAt
+        name
+        lastname
+        email
+        username
+        profilePicture
+      }
+      totalMembers
+    }
+  }`,
+};
+
+export { organizationQueries };

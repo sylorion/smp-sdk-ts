@@ -1,6 +1,6 @@
 const organizationMutations = {
-    // MUTATION TO CREATE AN ORGANIZATION
-    CREATE_ORGANIZATION: `
+  // MUTATION TO CREATE AN ORGANIZATION
+  CREATE_ORGANIZATION: `
       mutation CreateOrganization($input: CreateOrganizationInput!) {
         createOrganization(input: $input) {
           organizationID
@@ -38,9 +38,9 @@ const organizationMutations = {
         }
       }
     `,
-  
-    // MUTATION TO UPDATE AN ORGANIZATION
-    UPDATE_ORGANIZATION: `
+
+  // MUTATION TO UPDATE AN ORGANIZATION
+  UPDATE_ORGANIZATION: `
       mutation UpdateOrganization($organizationID: ID!, $input: UpdateOrganizationInput!) {
         updateOrganization(organizationID: $organizationID, input: $input) {
            organizationID
@@ -77,16 +77,15 @@ const organizationMutations = {
         }
       }
     `,
-  
-    // MUTATION TO DELETE AN ORGANIZATION
-    DELETE_ORGANIZATION: `
+
+  // MUTATION TO DELETE AN ORGANIZATION
+  DELETE_ORGANIZATION: `
       mutation DeleteOrganization($organizationID: ID!) {
         deleteOrganization(organizationID: $organizationID)
       }
     `,
-  
-  
-// MUTATION TO VERIFY AN INVITATION TOKEN
+
+  // MUTATION TO VERIFY AN INVITATION TOKEN
   VERIFY_INVITATION_TOKEN: `
   mutation VerifyInvitationToken($input: VerifyInvitationTokenInput!) {
     verifyInvitationToken(input: $input) {
@@ -99,7 +98,7 @@ const organizationMutations = {
   }
     `,
 
-// MUTATION TO INVITE A USER TO AN ORGANIZATION
+  // MUTATION TO INVITE A USER TO AN ORGANIZATION
   INVITE_USER_TO_ORGANIZATION: `
     mutation InviteUserToOrganization($input: InviteUserToOrganizationInput!) {
       inviteUserToOrganization(input: $input) {
@@ -109,7 +108,7 @@ const organizationMutations = {
       }
     }`,
 
-// MUTATION TO CREATE A USER ORGANIZATION
+  // MUTATION TO CREATE A USER ORGANIZATION
   CREATE_USER_ORGANIZATION: `
     mutation CreateUserOrganization($input: CreateUserOrganizationInput!) {
       createUserOrganization(input: $input) {
@@ -127,7 +126,19 @@ const organizationMutations = {
         deletedAt
       }
     }
-      `
+      `,
+
+  // MUTATION TO UPDATE A USER ORGANIZATION
+  UPDATE_USER_ROLE_IN_ORGANIZATION: `
+      mutation UpdateUserRoleInOrganization($input: UpdateUserRoleInOrganizationInput!) {
+        updateUserRoleInOrganization(input: $input) {
+          success
+          message
+        }
+      }`,
+
+
+
+      
 };
-  export { organizationMutations };
-  
+export { organizationMutations };

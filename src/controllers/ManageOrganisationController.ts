@@ -1,6 +1,7 @@
 import { APIClient } from '../api/APIClient';
 import { organizationMutations } from './../api/graphql/mutations/organization/organizationMutation';
 import {MUTATION_SIGNUP_AFTER_INVITATION} from './../api/graphql/mutations/authMutations'
+import { organizationQueries } from '../api/graphql/queries/organization/organizationQueries';
 
 
 
@@ -68,6 +69,39 @@ export interface AddUserToOrganizationResponse {
     email: string;
     password: string;
   }
+
+  /** 
+   * The `OrganizationMember` interface represents a member of an organization.
+ */
+export  interface OrganizationMember {
+    userID: String;
+    role: String;
+    username: String;
+    email: String;
+    name: String;
+    lastname: String;
+    joinedAt: String;
+    profilePicture: String;
+  }
+/**
+ * The `OrganizationMembers` interface represents the response of the `listOrganizationMembers` query.
+ */
+  export interface OrganizationMembers {
+    members: OrganizationMember[];
+    totalMembers: number;
+  }
+
+  export interface UpdateUserRoleInOrganizationInput {
+    OrganizationID: string;
+    userID: string;
+    newRoleID : string; 
+  }
+
+  export interface UpdateUserRoleInOrganizationResponse {
+    success: boolean;
+    message: string;
+  }
+
 /**
  * The `MemberOrganization` class manages member-organization-related requests within the application.
  */
@@ -119,4 +153,29 @@ export class ManageOrganization {
     const response = await this.client.mutate(mutation, variables) as { signupAfterInvitation: SignupAfterInvitationResponse };
     return response.signupAfterInvitation;
   }
+ 
+  async updateUserRoleInOrganization(input: UpdateUserRoleInOrganizationInput): Promise<UpdateUserRoleInOrganizationResponse> {
+    const mutation = organizationMutations.UPDATE_USER_ROLE_IN_ORGANIZATION;
+    const variables = { input };
+    const response = await this.client.mutate(mutation, variables) as { updateUserRoleInOrganization: UpdateUserRoleInOrganizationResponse };
+    return response.updateUserRoleInOrganization;
+  }
+
+
+    // ========================== QUERIES =============================================================
+
+  /** 
+   * Lists the members of an organization.
+   * @param organizationId The ID of the organization.
+   * @returns The list of members of the organization.
+    */
+  async members(organizationId: string) {
+    const query = organizationQueries.GET_ORGANIZATION_MEMBERS;
+    const variables = { organizationId };
+    const response = await this.client.query(query, variables) as { listOrganizationMembers: OrganizationMembers  };
+    return response.listOrganizationMembers;
+  }
+
+
+
 }
