@@ -81,7 +81,7 @@ export  interface OrganizationMember {
     name: String;
     lastname: String;
     joinedAt: String;
-    profilePicture: String;
+    profilePicture?: String;
   }
 /**
  * The `OrganizationMembers` interface represents the response of the `listOrganizationMembers` query.
@@ -92,7 +92,7 @@ export  interface OrganizationMember {
   }
 
   export interface UpdateUserRoleInOrganizationInput {
-    OrganizationID: string;
+    organizationID: string;
     userID: string;
     newRoleID : string; 
   }
