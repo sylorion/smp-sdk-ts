@@ -88,7 +88,7 @@ export  interface OrganizationMember {
  */
   export interface OrganizationMembers {
     members: OrganizationMember[];
-    totalMembers: number;
+    totalMembers: number; 
   }
 
   export interface UpdateUserRoleInOrganizationInput {
