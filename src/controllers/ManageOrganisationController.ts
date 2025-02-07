@@ -102,6 +102,16 @@ export  interface OrganizationMember {
     message: string;
   }
 
+  export interface UserRole {
+    roleID: String
+    roleName: String
+  }
+  
+  export interface  OrganizationsByUserResponse {
+    organizationID: String
+    organizationName: String
+    userRole: UserRole
+  }
 /**
  * The `MemberOrganization` class manages member-organization-related requests within the application.
  */
@@ -174,6 +184,13 @@ export class ManageOrganization {
     const variables = { organizationId };
     const response = await this.client.query(query, variables) as { listOrganizationMembers: OrganizationMembers  };
     return response.listOrganizationMembers;
+  }
+
+  async getUserOrganizations(userId: string) {
+    const query = organizationQueries.GET_USER_ORGANIZATIONS;
+    const variables = { userId };
+    const response = await this.client.query(query, variables) as { getUserOrganizations: OrganizationsByUserResponse[] };
+    return response.getUserOrganizations;
   }
 
 

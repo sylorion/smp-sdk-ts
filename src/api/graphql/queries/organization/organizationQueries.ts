@@ -276,6 +276,20 @@ const organizationQueries = {
       totalMembers
     }
   }`,
+
+  // QUERY TO GET A LIST OF ORGANIZATION MEMBERS
+  GET_USER_ORGANIZATIONS: `
+  query GetUserOrganizations($userId: ID!) {
+    getUserOrganizations(userID: $userId) {
+      userRole {
+        roleName
+        roleID
+      }
+      organizationName
+      organizationID
+    }
+  }
+    `
 };
 
 export { organizationQueries };
