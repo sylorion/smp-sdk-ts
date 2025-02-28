@@ -118,22 +118,22 @@ export class Service {
   async getById(serviceID: string): Promise<ServiceEntity> {
     const query = serviceQueries.GET_SERVICE_BY_ID;
     const variables = { serviceID };
-    const response = await this.client.query(query, variables) as { data: { service: ServiceEntity } };
-    return response.data.service;
+    const response = await this.client.query(query, variables) as { service: ServiceEntity } ;
+    return response.service;
   }
 
   async getByAuthorID(authorID: string): Promise<ServiceEntity[]> {
     const query = serviceQueries.GET_SERVICE_BY_AUTHOR_ID;
     const variables = { authorID };
-    const response = await this.client.query(query, variables) as { data: { servicesByUserId: ServiceEntity[] } };
-    return response.data.servicesByUserId;
+    const response = await this.client.query(query, variables) as { servicesByUserId: ServiceEntity[]  };
+    return response.servicesByUserId;
   }
 
   async getByUniqRef(uniqRef: string): Promise<ServiceEntity> {
     const query = serviceQueries.GET_SERVICE_BY_UNIQ_REF;
     const variables = { uniqRef };
-    const response = await this.client.query(query, variables) as { data: { serviceByUniqRef: ServiceEntity } };
-    return response.data.serviceByUniqRef;
+    const response = await this.client.query(query, variables) as  { serviceByUniqRef: ServiceEntity};
+    return response.serviceByUniqRef;
   }
 
   async getBySlug(slug: string): Promise<ServiceEntity> {
@@ -160,15 +160,15 @@ export class Service {
   async listByOrganization(input: ListServicesByOrganizationInput): Promise<ServiceEntity[]> {
     const query = serviceQueries.LIST_SERVICES_BY_ORGANIZATION;
     const variables = { input };
-    const response = await this.client.query(query, variables) as { data: { listServicesByOrganization: ServiceEntity[] } };
-    return response.data.listServicesByOrganization;
+    const response = await this.client.query(query, variables) as  { listServicesByOrganization: ServiceEntity[]  };
+    return response.listServicesByOrganization;
   }
 
   async search(input: string): Promise<ServiceEntity[]> {
     const query = serviceQueries.SEARCH_SERVICES;
     const variables = { input };
-    const response = await this.client.query(query, variables) as { data: { searchServices: ServiceEntity[] } };
-    return response.data.searchServices;
+    const response = await this.client.query(query, variables) as  { searchServices: ServiceEntity[]  };
+    return response.searchServices;
   }
 
   //========================== MUTATIONS =============================================================
@@ -201,8 +201,8 @@ export class Service {
   async addServiceToFavorites(input: { serviceID: string; userID?: string }): Promise<ServiceToFavorites> {
     const mutation = serviceMutations.ADD_SERVICE_TO_FAVORITES;
     const variables = { input };
-    const response = await this.client.mutate(mutation, variables) as { data: { addServiceToFavorites: ServiceToFavorites } };
-    return response.data.addServiceToFavorites;
+    const response = await this.client.mutate(mutation, variables) as  { addServiceToFavorites: ServiceToFavorites  };
+    return response.addServiceToFavorites;
   }
 
 }
