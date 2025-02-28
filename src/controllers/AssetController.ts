@@ -62,10 +62,10 @@ export interface UpdateAssetInput {
   state?: string;
 }
 
-
 export interface ListAssetsByServiceInput {
-    serviceID: string;
-  }
+  serviceID: string;
+}
+
 /**
  * Réponse type pour une mutation (ex : suppression d'un asset).
  */
@@ -91,10 +91,10 @@ export class Asset {
    * @param assetID - L'identifiant de l'asset.
    */
   async get(assetID: string): Promise<AssetEntity> {
-    const query = assetQueries.GET_ASSET; // Doit correspondre à la query "asset(assetID: ID!): Asset"
+    const query = assetQueries.GET_ASSET;
     const variables = { assetID };
-    const response = await this.client.query(query, variables) as { data: { asset: AssetEntity } };
-    return response.data.asset;
+    const response = await this.client.query(query, variables) as { asset: AssetEntity };
+    return response.asset;
   }
 
   /**
@@ -104,10 +104,10 @@ export class Asset {
    * @param filter - (Optionnel) Filtres.
    */
   async list(pagination?: any, sort?: any, filter?: any): Promise<AssetEntity[]> {
-    const query = assetQueries.GET_ASSETS; // Doit correspondre à la query "assets(pagination:..., sort:..., filter:...): [Asset!]!"
+    const query = assetQueries.GET_ASSETS;
     const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as { data: { assets: AssetEntity[] } };
-    return response.data.assets;
+    const response = await this.client.query(query, variables) as { assets: AssetEntity[] };
+    return response.assets;
   }
 
   /**
@@ -117,8 +117,8 @@ export class Asset {
   async assetBySlug(slug: string): Promise<AssetEntity> {
     const query = assetQueries.GET_ASSET_BY_SLUG;
     const variables = { slug };
-    const response = await this.client.query(query, variables) as { data: { assetBySlug: AssetEntity } };
-    return response.data.assetBySlug;
+    const response = await this.client.query(query, variables) as { assetBySlug: AssetEntity };
+    return response.assetBySlug;
   }
 
   /**
@@ -128,8 +128,8 @@ export class Asset {
   async assetsByIDs(assetIDs: string[]): Promise<AssetEntity[]> {
     const query = assetQueries.GET_ASSETS_BY_IDS;
     const variables = { assetIDs };
-    const response = await this.client.query(query, variables) as { data: { assetsByIDs: AssetEntity[] } };
-    return response.data.assetsByIDs;
+    const response = await this.client.query(query, variables) as { assetsByIDs: AssetEntity[] };
+    return response.assetsByIDs;
   }
 
   /**
@@ -139,8 +139,8 @@ export class Asset {
   async assetsBySlugs(slugs: string[]): Promise<AssetEntity[]> {
     const query = assetQueries.GET_ASSETS_BY_SLUGS;
     const variables = { slugs };
-    const response = await this.client.query(query, variables) as { data: { assetsBySlugs: AssetEntity[] } };
-    return response.data.assetsBySlugs;
+    const response = await this.client.query(query, variables) as { assetsBySlugs: AssetEntity[] };
+    return response.assetsBySlugs;
   }
 
   /**
@@ -150,10 +150,9 @@ export class Asset {
   async assetByUniqRef(uniqRef: string): Promise<AssetEntity> {
     const query = assetQueries.GET_ASSET_BY_UNIQ_REF;
     const variables = { uniqRef };
-    const response = await this.client.query(query, variables) as { data: { assetByUniqRef: AssetEntity } };
-    return response.data.assetByUniqRef;
+    const response = await this.client.query(query, variables) as { assetByUniqRef: AssetEntity };
+    return response.assetByUniqRef;
   }
-
 
   // ------------------------ MUTATIONS ------------------------
 
@@ -164,8 +163,8 @@ export class Asset {
   async createAsset(input: CreateAssetInput): Promise<AssetEntity> {
     const mutation = assetMutations.CREATE_ASSET;
     const variables = { input };
-    const response = await this.client.mutate(mutation, variables) as { data: { createAsset: AssetEntity } };
-    return response.data.createAsset;
+    const response = await this.client.mutate(mutation, variables) as { createAsset: AssetEntity };
+    return response.createAsset;
   }
 
   /**
@@ -176,8 +175,8 @@ export class Asset {
   async updateAsset(assetID: string, input: UpdateAssetInput): Promise<AssetEntity> {
     const mutation = assetMutations.UPDATE_ASSET;
     const variables = { assetID, input };
-    const response = await this.client.mutate(mutation, variables) as { data: { updateAsset: AssetEntity } };
-    return response.data.updateAsset;
+    const response = await this.client.mutate(mutation, variables) as { updateAsset: AssetEntity };
+    return response.updateAsset;
   }
 
   /**
@@ -187,8 +186,8 @@ export class Asset {
   async deleteAsset(assetID: string): Promise<MutationResponse> {
     const mutation = assetMutations.DELETE_ASSET;
     const variables = { assetID };
-    const response = await this.client.mutate(mutation, variables) as { data: { deleteAsset: MutationResponse } };
-    return response.data.deleteAsset;
+    const response = await this.client.mutate(mutation, variables) as { deleteAsset: MutationResponse };
+    return response.deleteAsset;
   }
 
   /**
@@ -199,7 +198,7 @@ export class Asset {
   async listByService(input: ListAssetsByServiceInput): Promise<AssetEntity[]> {
     const query = assetQueries.LIST_ASSETS_BY_SERVICE;
     const variables = { input };
-    const response = await this.client.query(query, variables) as { data: { listAssetsByService: AssetEntity[] } };
-    return response.data.listAssetsByService;
+    const response = await this.client.query(query, variables) as { listAssetsByService: AssetEntity[] };
+    return response.listAssetsByService;
   }
 }
