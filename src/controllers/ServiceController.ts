@@ -87,6 +87,12 @@ export interface MutationResponse {
   message: string;
 }
 
+export interface ServiceToFavorites {
+  serviceID: string;
+  userID?: string;
+  addedAt: string;
+}
+
 /**
  * `ServiceController` GÈRE LES REQUÊTES RELATIVES AUX SERVICES DANS L'APPLICATION.
  */
@@ -103,7 +109,7 @@ export class Service {
     const query = serviceQueries.GET_SERVICES;
     const variables = { pagination, sort, filter };
     const response = await this.client.query(query, variables) as { services: ServiceEntity[]  };
-    return response.services; // Renvoie un tableau d'entités de service
+    return response.services; 
   }
 
   async getById(serviceID: string): Promise<ServiceEntity> {
@@ -184,4 +190,16 @@ export class Service {
     const response = await this.client.mutate(mutation, variables) as { deleteService: MutationResponse };
     return response.deleteService;
   }
+
+  /**
+   * Publie un service ajouté aux favoris.
+   * @param input - Objet contenant serviceID et optionnellement userID.
+   */
+  async addServiceToFavorites(input: { serviceID: string; userID?: string }): Promise<ServiceToFavorites> {
+    const mutation = serviceMutations.ADD_SERVICE_TO_FAVORITES;
+    const variables = { input };
+    const response = await this.client.mutate(mutation, variables) as { data: { addServiceToFavorites: ServiceToFavorites } };
+    return response.data.addServiceToFavorites;
+  }
+
 }

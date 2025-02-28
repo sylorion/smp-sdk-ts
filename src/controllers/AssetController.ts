@@ -62,6 +62,10 @@ export interface UpdateAssetInput {
   state?: string;
 }
 
+
+export interface ListAssetsByServiceInput {
+    serviceID: string;
+  }
 /**
  * Réponse type pour une mutation (ex : suppression d'un asset).
  */
@@ -73,7 +77,7 @@ export interface MutationResponse {
 /**
  * AssetController gère les requêtes relatives aux assets dans l'application.
  */
-export class AssetController {
+export class Asset {
   private client: APIClient;
 
   constructor(client: APIClient) {
@@ -150,6 +154,7 @@ export class AssetController {
     return response.data.assetByUniqRef;
   }
 
+
   // ------------------------ MUTATIONS ------------------------
 
   /**
@@ -184,5 +189,17 @@ export class AssetController {
     const variables = { assetID };
     const response = await this.client.mutate(mutation, variables) as { data: { deleteAsset: MutationResponse } };
     return response.data.deleteAsset;
+  }
+
+  /**
+   * Récupère la liste des Assets associés à un service.
+   * @param input - Un objet contenant le serviceID.
+   * @returns Un tableau d'AssetEntity.
+   */
+  async listByService(input: ListAssetsByServiceInput): Promise<AssetEntity[]> {
+    const query = assetQueries.LIST_ASSETS_BY_SERVICE;
+    const variables = { input };
+    const response = await this.client.query(query, variables) as { data: { listAssetsByService: AssetEntity[] } };
+    return response.data.listAssetsByService;
   }
 }
