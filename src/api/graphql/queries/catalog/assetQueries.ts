@@ -159,6 +159,32 @@ const assetQueries = {
         deletedAt
       }
     }
+  `,
+  // QUERY : Récupère la liste des assets liés à un service
+  LIST_ASSETS_BY_SERVICE: `
+    query ListAssetsByService($input: listAssetsByService) {
+      listAssetsByService(input: $input) {
+        assetID
+        uniqRef
+        slug
+        title
+        authorID
+        organizationID
+        mediaID
+        description
+        price
+        legalVatPercent
+        quantity
+        stockQuantity
+        maxPerReservation
+        conflictingAssets
+        applyableAssets
+        state
+        createdAt
+        updatedAt
+        deletedAt
+      }
+    }
   `
 };
 
