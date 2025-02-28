@@ -49,7 +49,7 @@ export interface MutationResponse {
 /**
  * ServiceAssetController gère les requêtes relatives aux ServiceAssets dans l'application.
  */
-export class ServiceAssetController {
+export class ServiceAsset {
   private client: APIClient;
 
   constructor(client: APIClient) {

@@ -1,3 +1,4 @@
+import { ServiceAsset } from './ServiceAssetController';
 
 
 export {EstimateAsset} from './EstimateAssetController';
@@ -13,3 +14,4 @@ export {Profile} from './ProfileController';
 export {Location} from './LocationController';
 export {ManageOrganization} from './ManageOrganisationController';
 export {Asset} from './AssetController';
+export {ServiceAsset} from './ServiceAssetController';
