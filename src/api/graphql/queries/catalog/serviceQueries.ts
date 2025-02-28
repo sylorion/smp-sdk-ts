@@ -167,7 +167,7 @@
     }
   `,
   LIST_SERVICES_BY_ORGANIZATION: `
-    query ListServicesByOrganization($input: OrganizationServiceInput!) {
+    query ListServicesByOrganization($input: ListServicesByOrganizationInput!) {
       listServicesByOrganization(input: $input) {
         serviceID
         uniqRef
