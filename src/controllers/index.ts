@@ -12,3 +12,4 @@ export {Password} from './PasswordResolver';
 export {Profile} from './ProfileController';
 export {Location} from './LocationController';
 export {ManageOrganization} from './ManageOrganisationController';
+export {Asset} from './AssetController';

@@ -249,7 +249,9 @@
         updatedAt
       }
     }
-  `
+  `,
+
+
 };
 
 export { serviceQueries };
