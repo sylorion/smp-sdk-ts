@@ -80,6 +80,16 @@ const serviceMutations = {
         }
       }
     `,
+    // MUTATION POUR AJOUTER UN SERVICE AUX FAVORIS
+  ADD_SERVICE_TO_FAVORITES: `
+  mutation AddServiceToFavorites($input: AddServiceToFavoritesInput!) {
+    addServiceToFavorites(input: $input) {
+      serviceID
+      userID
+      addedAt
+    }
+  }`,
+  
   };
   
   export { serviceMutations };
