@@ -87,6 +87,9 @@ export interface MutationResponse {
   message: string;
 }
 
+export interface ListServicesByOrganizationInput {
+  organizationID: string;
+}
 export interface ServiceToFavorites {
   serviceID: string;
   userID?: string;
@@ -154,7 +157,7 @@ export class Service {
     return response.data.servicesBySlugs;
   }
 
-  async listByOrganization(input: any): Promise<ServiceEntity[]> {
+  async listByOrganization(input: ListServicesByOrganizationInput): Promise<ServiceEntity[]> {
     const query = serviceQueries.LIST_SERVICES_BY_ORGANIZATION;
     const variables = { input };
     const response = await this.client.query(query, variables) as { data: { listServicesByOrganization: ServiceEntity[] } };
