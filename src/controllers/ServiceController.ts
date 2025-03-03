@@ -55,7 +55,7 @@ import { serviceMutations } from '../api/graphql/mutations/catalog/serviceMutati
   uptakeForm?: string;
   billingPlan?: string;
   onlineService?: boolean;
-  advancedAttributes?: Record<string, unknown>; 
+  advancedAttributes?: string; 
   state: string;
 }
 
@@ -78,7 +78,7 @@ import { serviceMutations } from '../api/graphql/mutations/catalog/serviceMutati
   uptakeForm?: string;
   billingPlan?: string;
   onlineService?: boolean;
-  advancedAttributes?: JSON; 
+  advancedAttributes?: string; 
   state?: string;
 }
 
