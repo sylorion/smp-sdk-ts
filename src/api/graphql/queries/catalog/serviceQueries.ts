@@ -188,6 +188,7 @@
         uptakeForm
         billingPlan
         onlineService
+        advancedAttributes
         state
         createdAt
         updatedAt
@@ -244,6 +245,7 @@
         uptakeForm
         billingPlan
         onlineService
+        advancedAttributes
         state
         createdAt
         updatedAt
