@@ -188,6 +188,9 @@
         uptakeForm
         billingPlan
         onlineService
+        upperPrice
+        lowerPrice
+        legalVatPercent
         advancedAttributes
         state
         createdAt
