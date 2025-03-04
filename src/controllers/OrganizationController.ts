@@ -133,8 +133,8 @@ export class Organization {
   async getById(organizationID: string): Promise<Organization> {
     const query = organizationQueries.GET_ORGANIZATION_BY_ID;
     const variables = { organizationID };
-    const response = await this.client.query(query, variables) as { organizationByID: Organization  };
-    return response.organizationByID;
+    const response = await this.client.query(query, variables) as { organization: Organization  };
+    return response.organization;
   }
 
   /**
