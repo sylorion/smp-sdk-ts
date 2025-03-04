@@ -47,7 +47,7 @@ const organizationQueries = {
   // QUERY TO GET A SINGLE ORGANIZATION BY ID
   GET_ORGANIZATION_BY_ID: `
       query GetOrganizationByID($organizationID: ID!) {
-        organizationByID(organizationID: $organizationID) {
+        organization(organizationID: $organizationID) {
           organizationID
           uniqRef
           slug

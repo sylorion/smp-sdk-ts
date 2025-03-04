@@ -123,8 +123,8 @@ export class Organization {
   async list(pagination?: any, sort?: any, filter?: any): Promise<Organization[]> {
     const query = organizationQueries.GET_ORGANIZATIONS;
     const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as { data: { organizations: Organization[] } };
-    return response.data.organizations;
+    const response = await this.client.query(query, variables) as { organizations: Organization[]  };
+    return response.organizations;
   }
 
   /**
