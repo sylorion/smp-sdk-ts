@@ -66,8 +66,8 @@ export class Location {
   async getById(placeId: string): Promise<Place> {
     const query = placeQueries.GET_PLACE_BY_ID;
     const variables = { placeId };
-    const response = await this.client.query(query, variables) as { data: { place: Place } };
-    return response.data.place;
+    const response = await this.client.query(query, variables) as { place: Place };
+    return response.place;
   }
 
   //========================== MUTATIONS =============================================================
