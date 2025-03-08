@@ -182,7 +182,7 @@ const assetQueries = {
         state
         createdAt
         updatedAt
-        deletedAt
+  
       }
     }
   `
