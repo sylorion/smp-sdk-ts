@@ -24,7 +24,7 @@ const transactionQueries = {
   
     // QUERY TO GET A SINGLE TRANSACTION BY ITS UNIQUE ID
     GET_TRANSACTION_BY_ID: `
-      query transaction($transactionID: ID!) {
+      query transaction($transactionId: ID!) {
         transactionByID(transactionID: $transactionID) {
           transactionID
           uniqRef
