@@ -154,6 +154,18 @@ export class Asset {
     return response.assetByUniqRef;
   }
 
+  /**
+   * Récupère la liste des Assets associés à un service.
+   * @param input - Un objet contenant le serviceID.
+   * @returns Un tableau d'AssetEntity.
+   */
+  async listByService(input: ListAssetsByServiceInput): Promise<AssetEntity[]> {
+    const query = assetQueries.LIST_ASSETS_BY_SERVICE;
+    const variables = { input };
+    const response = await this.client.query(query, variables) as { listAssetsByService: AssetEntity[] };
+    return response.listAssetsByService;
+  }
+  
   // ------------------------ MUTATIONS ------------------------
 
   /**
@@ -190,15 +202,5 @@ export class Asset {
     return response.deleteAsset;
   }
 
-  /**
-   * Récupère la liste des Assets associés à un service.
-   * @param input - Un objet contenant le serviceID.
-   * @returns Un tableau d'AssetEntity.
-   */
-  async listByService(input: ListAssetsByServiceInput): Promise<AssetEntity[]> {
-    const query = assetQueries.LIST_ASSETS_BY_SERVICE;
-    const variables = { input };
-    const response = await this.client.query(query, variables) as { listAssetsByService: AssetEntity[] };
-    return response.listAssetsByService;
-  }
+  
 }
