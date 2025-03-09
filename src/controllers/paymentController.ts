@@ -112,7 +112,7 @@ export interface OrderAsset {
   title: string;
   description: string;
   legalVatPercent: number;
-  details: any;
+  // details: any;
 }
 
 export interface Order {
@@ -125,7 +125,7 @@ export interface Order {
   lines: OrderAsset[];
   createdAt: string;
   updatedAt: string;
-  deletedAt?: string;
+  // deletedAt?: string;
 }
 
 export interface Transaction {
