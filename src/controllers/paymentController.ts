@@ -91,7 +91,7 @@ export interface CardPaymentResponse {
 }
 
 export interface Estimate {
-  estimateID: string;
+  estimateId: string;
   serviceId: string;
   proposalPrice?: number;
   details?: any;
