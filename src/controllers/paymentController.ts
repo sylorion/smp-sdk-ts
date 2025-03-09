@@ -178,7 +178,7 @@ export class SMPPayment {
     const response = await this.client.mutate(mutation, variables) as { updateEstimate: Estimate };
     return response.updateEstimate;
   }
-
+ 
   /*---------------------- Contrat ----------------------*/
   async updateContract(updateContractId: string, data: UpdateContractInput): Promise<any> {
     const mutation = paymentMutations.UPDATE_CONTRACT;
