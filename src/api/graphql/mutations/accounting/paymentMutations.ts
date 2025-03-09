@@ -20,7 +20,7 @@ const paymentMutations = {
           title
           description
           legalVatPercent
-          details
+          
         }
       }
     }
@@ -58,7 +58,7 @@ const paymentMutations = {
           title
           description
           legalVatPercent
-          details
+          
         }
         createdAt
         updatedAt
@@ -158,11 +158,11 @@ const paymentMutations = {
           title
           description
           legalVatPercent
-          details
+          
         }
         createdAt
         updatedAt
-        deletedAt
+        
       }
     }
   `,
@@ -184,7 +184,7 @@ const paymentMutations = {
           title
           description
           legalVatPercent
-          details
+          
         }
         createdAt
         updatedAt
@@ -210,7 +210,7 @@ const paymentMutations = {
           title
           description
           legalVatPercent
-          details
+          
         }
         createdAt
         updatedAt
@@ -236,7 +236,7 @@ const paymentMutations = {
           title
           description
           legalVatPercent
-          details
+          
         }
         createdAt
         updatedAt
@@ -262,7 +262,7 @@ const paymentMutations = {
           title
           description
           legalVatPercent
-          details
+          
         }
         createdAt
         updatedAt
@@ -288,7 +288,7 @@ const paymentMutations = {
           title
           description
           legalVatPercent
-          details
+          
         }
         createdAt
         updatedAt
