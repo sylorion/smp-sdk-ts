@@ -3,7 +3,7 @@ import { APIClient } from '../api/APIClient';
 import { paymentMutations } from '../api/graphql/mutations/accounting/paymentMutations';
 import { orderQueries } from '../api/graphql/queries/accounting/orderQueries';
 import { transactionQueries } from '../api/graphql/queries/accounting/transactionQueries';
-
+import { transactionMutations } from '../api/graphql/mutations/accounting/transactionMutations';
 /* -------------------------------------
    Interfaces d'Input et Types de Retour
 ------------------------------------- */
@@ -146,6 +146,16 @@ export interface Transaction {
   deletedAt?: string;
 }
 
+export interface CreateTransactionInput {
+  buyerUserId?: string;
+  buyerOrganizationId?: string;
+  sellerOrganizationId: string;
+  totalAmount?: number;
+  currency?: string;
+  serviceId: string;
+  sellerUserContactId?: string;
+  metadata?: string; 
+}
 /* -------------------------------------
    Classe SMPPayment (PaymentController)
 ------------------------------------- */
@@ -277,5 +287,12 @@ export class SMPPayment {
     const query = transactionQueries.GET_TRANSACTIONS;
     const response = await this.client.query(query, {}) as { transactions: Transaction[] };
     return response.transactions;
+  }
+  /*---------------------- Transaction Mutations ----------------------*/
+  async initiatetransaction(input: CreateTransactionInput): Promise<Transaction> {
+    const mutation = transactionMutations.CREATE_TRANSACTION;
+    const variables = { input };
+    const response = await this.client.mutate(mutation, variables) as { initiatedTransaction: Transaction };
+    return response.initiatedTransaction;
   }
 }
