@@ -194,4 +194,50 @@ export class APIClient {
     return true;
   }
 
+  /**
+ * Envoie une mutation GraphQL incluant un fichier en utilisant le standard multipart.
+ * @param mutation La mutation GraphQL à exécuter.
+ * @param variables Les variables de la mutation.
+ * @param fileKey Le nom de la propriété dans variables qui contiendra le fichier.
+ * @param file L’objet fichier (File ou Blob) à uploader.
+ * @returns La réponse de la mutation.
+ */
+async mutateWithFile<T>(
+  mutation: string,
+  variables: any,
+  fileKey: string,
+  file: File
+): Promise<T> {
+  // Construction de l'objet "operations" qui inclut la mutation et les variables.
+  logger.info("CALL TO APIClient.MUTATEWITHFILE Method");
+  const operations = JSON.stringify({ query: mutation, variables });
+  // Construction du "map" pour lier le fichier à la variable.
+  // Ici, la clé "0" fait référence au premier fichier uploadé et on l'associe à la variable fileKey
+  const map = JSON.stringify({ "0": [`variables.${fileKey}`] });
+  
+  // Création d'un objet FormData pour envoyer la requête multipart.
+  const formData = new FormData();
+  formData.append("operations", operations);
+  formData.append("map", map);
+  formData.append("0", file);
+
+  // Vérification des limites de débit et suivi des données envoyées (optionnel)
+  this.checkRateLimit();
+
+  try {
+    // Utilisation d'axios pour envoyer la requête multipart
+    const response = await axios.post<T>(this.config.graphqlUrl, formData, {
+      headers: {
+        // Axios définit automatiquement le Content-Type multipart quand un FormData est passé
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    // - suivre la quantité de données reçues ici si besoin
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
 }
