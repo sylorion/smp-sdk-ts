@@ -221,7 +221,6 @@ async mutateWithFile<T>(
   formData.append("map", map);
   formData.append("0", file);
 
-  // Vérification des limites de débit et suivi des données envoyées (optionnel)
   this.checkRateLimit();
 
   try {
