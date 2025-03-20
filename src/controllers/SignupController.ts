@@ -7,6 +7,7 @@ export interface CreateUserInput {
     userKind: string;
     twoFactorEnabled?: boolean | null;
     state: string;
+    profileID?: string | null;
     plan?: string | null;
     password: string;
     email: string;
