@@ -4,13 +4,13 @@ import { profileQueries } from './../api/graphql/queries/user-space/profileQueri
 
 // Types d'entrée pour les mutations des profils
 interface CreateProfileInput {
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string; // ISO 8601 format
-  gender: string; // ProfileGender
-  nationality: string;
-  phoneNumber: string;
-  locationID: string;
+  firstName?: string;
+  lastName?: string;
+  dateOfBirth?: string; // ISO 8601 format
+  gender?: string; // ProfileGender
+  nationality?: string;
+  phoneNumber?: string;
+  locationID?: string;
   idCardNumber?: string;
   passportNumber?: string;
   socialSecurityNumber?: string;
