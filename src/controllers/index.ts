@@ -7,7 +7,7 @@ export {Invoice} from './InvoiceController';
 export {Service} from './ServiceController';
 export {Estimate} from './EstimateController';
 export {Notification} from './NotificationController';
-export {SMPPayment} from './PaymentController';
+export {SMPPayment} from './paymentController';
 export {Signup} from './SignupController';
 export {Password} from './PasswordResolver';  
 export {Profile} from './ProfileController';
