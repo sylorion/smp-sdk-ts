@@ -12,9 +12,10 @@ interface CreateProfileInput {
   phoneNumber?: string;
   locationID?: string;
   idCardNumber?: string;
+  authorID: string;
   passportNumber?: string;
   socialSecurityNumber?: string;
-  state: string; // ObjectStatus
+  state: string; 
 }
 
 interface UpdateProfileInput {
