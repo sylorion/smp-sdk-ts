@@ -15,3 +15,4 @@ export {Location} from './LocationController';
 export {ManageOrganization} from './ManageOrganisationController';
 export {Asset} from './AssetController';
 export {ServiceAsset} from './ServiceAssetController';
+export {Mailing} from './MailingController';
