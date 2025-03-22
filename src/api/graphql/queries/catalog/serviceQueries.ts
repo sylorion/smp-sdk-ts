@@ -199,7 +199,7 @@
     }
   `,
   SEARCH_SERVICES: `
-    query SearchServices($input: ServiceSearchInput!) {
+    query SearchServices($input: SearchServiceInput!) {
       searchServices(input: $input) {
         serviceID
         uniqRef

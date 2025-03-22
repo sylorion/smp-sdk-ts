@@ -42,8 +42,8 @@ import { serviceMutations } from '../api/graphql/mutations/catalog/serviceMutati
   termsAndConditionsID?: string;
   parentServiceID?: string;
   topicID?: string;
-  organizationID?: string;
-  locationID?: string;
+  organizationID: string;
+  locationID: string;
   paymentConfigID?: string;
   price: number;
   legalVatPercent: number;
@@ -96,6 +96,9 @@ export interface ServiceToFavorites {
   addedAt: string;
 }
 
+export interface SearchServiceInput {
+  searchTerm: String
+}
 /**
  * `ServiceController` GÈRE LES REQUÊTES RELATIVES AUX SERVICES DANS L'APPLICATION.
  */
@@ -164,7 +167,7 @@ export class Service {
     return response.listServicesByOrganization;
   }
 
-  async search(input: string): Promise<ServiceEntity[]> {
+  async search(input: SearchServiceInput): Promise<ServiceEntity[]> {
     const query = serviceQueries.SEARCH_SERVICES;
     const variables = { input };
     const response = await this.client.query(query, variables) as  { searchServices: ServiceEntity[]  };
