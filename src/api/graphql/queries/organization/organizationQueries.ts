@@ -263,18 +263,14 @@ const organizationQueries = {
   GET_ORGANIZATION_MEMBERS: `
   query ListOrganizationMembers($organizationId: ID!) {
     listOrganizationMembers(organizationID: $organizationId) {
-      members {
-        role
-        userID
-        joinedAt
-        name
-        lastname
-        email
-        username
-        profilePicture
-      }
-      totalMembers
+    members {
+      email
+      name
+      profilePicture
+      role
     }
+    totalMembers
+  }
   }`,
 
   // QUERY TO GET A LIST OF ORGANIZATION MEMBERS
