@@ -161,7 +161,6 @@ const paymentMutations = {
           
         }
         createdAt
-        updatedAt
         
       }
     }

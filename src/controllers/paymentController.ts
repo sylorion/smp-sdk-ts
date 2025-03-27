@@ -128,7 +128,7 @@ export interface Order {
   unloggedUser?: any;
   lines: OrderAsset[];
   createdAt: string;
-  updatedAt: string;
+
   // deletedAt?: string;
 }
 
@@ -159,6 +159,7 @@ export interface CreateTransactionInput {
   serviceId: string;
   sellerUserContactId?: string;
   metadata?: string; 
+
 }
 /* -------------------------------------
    Classe SMPPayment (PaymentController)
