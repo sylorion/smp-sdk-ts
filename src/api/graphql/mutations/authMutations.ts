@@ -145,11 +145,11 @@ mutation SignupAfterInvitation($input: CreateUserInput!, $organizationId: ID!) {
     username
     userID
     email
+    plan
     deletedAt
     profileID
     state
   }
-} 
+} `;
 
 
-`;

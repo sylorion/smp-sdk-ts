@@ -23,6 +23,10 @@ export interface CreateOrderInput {
   serviceId: string;
   quoteId: string;
   totalPrice: number;
+  transactionId?: string;
+  sellerOrganizationId: string;
+  buyerOrganizationId: string;
+  currency: string;
   unloggedUser?: string;
 }
 
