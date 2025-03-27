@@ -13,7 +13,7 @@
   `,
   GET_SERVICE_BY_ID: `
     query GetServiceByID($serviceID: ID!) {
-      serviceByID(serviceID: $serviceID) {
+      service(serviceID: $serviceID) {
         serviceID
         uniqRef
         slug
