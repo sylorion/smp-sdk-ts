@@ -9,6 +9,8 @@ const placeQueries = {
                 country
                 region
                 pstate
+                addressLine1
+                addressLine2
                 city
                 postalCode
                 placeKind
