@@ -53,7 +53,6 @@ export interface AddUserToOrganizationResponse {
   }
   
   export interface CreateUserOrganizationInput {
-    // Définissez ici les champs nécessaires pour créer une relation utilisateur-organisation
     userID: string;
     organizationID: string;
     roleID: string;
@@ -64,10 +63,15 @@ export interface AddUserToOrganizationResponse {
   }
   
   export interface CreateUserInput {
-    // Définissez ici les champs nécessaires pour l'inscription d'un utilisateur
     username: string;
-    email: string;
+    userKind: string;
+    twoFactorEnabled?: boolean | null;
+    state: string;
+    profileID?: string | null;
+    plan?: string | null;
     password: string;
+    email: string;
+    rsaPublicKey?: string;
   }
 
   /** 
