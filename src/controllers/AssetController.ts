@@ -37,8 +37,41 @@ export interface AssetWithServiceAssetEntity {
 }
 
 export interface ServiceWithServiceAssetEntity {
-  service: { serviceID: string; name?: string; organizationID?: string };
-  serviceAsset: ServiceAssetPayloadEntity;
+  service: {
+    serviceID: string;
+    uniqRef?: string;
+    slug?: string;
+    authorID?: string;
+    title: string;
+    description?: string;
+    mediaBannerID?: string;
+    termsAndConditionsID?: string;
+    parentServiceID?: string;
+    topicID?: string;
+    organizationID?: string;
+    locationID?: string;
+    paymentConfigID?: string;
+    price: number;
+    legalVatPercent?: number;
+    lowerPrice?: number;
+    upperPrice?: number;
+    negotiable?: boolean;
+    perimeter?: number;
+    supplyType?: string;
+    uptakeForm?: string;
+    billingPlan?: string;
+    onlineService?: boolean;
+    advancedAttributes?: string;
+    state: string;
+    createdAt?: string;
+    updatedAt?: string;
+    deletedAt?: string;
+  };
+  serviceAsset: {
+    serviceAssetID: string;
+    serviceID: string;
+    assetID: string;
+  };
 }
 
 export interface AssetWithLinksEntity {
