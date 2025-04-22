@@ -162,30 +162,121 @@ const assetQueries = {
   `,
   // QUERY : Récupère la liste des assets liés à un service
   LIST_ASSETS_BY_SERVICE: `
-    query ListAssetsByService($input: listAssetsByService) {
-      listAssetsByService(input: $input) {
+    query ServiceAsset($input: ListAssetsByServiceInput!) {
+  listAssetsByService(input: $input) {
+    asset {
+      assetID
+      title
+      description
+      organizationID
+      assetID
+      uniqRef
+      slug
+      authorID
+      mediaID
+      price
+      legalVatPercent
+      quantity
+      stockQuantity
+      maxPerReservation
+      conflictingAssets
+      applyableAssets
+      state
+      createdAt
+   
+    }
+    serviceAsset {
+      serviceAssetID
+      serviceID
+      assetID
+    }
+  }
+}
+  `
+,
+
+LIST_ASSETS_BY_ORGANIZATION: `
+query ListAssetsByOrganization($input: ListAssetsByOrganizationInput!) {
+  listAssetsByOrganization(input: $input) {
+    asset {
+      assetID
+      uniqRef
+      slug
+      title
+      authorID
+      organizationID
+      mediaID
+      description
+      price
+      legalVatPercent
+      quantity
+      stockQuantity
+      maxPerReservation
+      conflictingAssets
+      applyableAssets
+      state
+      createdAt
+      updatedAt
+    }
+    serviceLinks {
+      serviceAsset {
+        serviceAssetID
+        serviceID
         assetID
-        uniqRef
-        slug
+      }
+      service {
         title
-        authorID
-        organizationID
-        mediaID
-        description
         price
-        legalVatPercent
-        quantity
-        stockQuantity
-        maxPerReservation
-        conflictingAssets
-        applyableAssets
         state
-        createdAt
-        updatedAt
-  
+        description
       }
     }
-  `
+  }
+}
+`,
+
+LIST_SERVICES_BY_ASSET:`
+query ListServicesByAsset($input: ListServicesByAssetInput!) {
+  listServicesByAsset(input: $input) {
+    serviceAsset {
+      serviceAssetID
+      serviceID
+      assetID
+    }
+    service {
+      serviceID
+      uniqRef
+      slug
+      authorID
+      title
+      description
+      mediaBannerID
+      termsAndConditionsID
+      parentServiceID
+ 
+      topicID
+      organizationID
+      locationID
+      paymentConfigID
+      price
+      legalVatPercent
+      lowerPrice
+      upperPrice
+      negotiable
+      perimeter
+      supplyType
+      uptakeForm
+      billingPlan
+      onlineService
+      advancedAttributes
+      state
+      createdAt
+      updatedAt
+      deletedAt
+    }
+  }
+}
+`
 };
 
 export { assetQueries };

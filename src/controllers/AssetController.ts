@@ -2,9 +2,7 @@ import { APIClient } from '../api/APIClient';
 import { assetQueries } from '../api/graphql/queries/catalog/assetQueries';
 import { assetMutations } from '../api/graphql/mutations/catalog/assetMutations';
 
-/**
- * Type représentant un Asset tel que défini dans le schéma GraphQL.
- */
+// --- Entity Interfaces ---
 export interface AssetEntity {
   assetID: string;
   uniqRef?: string;
@@ -19,17 +17,35 @@ export interface AssetEntity {
   quantity: number;
   stockQuantity?: number;
   maxPerReservation?: number;
-  conflictingAssets?: string;
-  applyableAssets?: string;
-  state: string; // ObjectStatus (ici représenté par une chaîne de caractères)
-  createdAt: string; // DateTime au format ISO8601
-  updatedAt: string; // DateTime au format ISO8601
-  deletedAt?: string; // DateTime au format ISO8601
+  conflictingAssets?: JSON;
+  applyableAssets?: JSON;
+  state: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
 }
 
-/**
- * Input pour la création d'un Asset.
- */
+export interface ServiceAssetPayloadEntity {
+  serviceAssetID: string;
+  serviceID: string;
+  assetID: string;
+}
+
+export interface AssetWithServiceAssetEntity {
+  asset: AssetEntity;
+  serviceAsset: ServiceAssetPayloadEntity;
+}
+
+export interface ServiceWithServiceAssetEntity {
+  service: { serviceID: string; name?: string; organizationID?: string };
+  serviceAsset: ServiceAssetPayloadEntity;
+}
+
+export interface AssetWithLinksEntity {
+  asset: AssetEntity;
+  serviceLinks: ServiceWithServiceAssetEntity[];
+}
+
 export interface CreateAssetInput {
   title: string;
   stockQuantity?: number;
@@ -40,14 +56,11 @@ export interface CreateAssetInput {
   legalVatPercent?: number;
   quantity: number;
   maxPerReservation?: number;
-  conflictingAssets?: string;
-  applyableAssets?: string;
+  conflictingAssets?: JSON;
+  applyableAssets?: JSON;
   state: string;
 }
 
-/**
- * Input pour la mise à jour d'un Asset.
- */
 export interface UpdateAssetInput {
   title?: string;
   stockQuantity?: number;
@@ -66,9 +79,14 @@ export interface ListAssetsByServiceInput {
   serviceID: string;
 }
 
-/**
- * Réponse type pour une mutation (ex : suppression d'un asset).
- */
+export interface ListServicesByAssetInput {
+  assetID: string;
+}
+
+export interface ListAssetsByOrganizationInput {
+  organizationID: string;
+}
+
 export interface MutationResponse {
   success: boolean;
   message: string;
@@ -77,7 +95,7 @@ export interface MutationResponse {
 /**
  * AssetController gère les requêtes relatives aux assets dans l'application.
  */
-export class Asset {
+export class AssetController {
   private client: APIClient;
 
   constructor(client: APIClient) {
@@ -86,121 +104,125 @@ export class Asset {
 
   // ------------------------ QUERIES ------------------------
 
-  /**
-   * Récupère un asset via son ID.
-   * @param assetID - L'identifiant de l'asset.
-   */
   async get(assetID: string): Promise<AssetEntity> {
     const query = assetQueries.GET_ASSET;
     const variables = { assetID };
-    const response = await this.client.query(query, variables) as { asset: AssetEntity };
+    const response = await this.client.query<{ asset: AssetEntity }>(query, variables);
     return response.asset;
   }
 
-  /**
-   * Récupère la liste de tous les assets.
-   * @param pagination - (Optionnel) Paramètres de pagination.
-   * @param sort - (Optionnel) Critères de tri.
-   * @param filter - (Optionnel) Filtres.
-   */
-  async list(pagination?: any, sort?: any, filter?: any): Promise<AssetEntity[]> {
+  async list(
+    pagination?: any,
+    sort?: any,
+    filter?: any
+  ): Promise<AssetEntity[]> {
     const query = assetQueries.GET_ASSETS;
     const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as { assets: AssetEntity[] };
+    const response = await this.client.query<{ assets: AssetEntity[] }>(query, variables);
     return response.assets;
   }
 
-  /**
-   * Récupère un asset via son slug.
-   * @param slug - Le slug de l'asset.
-   */
   async assetBySlug(slug: string): Promise<AssetEntity> {
     const query = assetQueries.GET_ASSET_BY_SLUG;
     const variables = { slug };
-    const response = await this.client.query(query, variables) as { assetBySlug: AssetEntity };
+    const response = await this.client.query<{ assetBySlug: AssetEntity }>(query, variables);
     return response.assetBySlug;
   }
 
-  /**
-   * Récupère plusieurs assets via leurs IDs.
-   * @param assetIDs - Tableau d'IDs d'assets.
-   */
   async assetsByIDs(assetIDs: string[]): Promise<AssetEntity[]> {
     const query = assetQueries.GET_ASSETS_BY_IDS;
     const variables = { assetIDs };
-    const response = await this.client.query(query, variables) as { assetsByIDs: AssetEntity[] };
+    const response = await this.client.query<{ assetsByIDs: AssetEntity[] }>(query, variables);
     return response.assetsByIDs;
   }
 
-  /**
-   * Récupère plusieurs assets via leurs slugs.
-   * @param slugs - Tableau de slugs d'assets.
-   */
   async assetsBySlugs(slugs: string[]): Promise<AssetEntity[]> {
     const query = assetQueries.GET_ASSETS_BY_SLUGS;
     const variables = { slugs };
-    const response = await this.client.query(query, variables) as { assetsBySlugs: AssetEntity[] };
+    const response = await this.client.query<{ assetsBySlugs: AssetEntity[] }>(query, variables);
     return response.assetsBySlugs;
   }
 
-  /**
-   * Récupère un asset via son uniqRef.
-   * @param uniqRef - La référence unique de l'asset.
-   */
   async assetByUniqRef(uniqRef: string): Promise<AssetEntity> {
     const query = assetQueries.GET_ASSET_BY_UNIQ_REF;
     const variables = { uniqRef };
-    const response = await this.client.query(query, variables) as { assetByUniqRef: AssetEntity };
+    const response = await this.client.query<{ assetByUniqRef: AssetEntity }>(query, variables);
     return response.assetByUniqRef;
   }
 
   /**
-   * Récupère la liste des Assets associés à un service.
-   * @param input - Un objet contenant le serviceID.
-   * @returns Un tableau d'AssetEntity.
+   * Récupère la liste des Assets associés à un service, avec pivot.
    */
-  async listByService(input: ListAssetsByServiceInput): Promise<AssetEntity[]> {
+  async listByService(
+    input: ListAssetsByServiceInput
+  ): Promise<AssetWithServiceAssetEntity[]> {
     const query = assetQueries.LIST_ASSETS_BY_SERVICE;
     const variables = { input };
-    const response = await this.client.query(query, variables) as { listAssetsByService: AssetEntity[] };
+    const response = await this.client.query<{
+      listAssetsByService: AssetWithServiceAssetEntity[];
+    }>(query, variables);
     return response.listAssetsByService;
   }
-  
-  // ------------------------ MUTATIONS ------------------------
 
   /**
-   * Crée un nouvel asset.
-   * @param input - Les données nécessaires à la création de l'asset.
+   * Récupère la liste des Services associés à un asset, avec pivot.
    */
-  async createAsset(input: CreateAssetInput): Promise<AssetEntity> {
+  async listServicesByAsset(
+    input: ListServicesByAssetInput
+  ): Promise<ServiceWithServiceAssetEntity[]> {
+    const query = assetQueries.LIST_SERVICES_BY_ASSET;
+    const variables = { input };
+    const response = await this.client.query<{
+      listServicesByAsset: ServiceWithServiceAssetEntity[];
+    }>(query, variables);
+    return response.listServicesByAsset;
+  }
+
+  /**
+   * Récupère la liste des Assets d'une organisation, avec tous leurs pivots.
+   */
+  async listByOrganization(
+    input: ListAssetsByOrganizationInput
+  ): Promise<AssetWithLinksEntity[]> {
+    const query = assetQueries.LIST_ASSETS_BY_ORGANIZATION;
+    const variables = { input };
+    const response = await this.client.query<{
+      listAssetsByOrganization: AssetWithLinksEntity[];
+    }>(query, variables);
+    return response.listAssetsByOrganization;
+  }
+
+  // ------------------------ MUTATIONS ------------------------
+
+  async createAsset(
+    input: CreateAssetInput
+  ): Promise<AssetEntity> {
     const mutation = assetMutations.CREATE_ASSET;
     const variables = { input };
-    const response = await this.client.mutate(mutation, variables) as { createAsset: AssetEntity };
+    const response = await this.client.mutate<{
+      createAsset: AssetEntity;
+    }>(mutation, variables);
     return response.createAsset;
   }
 
-  /**
-   * Met à jour un asset existant.
-   * @param assetID - L'identifiant de l'asset à mettre à jour.
-   * @param input - Les données de mise à jour.
-   */
-  async updateAsset(assetID: string, input: UpdateAssetInput): Promise<AssetEntity> {
+  async updateAsset(
+    assetID: string,
+    input: UpdateAssetInput
+  ): Promise<AssetEntity> {
     const mutation = assetMutations.UPDATE_ASSET;
     const variables = { assetID, input };
-    const response = await this.client.mutate(mutation, variables) as { updateAsset: AssetEntity };
+    const response = await this.client.mutate<{
+      updateAsset: AssetEntity;
+    }>(mutation, variables);
     return response.updateAsset;
   }
 
-  /**
-   * Supprime un asset.
-   * @param assetID - L'identifiant de l'asset à supprimer.
-   */
   async deleteAsset(assetID: string): Promise<MutationResponse> {
     const mutation = assetMutations.DELETE_ASSET;
     const variables = { assetID };
-    const response = await this.client.mutate(mutation, variables) as { deleteAsset: MutationResponse };
+    const response = await this.client.mutate<{
+      deleteAsset: MutationResponse;
+    }>(mutation, variables);
     return response.deleteAsset;
   }
-
-  
 }
