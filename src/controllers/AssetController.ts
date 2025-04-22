@@ -95,7 +95,7 @@ export interface MutationResponse {
 /**
  * AssetController gère les requêtes relatives aux assets dans l'application.
  */
-export class AssetController {
+export class Asset {
   private client: APIClient;
 
   constructor(client: APIClient) {
