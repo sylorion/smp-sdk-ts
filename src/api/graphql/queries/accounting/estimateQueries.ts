@@ -31,34 +31,20 @@ const estimateQueries = {
     `,
   
     GET_ESTIMATE_BY_ID: `
-      query Estimate($estimateID: ID!) {
-  estimate(estimateID: $estimateID) {
-    estimateID
-    uniqRef
-    slug
-    operatorUserID
-    buyerOrganizationID
-    sellerOrganizationID
-    serviceID
-    expirationDueDate
-    expirationTimeLeft
-    referencePrice
-    previewPrice
-    authorID
-    proposedPrice
-    comment
-    negociatedPrice
-    discountID
-    details
-    propositionCount
-    lastProposition
-    stage
-    state
-    createdAt
-    updatedAt
-    deletedAt
-  }
-}
+      query GetEstimate($estimateId: String!) {
+        estimate(id: $estimateId) {
+          estimateId
+          serviceId
+          proposalPrice
+          details
+          status
+          negotiationCount
+          clientSignDate
+          providerSignDate
+          createdAt
+          updatedAt
+        }
+      }
     `,
   
     GET_ESTIMATE_BY_UNIQ_REF: `
@@ -180,7 +166,92 @@ const estimateQueries = {
         }
       }
     `,
-}
+
+    CREATE_ESTIMATE: `
+      mutation CreateEstimate($data: CreateEstimateInput!) {
+        createEstimate(data: $data) {
+          estimateId
+          serviceId
+          proposalPrice
+          details
+          status
+          negotiationCount
+          clientSignDate
+          providerSignDate
+          createdAt
+          updatedAt
+        }
+      }
+    `,
+
+    UPDATE_ESTIMATE: `
+      mutation UpdateEstimate($id: String!, $data: UpdateEstimateInput!) {
+        updateEstimate(id: $id, data: $data) {
+          estimateId
+          serviceId
+          proposalPrice
+          details
+          status
+          negotiationCount
+          clientSignDate
+          providerSignDate
+          createdAt
+          updatedAt
+        }
+      }
+    `,
+
+    VALIDATE_ESTIMATE: `
+      mutation ValidateEstimate($data: ValidateEstimateInput!) {
+        validateEstimate(data: $data) {
+          estimateId
+          serviceId
+          proposalPrice
+          details
+          status
+          negotiationCount
+          clientSignDate
+          providerSignDate
+          createdAt
+          updatedAt
+        }
+      }
+    `,
+
+    GET_ESTIMATES_BY_BUYER_USER_ID: `
+      query GetEstimatesByBuyerUserId($buyerUserId: String!) {
+        estimatesByBuyerUserId(buyerUserId: $buyerUserId) {
+          estimateId
+          serviceId
+          proposalPrice
+          details
+          status
+          negotiationCount
+          clientSignDate
+          providerSignDate
+          createdAt
+          updatedAt
+        }
+      }
+    `,
+
+    GET_ESTIMATES_BY_BUYER_ORGANIZATION_ID: `
+      query GetEstimatesByBuyerOrganizationId($buyerOrganizationId: String!) {
+        estimatesByBuyerOrganizationId(buyerOrganizationId: $buyerOrganizationId) {
+          estimateId
+          serviceId
+          proposalPrice
+          details
+          status
+          negotiationCount
+          clientSignDate
+          providerSignDate
+          createdAt
+          updatedAt
+        }
+      }
+    `
+};
   
     
   

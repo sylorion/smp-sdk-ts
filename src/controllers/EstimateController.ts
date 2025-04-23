@@ -3,6 +3,35 @@
 import { APIClient } from '../api/APIClient';
 import { estimateQueries } from '../api/graphql/queries/accounting/estimateQueries';
 
+interface EstimateResponse {
+  estimateId: string;
+  serviceId: string;
+  proposalPrice?: number;
+  details: any;
+  status: string;
+  negotiationCount: number;
+  clientSignDate?: string;
+  providerSignDate?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+interface CreateEstimateResponse {
+  createEstimate: EstimateResponse;
+}
+
+interface UpdateEstimateResponse {
+  updateEstimate: EstimateResponse;
+}
+
+interface ValidateEstimateResponse {
+  validateEstimate: EstimateResponse;
+}
+
+interface GetEstimateResponse {
+  estimate: EstimateResponse;
+}
+
 /**
  * The `Estimate` class manages estimate-related requests within the application.
  * Provides methods to retrieve, list, and search estimates.
@@ -15,6 +44,56 @@ export class Estimate {
   }
 
   /**
+   * Creates a new estimate
+   */
+  async create(data: {
+    serviceId: string;
+    proposalPrice?: number;
+    buyerUserId?: string;
+    buyerOrganizationId?: string;
+    negotiationCount?: number;
+    details?: any;
+  }): Promise<EstimateResponse> {
+    const query = estimateQueries.CREATE_ESTIMATE;
+    const response = await this.client.mutate<CreateEstimateResponse>(query, { data });
+    return response.createEstimate;
+  }
+
+  /**
+   * Updates an existing estimate
+   */
+  async update(id: string, data: {
+    proposalPrice?: number;
+    details?: any;
+  }): Promise<EstimateResponse> {
+    const query = estimateQueries.UPDATE_ESTIMATE;
+    const response = await this.client.mutate<UpdateEstimateResponse>(query, { id, data });
+    return response.updateEstimate;
+  }
+
+  /**
+   * Validates an estimate
+   */
+  async validate(data: {
+    estimateId: string;
+    role: string;
+    details?: any;
+  }): Promise<EstimateResponse> {
+    const query = estimateQueries.VALIDATE_ESTIMATE;
+    const response = await this.client.mutate<ValidateEstimateResponse>(query, { data });
+    return response.validateEstimate;
+  }
+
+  /**
+   * Retrieves an estimate by its ID
+   */
+  async getById(estimateId: string): Promise<EstimateResponse> {
+    const query = estimateQueries.GET_ESTIMATE_BY_ID;
+    const response = await this.client.query<GetEstimateResponse>(query, { estimateId });
+    return response.estimate;
+  }
+
+  /**
    * Retrieves a list of estimates with optional pagination, sorting, and filters.
    */
   async list(pagination?: any, sort?: any, filter?: any): Promise<any[]> {
@@ -22,16 +101,6 @@ export class Estimate {
     const variables = { pagination, sort, filter };
     const response = await this.client.query(query, variables) as  { estimates: any[] };
     return response.estimates;
-  }
-
-  /**
-   * Fetches an estimate by its unique ID.
-   */
-  async getById(estimateID: number): Promise<any> {
-    const query = estimateQueries.GET_ESTIMATE_BY_ID;
-    const variables = { estimateID };
-    const response = await this.client.query(query, variables) as  { estimate: any } ;
-    return response.estimate;
   }
 
   /**
@@ -72,5 +141,23 @@ export class Estimate {
     const variables = { slugs };
     const response = await this.client.query(query, variables) as { data: { estimatesBySlugs: any[] } };
     return response.data.estimatesBySlugs;
+  }
+
+  /**
+   * Retrieves estimates by buyer user ID
+   */
+  async getByBuyerUserId(buyerUserId: string): Promise<EstimateResponse[]> {
+    const query = estimateQueries.GET_ESTIMATES_BY_BUYER_USER_ID;
+    const response = await this.client.query<{ estimatesByBuyerUserId: EstimateResponse[] }>(query, { buyerUserId });
+    return response.estimatesByBuyerUserId;
+  }
+
+  /**
+   * Retrieves estimates by buyer organization ID
+   */
+  async getByBuyerOrganizationId(buyerOrganizationId: string): Promise<EstimateResponse[]> {
+    const query = estimateQueries.GET_ESTIMATES_BY_BUYER_ORGANIZATION_ID;
+    const response = await this.client.query<{ estimatesByBuyerOrganizationId: EstimateResponse[] }>(query, { buyerOrganizationId });
+    return response.estimatesByBuyerOrganizationId;
   }
 }

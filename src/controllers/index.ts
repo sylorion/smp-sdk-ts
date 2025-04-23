@@ -1,7 +1,6 @@
 import { ServiceAsset } from './ServiceAssetController';
 
 
-export {EstimateAsset} from './EstimateAssetController';
 export {Organization} from './OrganizationController';
 export {Invoice} from './InvoiceController';
 export {Service} from './ServiceController';
@@ -16,3 +15,4 @@ export {ManageOrganization} from './ManageOrganisationController';
 export {Asset} from './AssetController';
 export {ServiceAsset} from './ServiceAssetController';
 export {Mailing} from './MailingController';
+export { Order } from './OrderController';

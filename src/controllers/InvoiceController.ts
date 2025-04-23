@@ -3,6 +3,178 @@
 import { APIClient } from '../api/APIClient';
 import { invoiceQueries } from '../api/graphql/queries/accounting/invoiceQueries';
 
+interface InvoiceResponse {
+  invoiceId: string;
+  uniqRef: string;
+  transactionId: string;
+  slug: string;
+  orderId: string;
+  thirdPartyFees: number;
+  servicesFees: number;
+  servicesVatPercent: number;
+  prestationsVatPercent: number;
+  totalAmount: number;
+  sellerOrganizationId: string;
+  paymentStatus: string;
+  emittedDate: string;
+  dueDate: string;
+  digitalSignature: string;
+  state: string;
+  createdAt: string;
+  updatedAt?: string;
+  deletedAt?: string;
+  transactionData?: string;
+  notes?: string;
+  disclaimers?: string;
+  paymentTerms?: string;
+  profile?: string;
+  header?: {
+    id: string;
+    invoiceNumber: string;
+    name: string;
+    invoiceDate: string;
+    issueDate: string;
+    typeCode: string;
+    notes: Array<{
+      heading: string;
+      note: string;
+    }>;
+  };
+  seller?: {
+    name: string;
+    postalAddress: {
+      line1: string;
+      city: string;
+      postalCode: string;
+      countryCode: string;
+      line2?: string;
+    };
+    vatNumber?: string;
+    contacts: Array<{
+      contactName: string;
+      contactEmail?: string;
+      contactPhoneNumber?: string;
+      divisionName?: string;
+    }>;
+  };
+  buyer?: {
+    name: string;
+    postalAddress: {
+      line1: string;
+      city: string;
+      postalCode: string;
+      countryCode: string;
+      line2?: string;
+    };
+    vatNumber?: string;
+    contacts: Array<{
+      contactName: string;
+      contactEmail?: string;
+      contactPhoneNumber?: string;
+      divisionName?: string;
+    }>;
+  };
+  payment?: {
+    paymentMeansCode: string;
+    payeeIBAN?: string;
+    payeeBIC?: string;
+    dueDate?: string;
+    paymentTermsText?: string;
+  };
+  lines?: Array<{
+    id: string;
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    vatRate: number;
+    taxCategoryCode: string;
+    unitCode: string;
+    allowances: number;
+    charges: Array<{
+      chargeIndicator: boolean;
+      actualAmount: number;
+      reason?: string;
+      reasonCode?: string;
+      taxRate?: number;
+      taxCategoryCode?: string;
+      startDate?: string;
+      endDate?: string;
+      percentage?: number;
+    }>;
+  }>;
+  deliveryParty?: {
+    name: string;
+    postalAddress: {
+      line1: string;
+      city: string;
+      postalCode: string;
+      countryCode: string;
+      line2?: string;
+    };
+    vatNumber?: string;
+    contacts: Array<{
+      contactName: string;
+      contactEmail?: string;
+      contactPhoneNumber?: string;
+      divisionName?: string;
+    }>;
+  };
+  payeeParty?: {
+    name: string;
+    postalAddress: {
+      line1: string;
+      city: string;
+      postalCode: string;
+      countryCode: string;
+      line2?: string;
+    };
+    vatNumber?: string;
+    contacts: Array<{
+      contactName: string;
+      contactEmail?: string;
+      contactPhoneNumber?: string;
+      divisionName?: string;
+    }>;
+  };
+  buyerOrganizationId?: string;
+  additionalDocuments?: Array<{
+    documentTypeCode: string;
+    id?: string;
+    name: string;
+    attachmentPath: string;
+  }>;
+  docAllowanceCharges?: Array<{
+    chargeIndicator: boolean;
+    actualAmount: number;
+    reason?: string;
+    reasonCode?: string;
+    taxRate?: number;
+    taxCategoryCode?: string;
+    startDate?: string;
+    endDate?: string;
+    percentage?: number;
+  }>;
+  currency?: string;
+  taxTotals?: Array<{
+    taxCategory: string;
+    taxRate: number;
+    taxableAmount: number;
+    taxAmount: number;
+  }>;
+}
+
+interface CreateInvoiceResponse {
+  createInvoice: InvoiceResponse;
+}
+
+interface GetInvoiceResponse {
+  invoice: InvoiceResponse;
+}
+
+interface GetInvoicesResponse {
+  invoices: InvoiceResponse[];
+}
+
 /**
  * The `Invoice` class handles invoice-related requests within the application.
  * It utilizes an `APIClient` to interact with the GraphQL API and provides methods
@@ -20,30 +192,40 @@ export class Invoice {
   }
 
   /**
-   * Retrieves a list of invoices with optional pagination, sorting, and filters.
-   * @param pagination - Pagination parameters for the request.
-   * @param sort - Sorting parameters for the invoices.
-   * @param filter - Filters to refine the list of invoices.
-   * @returns A list of invoices.
+   * Creates a new invoice
    */
-  async list(pagination?: any, sort?: any, filter?: any) {
-
-    const query = invoiceQueries.GET_INVOICES;
-    const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as   { invoices: any[]  };
-    return response.invoices;
+  async create(data: {
+    orderId: string;
+    currency: string;
+    totalAmount: number;
+    sellerOrganizationId: string;
+    emittedDate: string;
+    dueDate: string;
+    transactionId: string;
+    transactionData?: string;
+    notes?: string;
+  }): Promise<InvoiceResponse> {
+    const query = invoiceQueries.CREATE_INVOICE;
+    const response = await this.client.mutate<CreateInvoiceResponse>(query, { input: data });
+    return response.createInvoice;
   }
 
   /**
-   * Fetches an invoice by its unique ID.
-   * @param invoiceID - The ID of the invoice to retrieve.
-   * @returns The details of the invoice.
+   * Retrieves an invoice by its ID
    */
-  async getById(invoiceID: number) {
+  async getById(invoiceId: string): Promise<InvoiceResponse> {
     const query = invoiceQueries.GET_INVOICE_BY_ID;
-    const variables = { invoiceID };
-    const response = await this.client.query(query, variables) as  { invoice: any } ;
+    const response = await this.client.query<GetInvoiceResponse>(query, { invoiceId });
     return response.invoice;
+  }
+
+  /**
+   * Retrieves all invoices
+   */
+  async list(): Promise<InvoiceResponse[]> {
+    const query = invoiceQueries.GET_INVOICES;
+    const response = await this.client.query<GetInvoicesResponse>(query);
+    return response.invoices;
   }
 
   /**

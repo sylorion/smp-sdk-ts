@@ -3,25 +3,165 @@
 const invoiceQueries = {
     // QUERY TO GET AN INVOICE BY ITS UNIQUE ID
     GET_INVOICE_BY_ID: `
-      query GetInvoiceByID($invoiceID: ID!) {
-        invoice(invoiceID: $invoiceID) {
-          invoiceID
+      query GetInvoice($invoiceId: String!) {
+        invoice(invoiceId: $invoiceId) {
+          invoiceId
           uniqRef
+          transactionId
           slug
-          estimateID
+          orderId
           thirdPartyFees
           servicesFees
           servicesVatPercent
           prestationsVatPercent
           totalAmount
+          sellerOrganizationId
           paymentStatus
-          emitDate
+          emittedDate
           dueDate
           digitalSignature
           state
           createdAt
           updatedAt
           deletedAt
+          transactionData
+          notes
+          disclaimers
+          paymentTerms
+          profile
+          header {
+            id
+            invoiceNumber
+            name
+            invoiceDate
+            issueDate
+            typeCode
+            notes {
+              heading
+              note
+            }
+          }
+          seller {
+            name
+            postalAddress {
+              line1
+              city
+              postalCode
+              countryCode
+              line2
+            }
+            vatNumber
+            contacts {
+              contactName
+              contactEmail
+              contactPhoneNumber
+              divisionName
+            }
+          }
+          buyer {
+            name
+            postalAddress {
+              line1
+              city
+              postalCode
+              countryCode
+              line2
+            }
+            vatNumber
+            contacts {
+              contactName
+              contactEmail
+              contactPhoneNumber
+              divisionName
+            }
+          }
+          payment {
+            paymentMeansCode
+            payeeIBAN
+            payeeBIC
+            dueDate
+            paymentTermsText
+          }
+          lines {
+            id
+            description
+            quantity
+            unitPrice
+            vatRate
+            taxCategoryCode
+            unitCode
+            allowances
+            charges {
+              chargeIndicator
+              actualAmount
+              reason
+              reasonCode
+              taxRate
+              taxCategoryCode
+              startDate
+              endDate
+              percentage
+            }
+          }
+          deliveryParty {
+            name
+            postalAddress {
+              line1
+              city
+              postalCode
+              countryCode
+              line2
+            }
+            vatNumber
+            contacts {
+              contactName
+              contactEmail
+              contactPhoneNumber
+              divisionName
+            }
+          }
+          payeeParty {
+            name
+            postalAddress {
+              line1
+              city
+              postalCode
+              countryCode
+              line2
+            }
+            vatNumber
+            contacts {
+              contactName
+              contactEmail
+              contactPhoneNumber
+              divisionName
+            }
+          }
+          buyerOrganizationId
+          additionalDocuments {
+            documentTypeCode
+            id
+            name
+            attachmentPath
+          }
+          docAllowanceCharges {
+            chargeIndicator
+            actualAmount
+            reason
+            reasonCode
+            taxRate
+            taxCategoryCode
+            startDate
+            endDate
+            percentage
+          }
+          currency
+          taxTotals {
+            taxCategory
+            taxRate
+            taxableAmount
+            taxAmount
+          }
         }
       }
     `,
@@ -128,25 +268,53 @@ const invoiceQueries = {
   
     // QUERY TO LIST INVOICES WITH OPTIONAL PAGINATION, SORTING, AND FILTERING
     GET_INVOICES: `
-      query GetInvoices($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-        invoices(pagination: $pagination, sort: $sort, filter: $filter) {
-          invoiceID
+      query GetInvoices {
+        invoices {
+          invoiceId
           uniqRef
+          transactionId
           slug
-          estimateID
+          orderId
           thirdPartyFees
           servicesFees
           servicesVatPercent
           prestationsVatPercent
           totalAmount
+          sellerOrganizationId
           paymentStatus
-          emitDate
+          emittedDate
           dueDate
           digitalSignature
           state
           createdAt
           updatedAt
           deletedAt
+        }
+      }
+    `,
+  
+    // QUERY TO CREATE AN INVOICE
+    CREATE_INVOICE: `
+      mutation CreateInvoice($input: CreateInvoiceInput!) {
+        createInvoice(input: $input) {
+          invoiceId
+          uniqRef
+          transactionId
+          slug
+          orderId
+          thirdPartyFees
+          servicesFees
+          servicesVatPercent
+          prestationsVatPercent
+          totalAmount
+          sellerOrganizationId
+          paymentStatus
+          emittedDate
+          dueDate
+          digitalSignature
+          state
+          createdAt
+          updatedAt
         }
       }
     `
