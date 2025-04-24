@@ -14,6 +14,9 @@ interface EstimateResponse {
   providerSignDate?: string;
   createdAt: string;
   updatedAt?: string;
+  deletedAt?: string;
+  buyerUserId?: string;
+  buyerOrganizationId?: string;
 }
 
 interface CreateEstimateResponse {

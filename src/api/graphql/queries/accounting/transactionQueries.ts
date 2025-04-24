@@ -125,6 +125,72 @@ const transactionQueries = {
           deletedAt
         }
       }
+    `,
+  
+    GET_TRANSACTIONS_BY_BUYER_USER_ID: `
+      query GetTransactionsByBuyerUserId($buyerUserId: String!) {
+        transactionsByBuyerUserId(buyerUserId: $buyerUserId) {
+          transactionId
+          serviceId
+          slug
+          buyerUserId
+          buyerOrganizationId
+          sellerUserContactId
+          sellerOrganizationId
+          currency
+          totalAmount
+          state
+          status
+          metadata
+          createdAt
+          updatedAt
+          deletedAt
+        }
+      }
+    `,
+  
+    GET_TRANSACTIONS_BY_BUYER_ORGANIZATION_ID: `
+      query GetTransactionsByBuyerOrganizationId($buyerOrganizationId: String!) {
+        transactionsByBuyerOrganizationId(buyerOrganizationId: $buyerOrganizationId) {
+          transactionId
+          serviceId
+          slug
+          buyerUserId
+          buyerOrganizationId
+          sellerUserContactId
+          sellerOrganizationId
+          currency
+          totalAmount
+          state
+          status
+          metadata
+          createdAt
+          updatedAt
+          deletedAt
+        }
+      }
+    `,
+  
+    GET_TRANSACTIONS_BY_SELLER_ORGANIZATION_ID: `
+      query GetTransactionsBySellerOrganizationId($sellerOrganizationId: String!) {
+        transactionsBySellerOrganizationId(sellerOrganizationId: $sellerOrganizationId) {
+          transactionId
+          serviceId
+          slug
+          buyerUserId
+          buyerOrganizationId
+          sellerUserContactId
+          sellerOrganizationId
+          currency
+          totalAmount
+          state
+          status
+          metadata
+          createdAt
+          updatedAt
+          deletedAt
+        }
+      }
     `
   };
   

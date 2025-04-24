@@ -98,7 +98,7 @@ export interface Estimate {
   estimateId: string;
   serviceId: string;
   proposalPrice?: number;
-  details?: any;
+  details: any;
   status: string;
   negotiationCount: number;
   clientSignDate?: string;
@@ -106,6 +106,8 @@ export interface Estimate {
   createdAt: string;
   updatedAt?: string;
   deletedAt?: string;
+  buyerUserId?: string;
+  buyerOrganizationId?: string;
 }
 
 export interface OrderAsset {
@@ -293,6 +295,25 @@ export class SMPPayment {
     const response = await this.client.query(query, {}) as { transactions: Transaction[] };
     return response.transactions;
   }
+
+  async getTransactionsByBuyerUserId(buyerUserId: string): Promise<Transaction[]> {
+    const query = transactionQueries.GET_TRANSACTIONS_BY_BUYER_USER_ID;
+    const response = await this.client.query(query, { buyerUserId }) as { transactionsByBuyerUserId: Transaction[] };
+    return response.transactionsByBuyerUserId;
+  }
+
+  async getTransactionsByBuyerOrganizationId(buyerOrganizationId: string): Promise<Transaction[]> {
+    const query = transactionQueries.GET_TRANSACTIONS_BY_BUYER_ORGANIZATION_ID;
+    const response = await this.client.query(query, { buyerOrganizationId }) as { transactionsByBuyerOrganizationId: Transaction[] };
+    return response.transactionsByBuyerOrganizationId;
+  }
+
+  async getTransactionsBySellerOrganizationId(sellerOrganizationId: string): Promise<Transaction[]> {
+    const query = transactionQueries.GET_TRANSACTIONS_BY_SELLER_ORGANIZATION_ID;
+    const response = await this.client.query(query, { sellerOrganizationId }) as { transactionsBySellerOrganizationId: Transaction[] };
+    return response.transactionsBySellerOrganizationId;
+  }
+
   /*---------------------- Transaction Mutations ----------------------*/
   async initiateTransaction(input: CreateTransactionInput): Promise<Transaction> {
     const mutation = transactionMutations.CREATE_TRANSACTION;
