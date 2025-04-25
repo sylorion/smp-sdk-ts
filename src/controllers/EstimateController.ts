@@ -17,6 +17,7 @@ interface EstimateResponse {
   deletedAt?: string;
   buyerUserId?: string;
   buyerOrganizationId?: string;
+  sellerOrganizationId?: string;
 }
 
 interface CreateEstimateResponse {
