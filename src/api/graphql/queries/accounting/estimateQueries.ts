@@ -234,7 +234,6 @@ const estimateQueries = {
           providerSignDate
           createdAt
           updatedAt
-          deletedAt
           buyerUserId
           buyerOrganizationId
         }
@@ -254,10 +253,8 @@ const estimateQueries = {
           providerSignDate
           createdAt
           updatedAt
-          deletedAt
           buyerUserId
           buyerOrganizationId
-          sellerOrganizationId
         }
       }
     `,
@@ -275,7 +272,6 @@ const estimateQueries = {
           providerSignDate
           createdAt
           updatedAt
-          deletedAt
           buyerUserId
           buyerOrganizationId
           sellerOrganizationId
