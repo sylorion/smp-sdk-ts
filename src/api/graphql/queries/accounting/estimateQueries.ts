@@ -257,6 +257,28 @@ const estimateQueries = {
           deletedAt
           buyerUserId
           buyerOrganizationId
+          sellerOrganizationId
+        }
+      }
+    `,
+
+    GET_ESTIMATES_BY_SELLER_ORGANIZATION_ID: `
+      query GetEstimatesBySellerOrganizationId($sellerOrganizationId: String!) {
+        estimatesBySellerOrganizationId(sellerOrganizationId: $sellerOrganizationId) {
+          estimateId
+          serviceId
+          proposalPrice
+          details
+          status
+          negotiationCount
+          clientSignDate
+          providerSignDate
+          createdAt
+          updatedAt
+          deletedAt
+          buyerUserId
+          buyerOrganizationId
+          sellerOrganizationId
         }
       }
     `

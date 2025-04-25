@@ -164,4 +164,13 @@ export class Estimate {
     const response = await this.client.query<{ estimatesByBuyerOrganizationId: EstimateResponse[] }>(query, { buyerOrganizationId });
     return response.estimatesByBuyerOrganizationId;
   }
+
+  /**
+   * Retrieves estimates by seller organization ID
+   */
+  async getBySellerOrganizationId(sellerOrganizationId: string): Promise<EstimateResponse[]> {
+    const query = estimateQueries.GET_ESTIMATES_BY_SELLER_ORGANIZATION_ID;
+    const response = await this.client.query<{ estimatesBySellerOrganizationId: EstimateResponse[] }>(query, { sellerOrganizationId });
+    return response.estimatesBySellerOrganizationId;
+  }
 }
