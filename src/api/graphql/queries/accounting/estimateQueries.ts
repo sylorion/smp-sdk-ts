@@ -43,7 +43,6 @@ const estimateQueries = {
           providerSignDate
           createdAt
           updatedAt
-          deletedAt
           buyerUserId
           buyerOrganizationId
         }
@@ -75,7 +74,6 @@ const estimateQueries = {
           state
           createdAt
           updatedAt
-          deletedAt
         }
       }
     `,
@@ -105,7 +103,6 @@ const estimateQueries = {
           state
           createdAt
           updatedAt
-          deletedAt
         }
       }
     `,
@@ -135,7 +132,6 @@ const estimateQueries = {
           state
           createdAt
           updatedAt
-          deletedAt
         }
       }
     `,
@@ -165,7 +161,6 @@ const estimateQueries = {
           state
           createdAt
           updatedAt
-          deletedAt
         }
       }
     `,
@@ -255,6 +250,7 @@ const estimateQueries = {
           updatedAt
           buyerUserId
           buyerOrganizationId
+          sellerOrganizationId
         }
       }
     `,
