@@ -161,7 +161,6 @@ export interface CreateTransactionInput {
   serviceId: string;
   sellerUserContactId?: string;
   metadata?: string; 
-
 }
 /* -------------------------------------
    Classe SMPPayment (PaymentController)
@@ -301,7 +300,7 @@ export class SMPPayment {
     const response = await this.client.query(query, { buyerUserId }) as { transactionsByBuyerUserId: Transaction[] };
     return response.transactionsByBuyerUserId;
   }
-
+  
   async getTransactionsByBuyerOrganizationId(buyerOrganizationId: string): Promise<Transaction[]> {
     const query = transactionQueries.GET_TRANSACTIONS_BY_BUYER_ORGANIZATION_ID;
     const response = await this.client.query(query, { buyerOrganizationId }) as { transactionsByBuyerOrganizationId: Transaction[] };
