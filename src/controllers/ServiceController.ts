@@ -1,9 +1,11 @@
 import { APIClient } from '../api/APIClient';
 import { serviceQueries } from '../api/graphql/queries/index';
 import { serviceMutations } from '../api/graphql/mutations/catalog/serviceMutation';
+import { serviceMediaQueries } from '../api/graphql/queries/catalog/serviceMediaQueries';
+import { serviceMediaMutations } from '../api/graphql/mutations/catalog/serviceMediaMutation';
 
 // Types pour les entités et les inputs
- interface ServiceEntity {
+interface ServiceEntity {
   serviceID: string;
   uniqRef: string;
   slug: string;
@@ -34,7 +36,7 @@ import { serviceMutations } from '../api/graphql/mutations/catalog/serviceMutati
   deletedAt?: string; // ISO 8601
 }
 
- interface CreateServiceInput {
+interface CreateServiceInput {
   authorID: string;
   title: string;
   description: string;
@@ -59,7 +61,7 @@ import { serviceMutations } from '../api/graphql/mutations/catalog/serviceMutati
   state: string;
 }
 
- interface UpdateServiceInput {
+interface UpdateServiceInput {
   title?: string;
   description?: string;
   mediaBannerID?: string;
@@ -82,6 +84,37 @@ import { serviceMutations } from '../api/graphql/mutations/catalog/serviceMutati
   state?: string;
 }
 
+// Types pour ServiceMedia
+interface ServiceMediaEntity {
+  serviceMediaID: string;
+  uniqRef: string;
+  slug: string;
+  mediaID: string;
+  serviceID: string;
+  legend: string;
+  listingPosition: number;
+  state: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
+}
+
+interface CreateServiceMediaInput {
+  mediaID: string;
+  serviceID: string;
+  legend?: string;
+  listingPosition?: number;
+  state: string;
+}
+
+interface UpdateServiceMediaInput {
+  mediaID?: string;
+  serviceID?: string;
+  legend?: string;
+  listingPosition?: number;
+  state?: string;
+}
+
 export interface MutationResponse {
   success: boolean;
   message: string;
@@ -90,6 +123,7 @@ export interface MutationResponse {
 export interface ListServicesByOrganizationInput {
   organizationID: string;
 }
+
 export interface ServiceToFavorites {
   serviceID: string;
   userID?: string;
@@ -99,6 +133,7 @@ export interface ServiceToFavorites {
 export interface SearchServiceInput {
   searchTerm: String
 }
+
 /**
  * `ServiceController` GÈRE LES REQUÊTES RELATIVES AUX SERVICES DANS L'APPLICATION.
  */
@@ -174,6 +209,50 @@ export class Service {
     return response.searchServices;
   }
 
+  //========================== SERVICE MEDIA QUERIES ==============================================
+
+  async getServiceMedia(serviceMediaID: string): Promise<ServiceMediaEntity> {
+    const query = serviceMediaQueries.GET_SERVICE_MEDIA;
+    const variables = { serviceMediaID };
+    const response = await this.client.query(query, variables) as { serviceMedia: ServiceMediaEntity };
+    return response.serviceMedia;
+  }
+
+  async listServiceMedias(pagination?: any, sort?: any, filter?: any): Promise<ServiceMediaEntity[]> {
+    const query = serviceMediaQueries.GET_SERVICE_MEDIAS;
+    const variables = { pagination, sort, filter };
+    const response = await this.client.query(query, variables) as { serviceMedias: ServiceMediaEntity[] };
+    return response.serviceMedias;
+  }
+
+  async getServiceMediaBySlug(slug: string): Promise<ServiceMediaEntity> {
+    const query = serviceMediaQueries.GET_SERVICE_MEDIA_BY_SLUG;
+    const variables = { slug };
+    const response = await this.client.query(query, variables) as { serviceMediaBySlug: ServiceMediaEntity };
+    return response.serviceMediaBySlug;
+  }
+
+  async getServiceMediasByIds(serviceMediaIDs: string[]): Promise<ServiceMediaEntity[]> {
+    const query = serviceMediaQueries.GET_SERVICE_MEDIAS_BY_IDS;
+    const variables = { serviceMediaIDs };
+    const response = await this.client.query(query, variables) as { serviceMediasByIDs: ServiceMediaEntity[] };
+    return response.serviceMediasByIDs;
+  }
+
+  async getServiceMediasBySlugs(slugs: string[]): Promise<ServiceMediaEntity[]> {
+    const query = serviceMediaQueries.GET_SERVICE_MEDIAS_BY_SLUGS;
+    const variables = { slugs };
+    const response = await this.client.query(query, variables) as { serviceMediasBySlugs: ServiceMediaEntity[] };
+    return response.serviceMediasBySlugs;
+  }
+
+  async getServiceMediaByUniqRef(uniqRef: string): Promise<ServiceMediaEntity> {
+    const query = serviceMediaQueries.GET_SERVICE_MEDIA_BY_UNIQ_REF;
+    const variables = { uniqRef };
+    const response = await this.client.query(query, variables) as { serviceMediaByUniqRef: ServiceMediaEntity };
+    return response.serviceMediaByUniqRef;
+  }
+
   //========================== MUTATIONS =============================================================
 
   async createService(input: CreateServiceInput): Promise<ServiceEntity> {
@@ -208,4 +287,26 @@ export class Service {
     return response.addServiceToFavorites;
   }
 
+  //========================== SERVICE MEDIA MUTATIONS ==============================================
+
+  async createServiceMedia(input: CreateServiceMediaInput): Promise<ServiceMediaEntity> {
+    const mutation = serviceMediaMutations.CREATE_SERVICE_MEDIA;
+    const variables = { input };
+    const response = await this.client.mutate(mutation, variables) as { createServiceMedia: ServiceMediaEntity };
+    return response.createServiceMedia;
+  }
+
+  async updateServiceMedia(serviceMediaID: string, input: UpdateServiceMediaInput): Promise<ServiceMediaEntity> {
+    const mutation = serviceMediaMutations.UPDATE_SERVICE_MEDIA;
+    const variables = { serviceMediaID, input };
+    const response = await this.client.mutate(mutation, variables) as { updateServiceMedia: ServiceMediaEntity };
+    return response.updateServiceMedia;
+  }
+
+  async deleteServiceMedia(serviceMediaID: string): Promise<MutationResponse> {
+    const mutation = serviceMediaMutations.DELETE_SERVICE_MEDIA;
+    const variables = { serviceMediaID };
+    const response = await this.client.mutate(mutation, variables) as { deleteServiceMedia: MutationResponse };
+    return response.deleteServiceMedia;
+  }
 }
