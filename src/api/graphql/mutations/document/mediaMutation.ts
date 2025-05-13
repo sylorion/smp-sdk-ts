@@ -1,7 +1,7 @@
 const mediaMutations = {
   CREATE_MEDIA: `
-    mutation CreateMedia($input: CreateMediaInput!, $file: Upload!) {
-      createMedia(input: $input, file: $file) {
+    mutation CreateMedia($input: CreateMediaInput!) {
+      createMedia(input: $input) {
         mediaID
         uniqRef
         slug
