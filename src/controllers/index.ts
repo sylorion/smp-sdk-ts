@@ -15,4 +15,5 @@ export {ManageOrganization} from './ManageOrganisationController';
 export {Asset} from './AssetController';
 export {ServiceAsset} from './ServiceAssetController';
 export {Mailing} from './MailingController';
+export {Media} from './MediaController';
 export { Order } from './OrderController';
