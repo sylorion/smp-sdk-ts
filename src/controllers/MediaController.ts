@@ -49,7 +49,7 @@ interface MediaEntity {
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;
-}
+} 
 
 interface MutationResponse {
   success: boolean;
@@ -69,9 +69,9 @@ export class Media {
 
   // ======================= MUTATIONS =======================
 
-  async createMedia(input: CreateMediaInput, file: File): Promise<MediaEntity> {
+  async createMedia(input: CreateMediaInput): Promise<MediaEntity> {
     const mutation = mediaMutations.CREATE_MEDIA;
-    const variables = { input, file };
+    const variables = { input };
     const response = await this.client.mutate(mutation, variables) as { createMedia: MediaEntity };
     return response.createMedia;
   }
