@@ -260,6 +260,14 @@
         state
         createdAt
         updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,
