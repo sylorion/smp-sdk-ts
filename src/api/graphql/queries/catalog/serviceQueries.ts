@@ -8,6 +8,14 @@
         title
         slug
         uniqRef
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,
@@ -82,6 +90,14 @@
         state
         createdAt
         updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,
@@ -115,6 +131,14 @@
         state
         createdAt
         updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,
@@ -143,6 +167,14 @@
         state
         createdAt
         updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,
@@ -171,6 +203,14 @@
         state
         createdAt
         updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,
@@ -203,6 +243,14 @@
         state
         createdAt
         updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,
@@ -231,6 +279,14 @@
         state
         createdAt
         updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,
