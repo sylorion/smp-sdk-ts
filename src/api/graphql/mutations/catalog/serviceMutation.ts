@@ -31,6 +31,14 @@ const serviceMutations = {
           createdAt
           updatedAt
           deletedAt
+          serviceMedias {
+            serviceMediaID
+            listingPosition
+            legend
+            media {
+              url
+            }
+          }
         }
       }
     `,
@@ -67,6 +75,14 @@ const serviceMutations = {
           createdAt
           updatedAt
           deletedAt
+          serviceMedias {
+            serviceMediaID
+            listingPosition
+            legend
+            media {
+              url
+            }
+          }
         }
       }
     `,
