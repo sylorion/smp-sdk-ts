@@ -3,18 +3,13 @@ const mediaMutations = {
     mutation CreateMedia($input: CreateMediaInput!) {
       createMedia(input: $input) {
         mediaID
-        uniqRef
-        slug
         authorID
         mediaType
-        legend
-        summary
         originalName
         finalName
         url
         size
         entityID
-        metadata
         entityName
         state
         createdAt
