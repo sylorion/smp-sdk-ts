@@ -32,6 +32,10 @@ interface UpdateProfileInput {
   state?: string; // ObjectStatus
 }
 
+interface MediaEntity {
+  url: string;
+}
+
 // Types de réponse pour les mutations et les requêtes
 interface ProfileEntity {
   profileID: string;
@@ -51,6 +55,7 @@ interface ProfileEntity {
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;
+  profilePicture?: MediaEntity;
 }
 
 interface MutationResponse {
