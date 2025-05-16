@@ -1,8 +1,31 @@
 import { APIClient } from '../api/APIClient';
 import { assetQueries } from '../api/graphql/queries/catalog/assetQueries';
 import { assetMutations } from '../api/graphql/mutations/catalog/assetMutations';
+import { assetMediaQueries } from '../api/graphql/queries/catalog/assetMediaQueries';
+import { assetMediaMutations } from '../api/graphql/mutations/catalog/assetMediaMutations';
 
 // --- Entity Interfaces ---
+interface MediaEntity {
+  mediaID: string;
+  url: string;
+  mediaType: string;
+  originalName: string;
+  finalName: string;
+}
+
+interface AssetMediaEntity {
+  assetMediaID: string;
+  assetID: string;
+  mediaID: string;
+  listingPosition: number;
+  legend?: string;
+  state: string;
+  media: MediaEntity;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
+}
+
 export interface AssetEntity {
   assetID: string;
   uniqRef?: string;
@@ -23,6 +46,7 @@ export interface AssetEntity {
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;
+  medias: AssetMediaEntity[];
 }
 
 export interface ServiceAssetPayloadEntity {
@@ -123,6 +147,20 @@ export interface ListAssetsByOrganizationInput {
 export interface MutationResponse {
   success: boolean;
   message: string;
+}
+
+export interface CreateAssetMediaInput {
+  assetID: string;
+  mediaID: string;
+  listingPosition: number;
+  legend?: string;
+  state: string;
+}
+
+export interface UpdateAssetMediaInput {
+  listingPosition?: number;
+  legend?: string;
+  state?: string;
 }
 
 /**
@@ -257,5 +295,66 @@ export class Asset {
       deleteAsset: MutationResponse;
     }>(mutation, variables);
     return response.deleteAsset;
+  }
+
+  // ------------------------ ASSET MEDIA QUERIES ------------------------
+
+  async getAssetMedia(assetMediaID: string): Promise<AssetMediaEntity> {
+    const query = assetMediaQueries.GET_ASSET_MEDIA;
+    const variables = { assetMediaID };
+    const response = await this.client.query<{ assetMedia: AssetMediaEntity }>(query, variables);
+    return response.assetMedia;
+  }
+
+  async listAssetMedias(
+    pagination?: any,
+    sort?: any,
+    filter?: any
+  ): Promise<AssetMediaEntity[]> {
+    const query = assetMediaQueries.GET_ASSET_MEDIAS;
+    const variables = { pagination, sort, filter };
+    const response = await this.client.query<{ assetMedias: AssetMediaEntity[] }>(query, variables);
+    return response.assetMedias;
+  }
+
+  async assetMediasByIDs(assetMediaIDs: string[]): Promise<AssetMediaEntity[]> {
+    const query = assetMediaQueries.GET_ASSET_MEDIAS_BY_IDS;
+    const variables = { assetMediaIDs };
+    const response = await this.client.query<{ assetMediasByIDs: AssetMediaEntity[] }>(query, variables);
+    return response.assetMediasByIDs;
+  }
+
+  // ------------------------ ASSET MEDIA MUTATIONS ------------------------
+
+  async createAssetMedia(
+    input: CreateAssetMediaInput
+  ): Promise<AssetMediaEntity> {
+    const mutation = assetMediaMutations.CREATE_ASSET_MEDIA;
+    const variables = { input };
+    const response = await this.client.mutate<{
+      createAssetMedia: AssetMediaEntity;
+    }>(mutation, variables);
+    return response.createAssetMedia;
+  }
+
+  async updateAssetMedia(
+    assetMediaID: string,
+    input: UpdateAssetMediaInput
+  ): Promise<AssetMediaEntity> {
+    const mutation = assetMediaMutations.UPDATE_ASSET_MEDIA;
+    const variables = { assetMediaID, input };
+    const response = await this.client.mutate<{
+      updateAssetMedia: AssetMediaEntity;
+    }>(mutation, variables);
+    return response.updateAssetMedia;
+  }
+
+  async deleteAssetMedia(assetMediaID: string): Promise<MutationResponse> {
+    const mutation = assetMediaMutations.DELETE_ASSET_MEDIA;
+    const variables = { assetMediaID };
+    const response = await this.client.mutate<{
+      deleteAssetMedia: MutationResponse;
+    }>(mutation, variables);
+    return response.deleteAssetMedia;
   }
 }
