@@ -158,8 +158,8 @@ export interface CreateAssetMediaInput {
 }
 
 export interface UpdateAssetMediaInput {
-  listingPosition?: number;
   legend?: string;
+  listingPosition?: number;
   state?: string;
 }
 
@@ -326,35 +326,21 @@ export class Asset {
 
   // ------------------------ ASSET MEDIA MUTATIONS ------------------------
 
-  async createAssetMedia(
-    input: CreateAssetMediaInput
-  ): Promise<AssetMediaEntity> {
+  async createAssetMedia(input: CreateAssetMediaInput): Promise<AssetMediaEntity> {
     const mutation = assetMediaMutations.CREATE_ASSET_MEDIA;
-    const variables = { input };
-    const response = await this.client.mutate<{
-      createAssetMedia: AssetMediaEntity;
-    }>(mutation, variables);
+    const response = await this.client.mutate(mutation, { input }) as { createAssetMedia: AssetMediaEntity };
     return response.createAssetMedia;
   }
 
-  async updateAssetMedia(
-    assetMediaID: string,
-    input: UpdateAssetMediaInput
-  ): Promise<AssetMediaEntity> {
+  async updateAssetMedia(assetMediaID: string, input: UpdateAssetMediaInput): Promise<AssetMediaEntity> {
     const mutation = assetMediaMutations.UPDATE_ASSET_MEDIA;
-    const variables = { assetMediaID, input };
-    const response = await this.client.mutate<{
-      updateAssetMedia: AssetMediaEntity;
-    }>(mutation, variables);
+    const response = await this.client.mutate(mutation, { assetMediaID, input }) as { updateAssetMedia: AssetMediaEntity };
     return response.updateAssetMedia;
   }
 
   async deleteAssetMedia(assetMediaID: string): Promise<MutationResponse> {
     const mutation = assetMediaMutations.DELETE_ASSET_MEDIA;
-    const variables = { assetMediaID };
-    const response = await this.client.mutate<{
-      deleteAssetMedia: MutationResponse;
-    }>(mutation, variables);
+    const response = await this.client.mutate(mutation, { assetMediaID }) as { deleteAssetMedia: MutationResponse };
     return response.deleteAssetMedia;
   }
 }

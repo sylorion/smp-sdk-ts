@@ -1,4 +1,4 @@
-export const assetMediaMutations = {
+const assetMediaMutations = {
   CREATE_ASSET_MEDIA: `
     mutation CreateAssetMedia($input: CreateAssetMediaInput!) {
       createAssetMedia(input: $input) {
@@ -45,4 +45,6 @@ export const assetMediaMutations = {
       }
     }
   `
-}; 
+};
+
+export { assetMediaMutations }; 
