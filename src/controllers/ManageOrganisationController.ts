@@ -19,6 +19,8 @@ export interface AddUserToOrganizationResponse {
     email: string;
     organizationID: string;
     userExists: boolean;
+    firstName?: string;
+    lastName?: string;
   }
   
   export interface CreateUserOrganizationResponse {
@@ -49,7 +51,9 @@ export interface AddUserToOrganizationResponse {
   export interface InviteUserToOrganizationInput {
     email: string;
     organizationID: string;
-    message: string;
+    message?: string;
+    firstName?: string;
+    lastName?: string;
   }
   
   export interface CreateUserOrganizationInput {
@@ -78,14 +82,14 @@ export interface AddUserToOrganizationResponse {
    * The `OrganizationMember` interface represents a member of an organization.
  */
 export  interface OrganizationMember {
-    userID: String;
-    role: String;
-    username: String;
-    email: String;
-    name: String;
-    lastname: String;
-    joinedAt: String;
-    profilePicture?: String;
+    userID: string;
+    role: string;
+    username: string;
+    email: string;
+    name: string;
+    lastname: string;
+    joinedAt: string;
+    profilePicture?: string;
   }
 /**
  * The `OrganizationMembers` interface represents the response of the `listOrganizationMembers` query.
@@ -98,7 +102,7 @@ export  interface OrganizationMember {
   export interface UpdateUserRoleInOrganizationInput {
     organizationID: string;
     userID: string;
-    newRoleID : string; 
+    newRoleID: string; 
   }
 
   export interface UpdateUserRoleInOrganizationResponse {
@@ -107,14 +111,22 @@ export  interface OrganizationMember {
   }
 
   export interface UserRole {
-    roleID: String
-    roleName: String
+    roleID: string;
+    roleName: string;
   }
   
-  export interface  OrganizationsByUserResponse {
-    organizationID: String
-    organizationName: String
-    userRole: UserRole
+  export interface OrganizationMedia {
+    mediaID: string;
+    url: string;
+    state: string;
+    originalName: string;
+  }
+  
+  export interface OrganizationsByUserResponse {
+    organizationID: string;
+    organizationName: string;
+    organizationMedia: OrganizationMedia[];
+    userRole: UserRole;
   }
 /**
  * The `MemberOrganization` class manages member-organization-related requests within the application.
@@ -141,11 +153,11 @@ export class ManageOrganization {
   /**
    * Creates a new user-organization relationship.
    */
-  async createUserOrganization(input: CreateUserOrganizationInput): Promise<CreateUserOrganizationResponse> {
+  async createUserOrganization(input: CreateUserOrganizationInput): Promise<AddUserToOrganizationResponse> {
     const mutation = organizationMutations.CREATE_USER_ORGANIZATION;
     const variables = { input };
-    const response = await this.client.mutate(mutation, variables) as { createUserOrganization: CreateUserOrganizationResponse };
-    return response.createUserOrganization;
+    const response = await this.client.mutate(mutation, variables) as { addUserToOrganization: AddUserToOrganizationResponse };
+    return response.addUserToOrganization;
   }
   
   /**
@@ -161,9 +173,9 @@ export class ManageOrganization {
   /**
    * Allows a user to sign up after receiving an invitation.
    */
-  async signupAfterInvitation(input: CreateUserInput, organizationId: string): Promise<SignupAfterInvitationResponse> {
+  async signupAfterInvitation(input: CreateUserInput, organizationId: string, firstName?: string, lastName?: string): Promise<SignupAfterInvitationResponse> {
     const mutation = MUTATION_SIGNUP_AFTER_INVITATION;
-    const variables = { input, organizationId };
+    const variables = { input, organizationId, firstName, lastName };
     const response = await this.client.mutate(mutation, variables) as { signupAfterInvitation: SignupAfterInvitationResponse };
     return response.signupAfterInvitation;
   }
@@ -175,6 +187,19 @@ export class ManageOrganization {
     return response.updateUserRoleInOrganization;
   }
 
+  async removeUserFromOrganization(input: { userID: string; organizationID: string }): Promise<AddUserToOrganizationResponse> {
+    const mutation = organizationMutations.REMOVE_USER_FROM_ORGANIZATION;
+    const variables = { input };
+    const response = await this.client.mutate(mutation, variables) as { removeUserFromOrganization: AddUserToOrganizationResponse };
+    return response.removeUserFromOrganization;
+  }
+
+  async removeInvitation(input: { email: string; organizationID: string }): Promise<AddUserToOrganizationResponse> {
+    const mutation = organizationMutations.REMOVE_INVITATION;
+    const variables = { input };
+    const response = await this.client.mutate(mutation, variables) as { removeInvitation: AddUserToOrganizationResponse };
+    return response.removeInvitation;
+  }
 
     // ========================== QUERIES =============================================================
 
@@ -183,14 +208,14 @@ export class ManageOrganization {
    * @param organizationId The ID of the organization.
    * @returns The list of members of the organization.
     */
-  async members(organizationId: string) {
+  async members(organizationId: string): Promise<OrganizationMembers> {
     const query = organizationQueries.GET_ORGANIZATION_MEMBERS;
     const variables = { organizationId };
     const response = await this.client.query(query, variables) as { listOrganizationMembers: OrganizationMembers  };
     return response.listOrganizationMembers;
   }
 
-  async getUserOrganizations(userId: string) {
+  async getUserOrganizations(userId: string): Promise<OrganizationsByUserResponse[]> {
     const query = organizationQueries.GET_USER_ORGANIZATIONS;
     const variables = { userId };
     const response = await this.client.query(query, variables) as { getUserOrganizations: OrganizationsByUserResponse[] };

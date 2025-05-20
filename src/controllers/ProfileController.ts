@@ -87,7 +87,6 @@ export class Profile {
     return response.updateProfile;
   }
   
-
   async deleteProfile(profileID: string): Promise<MutationResponse> {
     const mutation = profileMutations.DELETE_PROFILE;
     const variables = { profileID };
@@ -108,5 +107,33 @@ export class Profile {
     const query = profileQueries.GET_PROFILES;
     const response = await this.client.query(query) as { profiles: ProfileEntity[] };
     return response.profiles;
+  }
+
+  async getProfileBySlug(slug: string): Promise<ProfileEntity> {
+    const query = profileQueries.GET_PROFILE_BY_SLUG;
+    const variables = { slug };
+    const response = await this.client.query(query, variables) as { profileBySlug: ProfileEntity };
+    return response.profileBySlug;
+  }
+
+  async getProfileByUniqRef(uniqRef: string): Promise<ProfileEntity> {
+    const query = profileQueries.GET_PROFILE_BY_UNIQ_REF;
+    const variables = { uniqRef };
+    const response = await this.client.query(query, variables) as { profileByUniqRef: ProfileEntity };
+    return response.profileByUniqRef;
+  }
+
+  async getProfilesByIds(profileIDs: string[]): Promise<ProfileEntity[]> {
+    const query = profileQueries.GET_PROFILES_BY_IDS;
+    const variables = { profileIDs };
+    const response = await this.client.query(query, variables) as { profilesByIDs: ProfileEntity[] };
+    return response.profilesByIDs;
+  }
+
+  async getProfilesBySlugs(slugs: string[]): Promise<ProfileEntity[]> {
+    const query = profileQueries.GET_PROFILES_BY_SLUGS;
+    const variables = { slugs };
+    const response = await this.client.query(query, variables) as { profilesBySlugs: ProfileEntity[] };
+    return response.profilesBySlugs;
   }
 }

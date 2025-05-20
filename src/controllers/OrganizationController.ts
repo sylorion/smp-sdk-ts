@@ -14,9 +14,12 @@ export interface Organization {
   legalName: string;
   brand?: string;
   sigle?: string;
-  smallLogoID?: string;
-  bigLogoID?: string;
-  bannerID?: string;
+  smallLogo?: string;
+  bigLogo?: string;
+  banner?: string;
+  smallLogoUrl?: string;
+  bigLogoUrl?: string;
+  bannerUrl?: string;
   oSize?: string;
   juridicForm?: string;
   juridicCatLabel?: string;
@@ -41,6 +44,18 @@ export interface Organization {
   deletedAt?: string; // ISO 8601 format
 }
 
+export interface UserRoleInOrganization {
+  roleID: string;
+  roleName: string;
+}
+
+export interface OrganizationByUser {
+  organizationID: string;
+  organizationName: string;
+  smallLogoUrl: string | null;
+  userRole: UserRoleInOrganization;
+}
+
 // Types des inputs pour les mutations
 export interface CreateOrganizationInput {
   authorID: number;
@@ -50,9 +65,9 @@ export interface CreateOrganizationInput {
   legalName: string;
   brand?: string;
   sigle?: string;
-  smallLogoID?: string;
-  bigLogoID?: string;
-  bannerID?: string;
+  smallLogo?: string;
+  bigLogo?: string;
+  banner?: string;
   oSize?: string;
   juridicForm?: string;
   juridicCatLabel?: string;
@@ -81,9 +96,9 @@ export interface UpdateOrganizationInput {
   legalName?: string;
   brand?: string;
   sigle?: string;
-  smallLogoID?: string;
-  bigLogoID?: string;
-  bannerID?: string;
+  smallLogo?: string;
+  bigLogo?: string;
+  banner?: string;
   oSize?: string;
   juridicForm?: string;
   juridicCatLabel?: string;
