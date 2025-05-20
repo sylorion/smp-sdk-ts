@@ -198,5 +198,15 @@ export const organizationMutations = {
         message
       }
     }
+  `,
+
+  // MUTATION TO ADD USER TO ORGANIZATION
+  ADD_USER_TO_ORGANIZATION: `
+    mutation AddUserToOrganization($input: AddUserToOrganizationInput!) {
+      addUserToOrganization(input: $input) {
+        success
+        message
+      }
+    }
   `
 };

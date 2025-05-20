@@ -201,6 +201,16 @@ export class ManageOrganization {
     return response.removeInvitation;
   }
 
+  /**
+   * Adds a user to an organization.
+   */
+  async addUserToOrganization(input: { userID: string; organizationID: string; role: string }): Promise<AddUserToOrganizationResponse> {
+    const mutation = organizationMutations.ADD_USER_TO_ORGANIZATION;
+    const variables = { input };
+    const response = await this.client.mutate(mutation, variables) as { addUserToOrganization: AddUserToOrganizationResponse };
+    return response.addUserToOrganization;
+  }
+
     // ========================== QUERIES =============================================================
 
   /** 
