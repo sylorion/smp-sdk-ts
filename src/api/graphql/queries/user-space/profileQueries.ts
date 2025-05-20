@@ -20,6 +20,7 @@ export const profileQueries = {
           createdAt
           updatedAt
           deletedAt
+          profilePictureID
           profilePicture {
             url
           }
@@ -48,6 +49,7 @@ export const profileQueries = {
           createdAt
           updatedAt
           deletedAt
+          profilePictureID
           profilePicture {
             url
           }
@@ -76,6 +78,7 @@ export const profileQueries = {
           createdAt
           updatedAt
           deletedAt
+          profilePictureID
           profilePicture {
             url
           }
@@ -104,6 +107,7 @@ export const profileQueries = {
           createdAt
           updatedAt
           deletedAt
+          profilePictureID
           profilePicture {
             url
           }
@@ -132,6 +136,7 @@ export const profileQueries = {
           createdAt
           updatedAt
           deletedAt
+          profilePictureID
           profilePicture {
             url
           }
@@ -160,6 +165,7 @@ export const profileQueries = {
           createdAt
           updatedAt
           deletedAt
+          profilePictureID
           profilePicture {
             url
           }

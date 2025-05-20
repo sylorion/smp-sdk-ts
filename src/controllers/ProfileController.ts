@@ -30,6 +30,7 @@ interface UpdateProfileInput {
   passportNumber?: string;
   socialSecurityNumber?: string;
   state?: string; // ObjectStatus
+  profilePictureID?: string;
 }
 
 interface MediaEntity {
@@ -56,6 +57,7 @@ interface ProfileEntity {
   updatedAt: string;
   deletedAt?: string;
   profilePicture?: MediaEntity;
+  profilePictureID?: string;
 }
 
 interface MutationResponse {

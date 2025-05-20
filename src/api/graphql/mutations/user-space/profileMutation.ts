@@ -28,6 +28,7 @@ const profileMutations = {
 UPDATE_PROFILE: `
 mutation UpdateProfile($input: UpdateProfileInput!, $profileId: ID!) {
   updateProfile(profileID: $profileId ,input: $input) {
+    profileID
     uniqRef
     slug
     firstName
@@ -44,6 +45,10 @@ mutation UpdateProfile($input: UpdateProfileInput!, $profileId: ID!) {
     createdAt
     updatedAt
     deletedAt
+    profilePictureID
+    profilePicture {
+      url
+    }
   }
 }
 `,
