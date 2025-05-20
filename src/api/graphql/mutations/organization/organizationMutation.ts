@@ -1,4 +1,3 @@
-
 export const organizationMutations = {
   // MUTATION TO CREATE AN ORGANIZATION
   CREATE_ORGANIZATION: `

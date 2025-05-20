@@ -1,6 +1,8 @@
 import { APIClient } from '../api/APIClient';
 import { organizationQueries } from '../api/graphql/queries/organization/organizationQueries';
 import { organizationMutations } from '../api/graphql/mutations/organization/organizationMutation';
+import { organizationMediaQueries } from '../api/graphql/queries/organization/organizationMediaQueries';
+import { organizationMediaMutations } from '../api/graphql/mutations/organization/organizationMediaMutations';
 
 // Types des réponses
 export interface Organization {
@@ -120,6 +122,34 @@ export interface UpdateOrganizationInput {
   state?: string;
 }
 
+export interface OrganizationMedia {
+  organizationMediaID: string;
+  mediaID: string;
+  legend?: string;
+  listingPosition?: number;
+  state: string;
+  media?: {
+    mediaID: string;
+    url: string;
+    originalName: string;
+    finalName: string;
+  };
+}
+
+export interface CreateOrganizationMediaInput {
+  mediaID: string;
+  organizationID: string;
+  legend?: string;
+  listingPosition?: number;
+  state?: string;
+}
+
+export interface UpdateOrganizationMediaInput {
+  legend?: string;
+  listingPosition?: number;
+  state?: string;
+}
+
 /**
  * The `Organization` class manages organization-related requests within the application.
  */
@@ -222,5 +252,59 @@ export class Organization {
     const variables = { organizationID };
     const response = await this.client.mutate(mutation, variables) as { deleteOrganization: boolean };
     return response.deleteOrganization;
+  }
+
+  //========================== MEDIA QUERIES =============================================================
+
+  /**
+   * Fetches a single organization media by its ID.
+   */
+  async getOrganizationMedia(organizationMediaID: string): Promise<OrganizationMedia> {
+    const query = organizationMediaQueries.GET_ORGANIZATION_MEDIA;
+    const variables = { organizationMediaID };
+    const response = await this.client.query(query, variables) as { organizationMedia: OrganizationMedia };
+    return response.organizationMedia;
+  }
+
+  /**
+   * Fetches all media for an organization.
+   */
+  async getOrganizationMedias(organizationID: string): Promise<OrganizationMedia[]> {
+    const query = organizationMediaQueries.GET_ORGANIZATION_MEDIAS;
+    const variables = { organizationID };
+    const response = await this.client.query(query, variables) as { organizationMedias: OrganizationMedia[] };
+    return response.organizationMedias;
+  }
+
+  //========================== MEDIA MUTATIONS =============================================================
+
+  /**
+   * Creates a new organization media.
+   */
+  async createOrganizationMedia(input: CreateOrganizationMediaInput): Promise<OrganizationMedia> {
+    const mutation = organizationMediaMutations.CREATE_ORGANIZATION_MEDIA;
+    const variables = { input };
+    const response = await this.client.mutate(mutation, variables) as { createOrganizationMedia: OrganizationMedia };
+    return response.createOrganizationMedia;
+  }
+
+  /**
+   * Updates an existing organization media.
+   */
+  async updateOrganizationMedia(organizationMediaID: string, input: UpdateOrganizationMediaInput): Promise<OrganizationMedia> {
+    const mutation = organizationMediaMutations.UPDATE_ORGANIZATION_MEDIA;
+    const variables = { organizationMediaID, input };
+    const response = await this.client.mutate(mutation, variables) as { updateOrganizationMedia: OrganizationMedia };
+    return response.updateOrganizationMedia;
+  }
+
+  /**
+   * Deletes an organization media.
+   */
+  async deleteOrganizationMedia(organizationMediaID: string): Promise<boolean> {
+    const mutation = organizationMediaMutations.DELETE_ORGANIZATION_MEDIA;
+    const variables = { organizationMediaID };
+    const response = await this.client.mutate(mutation, variables) as { deleteOrganizationMedia: { success: boolean } };
+    return response.deleteOrganizationMedia.success;
   }
 }
