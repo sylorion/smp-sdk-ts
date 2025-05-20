@@ -144,6 +144,7 @@ export const organizationMutations = {
         email
         organizationID
         userExists
+        userID
         firstName
         lastName
       }

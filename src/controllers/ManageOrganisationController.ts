@@ -19,6 +19,7 @@ export interface AddUserToOrganizationResponse {
     email: string;
     organizationID: string;
     userExists: boolean;
+    userID: string | null;
     firstName?: string;
     lastName?: string;
   }
@@ -166,7 +167,10 @@ export class ManageOrganization {
   async verifyInvitationToken(input: VerifyInvitationTokenInput): Promise<InvitationResponse> {
     const mutation = organizationMutations.VERIFY_INVITATION_TOKEN;
     const variables = { input };
+    console.log("Sending mutation with variables:", variables);
     const response = await this.client.mutate(mutation, variables) as { verifyInvitationToken: InvitationResponse };
+    console.log("Raw response from server:", response);
+    console.log("Parsed verifyInvitationToken response:", response.verifyInvitationToken);
     return response.verifyInvitationToken;
   }
 
