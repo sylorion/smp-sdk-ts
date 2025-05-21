@@ -1,5 +1,5 @@
-import { APIClient } from '../api/APIClient';
-import {MUTATION_CREATE_USER} from './../api/graphql/mutations/authMutations'
+import { APIClient } from "../api/APIClient.js";
+import { MUTATION_CREATE_USER } from "../api/graphql/mutations/authMutations.js";
 
 // Types d'input pour la création d'utilisateur
 export interface CreateUserInput {
@@ -34,23 +34,22 @@ export interface CreateUserInput {
     deletedAt?: string;
   }
 
-  export class Signup {
-    private client: APIClient;
-  
-    constructor(client: APIClient) {
-      this.client = client;
-    }
-  
-  
-    /**
-     * Crée un nouvel utilisateur
-     * @param input Les données d'entrée pour créer un utilisateur
-     * @returns Les informations de l'utilisateur créé
-     */
-    async createUser(input: CreateUserInput): Promise<CreateUserResponse> {
-      const mutation = MUTATION_CREATE_USER;
-      const variables = { input };
-      const response = await this.client.mutate(mutation, variables) as { data: { signup: CreateUserResponse } };
-      return response.data.signup;
-    }
+export class Signup {
+  private client: APIClient;
+
+  constructor(client: APIClient) {
+    this.client = client;
   }
+
+  /**
+   * Crée un nouvel utilisateur
+   * @param input Les données d'entrée pour créer un utilisateur
+   * @returns Les informations de l'utilisateur créé
+   */
+  async createUser(input: CreateUserInput): Promise<CreateUserResponse> {
+    const mutation = MUTATION_CREATE_USER;
+    const variables = { input };
+    const response = await this.client.mutate(mutation, variables) as { createUser: CreateUserResponse };
+    return response.createUser;
+  }
+}

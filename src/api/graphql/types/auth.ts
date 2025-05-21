@@ -54,7 +54,6 @@ type LogoutResponse = {
   message: string,
 }
 
-
 type AppLoginResponse = {
   authenticateApp: AppLogIn,
 }
@@ -67,7 +66,6 @@ type AppLogIn = {
   app      : AppLoggedIn, 
   errors    : [MutationError],
 }
-
 
 type AppLoggedIn = {
   applicationID : string,
