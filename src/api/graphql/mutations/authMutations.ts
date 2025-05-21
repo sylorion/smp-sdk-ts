@@ -98,26 +98,25 @@ export const MUTATION_AUTH_LOGOUT_APP = /* GraphQL */ `
 
 export const MUTATION_CREATE_USER = /* GraphQL */ `
   mutation Signup($input: CreateUserInput!) {
-  signup(input: $input) {
-    userID
-    uniqRef
-    slug
-    username
-    email
-    plan
-    profileID
-    userKind
-    lastLogin
-    twoFactorEnabled
-    loginDuration
-    rsaPublicKey
-    state
-    createdAt
-    updatedAt
-    deletedAt
+    signup(input: $input) {
+      userID
+      uniqRef
+      slug
+      username
+      email
+      plan
+      profileID
+      userKind
+      lastLogin
+      twoFactorEnabled
+      loginDuration
+      rsaPublicKey
+      state
+      createdAt
+      updatedAt
+      deletedAt
+    }
   }
-}
-  
 `;
 
 export const MUTATION_FORGOT_PASSWORD = /* GraphQL */ `
