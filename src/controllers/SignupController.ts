@@ -47,9 +47,18 @@ export class Signup {
    * @returns Les informations de l'utilisateur créé
    */
   async createUser(input: CreateUserInput): Promise<CreateUserResponse> {
-    const mutation = MUTATION_CREATE_USER;
-    const variables = { input };
-    const response = await this.client.mutate(mutation, variables) as { createUser: CreateUserResponse };
-    return response.createUser;
+    try {
+      const mutation = MUTATION_CREATE_USER;
+      const variables = { input };
+      console.log('Mutation variables:', variables);
+      const response = await this.client.mutate(mutation, variables);
+      console.log('Raw response:', response);
+      const typedResponse = response as { signup: CreateUserResponse };
+      console.log('Typed response:', typedResponse);
+      return typedResponse.signup;
+    } catch (error) {
+      console.error('Error in createUser:', error);
+      throw error;
+    }
   }
 }
