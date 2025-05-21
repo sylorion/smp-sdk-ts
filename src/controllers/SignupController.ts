@@ -50,7 +50,7 @@ export interface CreateUserInput {
     async createUser(input: CreateUserInput): Promise<CreateUserResponse> {
       const mutation = MUTATION_CREATE_USER;
       const variables = { input };
-      const response = await this.client.mutate(mutation, variables) as { signup: CreateUserResponse };
-      return response.signup;
+      const response = await this.client.mutate(mutation, variables) as { data: { signup: CreateUserResponse } };
+      return response.data.signup;
     }
   }

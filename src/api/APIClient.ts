@@ -81,11 +81,13 @@ export class APIClient {
 
       logger.info("CALL TO APIClient.MUTATE Method");
       const response = await this.graphqlClient.request<T>(mutation, variables);
+      console.log("GraphQL Response:", response);
       const respJson = JSON.stringify(response);
       this.trackDataReceived(respJson.length);
       logger.info(`Total Data received : ${this.dataReceived}`);
       return response;
     } catch (error: any) {
+      console.error("GraphQL Error:", error);
       const ce: ClientError = error;
       throw ce;
     }
