@@ -317,7 +317,7 @@ export class SMPPayment {
   async initiateTransaction(input: CreateTransactionInput): Promise<Transaction> {
     const mutation = transactionMutations.CREATE_TRANSACTION;
     const variables = { input };
-    const response = await this.client.mutate(mutation, variables) as { initiatedTransaction: Transaction };
-    return response.initiatedTransaction;
+    const response = await this.client.mutate(mutation, variables) as { initiateTransaction: Transaction };
+    return response.initiateTransaction;
   }
 }
