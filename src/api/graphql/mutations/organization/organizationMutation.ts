@@ -147,6 +147,7 @@ export const organizationMutations = {
         userID
         firstName
         lastName
+        organizationName
       }
     }
   `,

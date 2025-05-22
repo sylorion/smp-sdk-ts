@@ -22,6 +22,7 @@ export interface AddUserToOrganizationResponse {
     userID: string | null;
     firstName?: string;
     lastName?: string;
+    organizationName?: string;
   }
   
   export interface CreateUserOrganizationResponse {
@@ -45,6 +46,9 @@ export interface AddUserToOrganizationResponse {
     email: string;
     deletedAt?: string;
     profileID: string;
+    firstName?: string;
+    lastName?: string;
+    organizationName?: string;
     state: string;
   }
   
