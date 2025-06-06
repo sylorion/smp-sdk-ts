@@ -21,10 +21,6 @@ export const waitingListMutations = {
           createdAt
           updatedAt
         }
-        errors {
-          field
-          message
-        }
       }
     }
   `,
@@ -51,10 +47,6 @@ export const waitingListMutations = {
           createdAt
           updatedAt
         }
-        errors {
-          field
-          message
-        }
       }
     }
   `,
@@ -64,10 +56,6 @@ export const waitingListMutations = {
       deleteWaitingList(waitingListID: $waitingListID) {
         success
         message
-        errors {
-          field
-          message
-        }
       }
     }
   `,
@@ -94,10 +82,6 @@ export const waitingListMutations = {
           createdAt
           updatedAt
         }
-        errors {
-          field
-          message
-        }
       }
     }
   `,
@@ -123,10 +107,6 @@ export const waitingListMutations = {
           slug
           createdAt
           updatedAt
-        }
-        errors {
-          field
-          message
         }
       }
     }

@@ -31,11 +31,13 @@ interface WaitingListEntity {
   updatedAt: string;
 }
 
-interface WaitingListResponse {
+interface MutationResponse {
   success: boolean;
   message: string;
+}
+
+interface WaitingListResponse extends MutationResponse {
   waitingList?: WaitingListEntity;
-  errors?: any[];
 }
 
 // Contrôleur des mutations et des requêtes pour la liste d'attente
@@ -62,10 +64,10 @@ export class WaitingList {
     return response.updateWaitingList;
   }
 
-  async delete(waitingListID: string): Promise<WaitingListResponse> {
+  async delete(waitingListID: string): Promise<MutationResponse> {
     const mutation = waitingListMutations.DELETE_WAITING_LIST;
     const variables = { waitingListID };
-    const response = await this.client.mutate(mutation, variables) as { deleteWaitingList: WaitingListResponse };
+    const response = await this.client.mutate(mutation, variables) as { deleteWaitingList: MutationResponse };
     return response.deleteWaitingList;
   }
 

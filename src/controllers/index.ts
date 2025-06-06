@@ -1,6 +1,5 @@
 import { ServiceAsset } from './ServiceAssetController';
 
-
 export {Organization} from './OrganizationController';
 export {Invoice} from './InvoiceController';
 export {Service} from './ServiceController';
