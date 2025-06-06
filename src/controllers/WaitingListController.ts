@@ -36,8 +36,8 @@ interface MutationResponse {
   message: string;
 }
 
-interface WaitingListResponse extends MutationResponse {
-  waitingList?: WaitingListEntity;
+interface WaitingListResponse {
+  waitingList: WaitingListEntity;
 }
 
 // Contrôleur des mutations et des requêtes pour la liste d'attente
@@ -50,18 +50,18 @@ export class WaitingList {
 
   // ======================= MUTATIONS =======================
 
-  async create(input: WaitingListInput): Promise<WaitingListResponse> {
+  async create(input: WaitingListInput): Promise<WaitingListEntity> {
     const mutation = waitingListMutations.CREATE_WAITING_LIST;
     const variables = { input };
     const response = await this.client.mutate(mutation, variables) as { createWaitingList: WaitingListResponse };
-    return response.createWaitingList;
+    return response.createWaitingList.waitingList;
   }
 
-  async update(waitingListID: string, input: WaitingListInput): Promise<WaitingListResponse> {
+  async update(waitingListID: string, input: WaitingListInput): Promise<WaitingListEntity> {
     const mutation = waitingListMutations.UPDATE_WAITING_LIST;
     const variables = { waitingListID, input };
     const response = await this.client.mutate(mutation, variables) as { updateWaitingList: WaitingListResponse };
-    return response.updateWaitingList;
+    return response.updateWaitingList.waitingList;
   }
 
   async delete(waitingListID: string): Promise<MutationResponse> {
@@ -71,18 +71,18 @@ export class WaitingList {
     return response.deleteWaitingList;
   }
 
-  async confirm(waitingListID: string): Promise<WaitingListResponse> {
+  async confirm(waitingListID: string): Promise<WaitingListEntity> {
     const mutation = waitingListMutations.CONFIRM_WAITING_LIST;
     const variables = { waitingListID };
     const response = await this.client.mutate(mutation, variables) as { confirmWaitingList: WaitingListResponse };
-    return response.confirmWaitingList;
+    return response.confirmWaitingList.waitingList;
   }
 
-  async resendEmail(waitingListID: string): Promise<WaitingListResponse> {
+  async resendEmail(waitingListID: string): Promise<WaitingListEntity> {
     const mutation = waitingListMutations.RESEND_WAITING_LIST_EMAIL;
     const variables = { waitingListID };
     const response = await this.client.mutate(mutation, variables) as { resendWaitingListEmail: WaitingListResponse };
-    return response.resendWaitingListEmail;
+    return response.resendWaitingListEmail.waitingList;
   }
 
   // ======================= QUERIES =======================
