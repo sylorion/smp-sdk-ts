@@ -17,3 +17,4 @@ export {ServiceAsset} from './ServiceAssetController';
 export {Mailing} from './MailingController';
 export {Media} from './MediaController';
 export { Order } from './OrderController';
+export { WaitingList } from './WaitingListController';
