@@ -118,10 +118,10 @@ export class WaitingList {
     return response.waitingList;
   }
 
-  async list(page?: number, limit?: number, state?: string): Promise<WaitingListEntity[]> {
+  async list(page?: number, limit?: number, state?: string): Promise<{ rows: WaitingListEntity[], count: number }> {
     const query = waitingListQueries.GET_WAITING_LISTS;
     const variables = { page, limit, state };
-    const response = await this.client.query(query, variables) as { waitingLists: WaitingListEntity[] };
+    const response = await this.client.query(query, variables) as { waitingLists: { rows: WaitingListEntity[], count: number } };
     return response.waitingLists;
   }
 } 
