@@ -327,4 +327,11 @@ export class SMPPayment {
     const response = await this.client.mutate(mutation, variables) as { updateTransaction: Transaction };
     return response.updateTransaction;
   }
+
+  async updateTransaction(transactionId: string, input: { status: string; totalAmount?: number; metadata?: string }): Promise<Transaction> {
+    const mutation = transactionMutations.UPDATE_TRANSACTION;
+    const variables = { transactionId, input };
+    const response = await this.client.mutate(mutation, variables) as { updateTransaction: Transaction };
+    return response.updateTransaction;
+  }
 }
