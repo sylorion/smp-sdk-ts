@@ -22,6 +22,26 @@ const transactionMutations = {
     }
   }`,
     // MUTATION POUR METTRE À JOUR UNE TRANSACTION
+    UPDATE_TRANSACTION: `
+  mutation UpdateTransaction($transactionId: String!, $input: UpdateTransactionInput!) {
+    updateTransaction(transactionId: $transactionId, input: $input) {
+      transactionId
+      serviceId
+      slug
+      buyerUserId
+      buyerOrganizationId
+      sellerUserContactId
+      sellerOrganizationId
+      currency
+      totalAmount
+      state
+      status
+      metadata
+      createdAt
+      updatedAt
+      deletedAt
+    }
+  }`
 
 };
 
