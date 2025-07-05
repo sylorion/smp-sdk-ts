@@ -58,10 +58,11 @@ export interface DeleteLineInput {
 export interface CreateEstimateInput {
   serviceId: string;
   proposalPrice?: number;
-  buyerOrganizationId: string;
-  buyerUserId: string;
-  sellerOrganizationId: string;
-  details?: any; // JSONObject
+  buyerUserId?: string;
+  buyerOrganizationId?: string;
+  sellerOrganizationId?: string;
+  negotiationCount?: number;
+  details?: any;
 }
 
 export interface UpdateEstimateInput {
@@ -102,14 +103,13 @@ export interface Estimate {
   estimateId: string;
   serviceId: string;
   proposalPrice?: number;
-  details: any;
+  details?: any;
   status: string;
   negotiationCount: number;
-  clientSignDate?: string;
-  providerSignDate?: string;
-  createdAt: string;
-  updatedAt?: string;
-  deletedAt?: string;
+  clientSignDate?: Date;
+  providerSignDate?: Date;
+  createdAt: Date;
+  updatedAt?: Date;
   buyerUserId?: string;
   buyerOrganizationId?: string;
 }
@@ -339,3 +339,4 @@ export class SMPPayment {
     return response.updateTransaction;
   }
 }
+
