@@ -58,11 +58,13 @@ export interface DeleteLineInput {
 export interface CreateEstimateInput {
   serviceId: string;
   proposalPrice?: number;
+  sellerOrganizationId: string;
   details?: any; // JSONObject
 }
 
 export interface UpdateEstimateInput {
   proposalPrice?: number;
+  buyerOrganizationId: string;
   details?: any; // JSONObject
 }
 
