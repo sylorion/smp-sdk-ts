@@ -102,6 +102,9 @@ const paymentMutations = {
         providerSignDate
         createdAt
         updatedAt
+        buyerUserId
+        buyerOrganizationId
+        sellerOrganizationId
       }
     }
   `,
