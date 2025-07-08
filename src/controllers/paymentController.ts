@@ -112,6 +112,7 @@ export interface Estimate {
   updatedAt?: Date;
   buyerUserId?: string;
   buyerOrganizationId?: string;
+  sellerOrganizationId: string;
 }
 
 export interface OrderAsset {

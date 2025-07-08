@@ -178,6 +178,9 @@ const estimateQueries = {
           providerSignDate
           createdAt
           updatedAt
+          buyerUserId
+          buyerOrganizationId
+          sellerOrganizationId
         }
       }
     `,
