@@ -190,6 +190,96 @@ You can implement rate limiting on top of the SDK if needed. To do so, ensure th
 
 The SMPClient SDK can be extended to support WebSocket notifications using GraphQL subscriptions. You can integrate real-time notifications from the GraphQL backend by setting up a WebSocket connection and managing events through the SDK.
 
+## Estimate and Negotiation Management
+
+The SDK provides comprehensive support for managing estimates and their negotiations.
+
+### Working with Estimates
+
+```typescript
+import { SMPClient, Estimate } from 'smp-sdk-ts';
+
+const smpClient = new SMPClient({
+  // ... configuration
+});
+
+const estimateController = new Estimate(smpClient.getAPIClient());
+
+// Create a new estimate
+const newEstimate = await estimateController.create({
+  serviceId: 'service-123',
+  proposalPrice: 1000,
+  buyerUserId: 'buyer-456',
+  details: {
+    // estimate details
+  }
+});
+
+// Get an estimate by ID
+const estimate = await estimateController.getById('estimate-789');
+
+// List estimates with filters
+const estimates = await estimateController.list(
+  { page: 1, limit: 10 }, // pagination
+  { field: 'createdAt', order: 'DESC' }, // sort
+  [{ field: 'status', value: 'active' }] // filter
+);
+```
+
+### Negotiation Management
+
+```typescript
+import { NegotiationStatus } from 'smp-sdk-ts';
+
+// Start a negotiation on an estimate
+const negotiationResult = await estimateController.createNegotiation({
+  estimateId: 'estimate-789',
+  proposedPrice: 900,
+  proposedBy: 'user-123',
+  details: {
+    reason: 'Budget constraints',
+    comments: 'Can we work within this budget?'
+  }
+});
+
+console.log('New negotiation created:', negotiationResult.negotiation);
+console.log('Updated estimate:', negotiationResult.estimate);
+
+// Get negotiation history for an estimate
+const history = await estimateController.getNegotiationHistory('estimate-789');
+console.log('Negotiation history:', history);
+
+// Get current active negotiation
+const currentNegotiation = await estimateController.getCurrentNegotiation('estimate-789');
+if (currentNegotiation && currentNegotiation.status === NegotiationStatus.IN_PROGRESS) {
+  console.log('Active negotiation found:', currentNegotiation);
+}
+
+// Accept a negotiation
+const acceptedEstimate = await estimateController.acceptNegotiation('estimate-789');
+console.log('Negotiation accepted, final estimate:', acceptedEstimate);
+
+// Reject a negotiation
+const rejectedEstimate = await estimateController.rejectNegotiation('estimate-789');
+console.log('Negotiation rejected:', rejectedEstimate);
+```
+
+### Negotiation Status Management
+
+The SDK supports the following negotiation statuses:
+
+- `NONE`: No negotiation has been initiated
+- `IN_PROGRESS`: A negotiation is currently active
+- `ACCEPTED`: The negotiation has been accepted
+- `REJECTED`: The negotiation has been rejected
+
+### Negotiation Rules
+
+- Maximum of 5 iterations per estimate (including initial price)
+- Only one active negotiation per estimate at a time
+- Negotiations can only be created on estimates with `isNegotiable: true`
+- The negotiation status is automatically updated based on actions taken
+
 ## Contributing
 
 If you'd like to contribute to the development of SMPClient, please open an issue or submit a pull request.

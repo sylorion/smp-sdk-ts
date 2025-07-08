@@ -2,6 +2,12 @@
 
 import { APIClient } from '../api/APIClient';
 import { estimateQueries } from '../api/graphql/queries/accounting/estimateQueries';
+import type { 
+  Negotiation, 
+  CreateNegotiationInput, 
+  NegotiationResponse,
+  NegotiationStatus 
+} from '../types/Estimate';
 
 interface EstimateResponse {
   estimateId: string;
@@ -10,6 +16,8 @@ interface EstimateResponse {
   details: any;
   status: string;
   negotiationCount: number;
+  negotiationStatus?: NegotiationStatus;
+  currentNegotiationId?: string;
   clientSignDate?: string;
   providerSignDate?: string;
   createdAt: string;
@@ -172,5 +180,52 @@ export class Estimate {
     const query = estimateQueries.GET_ESTIMATES_BY_SELLER_ORGANIZATION_ID;
     const response = await this.client.query<{ estimatesBySellerOrganizationId: EstimateResponse[] }>(query, { sellerOrganizationId });
     return response.estimatesBySellerOrganizationId;
+  }
+
+  // Negotiation methods
+
+  /**
+   * Creates a new negotiation for an estimate
+   */
+  async createNegotiation(input: CreateNegotiationInput): Promise<NegotiationResponse> {
+    const query = estimateQueries.CREATE_NEGOTIATION;
+    const response = await this.client.mutate<{ createNegotiation: NegotiationResponse }>(query, { input });
+    return response.createNegotiation;
+  }
+
+  /**
+   * Accepts the current negotiation for an estimate
+   */
+  async acceptNegotiation(estimateId: string): Promise<EstimateResponse> {
+    const query = estimateQueries.ACCEPT_NEGOTIATION;
+    const response = await this.client.mutate<{ acceptNegotiation: EstimateResponse }>(query, { estimateId });
+    return response.acceptNegotiation;
+  }
+
+  /**
+   * Rejects the current negotiation for an estimate
+   */
+  async rejectNegotiation(estimateId: string): Promise<EstimateResponse> {
+    const query = estimateQueries.REJECT_NEGOTIATION;
+    const response = await this.client.mutate<{ rejectNegotiation: EstimateResponse }>(query, { estimateId });
+    return response.rejectNegotiation;
+  }
+
+  /**
+   * Retrieves the negotiation history for an estimate
+   */
+  async getNegotiationHistory(estimateId: string): Promise<Negotiation[]> {
+    const query = estimateQueries.GET_NEGOTIATION_HISTORY;
+    const response = await this.client.query<{ getNegotiationHistory: Negotiation[] }>(query, { estimateId });
+    return response.getNegotiationHistory;
+  }
+
+  /**
+   * Retrieves the current active negotiation for an estimate
+   */
+  async getCurrentNegotiation(estimateId: string): Promise<Negotiation | null> {
+    const query = estimateQueries.GET_CURRENT_NEGOTIATION;
+    const response = await this.client.query<{ getCurrentNegotiation: Negotiation | null }>(query, { estimateId });
+    return response.getCurrentNegotiation;
   }
 }

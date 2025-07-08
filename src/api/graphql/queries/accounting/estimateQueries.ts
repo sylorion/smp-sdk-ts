@@ -276,6 +276,101 @@ const estimateQueries = {
           sellerOrganizationId
         }
       }
+    `,
+
+    // Negotiation Queries
+    GET_NEGOTIATION_HISTORY: `
+      query GetNegotiationHistory($estimateId: String!) {
+        getNegotiationHistory(estimateId: $estimateId) {
+          id
+          estimateId
+          proposedPrice
+          details
+          iterationCount
+          status
+          proposedBy
+          createdAt
+          updatedAt
+        }
+      }
+    `,
+
+    GET_CURRENT_NEGOTIATION: `
+      query GetCurrentNegotiation($estimateId: String!) {
+        getCurrentNegotiation(estimateId: $estimateId) {
+          id
+          estimateId
+          proposedPrice
+          details
+          iterationCount
+          status
+          proposedBy
+          createdAt
+          updatedAt
+        }
+      }
+    `,
+
+    // Negotiation Mutations
+    CREATE_NEGOTIATION: `
+      mutation CreateNegotiation($input: CreateNegotiationInput!) {
+        createNegotiation(input: $input) {
+          estimate {
+            estimateId
+            serviceId
+            proposalPrice
+            details
+            status
+            negotiationStatus
+            currentNegotiationId
+            createdAt
+            updatedAt
+          }
+          negotiation {
+            id
+            estimateId
+            proposedPrice
+            details
+            iterationCount
+            status
+            proposedBy
+            createdAt
+            updatedAt
+          }
+        }
+      }
+    `,
+
+    ACCEPT_NEGOTIATION: `
+      mutation AcceptNegotiation($estimateId: String!) {
+        acceptNegotiation(estimateId: $estimateId) {
+          estimateId
+          serviceId
+          proposalPrice
+          details
+          status
+          negotiationStatus
+          currentNegotiationId
+          createdAt
+          updatedAt
+        }
+      }
+    `,
+
+    REJECT_NEGOTIATION: `
+      mutation RejectNegotiation($estimateId: String!) {
+        rejectNegotiation(estimateId: $estimateId) {
+          estimateId
+          serviceId
+          proposalPrice
+          details
+          status
+          negotiationStatus
+          currentNegotiationId
+          createdAt
+          updatedAt
+        }
+      }
     `
 };
   
