@@ -114,6 +114,15 @@ export class Contract {
   }
 
   /**
+   * Retrieves contracts by organization ID
+   */
+  async getByOrganizationId(organizationId: string): Promise<ContractResponse[]> {
+    const query = contractQueries.GET_CONTRACTS_BY_ORGANIZATION_ID;
+    const response = await this.client.query<GetContractsResponse>(query, { organizationId });
+    return response.contracts;
+  }
+
+  /**
    * Signs a contract as a client
    */
   async signAsClient(contractId: string, options?: {

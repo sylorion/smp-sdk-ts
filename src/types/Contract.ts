@@ -22,6 +22,7 @@ export interface ContractResponse {
   contractId: string;
   estimateId?: string;
   serviceId: string;
+  organizationId?: string;
   clientSignHash?: string;
   providerSignHash?: string;
   status: ContractStatus;
@@ -38,6 +39,7 @@ export interface ContractResponse {
 export interface CreateContractInput {
   serviceId: string;
   estimateId?: string;
+  organizationId?: string;
   status?: string;
   content: any;
   variables: any;
@@ -53,6 +55,7 @@ export interface UpdateContractInput {
   variables?: any;
   details?: any;
   transactions?: string[];
+  organizationId?: string;
 }
 
 export interface SignContractInput {

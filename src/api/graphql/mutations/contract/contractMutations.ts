@@ -5,6 +5,7 @@ const contractMutations = {
         contractId
         estimateId
         serviceId
+        organizationId
         clientSignHash
         providerSignHash
         status
@@ -26,6 +27,7 @@ const contractMutations = {
         contractId
         estimateId
         serviceId
+        organizationId
         clientSignHash
         providerSignHash
         status
@@ -47,6 +49,7 @@ const contractMutations = {
         contractId
         estimateId
         serviceId
+        organizationId
         clientSignHash
         providerSignHash
         status
