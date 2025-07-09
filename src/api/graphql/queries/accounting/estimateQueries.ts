@@ -45,6 +45,7 @@ const estimateQueries = {
           updatedAt
           buyerUserId
           buyerOrganizationId
+          sellerOrganizationId
         }
       }
     `,
@@ -198,6 +199,9 @@ const estimateQueries = {
           providerSignDate
           createdAt
           updatedAt
+          buyerUserId
+          buyerOrganizationId
+          sellerOrganizationId
         }
       }
     `,
@@ -215,6 +219,9 @@ const estimateQueries = {
           providerSignDate
           createdAt
           updatedAt
+          buyerUserId
+          buyerOrganizationId
+          sellerOrganizationId
         }
       }
     `,
@@ -234,6 +241,7 @@ const estimateQueries = {
           updatedAt
           buyerUserId
           buyerOrganizationId
+          sellerOrganizationId
         }
       }
     `,
@@ -323,6 +331,9 @@ const estimateQueries = {
             status
             negotiationStatus
             currentNegotiationId
+            buyerUserId
+            buyerOrganizationId
+            sellerOrganizationId
             createdAt
             updatedAt
           }
@@ -351,6 +362,9 @@ const estimateQueries = {
           status
           negotiationStatus
           currentNegotiationId
+          buyerUserId
+          buyerOrganizationId
+          sellerOrganizationId
           createdAt
           updatedAt
         }
@@ -367,6 +381,9 @@ const estimateQueries = {
           status
           negotiationStatus
           currentNegotiationId
+          buyerUserId
+          buyerOrganizationId
+          sellerOrganizationId
           createdAt
           updatedAt
         }

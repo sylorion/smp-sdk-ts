@@ -8,7 +8,7 @@ import { ConfigManager } from "./config/ConfigManager.js";
 import { Persistence, PersistenceKind } from "./config/Persistence.js";
 import { AxiosRequestConfig } from "axios";
 import { GraphQLClient, ClientError } from 'graphql-request'; 
-import { Service, Organization,Invoice, Estimate, SMPPayment, Signup, Password, Profile, Location , ManageOrganization, Asset, ServiceAsset, Mailing, Order, Media, WaitingList } from "./controllers/index.js";
+import { Service, Organization,Invoice, Estimate, Contract, SMPPayment, Signup, Password, Profile, Location , ManageOrganization, Asset, ServiceAsset, Mailing, Order, Media, WaitingList } from "./controllers/index.js";
 export class SMPClient {
   public httpApiClient: APIClient; 
   public authTokenManager: AuthTokenManager;
@@ -16,6 +16,7 @@ export class SMPClient {
   public service: Service;
   public organization: Organization;
   public estimate: Estimate;
+  public contract: Contract;
   public invoice: Invoice;
   public smpPayment:SMPPayment
   public signup: Signup;
@@ -45,6 +46,7 @@ export class SMPClient {
     this.service = new Service(this.httpApiClient);
     this.organization = new Organization(this.httpApiClient);
     this.estimate = new Estimate(this.httpApiClient);
+    this.contract = new Contract(this.httpApiClient);
     this.invoice = new Invoice(this.httpApiClient);
     this.smpPayment = new SMPPayment(this.httpApiClient);
     this.signup = new Signup(this.httpApiClient);

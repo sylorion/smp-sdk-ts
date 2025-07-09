@@ -66,8 +66,8 @@ export interface CreateEstimateInput {
 }
 
 export interface UpdateEstimateInput {
+  estimateId: string;
   proposalPrice?: number;
-  buyerOrganizationId: string;
   details?: any; // JSONObject
 }
 

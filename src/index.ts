@@ -1,4 +1,3 @@
-
 import { statusByServices } from './api/graphql/queries/index.js';
 import { serviceQueries } from "./api/graphql/queries/index.js";
 import { logger } from "./utils/Logger.js";
@@ -15,6 +14,17 @@ export type {
   NegotiationResponse,
   NegotiationStatus 
 } from './types/Estimate';
+
+export type {
+  ContractResponse,
+  CreateContractInput,
+  UpdateContractInput,
+  SignContractInput,
+  SendContractInput,
+  ContractStatus,
+  SignerRole,
+  SignatureType
+} from './types/Contract';
 
 // Export controllers
 export * from './controllers';
