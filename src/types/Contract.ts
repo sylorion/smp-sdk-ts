@@ -29,7 +29,7 @@ export interface ContractResponse {
   content: any;
   variables: any;
   details: any;
-  transactions: string[];
+
   clientSignDate?: string;
   providerSignDate?: string;
   createdAt: string;
@@ -44,7 +44,6 @@ export interface CreateContractInput {
   content: any;
   variables: any;
   details?: any;
-  transactions?: string[];
   authorId?: string;
 }
 
@@ -54,7 +53,6 @@ export interface UpdateContractInput {
   content?: any;
   variables?: any;
   details?: any;
-  transactions?: string[];
   organizationId?: string;
 }
 
