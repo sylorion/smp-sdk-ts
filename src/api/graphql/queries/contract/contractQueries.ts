@@ -12,7 +12,6 @@ const contractQueries = {
         content
         variables
         details
-        transactions
         clientSignDate
         providerSignDate
         createdAt
@@ -34,7 +33,6 @@ const contractQueries = {
         content
         variables
         details
-        transactions
         clientSignDate
         providerSignDate
         createdAt
@@ -56,7 +54,6 @@ const contractQueries = {
         content
         variables
         details
-        transactions
         clientSignDate
         providerSignDate
         createdAt
@@ -78,7 +75,6 @@ const contractQueries = {
         content
         variables
         details
-        transactions
         clientSignDate
         providerSignDate
         createdAt
@@ -100,7 +96,6 @@ const contractQueries = {
         content
         variables
         details
-        transactions
         clientSignDate
         providerSignDate
         createdAt
@@ -122,7 +117,6 @@ const contractQueries = {
         content
         variables
         details
-        transactions
         clientSignDate
         providerSignDate
         createdAt

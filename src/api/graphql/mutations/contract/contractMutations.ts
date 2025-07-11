@@ -12,7 +12,6 @@ const contractMutations = {
         content
         variables
         details
-        transactions
         clientSignDate
         providerSignDate
         createdAt
@@ -34,7 +33,6 @@ const contractMutations = {
         content
         variables
         details
-        transactions
         clientSignDate
         providerSignDate
         createdAt
@@ -56,7 +54,6 @@ const contractMutations = {
         content
         variables
         details
-        transactions
         clientSignDate
         providerSignDate
         createdAt
