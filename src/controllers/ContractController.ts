@@ -77,39 +77,11 @@ export class Contract {
   }
 
   /**
-   * Retrieves a list of contracts with optional pagination, sorting, and filters.
+   * Retrieves all contracts.
    */
-  async list(pagination?: any, sort?: any, filter?: any): Promise<ContractResponse[]> {
-    const query = contractQueries.GET_CONTRACTS;
-    const variables = { pagination, sort, filter };
-    const response = await this.client.query<GetContractsResponse>(query, variables);
-    return response.contracts;
-  }
-
-  /**
-   * Retrieves contracts by service ID
-   */
-  async getByServiceId(serviceId: string): Promise<ContractResponse[]> {
-    const query = contractQueries.GET_CONTRACTS_BY_SERVICE_ID;
-    const response = await this.client.query<GetContractsResponse>(query, { serviceId });
-    return response.contracts;
-  }
-
-  /**
-   * Retrieves contracts by estimate ID
-   */
-  async getByEstimateId(estimateId: string): Promise<ContractResponse[]> {
-    const query = contractQueries.GET_CONTRACTS_BY_ESTIMATE_ID;
-    const response = await this.client.query<GetContractsResponse>(query, { estimateId });
-    return response.contracts;
-  }
-
-  /**
-   * Retrieves contracts by status
-   */
-  async getByStatus(status: ContractStatus): Promise<ContractResponse[]> {
-    const query = contractQueries.GET_CONTRACTS_BY_STATUS;
-    const response = await this.client.query<GetContractsResponse>(query, { status });
+  async list(): Promise<ContractResponse[]> {
+    const query = contractQueries.GET_ALL_CONTRACTS;
+    const response = await this.client.query<GetContractsResponse>(query, {});
     return response.contracts;
   }
 
@@ -120,103 +92,5 @@ export class Contract {
     const query = contractQueries.GET_CONTRACTS_BY_ORGANIZATION_ID;
     const response = await this.client.query<GetContractsResponse>(query, { organizationId });
     return response.contracts;
-  }
-
-  /**
-   * Signs a contract as a client
-   */
-  async signAsClient(contractId: string, options?: {
-    signatureHash?: string;
-    signatureImage?: string;
-    signatureFileUrl?: string;
-    signerEmail?: string;
-    metadata?: {
-      ip?: string;
-      userAgent?: string;
-      timestamp?: string;
-      location?: string;
-    };
-  }): Promise<ContractResponse> {
-    const data: SignContractInput = {
-      contractId,
-      role: SignerRole.CLIENT,
-      signatureType: options?.signatureImage ? SignatureType.IMAGE : 
-                    options?.signatureFileUrl ? SignatureType.UPLOAD : 
-                    SignatureType.HASH,
-      signatureHash: options?.signatureHash,
-      signatureImage: options?.signatureImage,
-      signatureFileUrl: options?.signatureFileUrl,
-      signerEmail: options?.signerEmail,
-      metadata: options?.metadata
-    };
-    return this.sign(data);
-  }
-
-  /**
-   * Signs a contract as a provider
-   */
-  async signAsProvider(contractId: string, options?: {
-    signatureHash?: string;
-    signatureImage?: string;
-    signatureFileUrl?: string;
-    signerEmail?: string;
-    metadata?: {
-      ip?: string;
-      userAgent?: string;
-      timestamp?: string;
-      location?: string;
-    };
-  }): Promise<ContractResponse> {
-    const data: SignContractInput = {
-      contractId,
-      role: SignerRole.PROVIDER,
-      signatureType: options?.signatureImage ? SignatureType.IMAGE : 
-                    options?.signatureFileUrl ? SignatureType.UPLOAD : 
-                    SignatureType.HASH,
-      signatureHash: options?.signatureHash,
-      signatureImage: options?.signatureImage,
-      signatureFileUrl: options?.signatureFileUrl,
-      signerEmail: options?.signerEmail,
-      metadata: options?.metadata
-    };
-    return this.sign(data);
-  }
-
-  /**
-   * Sends a contract to a client for signature
-   */
-  async sendToClient(contractId: string, email: string, options?: {
-    message?: string;
-    firstName?: string;
-    lastName?: string;
-  }): Promise<{ success: boolean; message: string }> {
-    const data: SendContractInput = {
-      contractId,
-      email,
-      role: 'client',
-      message: options?.message,
-      firstName: options?.firstName,
-      lastName: options?.lastName
-    };
-    return this.send(data);
-  }
-
-  /**
-   * Sends a contract to a provider for signature
-   */
-  async sendToProvider(contractId: string, email: string, options?: {
-    message?: string;
-    firstName?: string;
-    lastName?: string;
-  }): Promise<{ success: boolean; message: string }> {
-    const data: SendContractInput = {
-      contractId,
-      email,
-      role: 'provider',
-      message: options?.message,
-      firstName: options?.firstName,
-      lastName: options?.lastName
-    };
-    return this.send(data);
   }
 } 
