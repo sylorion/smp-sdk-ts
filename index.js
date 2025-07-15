@@ -1,7 +1,7 @@
 import { GraphQLClient, gql } from 'graphql-request';
 
 // Endpoint GraphQL
-const endpoint = "https://dev-gateway.sh1.hidora.net/";
+const endpoint = process.env.GATEWAY_GRAPHQL_URL ?? "http://dev-gateway.sh1.hidora.net/graphql";
 
 // Requête pour introspection
 const introspectionQuery = gql`
