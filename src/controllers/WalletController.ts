@@ -162,6 +162,51 @@ export class Wallet {
   }
 
   /**
+   * Retrieves wallets by user ID only
+   */
+  async getByUser(userId: string): Promise<WalletEntity[]> {
+    const query = walletQueries.GET_WALLETS_BY_USER;
+    const response = await this.client.query<GetWalletsResponse>(query, { userId });
+    return response.wallets;
+  }
+
+  /**
+   * Retrieves wallets by organization ID only
+   */
+  async getByOrganization(organizationId: string): Promise<WalletEntity[]> {
+    const query = walletQueries.GET_WALLETS_BY_ORGANIZATION;
+    const response = await this.client.query<GetWalletsResponse>(query, { organizationId });
+    return response.wallets;
+  }
+
+  /**
+   * Retrieves personal wallets of a user (organizationId = null)
+   */
+  async getUserWallets(userId: string): Promise<WalletEntity[]> {
+    const query = walletQueries.GET_USER_WALLETS;
+    const response = await this.client.query<GetWalletsResponse>(query, { userId });
+    return response.wallets;
+  }
+
+  /**
+   * Retrieves organization wallets (organizationId is set)
+   */
+  async getOrganizationWallets(organizationId: string): Promise<WalletEntity[]> {
+    const query = walletQueries.GET_ORGANIZATION_WALLETS;
+    const response = await this.client.query<GetWalletsResponse>(query, { organizationId });
+    return response.wallets;
+  }
+
+  /**
+   * Retrieves all wallets (admin only)
+   */
+  async getAll(): Promise<WalletEntity[]> {
+    const query = walletQueries.GET_ALL_WALLETS;
+    const response = await this.client.query<GetWalletsResponse>(query, {});
+    return response.wallets;
+  }
+
+  /**
    * Gets conversion details for tokens to money conversion
    */
   async getConversionDetails(data: ConversionDetailsInput): Promise<ConversionDetails> {
