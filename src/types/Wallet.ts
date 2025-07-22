@@ -7,7 +7,7 @@ export enum WalletStatus {
 
 export interface Wallet {
   walletId: string;
-  userId: string;
+  userId?: string; // Optionnel pour les wallets d'organisation
   organizationId?: string;
   balances: string; // JSON string
   tokens: string; // JSON string
@@ -22,7 +22,7 @@ export interface Wallet {
 }
 
 export interface CreateWalletInput {
-  userId: string;
+  userId?: string; // Optionnel pour les wallets d'organisation
   organizationId?: string;
   mainCurrency: string;
   description?: string;
