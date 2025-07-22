@@ -184,8 +184,8 @@ export class Wallet {
    */
   async getUserWallets(userId: string): Promise<WalletEntity[]> {
     const query = walletQueries.GET_USER_WALLETS;
-    const response = await this.client.query<GetWalletsResponse>(query, { userId });
-    return response.wallets;
+    const response = await this.client.query<any>(query, { userId });
+    return response.userWallets || [];
   }
 
   /**
@@ -193,8 +193,8 @@ export class Wallet {
    */
   async getOrganizationWallets(organizationId: string): Promise<WalletEntity[]> {
     const query = walletQueries.GET_ORGANIZATION_WALLETS;
-    const response = await this.client.query<GetWalletsResponse>(query, { organizationId });
-    return response.wallets;
+    const response = await this.client.query<any>(query, { organizationId });
+    return response.organizationWallets || [];
   }
 
   /**
@@ -202,8 +202,8 @@ export class Wallet {
    */
   async getAll(): Promise<WalletEntity[]> {
     const query = walletQueries.GET_ALL_WALLETS;
-    const response = await this.client.query<GetWalletsResponse>(query, {});
-    return response.wallets;
+    const response = await this.client.query<any>(query, {});
+    return response.allWallets || [];
   }
 
   /**
