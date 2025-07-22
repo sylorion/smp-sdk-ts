@@ -86,11 +86,137 @@ export class Contract {
   }
 
   /**
+   * Retrieves all contracts without filters.
+   */
+  async getAll(): Promise<ContractResponse[]> {
+    const query = contractQueries.GET_ALL_CONTRACTS;
+    const response = await this.client.query<GetContractsResponse>(query, {});
+    return response.contracts;
+  }
+
+  /**
    * Retrieves contracts by organization ID
    */
   async getByOrganizationId(organizationId: string): Promise<ContractResponse[]> {
+    console.log('🔍 [SDK] getByOrganizationId appelé avec:', organizationId);
+    
     const query = contractQueries.GET_CONTRACTS_BY_ORGANIZATION_ID;
-    const response = await this.client.query<GetContractsResponse>(query, { organizationId });
-    return response.contracts;
+    console.log('🔍 [SDK] Requête utilisée:', query);
+    
+    try {
+      const response = await this.client.query<GetContractsResponse>(query, { organizationId });
+      console.log('🔍 [SDK] Réponse complète:', JSON.stringify(response, null, 2));
+      console.log('🔍 [SDK] Type de response:', typeof response);
+      console.log('🔍 [SDK] Clés de response:', Object.keys(response || {}));
+      console.log('🔍 [SDK] response.contracts:', response?.contracts);
+      
+      if (!response?.contracts) {
+        console.error('🔍 [SDK] response.contracts est undefined!');
+        console.log('🔍 [SDK] Structure de response:', response);
+      }
+      
+      return response?.contracts || [];
+    } catch (error) {
+      console.error('🔍 [SDK] Erreur dans getByOrganizationId:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Signs a contract as a client
+   */
+  async signAsClient(contractId: string, options?: {
+    signatureHash?: string;
+    signatureImage?: string;
+    signatureFileUrl?: string;
+    signerEmail?: string;
+    metadata?: {
+      ip?: string;
+      userAgent?: string;
+      timestamp?: string;
+      location?: string;
+    };
+  }): Promise<ContractResponse> {
+    const data: SignContractInput = {
+      contractId,
+      role: SignerRole.CLIENT,
+      signatureType: options?.signatureImage ? SignatureType.IMAGE : 
+                    options?.signatureFileUrl ? SignatureType.UPLOAD : 
+                    SignatureType.HASH,
+      signatureHash: options?.signatureHash,
+      signatureImage: options?.signatureImage,
+      signatureFileUrl: options?.signatureFileUrl,
+      signerEmail: options?.signerEmail,
+      metadata: options?.metadata
+    };
+    return this.sign(data);
+  }
+
+  /**
+   * Signs a contract as a provider
+   */
+  async signAsProvider(contractId: string, options?: {
+    signatureHash?: string;
+    signatureImage?: string;
+    signatureFileUrl?: string;
+    signerEmail?: string;
+    metadata?: {
+      ip?: string;
+      userAgent?: string;
+      timestamp?: string;
+      location?: string;
+    };
+  }): Promise<ContractResponse> {
+    const data: SignContractInput = {
+      contractId,
+      role: SignerRole.PROVIDER,
+      signatureType: options?.signatureImage ? SignatureType.IMAGE : 
+                    options?.signatureFileUrl ? SignatureType.UPLOAD : 
+                    SignatureType.HASH,
+      signatureHash: options?.signatureHash,
+      signatureImage: options?.signatureImage,
+      signatureFileUrl: options?.signatureFileUrl,
+      signerEmail: options?.signerEmail,
+      metadata: options?.metadata
+    };
+    return this.sign(data);
+  }
+
+  /**
+   * Sends a contract to a client for signature
+   */
+  async sendToClient(contractId: string, email: string, options?: {
+    message?: string;
+    firstName?: string;
+    lastName?: string;
+  }): Promise<{ success: boolean; message: string }> {
+    const data: SendContractInput = {
+      contractId,
+      email,
+      role: 'client',
+      message: options?.message,
+      firstName: options?.firstName,
+      lastName: options?.lastName
+    };
+    return this.send(data);
+  }
+
+  /**
+   * Sends a contract to a provider for signature
+   */
+  async sendToProvider(contractId: string, email: string, options?: {
+    message?: string;
+    firstName?: string;
+    lastName?: string;
+  }): Promise<{ success: boolean; message: string }> {
+    const data: SendContractInput = {
+      contractId,
+      email,
+      role: 'provider',
+      message: options?.message,
+      firstName: options?.firstName,
+      lastName: options?.lastName
+    };
+    return this.send(data);
   }
 } 
