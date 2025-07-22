@@ -30,7 +30,7 @@ export class SMPClient {
   public order: Order;
   public media: Media;
   public waitingList: WaitingList;
-  public Wallet: Wallet;
+  public wallet: Wallet;
   
 
 
@@ -61,7 +61,7 @@ export class SMPClient {
     this.order = new Order(this.httpApiClient);
     this.media = new Media(this.httpApiClient);
     this.waitingList = new WaitingList(this.httpApiClient);
-    this.Wallet = new Wallet(this.httpApiClient);
+    this.wallet = new Wallet(this.httpApiClient);
 
     
     this.authTokenManager = new AuthTokenManager(this.configManager, this.httpApiClient);
