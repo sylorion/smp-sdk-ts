@@ -59,17 +59,7 @@ export interface UpdateContractInput {
 export interface SignContractInput {
   contractId: string;
   role: SignerRole;
-  signatureType: SignatureType;
-  signatureHash?: string;
-  signatureImage?: string;
-  signatureFileUrl?: string;
-  metadata?: {
-    ip?: string;
-    userAgent?: string;
-    timestamp?: string;
-    location?: string;
-  };
-  signerEmail?: string;
+  signatureText?: string;
 }
 
 export interface SendContractInput {
@@ -78,7 +68,7 @@ export interface SendContractInput {
   message?: string;
   firstName?: string;
   lastName?: string;
-  role?: 'client' | 'provider';
+  expirationDays?: number;
 }
 
 export interface CreateContractResponse {
@@ -97,6 +87,9 @@ export interface SendContractResponse {
   sendContract: {
     success: boolean;
     message: string;
+    invitationToken?: string;
+    expiresAt?: string;
+    signatureUrl?: string;
   };
 }
 

@@ -67,6 +67,9 @@ const contractMutations = {
       sendContract(data: $data) {
         success
         message
+        invitationToken
+        expiresAt
+        signatureUrl
       }
     }
   `,
