@@ -2,9 +2,7 @@ import { APIClient } from '../api/APIClient';
 import { contractQueries } from '../api/graphql/queries/contract/contractQueries';
 import { contractMutations } from '../api/graphql/mutations/contract/contractMutations';
 import { 
-  ContractStatus,
-  SignerRole,
-  SignatureType
+  ContractStatus
 } from '../types/Contract';
 import type { 
   ContractResponse,
@@ -63,7 +61,7 @@ export class Contract {
   /**
    * Sends a contract by email
    */
-  async send(data: SendContractInput): Promise<{ success: boolean; message: string }> {
+  async send(data: SendContractInput): Promise<{ success: boolean; message: string; invitationToken?: string; expiresAt?: string }> {
     const query = contractMutations.SEND_CONTRACT;
     const response = await this.client.mutate<SendContractResponse>(query, { data });
     return response.sendContract;
@@ -135,67 +133,5 @@ export class Contract {
     return response.verifyToken;
   }
 
-  /**
-   * Signs a contract as a client
-   */
-  async signAsClient(contractId: string, options?: {
-    signatureText?: string;
-  }): Promise<ContractResponse> {
-    const data: SignContractInput = {
-      contractId,
-      role: SignerRole.CLIENT,
-      signatureText: options?.signatureText
-    };
-    return this.sign(data);
-  }
 
-  /**
-   * Signs a contract as a provider
-   */
-  async signAsProvider(contractId: string, options?: {
-    signatureText?: string;
-  }): Promise<ContractResponse> {
-    const data: SignContractInput = {
-      contractId,
-      role: SignerRole.PROVIDER,
-      signatureText: options?.signatureText
-    };
-    return this.sign(data);
-  }
-
-  /**
-   * Sends a contract to a client for signature
-   */
-  async sendToClient(contractId: string, email: string, options?: {
-    message?: string;
-    firstName?: string;
-    lastName?: string;
-  }): Promise<{ success: boolean; message: string }> {
-    const data: SendContractInput = {
-      contractId,
-      email,
-      message: options?.message,
-      firstName: options?.firstName,
-      lastName: options?.lastName
-    };
-    return this.send(data);
-  }
-
-  /**
-   * Sends a contract to a provider for signature
-   */
-  async sendToProvider(contractId: string, email: string, options?: {
-    message?: string;
-    firstName?: string;
-    lastName?: string;
-  }): Promise<{ success: boolean; message: string }> {
-    const data: SendContractInput = {
-      contractId,
-      email,
-      message: options?.message,
-      firstName: options?.firstName,
-      lastName: options?.lastName
-    };
-    return this.send(data);
-  }
 } 
