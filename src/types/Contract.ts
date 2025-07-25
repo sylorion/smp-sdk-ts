@@ -93,7 +93,7 @@ export interface SendContractResponse {
 }
 
 export interface GetContractResponse {
-  contract: ContractResponse;
+  getContract: ContractResponse;
 }
 
 export interface GetContractsResponse {
