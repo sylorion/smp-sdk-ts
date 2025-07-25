@@ -1,7 +1,7 @@
 const contractQueries = {
   GET_CONTRACT_BY_ID: `
     query GetContract($id: String!) {
-      contract(id: $id) {
+      getContract(id: $id) {
         contractId
         estimateId
         serviceId
@@ -22,7 +22,7 @@ const contractQueries = {
 
   GET_ALL_CONTRACTS: `
     query GetAllContracts {
-      contracts {
+      getContracts {
         contractId
         estimateId
         serviceId
