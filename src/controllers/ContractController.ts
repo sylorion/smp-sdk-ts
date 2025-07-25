@@ -16,6 +16,7 @@ import type {
   SendContractResponse,
   GetContractResponse,
   GetContractsResponse,
+  GetContractsByOrganizationIdResponse,
   VerifyTokenResponse,
   VerifyTokenGraphQLResponse
 } from '../types/Contract';
@@ -104,18 +105,18 @@ export class Contract {
     console.log('🔍 [SDK] Requête utilisée:', query);
     
     try {
-      const response = await this.client.query<GetContractsResponse>(query, { organizationId });
+      const response = await this.client.query<GetContractsByOrganizationIdResponse>(query, { organizationId });
       console.log('🔍 [SDK] Réponse complète:', JSON.stringify(response, null, 2));
       console.log('🔍 [SDK] Type de response:', typeof response);
       console.log('🔍 [SDK] Clés de response:', Object.keys(response || {}));
-      console.log('🔍 [SDK] response.contracts:', response?.contracts);
+      console.log('🔍 [SDK] response.getContractsByOrganizationId:', response?.getContractsByOrganizationId);
       
-      if (!response?.contracts) {
-        console.error('🔍 [SDK] response.contracts est undefined!');
+      if (!response?.getContractsByOrganizationId) {
+        console.error('🔍 [SDK] response.getContractsByOrganizationId est undefined!');
         console.log('🔍 [SDK] Structure de response:', response);
       }
       
-      return response?.contracts || [];
+      return response?.getContractsByOrganizationId || [];
     } catch (error) {
       console.error('🔍 [SDK] Erreur dans getByOrganizationId:', error);
       throw error;

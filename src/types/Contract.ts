@@ -100,6 +100,10 @@ export interface GetContractsResponse {
   contracts: ContractResponse[];
 }
 
+export interface GetContractsByOrganizationIdResponse {
+  getContractsByOrganizationId: ContractResponse[];
+}
+
 export interface VerifyTokenInput {
   token: string;
 }
