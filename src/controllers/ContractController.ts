@@ -73,7 +73,7 @@ export class Contract {
    */
   async getById(contractId: string): Promise<ContractResponse> {
     const query = contractQueries.GET_CONTRACT_BY_ID;
-    const response = await this.client.query<GetContractResponse>(query, { id: contractId });
+    const response = await this.client.query<GetContractResponse>(query, { getContractId: contractId });
     return response.contract;
   }
 
