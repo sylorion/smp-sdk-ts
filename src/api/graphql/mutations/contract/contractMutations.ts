@@ -67,9 +67,22 @@ const contractMutations = {
       sendContract(data: $data) {
         success
         message
-        invitationToken
+              invitationToken
+      expiresAt
+      }
+    }
+  `,
+
+  VERIFY_TOKEN: `
+    mutation VerifyToken($data: VerifyTokenInput!) {
+      verifyToken(data: $data) {
+        isValid
+        message
+        contractId
+        email
+        role
         expiresAt
-        signatureUrl
+        isExpired
       }
     }
   `,

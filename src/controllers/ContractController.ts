@@ -17,7 +17,9 @@ import type {
   SignContractResponse,
   SendContractResponse,
   GetContractResponse,
-  GetContractsResponse
+  GetContractsResponse,
+  VerifyTokenResponse,
+  VerifyTokenGraphQLResponse
 } from '../types/Contract';
 
 /**
@@ -123,31 +125,26 @@ export class Contract {
   }
 
   /**
+   * Vérifie la validité d'un token d'invitation
+   */
+  async verifyToken(token: string): Promise<VerifyTokenResponse> {
+    const query = contractMutations.VERIFY_TOKEN;
+    const response = await this.client.mutate<VerifyTokenGraphQLResponse>(query, { 
+      data: { token } 
+    });
+    return response.verifyToken;
+  }
+
+  /**
    * Signs a contract as a client
    */
   async signAsClient(contractId: string, options?: {
-    signatureHash?: string;
-    signatureImage?: string;
-    signatureFileUrl?: string;
-    signerEmail?: string;
-    metadata?: {
-      ip?: string;
-      userAgent?: string;
-      timestamp?: string;
-      location?: string;
-    };
+    signatureText?: string;
   }): Promise<ContractResponse> {
     const data: SignContractInput = {
       contractId,
       role: SignerRole.CLIENT,
-      signatureType: options?.signatureImage ? SignatureType.IMAGE : 
-                    options?.signatureFileUrl ? SignatureType.UPLOAD : 
-                    SignatureType.HASH,
-      signatureHash: options?.signatureHash,
-      signatureImage: options?.signatureImage,
-      signatureFileUrl: options?.signatureFileUrl,
-      signerEmail: options?.signerEmail,
-      metadata: options?.metadata
+      signatureText: options?.signatureText
     };
     return this.sign(data);
   }
@@ -156,28 +153,12 @@ export class Contract {
    * Signs a contract as a provider
    */
   async signAsProvider(contractId: string, options?: {
-    signatureHash?: string;
-    signatureImage?: string;
-    signatureFileUrl?: string;
-    signerEmail?: string;
-    metadata?: {
-      ip?: string;
-      userAgent?: string;
-      timestamp?: string;
-      location?: string;
-    };
+    signatureText?: string;
   }): Promise<ContractResponse> {
     const data: SignContractInput = {
       contractId,
       role: SignerRole.PROVIDER,
-      signatureType: options?.signatureImage ? SignatureType.IMAGE : 
-                    options?.signatureFileUrl ? SignatureType.UPLOAD : 
-                    SignatureType.HASH,
-      signatureHash: options?.signatureHash,
-      signatureImage: options?.signatureImage,
-      signatureFileUrl: options?.signatureFileUrl,
-      signerEmail: options?.signerEmail,
-      metadata: options?.metadata
+      signatureText: options?.signatureText
     };
     return this.sign(data);
   }
@@ -193,7 +174,6 @@ export class Contract {
     const data: SendContractInput = {
       contractId,
       email,
-      role: 'client',
       message: options?.message,
       firstName: options?.firstName,
       lastName: options?.lastName
@@ -212,7 +192,6 @@ export class Contract {
     const data: SendContractInput = {
       contractId,
       email,
-      role: 'provider',
       message: options?.message,
       firstName: options?.firstName,
       lastName: options?.lastName

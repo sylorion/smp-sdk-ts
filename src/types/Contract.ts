@@ -89,7 +89,6 @@ export interface SendContractResponse {
     message: string;
     invitationToken?: string;
     expiresAt?: string;
-    signatureUrl?: string;
   };
 }
 
@@ -99,4 +98,22 @@ export interface GetContractResponse {
 
 export interface GetContractsResponse {
   contracts: ContractResponse[];
+}
+
+export interface VerifyTokenInput {
+  token: string;
+}
+
+export interface VerifyTokenResponse {
+  isValid: boolean;
+  message?: string;
+  contractId?: string;
+  email?: string;
+  role?: string;
+  expiresAt?: string;
+  isExpired?: boolean;
+}
+
+export interface VerifyTokenGraphQLResponse {
+  verifyToken: VerifyTokenResponse;
 } 
