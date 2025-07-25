@@ -43,7 +43,7 @@ const contractQueries = {
 
   GET_CONTRACTS_BY_ORGANIZATION_ID: `
     query GetContractsByOrganizationId($organizationId: String!) {
-      contractsByOrganizationId(organizationId: $organizationId) {
+      getContractsByOrganizationId(organizationId: $organizationId) {
         contractId
         estimateId
         serviceId
