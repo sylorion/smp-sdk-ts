@@ -111,7 +111,7 @@ const paymentMutations = {
   // MUTATION POUR METTRE À JOUR UN ESTIMATE
   UPDATE_ESTIMATE: `
     mutation UpdateEstimate($updateEstimateId: String!, $data: UpdateEstimateInput!) {
-      updateEstimate(id: $updateEstimateId, data: $data) {
+      updateEstimate(estimateId: { estimateId: $updateEstimateId }, updateEstimateInput: $data) {
         estimateId
         serviceId
         proposalPrice
