@@ -187,8 +187,8 @@ const estimateQueries = {
     `,
 
     UPDATE_ESTIMATE: `
-      mutation UpdateEstimate($id: String!, $data: UpdateEstimateInput!) {
-        updateEstimate(id: $id, data: $data) {
+      mutation UpdateEstimate($estimateId: EstimateIdInput!, $updateEstimateInput: UpdateEstimateInput!) {
+        updateEstimate(estimateId: $estimateId, updateEstimateInput: $updateEstimateInput) {
           estimateId
           serviceId
           proposalPrice
