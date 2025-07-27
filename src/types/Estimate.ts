@@ -76,4 +76,14 @@ export interface CreateNegotiationInput {
 export interface NegotiationResponse {
   estimate: EstimateDetails;
   negotiation: Negotiation;
+}
+
+export enum EstimateStatus {
+  PENDING = 'PENDING',
+  NEGOTIATING = 'NEGOTIATING',
+  CLIENT_VALIDATED = 'CLIENT_VALIDATED',
+  PROVIDER_VALIDATED = 'PROVIDER_VALIDATED',
+  ACCEPTED = 'ACCEPTED',
+  REJECTED = 'REJECTED',
+  CLOSED = 'CLOSED'
 } 

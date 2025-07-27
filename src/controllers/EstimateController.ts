@@ -77,6 +77,7 @@ export class Estimate {
   async update(id: string, data: {
     proposalPrice?: number;
     details?: any;
+    status?: string;
   }): Promise<EstimateResponse> {
     const query = estimateQueries.UPDATE_ESTIMATE;
     const response = await this.client.mutate<UpdateEstimateResponse>(query, { id, data });

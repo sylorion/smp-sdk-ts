@@ -2,6 +2,7 @@
 
 import { APIClient } from '../api/APIClient';
 import { invoiceQueries } from '../api/graphql/queries/accounting/invoiceQueries';
+import { invoiceMutations } from '../api/graphql/mutations/accounting/invoiceMutations';
 
 interface InvoiceResponse {
   invoiceId: string;
@@ -161,6 +162,14 @@ interface InvoiceResponse {
     taxableAmount: number;
     taxAmount: number;
   }>;
+  downloadStatus?: {
+    downloaded: boolean;
+    downloadedAt: string | null;
+    downloadCount: number;
+    ipAddress: string | null;
+  };
+  pdfGeneratedAt?: string;
+  pdfHash?: string;
 }
 
 interface CreateInvoiceResponse {
@@ -173,6 +182,32 @@ interface GetInvoiceResponse {
 
 interface GetInvoicesResponse {
   invoices: InvoiceResponse[];
+}
+
+interface GetInvoicesBySellerResponse {
+  invoicesBySeller: InvoiceResponse[];
+}
+
+interface GetInvoicesByBuyerResponse {
+  invoicesByBuyer: InvoiceResponse[];
+}
+
+interface GetInvoicesByBuyerUserResponse {
+  invoicesByBuyerUser: InvoiceResponse[];
+}
+
+interface UpdateInvoiceDownloadStatusInput {
+  downloaded: boolean;
+  downloadedAt: string;
+  downloadCount: number;
+  ipAddress: string;
+}
+
+interface SendInvoiceEmailInput {
+  recipientEmail: string;
+  recipientName: string;
+  subject?: string;
+  message?: string;
 }
 
 /**
@@ -205,9 +240,27 @@ export class Invoice {
     transactionData?: string;
     notes?: string;
   }): Promise<InvoiceResponse> {
-    const query = invoiceQueries.CREATE_INVOICE;
+    const query = invoiceMutations.CREATE_INVOICE;
     const response = await this.client.mutate<CreateInvoiceResponse>(query, { input: data });
     return response.createInvoice;
+  }
+
+  /**
+   * Updates the download status of an invoice
+   */
+  async updateDownloadStatus(invoiceId: string, data: UpdateInvoiceDownloadStatusInput): Promise<InvoiceResponse> {
+    const query = invoiceMutations.UPDATE_INVOICE_DOWNLOAD_STATUS;
+    const response = await this.client.mutate<{ updateInvoiceDownloadStatus: InvoiceResponse }>(query, { invoiceId, input: data });
+    return response.updateInvoiceDownloadStatus;
+  }
+
+  /**
+   * Sends an invoice via email
+   */
+  async sendEmail(invoiceId: string, data: SendInvoiceEmailInput): Promise<InvoiceResponse> {
+    const query = invoiceMutations.SEND_INVOICE_EMAIL;
+    const response = await this.client.mutate<{ sendInvoiceEmail: InvoiceResponse }>(query, { invoiceId, input: data });
+    return response.sendInvoiceEmail;
   }
 
   /**
@@ -226,6 +279,33 @@ export class Invoice {
     const query = invoiceQueries.GET_INVOICES;
     const response = await this.client.query<GetInvoicesResponse>(query);
     return response.invoices;
+  }
+
+  /**
+   * Retrieves all invoices for a seller organization
+   */
+  async getBySeller(sellerOrganizationId: string): Promise<InvoiceResponse[]> {
+    const query = invoiceQueries.GET_INVOICES_BY_SELLER;
+    const response = await this.client.query<GetInvoicesBySellerResponse>(query, { sellerOrganizationId });
+    return response.invoicesBySeller;
+  }
+
+  /**
+   * Retrieves all invoices for a buyer organization
+   */
+  async getByBuyer(buyerOrganizationId: string): Promise<InvoiceResponse[]> {
+    const query = invoiceQueries.GET_INVOICES_BY_BUYER;
+    const response = await this.client.query<GetInvoicesByBuyerResponse>(query, { buyerOrganizationId });
+    return response.invoicesByBuyer;
+  }
+
+  /**
+   * Retrieves all invoices for a buyer user
+   */
+  async getByBuyerUser(buyerUserId: string): Promise<InvoiceResponse[]> {
+    const query = invoiceQueries.GET_INVOICES_BY_BUYER_USER;
+    const response = await this.client.query<GetInvoicesByBuyerUserResponse>(query, { buyerUserId });
+    return response.invoicesByBuyerUser;
   }
 
   /**

@@ -1,4 +1,4 @@
-// smp-sdk-ts/src/api/graphql/queries/invoiceQueries.js
+// smp-sdk-ts/src/api/graphql/queries/accounting/invoiceQueries.ts
 
 const invoiceQueries = {
     // QUERY TO GET AN INVOICE BY ITS UNIQUE ID
@@ -162,6 +162,14 @@ const invoiceQueries = {
             taxableAmount
             taxAmount
           }
+          downloadStatus {
+            downloaded
+            downloadedAt
+            downloadCount
+            ipAddress
+          }
+          pdfGeneratedAt
+          pdfHash
         }
       }
     `,
@@ -187,6 +195,14 @@ const invoiceQueries = {
           createdAt
           updatedAt
           deletedAt
+          downloadStatus {
+            downloaded
+            downloadedAt
+            downloadCount
+            ipAddress
+          }
+          pdfGeneratedAt
+          pdfHash
         }
       }
     `,
@@ -212,6 +228,14 @@ const invoiceQueries = {
           createdAt
           updatedAt
           deletedAt
+          downloadStatus {
+            downloaded
+            downloadedAt
+            downloadCount
+            ipAddress
+          }
+          pdfGeneratedAt
+          pdfHash
         }
       }
     `,
@@ -237,6 +261,14 @@ const invoiceQueries = {
           createdAt
           updatedAt
           deletedAt
+          downloadStatus {
+            downloaded
+            downloadedAt
+            downloadCount
+            ipAddress
+          }
+          pdfGeneratedAt
+          pdfHash
         }
       }
     `,
@@ -262,6 +294,14 @@ const invoiceQueries = {
           createdAt
           updatedAt
           deletedAt
+          downloadStatus {
+            downloaded
+            downloadedAt
+            downloadCount
+            ipAddress
+          }
+          pdfGeneratedAt
+          pdfHash
         }
       }
     `,
@@ -289,14 +329,22 @@ const invoiceQueries = {
           createdAt
           updatedAt
           deletedAt
+          downloadStatus {
+            downloaded
+            downloadedAt
+            downloadCount
+            ipAddress
+          }
+          pdfGeneratedAt
+          pdfHash
         }
       }
     `,
-  
-    // QUERY TO CREATE AN INVOICE
-    CREATE_INVOICE: `
-      mutation CreateInvoice($input: CreateInvoiceInput!) {
-        createInvoice(input: $input) {
+
+    // QUERY TO GET INVOICES BY SELLER ORGANIZATION
+    GET_INVOICES_BY_SELLER: `
+      query GetInvoicesBySeller($sellerOrganizationId: String!) {
+        invoicesBySeller(sellerOrganizationId: $sellerOrganizationId) {
           invoiceId
           uniqRef
           transactionId
@@ -308,6 +356,8 @@ const invoiceQueries = {
           prestationsVatPercent
           totalAmount
           sellerOrganizationId
+          buyerOrganizationId
+          buyerUserId
           paymentStatus
           emittedDate
           dueDate
@@ -315,10 +365,93 @@ const invoiceQueries = {
           state
           createdAt
           updatedAt
+          deletedAt
+          downloadStatus {
+            downloaded
+            downloadedAt
+            downloadCount
+            ipAddress
+          }
+          pdfGeneratedAt
+          pdfHash
+        }
+      }
+    `,
+
+    // QUERY TO GET INVOICES BY BUYER ORGANIZATION
+    GET_INVOICES_BY_BUYER: `
+      query GetInvoicesByBuyer($buyerOrganizationId: String!) {
+        invoicesByBuyer(buyerOrganizationId: $buyerOrganizationId) {
+          invoiceId
+          uniqRef
+          transactionId
+          slug
+          orderId
+          thirdPartyFees
+          servicesFees
+          servicesVatPercent
+          prestationsVatPercent
+          totalAmount
+          sellerOrganizationId
+          buyerOrganizationId
+          buyerUserId
+          paymentStatus
+          emittedDate
+          dueDate
+          digitalSignature
+          state
+          createdAt
+          updatedAt
+          deletedAt
+          downloadStatus {
+            downloaded
+            downloadedAt
+            downloadCount
+            ipAddress
+          }
+          pdfGeneratedAt
+          pdfHash
+        }
+      }
+    `,
+
+    // QUERY TO GET INVOICES BY BUYER USER
+    GET_INVOICES_BY_BUYER_USER: `
+      query GetInvoicesByBuyerUser($buyerUserId: String!) {
+        invoicesByBuyerUser(buyerUserId: $buyerUserId) {
+          invoiceId
+          uniqRef
+          transactionId
+          slug
+          orderId
+          thirdPartyFees
+          servicesFees
+          servicesVatPercent
+          prestationsVatPercent
+          totalAmount
+          sellerOrganizationId
+          buyerOrganizationId
+          buyerUserId
+          paymentStatus
+          emittedDate
+          dueDate
+          digitalSignature
+          state
+          createdAt
+          updatedAt
+          deletedAt
+          downloadStatus {
+            downloaded
+            downloadedAt
+            downloadCount
+            ipAddress
+          }
+          pdfGeneratedAt
+          pdfHash
         }
       }
     `
-  };
-  
-  export { invoiceQueries };
+};
+
+export { invoiceQueries };
   
