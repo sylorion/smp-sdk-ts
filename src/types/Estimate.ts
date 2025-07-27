@@ -43,7 +43,6 @@ export interface EstimateDetails {
       }>;
       actions: any[];
       isNegotiable: boolean;
-      status: string;
     }>;
     from: {
       name: string;
@@ -61,7 +60,6 @@ export interface EstimateDetails {
     total: number;
     actions: any[];
     isNegotiable: boolean;
-    status: string;
   };
   items: any[];
 }
