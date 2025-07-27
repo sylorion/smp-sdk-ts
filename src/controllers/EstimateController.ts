@@ -82,7 +82,10 @@ export class Estimate {
     const query = estimateQueries.UPDATE_ESTIMATE;
     const response = await this.client.mutate<UpdateEstimateResponse>(query, {
       estimateId: { estimateId: id },
-      updateEstimateInput: data
+      updateEstimateInput: {
+        estimateId: id,
+        ...data
+      }
     });
     return response.updateEstimate;
   }
