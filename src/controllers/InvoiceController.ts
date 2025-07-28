@@ -6,7 +6,6 @@ import { invoiceMutations } from '../api/graphql/mutations/accounting/invoiceMut
 
 interface InvoiceResponse {
   invoiceId: string;
-  uniqRef: string;
   transactionId: string;
   slug: string;
   orderId: string;
@@ -320,17 +319,7 @@ export class Invoice {
     return response.data.invoicesByIDs;
   }
 
-  /**
-   * Fetches an invoice by its unique reference (`uniqRef`).
-   * @param uniqRef - The unique reference of the invoice.
-   * @returns The details of the invoice.
-   */
-  async getByUniqRef(uniqRef: string) {
-    const query = invoiceQueries.GET_INVOICE_BY_UNIQ_REF;
-    const variables = { uniqRef };
-    const response = await this.client.query(query, variables) as { data: { invoiceByUniqRef: any } };
-    return response.data.invoiceByUniqRef;
-  }
+
 
   /**
    * Fetches an invoice by its slug.

@@ -6,7 +6,6 @@ const invoiceQueries = {
       query GetInvoice($invoiceId: String!) {
         invoice(invoiceId: $invoiceId) {
           invoiceId
-          uniqRef
           transactionId
           slug
           orderId
@@ -179,7 +178,6 @@ const invoiceQueries = {
       query GetInvoicesByIDs($invoiceIDs: [ID!]!) {
         invoicesByIDs(invoiceIDs: $invoiceIDs) {
           invoiceID
-          uniqRef
           slug
           estimateID
           thirdPartyFees
@@ -207,45 +205,13 @@ const invoiceQueries = {
       }
     `,
   
-    // QUERY TO GET AN INVOICE BY ITS UNIQUE REFERENCE
-    GET_INVOICE_BY_UNIQ_REF: `
-      query GetInvoiceByUniqRef($uniqRef: String!) {
-        invoiceByUniqRef(uniqRef: $uniqRef) {
-          invoiceID
-          uniqRef
-          slug
-          estimateID
-          thirdPartyFees
-          servicesFees
-          servicesVatPercent
-          prestationsVatPercent
-          totalAmount
-          paymentStatus
-          emitDate
-          dueDate
-          digitalSignature
-          state
-          createdAt
-          updatedAt
-          deletedAt
-          downloadStatus {
-            downloaded
-            downloadedAt
-            downloadCount
-            ipAddress
-          }
-          pdfGeneratedAt
-          pdfHash
-        }
-      }
-    `,
+
   
     // QUERY TO GET AN INVOICE BY ITS SLUG
     GET_INVOICE_BY_SLUG: `
       query GetInvoiceBySlug($slug: String!) {
         invoiceBySlug(slug: $slug) {
           invoiceID
-          uniqRef
           slug
           estimateID
           thirdPartyFees
@@ -278,7 +244,6 @@ const invoiceQueries = {
       query GetInvoicesBySlugs($slugs: [String!]!) {
         invoicesBySlugs(slugs: $slugs) {
           invoiceID
-          uniqRef
           slug
           estimateID
           thirdPartyFees
@@ -311,7 +276,6 @@ const invoiceQueries = {
       query GetInvoices {
         invoices {
           invoiceId
-          uniqRef
           transactionId
           slug
           orderId
@@ -346,7 +310,6 @@ const invoiceQueries = {
       query GetInvoicesBySeller($sellerOrganizationId: String!) {
         invoicesBySeller(sellerOrganizationId: $sellerOrganizationId) {
           invoiceId
-          uniqRef
           transactionId
           slug
           orderId
@@ -383,7 +346,6 @@ const invoiceQueries = {
       query GetInvoicesByBuyer($buyerOrganizationId: String!) {
         invoicesByBuyer(buyerOrganizationId: $buyerOrganizationId) {
           invoiceId
-          uniqRef
           transactionId
           slug
           orderId
@@ -420,7 +382,6 @@ const invoiceQueries = {
       query GetInvoicesByBuyerUser($buyerUserId: String!) {
         invoicesByBuyerUser(buyerUserId: $buyerUserId) {
           invoiceId
-          uniqRef
           transactionId
           slug
           orderId

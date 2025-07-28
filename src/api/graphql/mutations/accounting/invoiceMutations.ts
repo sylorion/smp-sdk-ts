@@ -6,7 +6,6 @@ const invoiceMutations = {
     mutation CreateInvoice($input: CreateInvoiceInput!) {
       createInvoice(input: $input) {
         invoiceId
-        uniqRef
         transactionId
         slug
         orderId
@@ -32,7 +31,6 @@ const invoiceMutations = {
     mutation UpdateInvoice($invoiceId: String!, $input: UpdateInvoiceInput!) {
       updateInvoice(invoiceId: $invoiceId, input: $input) {
         invoiceId
-        uniqRef
         transactionId
         slug
         orderId
