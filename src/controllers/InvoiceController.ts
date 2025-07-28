@@ -344,4 +344,66 @@ export class Invoice {
     const response = await this.client.query(query, variables) as { data: { invoicesBySlugs: any[] } };
     return response.data.invoicesBySlugs;
   }
+
+  /**
+   * Envoie une invitation de paiement pour une facture
+   */
+  async sendPayment(data: {
+    invoiceId: string;
+    email: string;
+    message?: string;
+    firstName?: string;
+    lastName?: string;
+    expirationDays?: number;
+  }): Promise<{
+    success: boolean;
+    message: string;
+    invitationToken?: string;
+    expiresAt?: string;
+  }> {
+    const mutation = invoiceMutations.SEND_INVOICE_PAYMENT;
+    const response = await this.client.mutate(mutation, { input: data }) as { sendInvoicePayment: any };
+    return response.sendInvoicePayment;
+  }
+
+  /**
+   * Vérifie un token d'invitation de paiement
+   */
+  async verifyPaymentToken(token: string): Promise<{
+    isValid: boolean;
+    message?: string;
+    invoiceId?: string;
+    email?: string;
+    role?: string;
+    expiresAt?: string;
+    isExpired?: boolean;
+    firstName?: string;
+    lastName?: string;
+    sentAt?: string;
+    status?: string;
+  }> {
+    const query = invoiceMutations.VERIFY_INVOICE_PAYMENT_TOKEN;
+    const response = await this.client.query(query, { input: { token } }) as { verifyInvoicePaymentToken: any };
+    return response.verifyInvoicePaymentToken;
+  }
+
+  /**
+   * Traite le paiement d'une facture
+   */
+  async processPayment(token: string, data: {
+    paymentMethod: string;
+    paymentReference: string;
+    amount: number;
+    currency: string;
+    transactionId?: string;
+  }): Promise<{
+    success: boolean;
+    message: string;
+    invitationToken?: string;
+    expiresAt?: string;
+  }> {
+    const mutation = invoiceMutations.PROCESS_INVOICE_PAYMENT;
+    const response = await this.client.mutate(mutation, { token, input: data }) as { processInvoicePayment: any };
+    return response.processInvoicePayment;
+  }
 }

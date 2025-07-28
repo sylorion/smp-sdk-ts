@@ -87,6 +87,49 @@ const invoiceMutations = {
         emailStatus
       }
     }
+  `,
+
+  // MUTATION TO SEND INVOICE PAYMENT INVITATION
+  SEND_INVOICE_PAYMENT: `
+    mutation SendInvoicePayment($input: SendInvoicePaymentInput!) {
+      sendInvoicePayment(input: $input) {
+        success
+        message
+        invitationToken
+        expiresAt
+      }
+    }
+  `,
+
+  // QUERY TO VERIFY INVOICE PAYMENT TOKEN
+  VERIFY_INVOICE_PAYMENT_TOKEN: `
+    query VerifyInvoicePaymentToken($input: VerifyInvoicePaymentTokenInput!) {
+      verifyInvoicePaymentToken(input: $input) {
+        isValid
+        message
+        invoiceId
+        email
+        role
+        expiresAt
+        isExpired
+        firstName
+        lastName
+        sentAt
+        status
+      }
+    }
+  `,
+
+  // MUTATION TO PROCESS INVOICE PAYMENT
+  PROCESS_INVOICE_PAYMENT: `
+    mutation ProcessInvoicePayment($token: String!, $input: ProcessInvoicePaymentInput!) {
+      processInvoicePayment(token: $token, input: $input) {
+        success
+        message
+        invitationToken
+        expiresAt
+      }
+    }
   `
 };
 
