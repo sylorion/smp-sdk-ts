@@ -9,330 +9,20 @@ const invoiceQueries = {
           transactionId
           slug
           orderId
-          thirdPartyFees
-          servicesFees
-          servicesVatPercent
-          prestationsVatPercent
           totalAmount
           sellerOrganizationId
+          buyerOrganizationId
+          buyerUserId
           paymentStatus
           emittedDate
           dueDate
-          digitalSignature
           state
           createdAt
-          updatedAt
-          deletedAt
           transactionData
           notes
           disclaimers
           paymentTerms
           profile
-          header {
-            id
-            invoiceNumber
-            name
-            invoiceDate
-            issueDate
-            typeCode
-            notes {
-              heading
-              note
-            }
-          }
-          seller {
-            name
-            postalAddress {
-              line1
-              city
-              postalCode
-              countryCode
-              line2
-            }
-            vatNumber
-            contacts {
-              contactName
-              contactEmail
-              contactPhoneNumber
-              divisionName
-            }
-          }
-          buyer {
-            name
-            postalAddress {
-              line1
-              city
-              postalCode
-              countryCode
-              line2
-            }
-            vatNumber
-            contacts {
-              contactName
-              contactEmail
-              contactPhoneNumber
-              divisionName
-            }
-          }
-          payment {
-            paymentMeansCode
-            payeeIBAN
-            payeeBIC
-            dueDate
-            paymentTermsText
-          }
-          lines {
-            id
-            description
-            quantity
-            unitPrice
-            vatRate
-            taxCategoryCode
-            unitCode
-            allowances
-            charges {
-              chargeIndicator
-              actualAmount
-              reason
-              reasonCode
-              taxRate
-              taxCategoryCode
-              startDate
-              endDate
-              percentage
-            }
-          }
-          deliveryParty {
-            name
-            postalAddress {
-              line1
-              city
-              postalCode
-              countryCode
-              line2
-            }
-            vatNumber
-            contacts {
-              contactName
-              contactEmail
-              contactPhoneNumber
-              divisionName
-            }
-          }
-          payeeParty {
-            name
-            postalAddress {
-              line1
-              city
-              postalCode
-              countryCode
-              line2
-            }
-            vatNumber
-            contacts {
-              contactName
-              contactEmail
-              contactPhoneNumber
-              divisionName
-            }
-          }
-          buyerOrganizationId
-          additionalDocuments {
-            documentTypeCode
-            id
-            name
-            attachmentPath
-          }
-          docAllowanceCharges {
-            chargeIndicator
-            actualAmount
-            reason
-            reasonCode
-            taxRate
-            taxCategoryCode
-            startDate
-            endDate
-            percentage
-          }
-          currency
-          taxTotals {
-            taxCategory
-            taxRate
-            taxableAmount
-            taxAmount
-          }
-          downloadStatus {
-            downloaded
-            downloadedAt
-            downloadCount
-            ipAddress
-          }
-          pdfGeneratedAt
-          pdfHash
-        }
-      }
-    `,
-  
-    // QUERY TO GET MULTIPLE INVOICES BY AN ARRAY OF INVOICE IDS
-    GET_INVOICES_BY_IDS: `
-      query GetInvoicesByIDs($invoiceIDs: [ID!]!) {
-        invoicesByIDs(invoiceIDs: $invoiceIDs) {
-          invoiceID
-          slug
-          estimateID
-          thirdPartyFees
-          servicesFees
-          servicesVatPercent
-          prestationsVatPercent
-          totalAmount
-          paymentStatus
-          emitDate
-          dueDate
-          digitalSignature
-          state
-          createdAt
-          updatedAt
-          deletedAt
-          downloadStatus {
-            downloaded
-            downloadedAt
-            downloadCount
-            ipAddress
-          }
-          pdfGeneratedAt
-          pdfHash
-        }
-      }
-    `,
-  
-
-  
-    // QUERY TO GET AN INVOICE BY ITS SLUG
-    GET_INVOICE_BY_SLUG: `
-      query GetInvoiceBySlug($slug: String!) {
-        invoiceBySlug(slug: $slug) {
-          invoiceID
-          slug
-          estimateID
-          thirdPartyFees
-          servicesFees
-          servicesVatPercent
-          prestationsVatPercent
-          totalAmount
-          paymentStatus
-          emitDate
-          dueDate
-          digitalSignature
-          state
-          createdAt
-          updatedAt
-          deletedAt
-          downloadStatus {
-            downloaded
-            downloadedAt
-            downloadCount
-            ipAddress
-          }
-          pdfGeneratedAt
-          pdfHash
-        }
-      }
-    `,
-  
-    // QUERY TO GET MULTIPLE INVOICES BY SLUGS
-    GET_INVOICES_BY_SLUGS: `
-      query GetInvoicesBySlugs($slugs: [String!]!) {
-        invoicesBySlugs(slugs: $slugs) {
-          invoiceID
-          slug
-          estimateID
-          thirdPartyFees
-          servicesFees
-          servicesVatPercent
-          prestationsVatPercent
-          totalAmount
-          paymentStatus
-          emitDate
-          dueDate
-          digitalSignature
-          state
-          createdAt
-          updatedAt
-          deletedAt
-          downloadStatus {
-            downloaded
-            downloadedAt
-            downloadCount
-            ipAddress
-          }
-          pdfGeneratedAt
-          pdfHash
-        }
-      }
-    `,
-  
-    // QUERY TO LIST INVOICES WITH OPTIONAL PAGINATION, SORTING, AND FILTERING
-    GET_INVOICES: `
-      query GetInvoices {
-        invoices {
-          invoiceId
-          transactionId
-          slug
-          orderId
-          thirdPartyFees
-          servicesFees
-          servicesVatPercent
-          prestationsVatPercent
-          totalAmount
-          sellerOrganizationId
-          paymentStatus
-          emittedDate
-          dueDate
-          digitalSignature
-          state
-          createdAt
-          updatedAt
-          deletedAt
-          downloadStatus {
-            downloaded
-            downloadedAt
-            downloadCount
-            ipAddress
-          }
-          pdfGeneratedAt
-          pdfHash
-        }
-      }
-    `,
-
-    // QUERY TO GET INVOICES BY SELLER ORGANIZATION
-    GET_INVOICES_BY_SELLER: `
-      query GetInvoicesBySeller($sellerOrganizationId: String!) {
-        invoicesBySeller(sellerOrganizationId: $sellerOrganizationId) {
-          invoiceId
-          transactionId
-          slug
-          orderId
-          thirdPartyFees
-          servicesFees
-          servicesVatPercent
-          prestationsVatPercent
-          totalAmount
-          sellerOrganizationId
-          buyerOrganizationId
-          paymentStatus
-          emittedDate
-          dueDate
-          digitalSignature
-          state
-          createdAt
-          updatedAt
-          deletedAt
-          notes
-          disclaimers
-          paymentTerms
-          profile
-          currency
           header
           seller
           buyer
@@ -342,23 +32,20 @@ const invoiceQueries = {
           payeeParty
           additionalDocuments
           docAllowanceCharges
+          currency
           taxTotals
         }
       }
     `,
 
-    // QUERY TO GET INVOICES BY BUYER ORGANIZATION
-    GET_INVOICES_BY_BUYER: `
-      query GetInvoicesByBuyer($buyerOrganizationId: String!) {
-        invoicesByBuyer(buyerOrganizationId: $buyerOrganizationId) {
+    // QUERY TO GET ALL INVOICES
+    GET_ALL_INVOICES: `
+      query GetInvoices {
+        invoices {
           invoiceId
           transactionId
           slug
           orderId
-          thirdPartyFees
-          servicesFees
-          servicesVatPercent
-          prestationsVatPercent
           totalAmount
           sellerOrganizationId
           buyerOrganizationId
@@ -366,19 +53,98 @@ const invoiceQueries = {
           paymentStatus
           emittedDate
           dueDate
-          digitalSignature
           state
           createdAt
-          updatedAt
-          deletedAt
-          downloadStatus {
-            downloaded
-            downloadedAt
-            downloadCount
-            ipAddress
-          }
-          pdfGeneratedAt
-          pdfHash
+          transactionData
+          notes
+          disclaimers
+          paymentTerms
+          profile
+          header
+          seller
+          buyer
+          payment
+          lines
+          deliveryParty
+          payeeParty
+          additionalDocuments
+          docAllowanceCharges
+          currency
+          taxTotals
+        }
+      }
+    `,
+
+    // QUERY TO GET INVOICES BY SELLER
+    GET_INVOICES_BY_SELLER: `
+      query GetInvoicesBySeller($sellerOrganizationId: String!) {
+        invoicesBySeller(sellerOrganizationId: $sellerOrganizationId) {
+          invoiceId
+          transactionId
+          slug
+          orderId
+          totalAmount
+          sellerOrganizationId
+          buyerOrganizationId
+          buyerUserId
+          paymentStatus
+          emittedDate
+          dueDate
+          state
+          createdAt
+          transactionData
+          notes
+          disclaimers
+          paymentTerms
+          profile
+          header
+          seller
+          buyer
+          payment
+          lines
+          deliveryParty
+          payeeParty
+          additionalDocuments
+          docAllowanceCharges
+          currency
+          taxTotals
+        }
+      }
+    `,
+
+    // QUERY TO GET INVOICES BY BUYER
+    GET_INVOICES_BY_BUYER: `
+      query GetInvoicesByBuyer($buyerOrganizationId: String!) {
+        invoicesByBuyer(buyerOrganizationId: $buyerOrganizationId) {
+          invoiceId
+          transactionId
+          slug
+          orderId
+          totalAmount
+          sellerOrganizationId
+          buyerOrganizationId
+          buyerUserId
+          paymentStatus
+          emittedDate
+          dueDate
+          state
+          createdAt
+          transactionData
+          notes
+          disclaimers
+          paymentTerms
+          profile
+          header
+          seller
+          buyer
+          payment
+          lines
+          deliveryParty
+          payeeParty
+          additionalDocuments
+          docAllowanceCharges
+          currency
+          taxTotals
         }
       }
     `,
@@ -391,10 +157,6 @@ const invoiceQueries = {
           transactionId
           slug
           orderId
-          thirdPartyFees
-          servicesFees
-          servicesVatPercent
-          prestationsVatPercent
           totalAmount
           sellerOrganizationId
           buyerOrganizationId
@@ -402,19 +164,135 @@ const invoiceQueries = {
           paymentStatus
           emittedDate
           dueDate
-          digitalSignature
           state
           createdAt
-          updatedAt
-          deletedAt
-          downloadStatus {
-            downloaded
-            downloadedAt
-            downloadCount
-            ipAddress
-          }
-          pdfGeneratedAt
-          pdfHash
+          transactionData
+          notes
+          disclaimers
+          paymentTerms
+          profile
+          header
+          seller
+          buyer
+          payment
+          lines
+          deliveryParty
+          payeeParty
+          additionalDocuments
+          docAllowanceCharges
+          currency
+          taxTotals
+        }
+      }
+    `,
+
+    // QUERY TO GET INVOICE BY SLUG
+    GET_INVOICE_BY_SLUG: `
+      query GetInvoiceBySlug($slug: String!) {
+        invoiceBySlug(slug: $slug) {
+          invoiceId
+          transactionId
+          slug
+          orderId
+          totalAmount
+          sellerOrganizationId
+          buyerOrganizationId
+          buyerUserId
+          paymentStatus
+          emittedDate
+          dueDate
+          state
+          createdAt
+          transactionData
+          notes
+          disclaimers
+          paymentTerms
+          profile
+          header
+          seller
+          buyer
+          payment
+          lines
+          deliveryParty
+          payeeParty
+          additionalDocuments
+          docAllowanceCharges
+          currency
+          taxTotals
+        }
+      }
+    `,
+
+    // QUERY TO GET INVOICES BY SLUGS
+    GET_INVOICES_BY_SLUGS: `
+      query GetInvoicesBySlugs($slugs: [String!]!) {
+        invoicesBySlugs(slugs: $slugs) {
+          invoiceId
+          transactionId
+          slug
+          orderId
+          totalAmount
+          sellerOrganizationId
+          buyerOrganizationId
+          buyerUserId
+          paymentStatus
+          emittedDate
+          dueDate
+          state
+          createdAt
+          transactionData
+          notes
+          disclaimers
+          paymentTerms
+          profile
+          header
+          seller
+          buyer
+          payment
+          lines
+          deliveryParty
+          payeeParty
+          additionalDocuments
+          docAllowanceCharges
+          currency
+          taxTotals
+        }
+      }
+    `,
+
+    // QUERY TO GET INVOICES BY IDs
+    GET_INVOICES_BY_IDS: `
+      query GetInvoicesByIds($invoiceIds: [String!]!) {
+        invoicesByIds(invoiceIds: $invoiceIds) {
+          invoiceId
+          transactionId
+          slug
+          orderId
+          totalAmount
+          sellerOrganizationId
+          buyerOrganizationId
+          buyerUserId
+          paymentStatus
+          emittedDate
+          dueDate
+          state
+          createdAt
+          transactionData
+          notes
+          disclaimers
+          paymentTerms
+          profile
+          header
+          seller
+          buyer
+          payment
+          lines
+          deliveryParty
+          payeeParty
+          additionalDocuments
+          docAllowanceCharges
+          currency
+          taxTotals
         }
       }
     `

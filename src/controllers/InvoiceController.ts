@@ -9,157 +9,31 @@ interface InvoiceResponse {
   transactionId: string;
   slug: string;
   orderId: string;
-  thirdPartyFees: number;
-  servicesFees: number;
-  servicesVatPercent: number;
-  prestationsVatPercent: number;
   totalAmount: number;
   sellerOrganizationId: string;
+  buyerOrganizationId?: string;
+  buyerUserId?: string;
   paymentStatus: string;
   emittedDate: string;
   dueDate: string;
-  digitalSignature: string;
   state: string;
   createdAt: string;
-  updatedAt?: string;
-  deletedAt?: string;
+  transactionData?: any; // JSON object
   notes?: string;
   disclaimers?: string;
   paymentTerms?: string;
   profile?: string;
-  header?: {
-    id: string;
-    invoiceNumber: string;
-    name: string;
-    invoiceDate: string;
-    issueDate: string;
-    typeCode: string;
-    notes: Array<{
-      heading: string;
-      note: string;
-    }>;
-  };
-  seller?: {
-    name: string;
-    postalAddress: {
-      line1: string;
-      city: string;
-      postalCode: string;
-      countryCode: string;
-      line2?: string;
-    };
-    vatNumber?: string;
-    contacts: Array<{
-      contactName: string;
-      contactEmail?: string;
-      contactPhoneNumber?: string;
-      divisionName?: string;
-    }>;
-  };
-  buyer?: {
-    name: string;
-    postalAddress: {
-      line1: string;
-      city: string;
-      postalCode: string;
-      countryCode: string;
-      line2?: string;
-    };
-    vatNumber?: string;
-    contacts: Array<{
-      contactName: string;
-      contactEmail?: string;
-      contactPhoneNumber?: string;
-      divisionName?: string;
-    }>;
-  };
-  payment?: {
-    paymentMeansCode: string;
-    payeeIBAN?: string;
-    payeeBIC?: string;
-    dueDate?: string;
-    paymentTermsText?: string;
-  };
-  lines?: Array<{
-    id: string;
-    description: string;
-    quantity: number;
-    unitPrice: number;
-    vatRate: number;
-    taxCategoryCode: string;
-    unitCode: string;
-    allowances: number;
-    charges: Array<{
-      chargeIndicator: boolean;
-      actualAmount: number;
-      reason?: string;
-      reasonCode?: string;
-      taxRate?: number;
-      taxCategoryCode?: string;
-      startDate?: string;
-      endDate?: string;
-      percentage?: number;
-    }>;
-  }>;
-  deliveryParty?: {
-    name: string;
-    postalAddress: {
-      line1: string;
-      city: string;
-      postalCode: string;
-      countryCode: string;
-      line2?: string;
-    };
-    vatNumber?: string;
-    contacts: Array<{
-      contactName: string;
-      contactEmail?: string;
-      contactPhoneNumber?: string;
-      divisionName?: string;
-    }>;
-  };
-  payeeParty?: {
-    name: string;
-    postalAddress: {
-      line1: string;
-      city: string;
-      postalCode: string;
-      countryCode: string;
-      line2?: string;
-    };
-    vatNumber?: string;
-    contacts: Array<{
-      contactName: string;
-      contactEmail?: string;
-      contactPhoneNumber?: string;
-      divisionName?: string;
-    }>;
-  };
-  buyerOrganizationId?: string;
-  additionalDocuments?: Array<{
-    documentTypeCode: string;
-    id?: string;
-    name: string;
-    attachmentPath: string;
-  }>;
-  docAllowanceCharges?: Array<{
-    chargeIndicator: boolean;
-    actualAmount: number;
-    reason?: string;
-    reasonCode?: string;
-    taxRate?: number;
-    taxCategoryCode?: string;
-    startDate?: string;
-    endDate?: string;
-    percentage?: number;
-  }>;
+  header?: any; // JSON object
+  seller?: any; // JSON object
+  buyer?: any; // JSON object
+  payment?: any; // JSON object
+  lines?: any; // JSON array
+  deliveryParty?: any; // JSON object
+  payeeParty?: any; // JSON object
+  additionalDocuments?: any; // JSON array
+  docAllowanceCharges?: any; // JSON array
   currency?: string;
-  taxTotals?: Array<{
-    taxCategory: string;
-    taxRate: number;
-    taxableAmount: number;
-    taxAmount: number;
-  }>;
+  taxTotals?: any; // JSON array
 }
 
 interface CreateInvoiceResponse {
@@ -221,14 +95,31 @@ export class Invoice {
    */
   async create(data: {
     orderId: string;
-    currency: string;
     totalAmount: number;
     sellerOrganizationId: string;
     emittedDate: string;
     dueDate: string;
     transactionId: string;
-    transactionData?: string;
+    buyerOrganizationId?: string;
+    buyerUserId?: string;
+    state?: string;
+    paymentStatus?: string;
+    currency?: string;
     notes?: string;
+    transactionData?: any;
+    disclaimers?: string;
+    paymentTerms?: string;
+    profile?: string;
+    header?: any;
+    seller?: any;
+    buyer?: any;
+    payment?: any;
+    lines?: any;
+    deliveryParty?: any;
+    payeeParty?: any;
+    additionalDocuments?: any;
+    docAllowanceCharges?: any;
+    taxTotals?: any;
   }): Promise<InvoiceResponse> {
     const query = invoiceMutations.CREATE_INVOICE;
     const response = await this.client.mutate<CreateInvoiceResponse>(query, { input: data });
@@ -266,7 +157,7 @@ export class Invoice {
    * Retrieves all invoices
    */
   async list(): Promise<InvoiceResponse[]> {
-    const query = invoiceQueries.GET_INVOICES;
+    const query = invoiceQueries.GET_ALL_INVOICES;
     const response = await this.client.query<GetInvoicesResponse>(query);
     return response.invoices;
   }

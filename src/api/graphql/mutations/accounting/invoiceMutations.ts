@@ -9,25 +9,31 @@ const invoiceMutations = {
         transactionId
         slug
         orderId
-        thirdPartyFees
-        servicesFees
-        servicesVatPercent
-        prestationsVatPercent
         totalAmount
         sellerOrganizationId
+        buyerOrganizationId
+        buyerUserId
         paymentStatus
         emittedDate
         dueDate
-        digitalSignature
         state
         createdAt
-        updatedAt
         transactionData
         notes
         disclaimers
         paymentTerms
         profile
+        header
+        seller
+        buyer
+        payment
+        lines
+        deliveryParty
+        payeeParty
+        additionalDocuments
+        docAllowanceCharges
         currency
+        taxTotals
       }
     }
   `,
@@ -58,7 +64,18 @@ const invoiceMutations = {
         disclaimers
         paymentTerms
         profile
+        header
+        seller
+        buyer
+        payment
+        lines
+        deliveryParty
+        payeeParty
+        buyerOrganizationId
+        additionalDocuments
+        docAllowanceCharges
         currency
+        taxTotals
       }
     }
   `,
@@ -100,7 +117,18 @@ const invoiceMutations = {
         disclaimers
         paymentTerms
         profile
+        header
+        seller
+        buyer
+        payment
+        lines
+        deliveryParty
+        payeeParty
+        buyerOrganizationId
+        additionalDocuments
+        docAllowanceCharges
         currency
+        taxTotals
       }
     }
   `,
@@ -131,7 +159,18 @@ const invoiceMutations = {
         disclaimers
         paymentTerms
         profile
+        header
+        seller
+        buyer
+        payment
+        lines
+        deliveryParty
+        payeeParty
+        buyerOrganizationId
+        additionalDocuments
+        docAllowanceCharges
         currency
+        taxTotals
       }
     }
   `,
