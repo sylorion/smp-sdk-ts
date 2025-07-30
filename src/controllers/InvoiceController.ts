@@ -23,7 +23,6 @@ interface InvoiceResponse {
   createdAt: string;
   updatedAt?: string;
   deletedAt?: string;
-  transactionData?: string;
   notes?: string;
   disclaimers?: string;
   paymentTerms?: string;

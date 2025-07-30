@@ -313,15 +313,36 @@ const invoiceQueries = {
           transactionId
           slug
           orderId
+          thirdPartyFees
+          servicesFees
+          servicesVatPercent
+          prestationsVatPercent
           totalAmount
           sellerOrganizationId
+          buyerOrganizationId
           paymentStatus
           emittedDate
           dueDate
+          digitalSignature
           state
           createdAt
           updatedAt
           deletedAt
+          notes
+          disclaimers
+          paymentTerms
+          profile
+          currency
+          header
+          seller
+          buyer
+          payment
+          lines
+          deliveryParty
+          payeeParty
+          additionalDocuments
+          docAllowanceCharges
+          taxTotals
         }
       }
     `,
