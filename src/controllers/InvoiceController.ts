@@ -9,31 +9,25 @@ interface InvoiceResponse {
   transactionId: string;
   slug: string;
   orderId: string;
+  thirdPartyFees: number;
+  servicesFees: number;
+  servicesVatPercent: number;
+  prestationsVatPercent: number;
   totalAmount: number;
   sellerOrganizationId: string;
-  buyerOrganizationId?: string;
-  buyerUserId?: string;
   paymentStatus: string;
   emittedDate: string;
   dueDate: string;
+  digitalSignature: string;
   state: string;
   createdAt: string;
+  updatedAt?: string;
+  deletedAt?: string;
   transactionData?: any; // JSON object
   notes?: string;
   disclaimers?: string;
   paymentTerms?: string;
   profile?: string;
-  header?: any; // JSON object
-  seller?: any; // JSON object
-  buyer?: any; // JSON object
-  payment?: any; // JSON object
-  lines?: any; // JSON array
-  deliveryParty?: any; // JSON object
-  payeeParty?: any; // JSON object
-  additionalDocuments?: any; // JSON array
-  docAllowanceCharges?: any; // JSON array
-  currency?: string;
-  taxTotals?: any; // JSON array
 }
 
 interface CreateInvoiceResponse {
@@ -100,26 +94,13 @@ export class Invoice {
     emittedDate: string;
     dueDate: string;
     transactionId: string;
-    buyerOrganizationId?: string;
-    buyerUserId?: string;
     state?: string;
     paymentStatus?: string;
-    currency?: string;
     notes?: string;
     transactionData?: any;
     disclaimers?: string;
     paymentTerms?: string;
     profile?: string;
-    header?: any;
-    seller?: any;
-    buyer?: any;
-    payment?: any;
-    lines?: any;
-    deliveryParty?: any;
-    payeeParty?: any;
-    additionalDocuments?: any;
-    docAllowanceCharges?: any;
-    taxTotals?: any;
   }): Promise<InvoiceResponse> {
     const query = invoiceMutations.CREATE_INVOICE;
     const response = await this.client.mutate<CreateInvoiceResponse>(query, { input: data });
@@ -149,7 +130,7 @@ export class Invoice {
    */
   async getById(invoiceId: string): Promise<InvoiceResponse> {
     const query = invoiceQueries.GET_INVOICE_BY_ID;
-    const response = await this.client.query<GetInvoiceResponse>(query, { invoiceId });
+    const response = await this.client.query<GetInvoiceResponse>(query, { invoiceID: invoiceId });
     return response.invoice;
   }
 

@@ -3,37 +3,31 @@
 const invoiceQueries = {
     // QUERY TO GET AN INVOICE BY ITS UNIQUE ID
     GET_INVOICE_BY_ID: `
-      query GetInvoice($invoiceId: String!) {
-        invoice(invoiceId: $invoiceId) {
+      query GetInvoice($invoiceID: ID!) {
+        invoice(invoiceID: $invoiceID) {
           invoiceId
           transactionId
           slug
           orderId
+          thirdPartyFees
+          servicesFees
+          servicesVatPercent
+          prestationsVatPercent
           totalAmount
           sellerOrganizationId
-          buyerOrganizationId
-          buyerUserId
           paymentStatus
           emittedDate
           dueDate
+          digitalSignature
           state
           createdAt
+          updatedAt
+          deletedAt
           transactionData
           notes
           disclaimers
           paymentTerms
           profile
-          header
-          seller
-          buyer
-          payment
-          lines
-          deliveryParty
-          payeeParty
-          additionalDocuments
-          docAllowanceCharges
-          currency
-          taxTotals
         }
       }
     `,
@@ -46,31 +40,25 @@ const invoiceQueries = {
           transactionId
           slug
           orderId
+          thirdPartyFees
+          servicesFees
+          servicesVatPercent
+          prestationsVatPercent
           totalAmount
           sellerOrganizationId
-          buyerOrganizationId
-          buyerUserId
           paymentStatus
           emittedDate
           dueDate
+          digitalSignature
           state
           createdAt
+          updatedAt
+          deletedAt
           transactionData
           notes
           disclaimers
           paymentTerms
           profile
-          header
-          seller
-          buyer
-          payment
-          lines
-          deliveryParty
-          payeeParty
-          additionalDocuments
-          docAllowanceCharges
-          currency
-          taxTotals
         }
       }
     `,
@@ -83,31 +71,25 @@ const invoiceQueries = {
           transactionId
           slug
           orderId
+          thirdPartyFees
+          servicesFees
+          servicesVatPercent
+          prestationsVatPercent
           totalAmount
           sellerOrganizationId
-          buyerOrganizationId
-          buyerUserId
           paymentStatus
           emittedDate
           dueDate
+          digitalSignature
           state
           createdAt
+          updatedAt
+          deletedAt
           transactionData
           notes
           disclaimers
           paymentTerms
           profile
-          header
-          seller
-          buyer
-          payment
-          lines
-          deliveryParty
-          payeeParty
-          additionalDocuments
-          docAllowanceCharges
-          currency
-          taxTotals
         }
       }
     `,
