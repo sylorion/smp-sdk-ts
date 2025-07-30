@@ -320,7 +320,6 @@ const invoiceQueries = {
           totalAmount
           sellerOrganizationId
           buyerOrganizationId
-          buyerUserId
           paymentStatus
           emittedDate
           dueDate
@@ -329,14 +328,12 @@ const invoiceQueries = {
           createdAt
           updatedAt
           deletedAt
-          downloadStatus {
-            downloaded
-            downloadedAt
-            downloadCount
-            ipAddress
-          }
-          pdfGeneratedAt
-          pdfHash
+          transactionData
+          notes
+          disclaimers
+          paymentTerms
+          profile
+          currency
         }
       }
     `,

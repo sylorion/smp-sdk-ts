@@ -22,6 +22,12 @@ const invoiceMutations = {
         state
         createdAt
         updatedAt
+        transactionData
+        notes
+        disclaimers
+        paymentTerms
+        profile
+        currency
       }
     }
   `,
@@ -47,6 +53,12 @@ const invoiceMutations = {
         state
         createdAt
         updatedAt
+        transactionData
+        notes
+        disclaimers
+        paymentTerms
+        profile
+        currency
       }
     }
   `,
@@ -67,12 +79,28 @@ const invoiceMutations = {
     mutation UpdateInvoiceDownloadStatus($invoiceId: String!, $input: UpdateInvoiceDownloadStatusInput!) {
       updateInvoiceDownloadStatus(invoiceId: $invoiceId, input: $input) {
         invoiceId
-        downloadStatus {
-          downloaded
-          downloadedAt
-          downloadCount
-          ipAddress
-        }
+        transactionId
+        slug
+        orderId
+        thirdPartyFees
+        servicesFees
+        servicesVatPercent
+        prestationsVatPercent
+        totalAmount
+        sellerOrganizationId
+        paymentStatus
+        emittedDate
+        dueDate
+        digitalSignature
+        state
+        createdAt
+        updatedAt
+        transactionData
+        notes
+        disclaimers
+        paymentTerms
+        profile
+        currency
       }
     }
   `,
@@ -82,9 +110,28 @@ const invoiceMutations = {
     mutation SendInvoiceEmail($invoiceId: String!, $input: SendInvoiceEmailInput!) {
       sendInvoiceEmail(invoiceId: $invoiceId, input: $input) {
         invoiceId
-        emailSentAt
-        emailRecipient
-        emailStatus
+        transactionId
+        slug
+        orderId
+        thirdPartyFees
+        servicesFees
+        servicesVatPercent
+        prestationsVatPercent
+        totalAmount
+        sellerOrganizationId
+        paymentStatus
+        emittedDate
+        dueDate
+        digitalSignature
+        state
+        createdAt
+        updatedAt
+        transactionData
+        notes
+        disclaimers
+        paymentTerms
+        profile
+        currency
       }
     }
   `,
@@ -101,9 +148,21 @@ const invoiceMutations = {
     }
   `,
 
-  // QUERY TO VERIFY INVOICE PAYMENT TOKEN
+  // MUTATION TO PROCESS INVOICE PAYMENT
+  PROCESS_INVOICE_PAYMENT: `
+    mutation ProcessInvoicePayment($token: String!, $input: ProcessInvoicePaymentInput!) {
+      processInvoicePayment(token: $token, input: $input) {
+        success
+        message
+        invoiceId
+        transactionId
+      }
+    }
+  `,
+
+  // MUTATION TO VERIFY INVOICE PAYMENT TOKEN
   VERIFY_INVOICE_PAYMENT_TOKEN: `
-    query VerifyInvoicePaymentToken($input: VerifyInvoicePaymentTokenInput!) {
+    mutation VerifyInvoicePaymentToken($input: VerifyInvoicePaymentTokenInput!) {
       verifyInvoicePaymentToken(input: $input) {
         isValid
         message
@@ -115,22 +174,11 @@ const invoiceMutations = {
         firstName
         lastName
         sentAt
+        paidAt
         status
-      }
-    }
-  `,
-
-  // MUTATION TO PROCESS INVOICE PAYMENT
-  PROCESS_INVOICE_PAYMENT: `
-    mutation ProcessInvoicePayment($token: String!, $input: ProcessInvoicePaymentInput!) {
-      processInvoicePayment(token: $token, input: $input) {
-        success
-        message
-        invitationToken
-        expiresAt
       }
     }
   `
 };
 
-export { invoiceMutations }; 
+export default invoiceMutations; 

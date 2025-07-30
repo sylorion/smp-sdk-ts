@@ -2,7 +2,7 @@
 
 import { APIClient } from '../api/APIClient';
 import { invoiceQueries } from '../api/graphql/queries/accounting/invoiceQueries';
-import { invoiceMutations } from '../api/graphql/mutations/accounting/invoiceMutations';
+import invoiceMutations from '../api/graphql/mutations/accounting/invoiceMutations';
 
 interface InvoiceResponse {
   invoiceId: string;
@@ -161,14 +161,6 @@ interface InvoiceResponse {
     taxableAmount: number;
     taxAmount: number;
   }>;
-  downloadStatus?: {
-    downloaded: boolean;
-    downloadedAt: string | null;
-    downloadCount: number;
-    ipAddress: string | null;
-  };
-  pdfGeneratedAt?: string;
-  pdfHash?: string;
 }
 
 interface CreateInvoiceResponse {
