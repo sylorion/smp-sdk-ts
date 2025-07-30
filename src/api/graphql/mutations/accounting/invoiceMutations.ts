@@ -9,31 +9,25 @@ const invoiceMutations = {
         transactionId
         slug
         orderId
+        thirdPartyFees
+        servicesFees
+        servicesVatPercent
+        prestationsVatPercent
         totalAmount
         sellerOrganizationId
-        buyerOrganizationId
-        buyerUserId
         paymentStatus
         emittedDate
         dueDate
+        digitalSignature
         state
         createdAt
+        updatedAt
+        deletedAt
         transactionData
         notes
         disclaimers
         paymentTerms
         profile
-        header
-        seller
-        buyer
-        payment
-        lines
-        deliveryParty
-        payeeParty
-        additionalDocuments
-        docAllowanceCharges
-        currency
-        taxTotals
       }
     }
   `,

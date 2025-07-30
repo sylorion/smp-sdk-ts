@@ -99,26 +99,13 @@ export class Contract {
    * Retrieves contracts by organization ID
    */
   async getByOrganizationId(organizationId: string): Promise<ContractResponse[]> {
-    console.log('🔍 [SDK] getByOrganizationId appelé avec:', organizationId);
-    
     const query = contractQueries.GET_CONTRACTS_BY_ORGANIZATION_ID;
-    console.log('🔍 [SDK] Requête utilisée:', query);
     
     try {
       const response = await this.client.query<GetContractsByOrganizationIdResponse>(query, { organizationId });
-      console.log('🔍 [SDK] Réponse complète:', JSON.stringify(response, null, 2));
-      console.log('🔍 [SDK] Type de response:', typeof response);
-      console.log('🔍 [SDK] Clés de response:', Object.keys(response || {}));
-      console.log('🔍 [SDK] response.getContractsByOrganizationId:', response?.getContractsByOrganizationId);
-      
-      if (!response?.getContractsByOrganizationId) {
-        console.error('🔍 [SDK] response.getContractsByOrganizationId est undefined!');
-        console.log('🔍 [SDK] Structure de response:', response);
-      }
-      
       return response?.getContractsByOrganizationId || [];
     } catch (error) {
-      console.error('🔍 [SDK] Erreur dans getByOrganizationId:', error);
+      console.error('Error in getByOrganizationId:', error);
       throw error;
     }
   }
