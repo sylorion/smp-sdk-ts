@@ -3,8 +3,8 @@
 const invoiceQueries = {
     // QUERY TO GET AN INVOICE BY ITS UNIQUE ID
     GET_INVOICE_BY_ID: `
-      query GetInvoice($invoiceID: ID!) {
-        invoice(invoiceID: $invoiceID) {
+      query Invoice($invoiceId: String!) {
+        invoice(invoiceId: $invoiceId) {
           invoiceId
           transactionId
           slug
@@ -28,6 +28,18 @@ const invoiceQueries = {
           disclaimers
           paymentTerms
           profile
+          header
+          seller
+          buyer
+          payment
+          lines
+          deliveryParty
+          payeeParty
+          buyerOrganizationId
+          additionalDocuments
+          docAllowanceCharges
+          currency
+          taxTotals
         }
       }
     `,

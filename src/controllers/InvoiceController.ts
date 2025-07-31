@@ -130,7 +130,7 @@ export class Invoice {
    */
   async getById(invoiceId: string): Promise<InvoiceResponse> {
     const query = invoiceQueries.GET_INVOICE_BY_ID;
-    const response = await this.client.query<GetInvoiceResponse>(query, { invoiceID: invoiceId });
+    const response = await this.client.query<GetInvoiceResponse>(query, { invoiceId: invoiceId });
     return response.invoice;
   }
 
