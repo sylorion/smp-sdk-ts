@@ -3,8 +3,8 @@
 const invoiceQueries = {
     // QUERY TO GET AN INVOICE BY ITS UNIQUE ID
     GET_INVOICE_BY_ID: `
-      query GetInvoice($invoiceId: String!) {
-        invoice(invoiceId: $invoiceId) {
+      query GetInvoice($invoiceID: ID!) {
+        invoice(invoiceID: $invoiceID) {
           invoiceId
           transactionId
           slug
