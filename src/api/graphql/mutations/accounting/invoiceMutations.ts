@@ -187,8 +187,8 @@ const invoiceMutations = {
       processInvoicePayment(token: $token, input: $input) {
         success
         message
-        invoiceId
-        transactionId
+        invitationToken
+        expiresAt
       }
     }
   `,
