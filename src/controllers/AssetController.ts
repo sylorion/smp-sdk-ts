@@ -42,6 +42,7 @@ export interface AssetEntity {
   maxPerReservation?: number;
   conflictingAssets?: JSON;
   applyableAssets?: JSON;
+  details?: JSON;
   state: string;
   createdAt: string;
   updatedAt: string;
@@ -115,6 +116,7 @@ export interface CreateAssetInput {
   maxPerReservation?: number;
   conflictingAssets?: JSON;
   applyableAssets?: JSON;
+  details?: JSON;
   state: string;
 }
 
@@ -129,6 +131,7 @@ export interface UpdateAssetInput {
   maxPerReservation?: number;
   conflictingAssets?: string;
   applyableAssets?: string;
+  details?: string;
   state?: string;
 }
 

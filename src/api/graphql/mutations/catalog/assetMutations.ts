@@ -18,6 +18,7 @@ const assetMutations = {
           maxPerReservation
           conflictingAssets
           applyableAssets
+          details
           state
           createdAt
           updatedAt
@@ -44,6 +45,7 @@ const assetMutations = {
           maxPerReservation
           conflictingAssets
           applyableAssets
+          details
           state
           createdAt
           updatedAt

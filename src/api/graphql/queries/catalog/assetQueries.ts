@@ -18,6 +18,7 @@ const assetQueries = {
         maxPerReservation
         conflictingAssets
         applyableAssets
+        details
         state
         createdAt
         updatedAt
@@ -54,6 +55,7 @@ const assetQueries = {
         maxPerReservation
         conflictingAssets
         applyableAssets
+        details
         state
         createdAt
         updatedAt
@@ -90,6 +92,7 @@ const assetQueries = {
         maxPerReservation
         conflictingAssets
         applyableAssets
+        details
         state
         createdAt
         updatedAt
@@ -126,6 +129,7 @@ const assetQueries = {
         maxPerReservation
         conflictingAssets
         applyableAssets
+        details
         state
         createdAt
         updatedAt
@@ -162,6 +166,7 @@ const assetQueries = {
         maxPerReservation
         conflictingAssets
         applyableAssets
+        details
         state
         createdAt
         updatedAt
@@ -198,6 +203,7 @@ const assetQueries = {
         maxPerReservation
         conflictingAssets
         applyableAssets
+        details
         state
         createdAt
         updatedAt
@@ -235,6 +241,7 @@ const assetQueries = {
           maxPerReservation
           conflictingAssets
           applyableAssets
+          details
           state
           createdAt
           medias {
@@ -275,6 +282,7 @@ const assetQueries = {
           maxPerReservation
           conflictingAssets
           applyableAssets
+          details
           state
           createdAt
           updatedAt
