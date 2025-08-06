@@ -151,15 +151,21 @@ const invoiceQueries = {
           transactionId
           slug
           orderId
+          thirdPartyFees
+          servicesFees
+          servicesVatPercent
+          prestationsVatPercent
           totalAmount
           sellerOrganizationId
           buyerOrganizationId
-          buyerUserId
           paymentStatus
           emittedDate
           dueDate
+          digitalSignature
           state
           createdAt
+          updatedAt
+          deletedAt
           transactionData
           notes
           disclaimers
