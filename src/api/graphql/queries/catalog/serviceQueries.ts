@@ -172,6 +172,7 @@ const serviceQueries = {
         uptakeForm
         billingPlan
         onlineService
+        advancedAttributes
         poweredByAgent
         agentConfiguration
         state
@@ -290,6 +291,7 @@ const serviceQueries = {
         uptakeForm
         billingPlan
         onlineService
+        advancedAttributes
         poweredByAgent
         agentConfiguration
         state
