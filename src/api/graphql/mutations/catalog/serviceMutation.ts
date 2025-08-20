@@ -27,6 +27,8 @@ const serviceMutations = {
           billingPlan
           onlineService
           advancedAttributes
+          poweredByAgent
+          agentConfiguration
           state
           createdAt
           updatedAt
@@ -71,6 +73,8 @@ const serviceMutations = {
           billingPlan
           onlineService
           advancedAttributes
+          poweredByAgent
+          agentConfiguration
           state
           createdAt
           updatedAt

@@ -30,6 +30,8 @@ interface ServiceEntity {
   billingPlan: string;
   onlineService?: boolean;
   advancedAttributes?: string; // JSON stringifié
+  poweredByAgent?: boolean; // Indique si le service utilise un agent
+  agentConfiguration?: string; // JSON stringifié contenant l'ID de l'agent et son endpoint
   state: string;
   createdAt: string; // ISO 8601
   updatedAt: string; // ISO 8601
@@ -58,6 +60,8 @@ interface CreateServiceInput {
   billingPlan?: string;
   onlineService?: boolean;
   advancedAttributes?: string; 
+  poweredByAgent?: boolean; // Indique si le service utilise un agent
+  agentConfiguration?: string; // JSON stringifié contenant l'ID de l'agent et son endpoint
   state: string;
 }
 
@@ -81,6 +85,8 @@ interface UpdateServiceInput {
   billingPlan?: string;
   onlineService?: boolean;
   advancedAttributes?: string; 
+  poweredByAgent?: boolean; // Indique si le service utilise un agent
+  agentConfiguration?: string; // JSON stringifié contenant l'ID de l'agent et son endpoint
   state?: string;
 }
 
@@ -207,6 +213,13 @@ export class Service {
     const variables = { input };
     const response = await this.client.query(query, variables) as  { searchServices: ServiceEntity[]  };
     return response.searchServices;
+  }
+
+  async getByAgentID(agentID: string): Promise<ServiceEntity[]> {
+    const query = serviceQueries.GET_SERVICES_BY_AGENT_ID;
+    const variables = { agentID };
+    const response = await this.client.query(query, variables) as { data: { servicesByAgentID: ServiceEntity[] } };
+    return response.data.servicesByAgentID;
   }
 
   //========================== SERVICE MEDIA QUERIES ==============================================

@@ -1,4 +1,4 @@
- const serviceQueries = {
+const serviceQueries = {
   GET_SERVICE_BY_AUTHOR_ID: `
     query GetServicesByUserId($authorID: String!) {
       servicessByUserId(userID: $authorID) {
@@ -8,6 +8,8 @@
         title
         slug
         uniqRef
+        poweredByAgent
+        agentConfiguration
         serviceMedias {
           serviceMediaID
           listingPosition
@@ -46,6 +48,8 @@
         billingPlan
         onlineService
         advancedAttributes
+        poweredByAgent
+        agentConfiguration
         state
         createdAt
         updatedAt
@@ -87,6 +91,8 @@
         billingPlan
         onlineService
         advancedAttributes 
+        poweredByAgent
+        agentConfiguration
         state
         createdAt
         updatedAt
@@ -128,6 +134,8 @@
         billingPlan
         onlineService
         advancedAttributes
+        poweredByAgent
+        agentConfiguration
         state
         createdAt
         updatedAt
@@ -164,6 +172,8 @@
         uptakeForm
         billingPlan
         onlineService
+        poweredByAgent
+        agentConfiguration
         state
         createdAt
         updatedAt
@@ -200,6 +210,8 @@
         uptakeForm
         billingPlan
         onlineService
+        poweredByAgent
+        agentConfiguration
         state
         createdAt
         updatedAt
@@ -240,6 +252,8 @@
         lowerPrice
         legalVatPercent
         advancedAttributes
+        poweredByAgent
+        agentConfiguration
         state
         createdAt
         updatedAt
@@ -276,6 +290,8 @@
         uptakeForm
         billingPlan
         onlineService
+        poweredByAgent
+        agentConfiguration
         state
         createdAt
         updatedAt
@@ -313,6 +329,47 @@
         billingPlan
         onlineService
         advancedAttributes
+        poweredByAgent
+        agentConfiguration
+        state
+        createdAt
+        updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
+      }
+    }
+  `,
+  GET_SERVICES_BY_AGENT_ID: `
+    query GetServicesByAgentID($agentID: String!) {
+      servicesByAgentID(agentID: $agentID) {
+        serviceID
+        uniqRef
+        slug
+        authorID
+        title
+        description
+        mediaBannerID
+        parentServiceID
+        topicID
+        organizationID
+        locationID
+        paymentConfigID
+        price
+        negotiable
+        perimeter
+        supplyType
+        uptakeForm
+        billingPlan
+        onlineService
+        advancedAttributes
+        poweredByAgent
+        agentConfiguration
         state
         createdAt
         updatedAt
