@@ -19,3 +19,5 @@ export {Media} from './MediaController';
 export { Order } from './OrderController';
 export { WaitingList } from './WaitingListController';
 export { Wallet } from './WalletController';
+export { BookingController } from './BookingController';
+export { BookingConfigurationController } from './BookingConfigurationController';

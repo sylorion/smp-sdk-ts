@@ -26,6 +26,38 @@ export type {
   SignatureType
 } from './types/Contract';
 
+// Export booking types
+export type {
+  EstimateRequest,
+  EstimateRequestStatus,
+  Booking,
+  BookingStatus,
+  Availability,
+  WeeklyAvailability,
+  AvailabilityException,
+  AvailableSlot,
+  DailySlot,
+  SlotStatus,
+  BookingConfiguration,
+  BookingMode,
+  ServiceType,
+  CreateEstimateRequestInput,
+  CreateBookingInput,
+  CreateAvailabilityInput,
+  UpdateAvailabilityInput,
+  CreateWeeklyAvailabilityInput,
+  CreateWeeklyAvailabilityBatchInput,
+  CreateDailySlotsInput,
+  CreateAvailabilityExceptionInput,
+  CreateBookingConfigurationInput,
+  CreateServiceTypeBookingInput,
+  UpdateBookingConfigurationInput,
+  SearchAvailabilityInput,
+  AvailableSlotsInput,
+  SearchDailySlotsInput,
+  AvailabilityStatus
+} from './api/graphql/types/command/BookingTypes';
+
 // Export controllers
 export * from './controllers';
 

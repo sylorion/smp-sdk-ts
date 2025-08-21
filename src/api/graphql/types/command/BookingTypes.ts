@@ -1,0 +1,293 @@
+// Types pour le système de booking et de commande
+
+export interface EstimateRequest {
+  estimateRequestId: string;
+  serviceId: string;
+  userId?: string;
+  requestedStartDate: Date;
+  requestedEndDate?: Date;
+  requestedDuration?: number;
+  description?: string;
+  status: EstimateRequestStatus;
+  unloggedUser?: string;
+  additionalRequirements?: string;
+  createdAt: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}
+
+export enum EstimateRequestStatus {
+  PENDING = 'PENDING',
+  REVIEWING = 'REVIEWING',
+  QUOTED = 'QUOTED',
+  ACCEPTED = 'ACCEPTED',
+  REJECTED = 'REJECTED',
+  EXPIRED = 'EXPIRED'
+}
+
+export interface Booking {
+  bookingId: string;
+  serviceId: string;
+  availabilityId: string;
+  userId: string;
+  status: BookingStatus;
+  createdAt: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}
+
+export enum BookingStatus {
+  PENDING = 'PENDING',
+  CONFIRMED = 'CONFIRMED',
+  CANCELED = 'CANCELED'
+}
+
+export interface Availability {
+  availabilityId: string;
+  serviceId: string;
+  providerId: string;
+  startDate: Date;
+  endDate: Date;
+  startTime: number;
+  endTime: number;
+  capacity: number;
+  status: string;
+  createdAt: Date;
+  updatedAt?: Date;
+}
+
+export interface WeeklyAvailability {
+  weeklyAvailabilityId: string;
+  userId: string;
+  serviceId: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+  createdAt: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}
+
+export interface AvailabilityException {
+  availabilityExceptionId: string;
+  userId: string;
+  serviceId: string;
+  exceptionStartDate: Date;
+  exceptionEndDate?: Date;
+  startTime: string;
+  endTime: string;
+  createdAt: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}
+
+export interface AvailableSlot {
+  slotId: string;
+  startTime: Date;
+  endTime: Date;
+  duration: number;
+  availableCapacity: number;
+  totalCapacity: number;
+  serviceId: string;
+  providerId: string;
+  isAvailable: boolean;
+  remainingSlots: number;
+}
+
+export interface DailySlot {
+  slotId: string;
+  date: Date;
+  startTime: string;
+  endTime: string;
+  duration: number;
+  capacity: number;
+  availableCapacity: number;
+  bookedCapacity: number;
+  status: SlotStatus;
+  serviceId: string;
+  providerId: string;
+  weeklyAvailabilityId?: string;
+  isRecurring: boolean;
+  bookingIds?: string[];
+}
+
+export enum SlotStatus {
+  AVAILABLE = 'AVAILABLE',
+  BOOKED = 'BOOKED',
+  UNAVAILABLE = 'UNAVAILABLE',
+  PAST = 'PAST'
+}
+
+export interface BookingConfiguration {
+  bookingConfigurationId: string;
+  userId: string;
+  serviceId: string;
+  bookingMode: BookingMode;
+  defaultSlotDuration: number;
+  allowGroupBooking: boolean;
+  minBookingDuration: number;
+  maxBookingDuration: number;
+  dateRangeBookingAllowed: boolean;
+  createdAt: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}
+
+export enum BookingMode {
+  TIME_SLOT = 'TIME_SLOT',
+  DATE_RANGE = 'DATE_RANGE'
+}
+
+export enum ServiceType {
+  HOURLY = 'HOURLY',
+  DAILY = 'DAILY',
+  WEEKLY = 'WEEKLY',
+  MONTHLY = 'MONTHLY',
+  CUSTOM = 'CUSTOM'
+}
+
+// Types pour les inputs de création
+export interface CreateEstimateRequestInput {
+  serviceId: string;
+  userId?: string;
+  requestedStartDate: Date;
+  requestedEndDate?: Date;
+  requestedDuration?: number;
+  description?: string;
+  unloggedUser?: string;
+  additionalRequirements?: string;
+}
+
+export interface CreateBookingInput {
+  availabilityId: string;
+  userId: string;
+  serviceId: string;
+}
+
+export interface CreateAvailabilityInput {
+  providerId: string;
+  serviceId: string;
+  startDate: Date;
+  endDate: Date;
+  startTime: number;
+  endTime: number;
+  capacity: number;
+}
+
+export interface UpdateAvailabilityInput {
+  availabilityId: string;
+  startDate?: Date;
+  endDate?: Date;
+  startTime?: number;
+  endTime?: number;
+  capacity?: number;
+  status?: AvailabilityStatus;
+}
+
+export enum AvailabilityStatus {
+  ACTIVE = 'ACTIVE',
+  CANCELLED = 'CANCELLED'
+}
+
+export interface CreateWeeklyAvailabilityInput {
+  userId: string;
+  serviceId: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+}
+
+export interface CreateWeeklyAvailabilityBatchInput {
+  userId: string;
+  serviceId: string;
+  slots: WeeklyAvailabilitySlot[];
+  replaceExisting: boolean;
+}
+
+export interface WeeklyAvailabilitySlot {
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+}
+
+export interface CreateDailySlotsInput {
+  userId: string;
+  serviceId: string;
+  dayOfWeek: number;
+  slots: DailyTimeSlot[];
+  replaceExisting: boolean;
+}
+
+export interface DailyTimeSlot {
+  startTime: string;
+  endTime: string;
+  capacity: number;
+}
+
+export interface CreateAvailabilityExceptionInput {
+  userId: string;
+  serviceId: string;
+  exceptionStartDate: Date;
+  exceptionEndDate?: Date;
+  startTime: string;
+  endTime: string;
+}
+
+export interface CreateBookingConfigurationInput {
+  providerId: string;
+  userId: string;
+  bookingMode: string;
+  defaultSlotDuration: number;
+  allowGroupBooking: boolean;
+  minBookingDuration: number;
+  maxBookingDuration: number;
+  dateRangeBookingAllowed: boolean;
+}
+
+export interface CreateServiceTypeBookingInput {
+  providerId: string;
+  userId: string;
+  serviceId: string;
+  serviceType: ServiceType;
+  allowGroupBooking?: boolean;
+  allowUnloggedUsers?: boolean;
+  customNotes?: string;
+}
+
+export interface UpdateBookingConfigurationInput {
+  providerId?: string;
+  userId?: string;
+  bookingMode?: string;
+  defaultSlotDuration?: number;
+  allowGroupBooking?: boolean;
+  minBookingDuration?: number;
+  maxBookingDuration?: number;
+  dateRangeBookingAllowed?: boolean;
+}
+
+// Types pour les inputs de recherche
+export interface SearchAvailabilityInput {
+  serviceId: string;
+  startDate: Date;
+  endDate: Date;
+  userId?: string;
+  minDuration?: number;
+  maxDuration?: number;
+}
+
+export interface AvailableSlotsInput {
+  serviceId: string;
+  date: Date;
+  userId?: string;
+  slotDuration?: number;
+  maxSlots?: number;
+}
+
+export interface SearchDailySlotsInput {
+  serviceId: string;
+  date: Date;
+  userId?: string;
+  slotDuration?: number;
+  maxSlots?: number;
+  includeBookedSlots: boolean;
+}
