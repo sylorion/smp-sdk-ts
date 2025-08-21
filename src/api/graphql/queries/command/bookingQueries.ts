@@ -40,7 +40,6 @@ const bookingQueries = {
       searchAvailabilities(input: $input) {
         availabilityId
         serviceId
-        providerId
         startDate
         endDate
         startTime
@@ -64,7 +63,6 @@ const bookingQueries = {
         availableCapacity
         totalCapacity
         serviceId
-        providerId
         isAvailable
         remainingSlots
       }
@@ -85,7 +83,6 @@ const bookingQueries = {
         bookedCapacity
         status
         serviceId
-        providerId
         weeklyAvailabilityId
         isRecurring
         bookingIds
@@ -104,7 +101,6 @@ const bookingQueries = {
         availableCapacity
         totalCapacity
         serviceId
-        providerId
         isAvailable
         remainingSlots
       }
@@ -261,25 +257,7 @@ const bookingQueries = {
     }
   `,
 
-  // QUERY POUR RÉCUPÉRER LES CONFIGURATIONS DE BOOKING PAR FOURNISSEUR
-  GET_BOOKING_CONFIGURATIONS_BY_PROVIDER: `
-    query GetBookingConfigurationsByProvider($providerId: String!) {
-      bookingConfigurationsByProvider(providerId: $providerId) {
-        bookingConfigurationId
-        userId
-        serviceId
-        bookingMode
-        defaultSlotDuration
-        allowGroupBooking
-        minBookingDuration
-        maxBookingDuration
-        dateRangeBookingAllowed
-        createdAt
-        updatedAt
-        deletedAt
-      }
-    }
-  `,
+
 };
 
 export { bookingQueries };

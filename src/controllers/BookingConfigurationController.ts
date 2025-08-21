@@ -89,28 +89,17 @@ export class BookingConfigurationController {
     return response.bookingConfigurationsByUser;
   }
 
-  /**
-   * Récupérer toutes les configurations de booking d'un fournisseur
-   */
-  async getBookingConfigurationsByProvider(providerId: string): Promise<BookingConfiguration[]> {
-    const response = await this.apiClient.query(
-      bookingQueries.GET_BOOKING_CONFIGURATIONS_BY_PROVIDER, 
-      { providerId }
-    ) as { bookingConfigurationsByProvider: BookingConfiguration[] };
-    return response.bookingConfigurationsByProvider;
-  }
+
 
   /**
    * Créer une configuration automatique basée sur le type de service
    */
   async createAutomaticConfiguration(
-    providerId: string,
     userId: string,
     serviceId: string,
     serviceType: ServiceType
   ): Promise<BookingConfiguration> {
     const input: CreateServiceTypeBookingInput = {
-      providerId,
       userId,
       serviceId,
       serviceType,

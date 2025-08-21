@@ -42,7 +42,6 @@ const bookingMutations = {
       createAvailability(input: $input) {
         availabilityId
         serviceId
-        providerId
         startDate
         endDate
         startTime
@@ -61,7 +60,6 @@ const bookingMutations = {
       updateAvailability(id: $id, input: $input) {
         availabilityId
         serviceId
-        providerId
         startDate
         endDate
         startTime
@@ -133,7 +131,6 @@ const bookingMutations = {
         bookedCapacity
         status
         serviceId
-        providerId
         weeklyAvailabilityId
         isRecurring
         bookingIds

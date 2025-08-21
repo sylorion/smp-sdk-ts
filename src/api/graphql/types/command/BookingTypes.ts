@@ -45,7 +45,6 @@ export enum BookingStatus {
 export interface Availability {
   availabilityId: string;
   serviceId: string;
-  providerId: string;
   startDate: Date;
   endDate: Date;
   startTime: number;
@@ -89,7 +88,6 @@ export interface AvailableSlot {
   availableCapacity: number;
   totalCapacity: number;
   serviceId: string;
-  providerId: string;
   isAvailable: boolean;
   remainingSlots: number;
 }
@@ -105,7 +103,6 @@ export interface DailySlot {
   bookedCapacity: number;
   status: SlotStatus;
   serviceId: string;
-  providerId: string;
   weeklyAvailabilityId?: string;
   isRecurring: boolean;
   bookingIds?: string[];
@@ -234,8 +231,8 @@ export interface CreateAvailabilityExceptionInput {
 }
 
 export interface CreateBookingConfigurationInput {
-  providerId: string;
   userId: string;
+  serviceId: string;
   bookingMode: string;
   defaultSlotDuration: number;
   allowGroupBooking: boolean;
@@ -245,7 +242,6 @@ export interface CreateBookingConfigurationInput {
 }
 
 export interface CreateServiceTypeBookingInput {
-  providerId: string;
   userId: string;
   serviceId: string;
   serviceType: ServiceType;
@@ -255,8 +251,8 @@ export interface CreateServiceTypeBookingInput {
 }
 
 export interface UpdateBookingConfigurationInput {
-  providerId?: string;
   userId?: string;
+  serviceId?: string;
   bookingMode?: string;
   defaultSlotDuration?: number;
   allowGroupBooking?: boolean;
