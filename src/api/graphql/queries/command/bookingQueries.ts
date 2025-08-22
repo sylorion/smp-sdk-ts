@@ -158,6 +158,14 @@ const bookingQueries = {
         availabilityId
         userId
         status
+        weeklyAvailabilityId
+        slotDate
+        slotStartTime
+        slotEndTime
+        slotDuration
+        bookingStartDate
+        bookingEndDate
+        customerDetails
         createdAt
         updatedAt
         deletedAt
@@ -174,6 +182,14 @@ const bookingQueries = {
         availabilityId
         userId
         status
+        weeklyAvailabilityId
+        slotDate
+        slotStartTime
+        slotEndTime
+        slotDuration
+        bookingStartDate
+        bookingEndDate
+        customerDetails
         createdAt
         updatedAt
         deletedAt
@@ -190,6 +206,14 @@ const bookingQueries = {
         availabilityId
         userId
         status
+        weeklyAvailabilityId
+        slotDate
+        slotStartTime
+        slotEndTime
+        slotDuration
+        bookingStartDate
+        bookingEndDate
+        customerDetails
         createdAt
         updatedAt
         deletedAt
@@ -253,6 +277,64 @@ const bookingQueries = {
         createdAt
         updatedAt
         deletedAt
+      }
+    }
+  `,
+
+  // NOUVELLE QUERY POUR RÉCUPÉRER LES DONNÉES COMPLÈTES DU CALENDRIER
+  GET_CALENDAR_DATA: `
+    query GetCalendarData($serviceId: String!, $startDate: DateTime!, $endDate: DateTime!) {
+      weeklyAvailabilities(serviceId: $serviceId) {
+        weeklyAvailabilityId
+        userId
+        serviceId
+        dayOfWeek
+        startTime
+        endTime
+        createdAt
+        updatedAt
+        deletedAt
+      }
+      availabilityExceptions(serviceId: $serviceId, startDate: $startDate, endDate: $endDate) {
+        availabilityExceptionId
+        userId
+        serviceId
+        exceptionStartDate
+        exceptionEndDate
+        startTime
+        endTime
+        createdAt
+        updatedAt
+        deletedAt
+      }
+      bookingsByService(serviceId: $serviceId) {
+        bookingId
+        serviceId
+        availabilityId
+        userId
+        status
+        weeklyAvailabilityId
+        slotDate
+        slotStartTime
+        slotEndTime
+        slotDuration
+        bookingStartDate
+        bookingEndDate
+        customerDetails
+        createdAt
+        updatedAt
+        deletedAt
+      }
+      calendarSlots(serviceId: $serviceId, startDate: $startDate, endDate: $endDate) {
+        slotId
+        startTime
+        endTime
+        duration
+        availableCapacity
+        totalCapacity
+        serviceId
+        isAvailable
+        remainingSlots
       }
     }
   `,

@@ -29,6 +29,14 @@ const bookingMutations = {
         availabilityId
         userId
         status
+        weeklyAvailabilityId
+        slotDate
+        slotStartTime
+        slotEndTime
+        slotDuration
+        bookingStartDate
+        bookingEndDate
+        customerDetails
         createdAt
         updatedAt
         deletedAt
@@ -93,6 +101,30 @@ const bookingMutations = {
         dayOfWeek
         startTime
         endTime
+        createdAt
+        updatedAt
+        deletedAt
+      }
+    }
+  `,
+
+  // NOUVELLE MUTATION POUR CRÉER UNE RÉSERVATION AVEC CRÉNEAU AUTO-DÉTERMINÉ
+  CREATE_BOOKING_WITH_SLOT: `
+    mutation CreateBookingWithSlot($input: CreateBookingInput!) {
+      createBooking(input: $input) {
+        bookingId
+        serviceId
+        availabilityId
+        userId
+        status
+        weeklyAvailabilityId
+        slotDate
+        slotStartTime
+        slotEndTime
+        slotDuration
+        bookingStartDate
+        bookingEndDate
+        customerDetails
         createdAt
         updatedAt
         deletedAt

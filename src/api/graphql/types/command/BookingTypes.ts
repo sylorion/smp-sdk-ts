@@ -29,8 +29,19 @@ export interface Booking {
   bookingId: string;
   serviceId: string;
   availabilityId: string;
-  userId: string;
+  userId?: string; // Peut être null pour les utilisateurs non connectés
   status: BookingStatus;
+  
+  // NOUVEAUX CHAMPS pour l'autodétermination des créneaux
+  weeklyAvailabilityId?: string;
+  slotDate?: Date;
+  slotStartTime?: number;
+  slotEndTime?: number;
+  slotDuration?: number;
+  
+  // Détails du client en JSON
+  customerDetails?: any;
+  
   createdAt: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -157,8 +168,18 @@ export interface CreateEstimateRequestInput {
 
 export interface CreateBookingInput {
   availabilityId: string;
-  userId: string;
+  userId?: string; // Peut être null pour les utilisateurs non connectés
   serviceId: string;
+  
+  // NOUVEAUX CHAMPS pour l'autodétermination des créneaux
+  weeklyAvailabilityId?: string;
+  slotDate?: Date;
+  slotStartTime?: number;
+  slotEndTime?: number;
+  slotDuration?: number;
+  
+  // Détails du client en JSON
+  customerDetails?: any;
 }
 
 export interface CreateAvailabilityInput {
@@ -259,6 +280,20 @@ export interface UpdateBookingConfigurationInput {
   minBookingDuration?: number;
   maxBookingDuration?: number;
   dateRangeBookingAllowed?: boolean;
+}
+
+// NOUVELLE INTERFACE pour les données du calendrier
+export interface CalendarData {
+  weeklyAvailabilities: WeeklyAvailability[];
+  exceptions: AvailabilityException[];
+  bookings: Booking[];
+  dailySlots: DailySlot[];
+  configuration?: {
+    defaultSlotDuration: number;
+    allowGroupBooking: boolean;
+    minBookingDuration: number;
+    maxBookingDuration: number;
+  };
 }
 
 // Types pour les inputs de recherche

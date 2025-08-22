@@ -100,6 +100,38 @@ export class BookingController {
   }
 
   /**
+   * Créer une réservation avec créneau auto-déterminé
+   */
+  async createBookingWithSlot(input: CreateBookingInput): Promise<Booking> {
+    const response = await this.apiClient.mutate(
+      bookingMutations.CREATE_BOOKING_WITH_SLOT, 
+      { input }
+    ) as { createBooking: Booking };
+    return response.createBooking;
+  }
+
+  /**
+   * Récupérer les données complètes du calendrier pour un service
+   */
+  async getCalendarData(serviceId: string, startDate: Date, endDate: Date): Promise<{
+    weeklyAvailabilities: WeeklyAvailability[];
+    availabilityExceptions: AvailabilityException[];
+    bookings: Booking[];
+    calendarSlots: AvailableSlot[];
+  }> {
+    const response = await this.apiClient.query(
+      bookingQueries.GET_CALENDAR_DATA, 
+      { serviceId, startDate, endDate }
+    ) as {
+      weeklyAvailabilities: WeeklyAvailability[];
+      availabilityExceptions: AvailabilityException[];
+      bookings: Booking[];
+      calendarSlots: AvailableSlot[];
+    };
+    return response;
+  }
+
+  /**
    * Récupérer les réservations d'une disponibilité
    */
   async getBookingsByAvailability(availabilityId: string): Promise<Booking[]> {

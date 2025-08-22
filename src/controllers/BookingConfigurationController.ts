@@ -157,4 +157,50 @@ export class BookingConfigurationController {
 
     return defaults[serviceType];
   }
+
+  /**
+   * Créer une configuration avec gestion des utilisateurs non connectés
+   */
+  async createConfigurationWithUnloggedUsers(
+    input: CreateBookingConfigurationInput & { allowUnloggedUsers: boolean }
+  ): Promise<BookingConfiguration> {
+    // Créer la configuration de base
+    const baseConfig = await this.createBookingConfiguration(input);
+    
+    // Logique supplémentaire pour gérer les utilisateurs non connectés
+    // (peut être étendue selon les besoins)
+    
+    return baseConfig;
+  }
+
+  /**
+   * Vérifier la compatibilité d'une configuration avec les réservations existantes
+   */
+  async validateConfigurationCompatibility(
+    serviceId: string, 
+    newConfig: Partial<CreateBookingConfigurationInput>
+  ): Promise<{ compatible: boolean; issues: string[] }> {
+    const existingBookings = await this.apiClient.query(
+      'query GetBookingsCount($serviceId: String!) { bookingsByService(serviceId: $serviceId) { bookingId, quantity } }',
+      { serviceId }
+    ) as { bookingsByService: { bookingId: string; quantity?: string }[] };
+
+    const issues: string[] = [];
+    
+    if (existingBookings.bookingsByService.length > 0) {
+      // Vérifier la compatibilité avec les réservations existantes
+      if (newConfig.defaultSlotDuration && newConfig.defaultSlotDuration < 30) {
+        issues.push('La durée minimale ne peut pas être inférieure à 30 minutes avec des réservations existantes');
+      }
+      
+      if (newConfig.allowGroupBooking === false && existingBookings.bookingsByService.some(b => b.quantity && parseInt(b.quantity) > 1)) {
+        issues.push('Impossible de désactiver les réservations de groupe avec des réservations de groupe existantes');
+      }
+    }
+
+    return {
+      compatible: issues.length === 0,
+      issues
+    };
+  }
 }
