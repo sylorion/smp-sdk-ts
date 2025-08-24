@@ -10,7 +10,7 @@ export const orderQueries = {
         destinationWalletId
         sourceWalletId
         currency
-        quoteId
+        estimateId
         serviceId
         status
         totalPrice
@@ -42,7 +42,7 @@ export const orderQueries = {
         destinationWalletId
         sourceWalletId
         currency
-        quoteId
+        estimateId
         serviceId
         status
         totalPrice
@@ -74,7 +74,7 @@ export const orderQueries = {
         destinationWalletId
         sourceWalletId
         currency
-        quoteId
+        estimateId
         serviceId
         status
         totalPrice
@@ -106,7 +106,7 @@ export const orderQueries = {
         destinationWalletId
         sourceWalletId
         currency
-        quoteId
+        estimateId
         serviceId
         status
         totalPrice

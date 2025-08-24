@@ -5,7 +5,7 @@ const orderQueries = {
       query Orders {
         orders {
           orderId
-          quoteId
+          estimateId
           userId
           totalPrice
           status
@@ -31,7 +31,7 @@ const orderQueries = {
       query Order($orderId: String!) {
         order(orderId: $orderId) {
           orderId
-          quoteId
+          estimateId
           userId
           totalPrice
           status
@@ -57,7 +57,7 @@ const orderQueries = {
       query OrdersByUser($userId: String!) {
         ordersByUser(userId: $userId) {
           orderId
-          quoteId
+          estimateId
           userId
           totalPrice
           status

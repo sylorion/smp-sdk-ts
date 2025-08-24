@@ -5,7 +5,7 @@ const paymentMutations = {
     mutation AddLine($orderId: String!, $input: AddLineInput!) {
       addLine(orderId: $orderId, input: $input) {
         orderId
-        quoteId
+        estimateId
         userId
         totalPrice
         status
@@ -30,7 +30,7 @@ const paymentMutations = {
     mutation DeleteLine($input: DeleteLineInput!) {
       deleteLine(input: $input) {
         orderId
-        quoteId
+        estimateId
         userId
         totalPrice
         status
@@ -45,7 +45,7 @@ const paymentMutations = {
     mutation UpdateLine($orderId: String!, $assetId: String!, $updateData: UpdateLineDataInput!) {
       updateLine(orderId: $orderId, assetId: $assetId, updateData: $updateData) {
         orderId
-        quoteId
+        estimateId
         userId
         totalPrice
         status
@@ -151,7 +151,7 @@ const paymentMutations = {
     mutation CreateOrder($input: CreateOrderInput!) {
       createOrder(input: $input) {
         orderId
-        quoteId
+        estimateId
         userId
         totalPrice
         status
@@ -176,7 +176,7 @@ const paymentMutations = {
     mutation UpdateOrder($orderId: String!, $data: UpdateOrderInput!) {
       updateOrder(orderId: $orderId, data: $data) {
         orderId
-        quoteId
+        estimateId
         userId
         totalPrice
         status
@@ -202,7 +202,7 @@ const paymentMutations = {
     mutation ConfirmOrder($orderId: String!) {
       confirmOrder(orderId: $orderId) {
         orderId
-        quoteId
+        estimateId
         userId
         totalPrice
         status
@@ -228,7 +228,7 @@ const paymentMutations = {
     mutation MarkOrderPaid($orderId: String!) {
       markOrderPaid(orderId: $orderId) {
         orderId
-        quoteId
+        estimateId
         userId
         totalPrice
         status
@@ -254,7 +254,7 @@ const paymentMutations = {
     mutation MarkOrderDelivered($orderId: String!) {
       markOrderDelivered(orderId: $orderId) {
         orderId
-        quoteId
+        estimateId
         userId
         totalPrice
         status
@@ -280,7 +280,7 @@ const paymentMutations = {
     mutation CancelOrder($orderId: String!) {
       cancelOrder(orderId: $orderId) {
         orderId
-        quoteId
+        estimateId
         userId
         totalPrice
         status

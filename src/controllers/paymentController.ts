@@ -21,7 +21,7 @@ export interface CreatePaymentDto {
 export interface CreateOrderInput {
   userId?: string;
   serviceId: string;
-  quoteId: string;
+  estimateId: string;
   totalPrice: number;
   transactionId?: string;
   sellerOrganizationId: string;
@@ -129,7 +129,7 @@ export interface OrderAsset {
 
 export interface Order {
   orderId: string;
-  quoteId: string;
+  estimateId: string;
   userId?: string;
   totalPrice: number;
   status: string;

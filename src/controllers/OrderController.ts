@@ -10,7 +10,7 @@ interface OrderResponse {
   destinationWalletId: string;
   sourceWalletId: string;
   currency: string;
-  quoteId: string;
+  estimateId: string;
   serviceId: string;
   status: string;
   totalPrice: number;
