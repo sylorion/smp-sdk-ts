@@ -25,7 +25,6 @@ const invoiceMutations = {
         deletedAt
         transactionData
         notes
-        disclaimers
         paymentTerms
         profile
       }
@@ -55,7 +54,6 @@ const invoiceMutations = {
         updatedAt
         transactionData
         notes
-        disclaimers
         paymentTerms
         profile
         header
@@ -108,7 +106,6 @@ const invoiceMutations = {
         updatedAt
         transactionData
         notes
-        disclaimers
         paymentTerms
         profile
         header
@@ -150,7 +147,6 @@ const invoiceMutations = {
         updatedAt
         transactionData
         notes
-        disclaimers
         paymentTerms
         profile
         header
