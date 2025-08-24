@@ -167,7 +167,7 @@ export interface CreateEstimateRequestInput {
 }
 
 export interface CreateBookingInput {
-  availabilityId: string;
+  availabilityId?: string; // Maintenant optionnel pour les bookings sur disponibilité hebdomadaire
   userId?: string; // Peut être null pour les utilisateurs non connectés
   serviceId: string;
   
