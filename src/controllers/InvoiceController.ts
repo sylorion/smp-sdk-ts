@@ -25,7 +25,6 @@ interface InvoiceResponse {
   deletedAt?: string;
   transactionData?: any; // JSON object
   notes?: string;
-  disclaimers?: string;
   paymentTerms?: string;
   profile?: string;
 }
@@ -98,7 +97,7 @@ export class Invoice {
     paymentStatus?: string;
     notes?: string;
     transactionData?: any;
-    disclaimers?: string;
+    // disclaimers?: string;
     paymentTerms?: string;
     profile?: string;
   }): Promise<InvoiceResponse> {

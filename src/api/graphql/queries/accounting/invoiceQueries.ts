@@ -25,7 +25,6 @@ const invoiceQueries = {
           deletedAt
           transactionData
           notes
-          disclaimers
           paymentTerms
           profile
           header
@@ -68,7 +67,6 @@ const invoiceQueries = {
           deletedAt
           transactionData
           notes
-          disclaimers
           paymentTerms
           profile
         }
@@ -99,7 +97,6 @@ const invoiceQueries = {
           deletedAt
           transactionData
           notes
-          disclaimers
           paymentTerms
           profile
         }
@@ -125,7 +122,6 @@ const invoiceQueries = {
           createdAt
           transactionData
           notes
-          disclaimers
           paymentTerms
           profile
           header
@@ -168,7 +164,6 @@ const invoiceQueries = {
           deletedAt
           transactionData
           notes
-          disclaimers
           paymentTerms
           profile
           header
@@ -205,7 +200,6 @@ const invoiceQueries = {
           createdAt
           transactionData
           notes
-          disclaimers
           paymentTerms
           profile
           header
@@ -242,7 +236,6 @@ const invoiceQueries = {
           createdAt
           transactionData
           notes
-          disclaimers
           paymentTerms
           profile
           header
@@ -279,7 +272,6 @@ const invoiceQueries = {
           createdAt
           transactionData
           notes
-          disclaimers
           paymentTerms
           profile
           header
