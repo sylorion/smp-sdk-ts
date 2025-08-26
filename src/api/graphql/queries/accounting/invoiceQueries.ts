@@ -39,6 +39,10 @@ const invoiceQueries = {
           docAllowanceCharges
           currency
           taxTotals
+          pdfGeneratedAt
+          pdfHash
+          downloadStatus
+          additionalInfo
         }
       }
     `,
