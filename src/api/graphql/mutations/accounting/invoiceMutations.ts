@@ -207,6 +207,31 @@ const invoiceMutations = {
         status
       }
     }
+  `,
+
+  // MUTATION TO GENERATE AND UPLOAD INVOICE PDF
+  GENERATE_INVOICE_PDF: `
+    mutation GenerateInvoicePDF($invoiceId: String!, $input: GenerateInvoicePDFInput!) {
+      generateInvoicePDF(invoiceId: $invoiceId, input: $input) {
+        success
+        message
+        filePath
+        downloadUrl
+        digitalSignature
+        downloadCount
+      }
+    }
+  `,
+
+  // MUTATION TO MARK INVOICE AS DOWNLOADED
+  MARK_INVOICE_DOWNLOADED: `
+    mutation MarkInvoiceDownloaded($invoiceId: String!, $input: MarkInvoiceDownloadedInput!) {
+      markInvoiceDownloaded(invoiceId: $invoiceId, input: $input) {
+        success
+        downloadCount
+        downloadedAt
+      }
+    }
   `
 };
 

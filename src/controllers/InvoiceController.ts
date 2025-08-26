@@ -15,6 +15,8 @@ interface InvoiceResponse {
   prestationsVatPercent: number;
   totalAmount: number;
   sellerOrganizationId: string;
+  buyerOrganizationId?: string;
+  buyerUserId?: string;
   paymentStatus: string;
   emittedDate: string;
   dueDate: string;
@@ -25,8 +27,19 @@ interface InvoiceResponse {
   deletedAt?: string;
   transactionData?: any; // JSON object
   notes?: string;
+  // disclaimers?: string;
   paymentTerms?: string;
   profile?: string;
+  // Champs PDF existants dans Prisma
+  downloadStatus?: {
+    downloaded: boolean;
+    downloadedAt?: string;
+    downloadCount: number;
+    ipAddress?: string;
+  };
+  pdfGeneratedAt?: string;
+  pdfHash?: string;
+  additionalInfo?: string; // JSON string contenant pdfDownloadUrl, pdfFilePath, etc.
 }
 
 interface CreateInvoiceResponse {
@@ -268,4 +281,29 @@ export class Invoice {
     const response = await this.client.mutate(mutation, { token, input: data }) as { processInvoicePayment: any };
     return response.processInvoicePayment;
   }
+
+  /**
+   * Génère et upload le PDF de la facture (backend sécurisé)
+   */
+  async generateAndUploadPDF(invoiceId: string, data: {
+    userId: string;
+    sellerOrganizationId: string;
+    buyerOrganizationId?: string;
+    ipAddress?: string;
+  }): Promise<{
+    success: boolean;
+    message: string;
+    filePath?: string;
+    downloadUrl?: string;
+    digitalSignature?: string;
+    downloadCount?: number;
+  }> {
+    const mutation = invoiceMutations.GENERATE_INVOICE_PDF;
+    const response = await this.client.mutate(mutation, { invoiceId, input: data }) as { generateInvoicePDF: any };
+    return response.generateInvoicePDF;
+  }
+
+  // Note: getSecurePDFUrl et markAsDownloaded sont supprimées
+  // L'URL de téléchargement est maintenant stockée directement dans invoice.pdfData.downloadUrl
+  // après avoir appelé generateAndUploadPDF
 }

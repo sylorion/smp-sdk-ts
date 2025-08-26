@@ -287,7 +287,20 @@ const invoiceQueries = {
           taxTotals
         }
       }
-    `
+    `,
+
+  // QUERY TO GET INVOICE PDF SECURE URL
+  GET_INVOICE_PDF_URL: `
+    query GetInvoicePDFUrl($invoiceId: String!, $input: GetInvoicePDFUrlInput!) {
+      getInvoicePDFUrl(invoiceId: $invoiceId, input: $input) {
+        success
+        downloadUrl
+        isAlreadyDownloaded
+        downloadCount
+        expiresAt
+      }
+    }
+  `
 };
 
 export { invoiceQueries };
