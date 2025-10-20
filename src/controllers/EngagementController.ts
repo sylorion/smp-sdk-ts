@@ -92,48 +92,16 @@ export class EngagementController {
   }
 
   /**
-   * Récupérer un engagement complet avec toutes ses relations (timeSlots, reports)
+   * Récupérer les engagements par estimate
    */
-  async getEngagementWithRelations(engagementId: string): Promise<Engagement> {
+  async getEngagementsByEstimate(estimateId: string): Promise<Engagement[]> {
     const response = await this.apiClient.query(
-      engagementQueries.GET_ENGAGEMENT_WITH_RELATIONS, 
-      { engagementId }
-    ) as { engagement: Engagement };
-    return response.engagement;
+      engagementQueries.GET_ENGAGEMENTS_BY_ESTIMATE, 
+      { estimateId }
+    ) as { engagementsByEstimate: Engagement[] };
+    return response.engagementsByEstimate;
   }
 
-  /**
-   * Récupérer les engagements par service avec toutes leurs relations
-   */
-  async getEngagementsByServiceWithRelations(serviceId: string): Promise<Engagement[]> {
-    const response = await this.apiClient.query(
-      engagementQueries.GET_ENGAGEMENTS_BY_SERVICE_WITH_RELATIONS, 
-      { serviceId }
-    ) as { engagementsByService: Engagement[] };
-    return response.engagementsByService;
-  }
-
-  /**
-   * Récupérer les engagements par consultant avec toutes leurs relations
-   */
-  async getEngagementsByConsultantWithRelations(consultantUserId: string): Promise<Engagement[]> {
-    const response = await this.apiClient.query(
-      engagementQueries.GET_ENGAGEMENTS_BY_CONSULTANT_WITH_RELATIONS, 
-      { consultantUserId }
-    ) as { engagementsByConsultant: Engagement[] };
-    return response.engagementsByConsultant;
-  }
-
-  /**
-   * Récupérer les engagements par organisation avec toutes leurs relations
-   */
-  async getEngagementsByOrganizationWithRelations(organizationId: string): Promise<Engagement[]> {
-    const response = await this.apiClient.query(
-      engagementQueries.GET_ENGAGEMENTS_BY_ORGANIZATION_WITH_RELATIONS, 
-      { organizationId }
-    ) as { engagementsByOrganization: Engagement[] };
-    return response.engagementsByOrganization;
-  }
 
   /**
    * Créer un engagement
@@ -214,6 +182,50 @@ export class EngagementController {
       { token }
     ) as { engagementReportByToken: EngagementReport };
     return response.engagementReportByToken;
+  }
+
+  /**
+   * Récupérer les rapports d'engagement par engagement
+   */
+  async getEngagementReportsByEngagement(engagementId: string): Promise<EngagementReport[]> {
+    const response = await this.apiClient.query(
+      engagementQueries.GET_ENGAGEMENT_REPORTS_BY_ENGAGEMENT, 
+      { engagementId }
+    ) as { engagementReportsByEngagement: EngagementReport[] };
+    return response.engagementReportsByEngagement;
+  }
+
+  /**
+   * Récupérer les rapports d'engagement par consultant
+   */
+  async getEngagementReportsByConsultant(consultantUserId: string): Promise<EngagementReport[]> {
+    const response = await this.apiClient.query(
+      engagementQueries.GET_ENGAGEMENT_REPORTS_BY_CONSULTANT, 
+      { consultantUserId }
+    ) as { engagementReportsByConsultant: EngagementReport[] };
+    return response.engagementReportsByConsultant;
+  }
+
+  /**
+   * Récupérer les rapports d'engagement par organisation
+   */
+  async getEngagementReportsByOrganization(organizationId: string): Promise<EngagementReport[]> {
+    const response = await this.apiClient.query(
+      engagementQueries.GET_ENGAGEMENT_REPORTS_BY_ORGANIZATION, 
+      { organizationId }
+    ) as { engagementReportsByOrganization: EngagementReport[] };
+    return response.engagementReportsByOrganization;
+  }
+
+  /**
+   * Récupérer les rapports d'engagement par période
+   */
+  async getEngagementReportsByPeriod(year: number, periodType: string, periodValue: number): Promise<EngagementReport[]> {
+    const response = await this.apiClient.query(
+      engagementQueries.GET_ENGAGEMENT_REPORTS_BY_PERIOD, 
+      { year, periodType, periodValue }
+    ) as { engagementReportsByPeriod: EngagementReport[] };
+    return response.engagementReportsByPeriod;
   }
 
   /**

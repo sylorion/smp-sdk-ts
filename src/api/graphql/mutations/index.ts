@@ -20,3 +20,4 @@ export { profileMutations } from "./user-space/profileMutation.js";
 export { walletMutations } from "./wallet/walletMutations.js";
 export { waitingListMutations } from "./authentication/waitingListMutations.js";
 export { engagementMutations } from "./engagement/engagementMutations.js";
+export { timeSlotMutations } from "./timeSlot/timeSlotMutations.js";

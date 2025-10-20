@@ -22,3 +22,4 @@ export { Wallet } from './WalletController';
 export { BookingController } from './BookingController';
 export { BookingConfigurationController } from './BookingConfigurationController';
 export { EngagementController } from './EngagementController';
+export { TimeSlotController } from './TimeSlotController';
