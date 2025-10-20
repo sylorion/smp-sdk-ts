@@ -103,6 +103,22 @@ const invoiceQueries = {
           notes
           paymentTerms
           profile
+          header
+          seller
+          buyer
+          payment
+          lines
+          deliveryParty
+          payeeParty
+          buyerOrganizationId
+          additionalDocuments
+          docAllowanceCharges
+          currency
+          taxTotals
+          pdfGeneratedAt
+          pdfHash
+          downloadStatus
+          additionalInfo
         }
       }
     `,

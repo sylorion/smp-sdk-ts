@@ -21,3 +21,4 @@ export { WaitingList } from './WaitingListController';
 export { Wallet } from './WalletController';
 export { BookingController } from './BookingController';
 export { BookingConfigurationController } from './BookingConfigurationController';
+export { EngagementController } from './EngagementController';

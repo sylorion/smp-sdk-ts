@@ -5,6 +5,7 @@ export {estimateQueries} from "./accounting/estimateQueries.js";
 export { organizationQueries } from "./organization/organizationQueries.js";
 export {paymentMutations} from "./../mutations/accounting/paymentMutations.js";
 export { bookingQueries } from "./command/bookingQueries.js";
+export { engagementQueries } from "./engagement/engagementQueries.js";
 
 // export { userQueries } from "./user/userQueries.js";
 
