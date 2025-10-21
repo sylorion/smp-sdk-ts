@@ -1,6 +1,6 @@
 const engagementQueries = {
   // QUERY POUR RÉCUPÉRER LES ENGAGEMENTS PAR SERVICE
-  GET_ENGAGEMENTS_BY_SERVICE: `
+  GET_ENGAGEMENTS_BY_SERVICE_ID: `
     query GetEngagementsByService($serviceId: String!) {
       engagementsByService(serviceId: $serviceId) {
         engagementId
