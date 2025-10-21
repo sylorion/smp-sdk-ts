@@ -1,9 +1,9 @@
 import { APIClient } from '../api/APIClient.js';
-import { 
-  engagementMutations 
+import {
+  engagementMutations
 } from '../api/graphql/mutations/engagement/engagementMutations.js';
-import { 
-  engagementQueries 
+import {
+  engagementQueries
 } from '../api/graphql/queries/engagement/engagementQueries.js';
 import {
   Engagement,
@@ -52,7 +52,7 @@ export class EngagementController {
    */
   async getEngagementsByService(serviceId: string): Promise<Engagement[]> {
     const response = await this.apiClient.query(
-      engagementQueries.GET_ENGAGEMENTS_BY_SERVICE, 
+      engagementQueries.GET_ENGAGEMENTS_BY_SERVICE_ID,
       { serviceId }
     ) as { engagementsByService: Engagement[] };
     return response.engagementsByService;
