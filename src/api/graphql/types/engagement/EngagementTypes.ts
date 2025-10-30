@@ -31,6 +31,7 @@ export interface TimeSlot {
   timeSlotId: string;
   slotType: TimeSlotType;
   engagementId?: string;
+  engagementReportId?: string;
   engagementMilestoneId?: string;
   serviceId?: string;
   startDateTime: string;
@@ -73,6 +74,7 @@ export interface EngagementReport {
   serviceId: string;
   periodType: string;
   periodValue: number;
+  month?: number;
   year: number;
   hourlyRate: number;
   totalHours: number;
@@ -88,6 +90,7 @@ export interface EngagementReport {
   createdAt: string;
   updatedAt?: string;
   deletedAt?: string;
+  timeSlots?: TimeSlot[];
 }
 
 // Enums
