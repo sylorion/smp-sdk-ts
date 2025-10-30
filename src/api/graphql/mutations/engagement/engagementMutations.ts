@@ -93,6 +93,7 @@ const engagementMutations = {
         timeSlotId
         slotType
         engagementId
+        engagementReportId
         engagementMilestoneId
         serviceId
         startDateTime

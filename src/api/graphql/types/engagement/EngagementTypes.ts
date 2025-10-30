@@ -166,6 +166,7 @@ export interface UpdateEngagementInput {
 export interface CreateTimeSlotInput {
   slotType: TimeSlotType;
   engagementId?: string;
+  engagementReportId?: string; // ⭐ Lien optionnel avec un rapport mensuel
   engagementMilestoneId?: string;
   serviceId?: string;
   startDateTime: string;
@@ -198,6 +199,7 @@ export interface CreateTimeSlotInput {
 export interface UpdateTimeSlotInput {
   slotType?: TimeSlotType;
   engagementId?: string;
+  engagementReportId?: string; // ⭐ Lien optionnel avec un rapport mensuel
   engagementMilestoneId?: string;
   serviceId?: string;
   startDateTime?: string;

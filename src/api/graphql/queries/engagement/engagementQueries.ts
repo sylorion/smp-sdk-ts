@@ -1,3 +1,70 @@
+const TIME_SLOT_FIELDS = `
+  timeSlotId
+  slotType
+  engagementId
+  engagementReportId
+  engagementMilestoneId
+  serviceId
+  startDateTime
+  endDateTime
+  duration
+  title
+  description
+  status
+  priority
+  capacity
+  maxParticipants
+  currentParticipants
+  isPublic
+  requiresApproval
+  parentSlotId
+  dependentSlotIds
+  estimatedHours
+  actualHours
+  hourlyRate
+  qualityScore
+  clientFeedback
+  internalNotes
+  deliverables
+  codeCommits
+  documentation
+  participants
+  metadata
+  tags
+  createdAt
+  updatedAt
+  deletedAt
+`;
+
+const ENGAGEMENT_REPORT_FIELDS = `
+  engagementReportId
+  engagementId
+  consultantUserId
+  organizationId
+  serviceId
+  periodType
+  periodValue
+  month
+  year
+  hourlyRate
+  totalHours
+  totalAmount
+  status
+  submittedAt
+  approvedAt
+  paidAt
+  notes
+  invoiceId
+  token
+  metadata
+  createdAt
+  updatedAt
+  deletedAt
+  timeSlots {
+    ${TIME_SLOT_FIELDS}
+  }
+`;
+
 const engagementQueries = {
   // QUERY POUR RÉCUPÉRER LES ENGAGEMENTS PAR SERVICE
   GET_ENGAGEMENTS_BY_SERVICE_ID: `
@@ -25,64 +92,10 @@ const engagementQueries = {
         updatedAt
         deletedAt
         timeSlots {
-          timeSlotId
-          slotType
-          engagementId
-          engagementMilestoneId
-          serviceId
-          startDateTime
-          endDateTime
-          duration
-          title
-          description
-          status
-          priority
-          capacity
-          maxParticipants
-          currentParticipants
-          isPublic
-          requiresApproval
-          parentSlotId
-          dependentSlotIds
-          estimatedHours
-          actualHours
-          hourlyRate
-          qualityScore
-          clientFeedback
-          internalNotes
-          deliverables
-          codeCommits
-          documentation
-          participants
-          metadata
-          tags
-          createdAt
-          updatedAt
-          deletedAt
+          ${TIME_SLOT_FIELDS}
         }
         reports {
-          engagementReportId
-          engagementId
-          consultantUserId
-          organizationId
-          serviceId
-          periodType
-          periodValue
-          year
-          hourlyRate
-          totalHours
-          totalAmount
-          status
-          submittedAt
-          approvedAt
-          paidAt
-          notes
-          invoiceId
-          token
-          metadata
-          createdAt
-          updatedAt
-          deletedAt
+          ${ENGAGEMENT_REPORT_FIELDS}
         }
       }
     }
@@ -114,64 +127,10 @@ const engagementQueries = {
         updatedAt
         deletedAt
         timeSlots {
-          timeSlotId
-          slotType
-          engagementId
-          engagementMilestoneId
-          serviceId
-          startDateTime
-          endDateTime
-          duration
-          title
-          description
-          status
-          priority
-          capacity
-          maxParticipants
-          currentParticipants
-          isPublic
-          requiresApproval
-          parentSlotId
-          dependentSlotIds
-          estimatedHours
-          actualHours
-          hourlyRate
-          qualityScore
-          clientFeedback
-          internalNotes
-          deliverables
-          codeCommits
-          documentation
-          participants
-          metadata
-          tags
-          createdAt
-          updatedAt
-          deletedAt
+          ${TIME_SLOT_FIELDS}
         }
         reports {
-          engagementReportId
-          engagementId
-          consultantUserId
-          organizationId
-          serviceId
-          periodType
-          periodValue
-          year
-          hourlyRate
-          totalHours
-          totalAmount
-          status
-          submittedAt
-          approvedAt
-          paidAt
-          notes
-          invoiceId
-          token
-          metadata
-          createdAt
-          updatedAt
-          deletedAt
+          ${ENGAGEMENT_REPORT_FIELDS}
         }
       }
     }
@@ -203,64 +162,10 @@ const engagementQueries = {
         updatedAt
         deletedAt
         timeSlots {
-          timeSlotId
-          slotType
-          engagementId
-          engagementMilestoneId
-          serviceId
-          startDateTime
-          endDateTime
-          duration
-          title
-          description
-          status
-          priority
-          capacity
-          maxParticipants
-          currentParticipants
-          isPublic
-          requiresApproval
-          parentSlotId
-          dependentSlotIds
-          estimatedHours
-          actualHours
-          hourlyRate
-          qualityScore
-          clientFeedback
-          internalNotes
-          deliverables
-          codeCommits
-          documentation
-          participants
-          metadata
-          tags
-          createdAt
-          updatedAt
-          deletedAt
+          ${TIME_SLOT_FIELDS}
         }
         reports {
-          engagementReportId
-          engagementId
-          consultantUserId
-          organizationId
-          serviceId
-          periodType
-          periodValue
-          year
-          hourlyRate
-          totalHours
-          totalAmount
-          status
-          submittedAt
-          approvedAt
-          paidAt
-          notes
-          invoiceId
-          token
-          metadata
-          createdAt
-          updatedAt
-          deletedAt
+          ${ENGAGEMENT_REPORT_FIELDS}
         }
       }
     }
@@ -292,64 +197,10 @@ const engagementQueries = {
         updatedAt
         deletedAt
         timeSlots {
-          timeSlotId
-          slotType
-          engagementId
-          engagementMilestoneId
-          serviceId
-          startDateTime
-          endDateTime
-          duration
-          title
-          description
-          status
-          priority
-          capacity
-          maxParticipants
-          currentParticipants
-          isPublic
-          requiresApproval
-          parentSlotId
-          dependentSlotIds
-          estimatedHours
-          actualHours
-          hourlyRate
-          qualityScore
-          clientFeedback
-          internalNotes
-          deliverables
-          codeCommits
-          documentation
-          participants
-          metadata
-          tags
-          createdAt
-          updatedAt
-          deletedAt
+          ${TIME_SLOT_FIELDS}
         }
         reports {
-          engagementReportId
-          engagementId
-          consultantUserId
-          organizationId
-          serviceId
-          periodType
-          periodValue
-          year
-          hourlyRate
-          totalHours
-          totalAmount
-          status
-          submittedAt
-          approvedAt
-          paidAt
-          notes
-          invoiceId
-          token
-          metadata
-          createdAt
-          updatedAt
-          deletedAt
+          ${ENGAGEMENT_REPORT_FIELDS}
         }
       }
     }
@@ -381,64 +232,10 @@ const engagementQueries = {
         updatedAt
         deletedAt
         timeSlots {
-          timeSlotId
-          slotType
-          engagementId
-          engagementMilestoneId
-          serviceId
-          startDateTime
-          endDateTime
-          duration
-          title
-          description
-          status
-          priority
-          capacity
-          maxParticipants
-          currentParticipants
-          isPublic
-          requiresApproval
-          parentSlotId
-          dependentSlotIds
-          estimatedHours
-          actualHours
-          hourlyRate
-          qualityScore
-          clientFeedback
-          internalNotes
-          deliverables
-          codeCommits
-          documentation
-          participants
-          metadata
-          tags
-          createdAt
-          updatedAt
-          deletedAt
+          ${TIME_SLOT_FIELDS}
         }
         reports {
-          engagementReportId
-          engagementId
-          consultantUserId
-          organizationId
-          serviceId
-          periodType
-          periodValue
-          year
-          hourlyRate
-          totalHours
-          totalAmount
-          status
-          submittedAt
-          approvedAt
-          paidAt
-          notes
-          invoiceId
-          token
-          metadata
-          createdAt
-          updatedAt
-          deletedAt
+          ${ENGAGEMENT_REPORT_FIELDS}
         }
       }
     }
@@ -448,28 +245,7 @@ const engagementQueries = {
   GET_ENGAGEMENT_REPORT_BY_TOKEN: `
     query GetEngagementReportByToken($token: String!) {
       engagementReportByToken(token: $token) {
-        engagementReportId
-        engagementId
-        consultantUserId
-        organizationId
-        serviceId
-        periodType
-        periodValue
-        year
-        hourlyRate
-        totalHours
-        totalAmount
-        status
-        submittedAt
-        approvedAt
-        paidAt
-        notes
-        invoiceId
-        token
-        metadata
-        createdAt
-        updatedAt
-        deletedAt
+        ${ENGAGEMENT_REPORT_FIELDS}
       }
     }
   `,
@@ -478,28 +254,7 @@ const engagementQueries = {
   GET_ENGAGEMENT_REPORTS_BY_ENGAGEMENT: `
     query GetEngagementReportsByEngagement($engagementId: String!) {
       engagementReportsByEngagement(engagementId: $engagementId) {
-        engagementReportId
-        engagementId
-        consultantUserId
-        organizationId
-        serviceId
-        periodType
-        periodValue
-        year
-        hourlyRate
-        totalHours
-        totalAmount
-        status
-        submittedAt
-        approvedAt
-        paidAt
-        notes
-        invoiceId
-        token
-        metadata
-        createdAt
-        updatedAt
-        deletedAt
+        ${ENGAGEMENT_REPORT_FIELDS}
       }
     }
   `,
@@ -508,28 +263,7 @@ const engagementQueries = {
   GET_ENGAGEMENT_REPORTS_BY_CONSULTANT: `
     query GetEngagementReportsByConsultant($consultantUserId: String!) {
       engagementReportsByConsultant(consultantUserId: $consultantUserId) {
-        engagementReportId
-        engagementId
-        consultantUserId
-        organizationId
-        serviceId
-        periodType
-        periodValue
-        year
-        hourlyRate
-        totalHours
-        totalAmount
-        status
-        submittedAt
-        approvedAt
-        paidAt
-        notes
-        invoiceId
-        token
-        metadata
-        createdAt
-        updatedAt
-        deletedAt
+        ${ENGAGEMENT_REPORT_FIELDS}
       }
     }
   `,
@@ -538,28 +272,7 @@ const engagementQueries = {
   GET_ENGAGEMENT_REPORTS_BY_ORGANIZATION: `
     query GetEngagementReportsByOrganization($organizationId: String!) {
       engagementReportsByOrganization(organizationId: $organizationId) {
-        engagementReportId
-        engagementId
-        consultantUserId
-        organizationId
-        serviceId
-        periodType
-        periodValue
-        year
-        hourlyRate
-        totalHours
-        totalAmount
-        status
-        submittedAt
-        approvedAt
-        paidAt
-        notes
-        invoiceId
-        token
-        metadata
-        createdAt
-        updatedAt
-        deletedAt
+        ${ENGAGEMENT_REPORT_FIELDS}
       }
     }
   `,
@@ -568,28 +281,7 @@ const engagementQueries = {
   GET_ENGAGEMENT_REPORTS_BY_PERIOD: `
     query GetEngagementReportsByPeriod($year: Int!, $periodType: String!, $periodValue: Int!) {
       engagementReportsByPeriod(year: $year, periodType: $periodType, periodValue: $periodValue) {
-        engagementReportId
-        engagementId
-        consultantUserId
-        organizationId
-        serviceId
-        periodType
-        periodValue
-        year
-        hourlyRate
-        totalHours
-        totalAmount
-        status
-        submittedAt
-        approvedAt
-        paidAt
-        notes
-        invoiceId
-        token
-        metadata
-        createdAt
-        updatedAt
-        deletedAt
+        ${ENGAGEMENT_REPORT_FIELDS}
       }
     }
   `,
