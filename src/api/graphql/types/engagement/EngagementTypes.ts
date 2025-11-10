@@ -164,6 +164,7 @@ export interface UpdateEngagementInput {
   status?: EngagementStatus;
   priority?: EngagementPriority;
   notes?: string;
+  deliverables?: Record<string, any>;
 }
 
 export interface CreateTimeSlotInput {
