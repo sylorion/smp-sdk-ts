@@ -63,3 +63,4 @@ export * from './controllers';
 
 export { SMPClient, APIClient, serviceQueries, statusByServices } ;
 export { Persistence, defaultLanguage, logger };
+export type { SMPClientOptions } from './config/SMPConfig.js';

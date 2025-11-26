@@ -20,8 +20,11 @@ export class APIClient {
     this.config = config; 
     this.restClient = axios.create({
       baseURL: config.apiUrl,
+      httpsAgent: config.requestAgent,
     }); 
-    this.graphqlClient = new GraphQLClient(config.graphqlUrl);
+    const graphqlOptions: { fetch?: typeof fetch } = {};
+    if (config.customFetch) graphqlOptions.fetch = config.customFetch;
+    this.graphqlClient = new GraphQLClient(config.graphqlUrl, graphqlOptions);
   }
 
   /**

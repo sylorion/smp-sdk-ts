@@ -1,4 +1,5 @@
 
+import type { Agent } from 'http';
 import { SupportedLang, defaultLanguage } from '../i18n/languages.js';
 import { Persistence, PersistenceKind, PersistenceType } from './Persistence.js';
 import { DataLimitOptions, RateLimitOptions, SMPClientOptions, SMPToken } from './SMPConfig.js';
@@ -23,6 +24,8 @@ export class ConfigManager {
   userToken?            : SMPToken;
   loggedUser?           : UserLoggedIn;
   wsClient?             : WebSocket;
+  customFetch?: typeof fetch;
+  requestAgent?: Agent;
   requestCount          : number  = 0;
   dataSent              : number  = 0;
   dataReceived          : number  = 0;
@@ -46,6 +49,8 @@ export class ConfigManager {
     this.rateLimits = options.rateLimits || { maxRequests: 1000, windowMs: 60000 };
     this.dataLimits = options.dataLimits || { maxDataSent: 1024 * 1024, maxDataReceived: 1024 * 1024, windowMs: 60000 };
     this.wsEnabled = options.wsEnabled || false;
+    this.customFetch = options.customFetch;
+    this.requestAgent = options.requestAgent;
     const now = new Date();
     this.loggedUser = {   
         userID: 0,

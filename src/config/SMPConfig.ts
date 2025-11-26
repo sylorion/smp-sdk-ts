@@ -1,3 +1,4 @@
+import type { Agent } from "http";
 import { SupportedLang } from "../i18n";
 import { PersistenceKind, PersistenceType } from "./Persistence";
 
@@ -35,6 +36,8 @@ export type SMPClientOptions = {
   rateLimits?: RateLimitOptions;
   dataLimits?: DataLimitOptions; // Limites de quantité de données échangées
   wsEnabled?: boolean;           // Activer WebSockets pour les notifications
+  customFetch?: typeof fetch;
+  requestAgent?: Agent;
  
 };
 
