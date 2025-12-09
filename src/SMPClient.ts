@@ -1,16 +1,16 @@
-import { APIClient } from "./api/APIClient.js"; 
+import { APIClient } from "./api/APIClient.js";
 import { AuthTokenManager } from "./auth/AuthTokenManager.js";
 import { ErrorHandler } from "./utils/ErrorHandler.js";
 import { logger } from './utils/Logger.js';
-import { i18n } from './i18n/index.js'; 
+import { i18n } from './i18n/index.js';
 import { SMPClientOptions } from "./config/SMPConfig.js";
 import { ConfigManager } from "./config/ConfigManager.js";
 import { Persistence, PersistenceKind } from "./config/Persistence.js";
 import { AxiosRequestConfig } from "axios";
-import { GraphQLClient, ClientError } from 'graphql-request'; 
-import { Service, Organization,Invoice, Estimate, Contract, SMPPayment, Signup, Password, Profile, Location , ManageOrganization, Asset, ServiceAsset, Mailing, Order, Media, WaitingList, Wallet, BookingController, BookingConfigurationController, EngagementController, TimeSlotController } from "./controllers/index.js";
+import { GraphQLClient, ClientError } from 'graphql-request';
+import { Service, Organization, Invoice, Estimate, Contract, SMPPayment, Signup, Password, Profile, Location, ManageOrganization, Asset, ServiceAsset, Mailing, Order, Media, WaitingList, Wallet, BookingController, BookingConfigurationController, EngagementController, TimeSlotController, AffiliateController } from "./controllers/index.js";
 export class SMPClient {
-  public httpApiClient: APIClient; 
+  public httpApiClient: APIClient;
   public authTokenManager: AuthTokenManager;
   // [Class]  
   public service: Service;
@@ -22,7 +22,7 @@ export class SMPClient {
   public bookingConfiguration: BookingConfigurationController;
   public engagement: EngagementController;
   public timeSlot: TimeSlotController;
-  public smpPayment:SMPPayment
+  public smpPayment: SMPPayment
   public signup: Signup;
   public Password: Password;
   public profile: Profile;
@@ -35,18 +35,19 @@ export class SMPClient {
   public media: Media;
   public waitingList: WaitingList;
   public wallet: Wallet;
-  
+  public affiliate: AffiliateController;
+
 
 
   // public notificationManager: AuthTokenManager;
   private loggedUser?: LogIn;  /// A créer account et mettre en loggedUser dedans
   private loggedApp?: AppLogIn; /// A créer application et mettre en loggedApp dedans
-  private wsClient?: WebSocket; 
-  private configManager: ConfigManager; 
-  constructor(options: SMPClientOptions) { 
+  private wsClient?: WebSocket;
+  private configManager: ConfigManager;
+  constructor(options: SMPClientOptions) {
     this.configManager = new ConfigManager(options)
-    this.httpApiClient    = new APIClient(this.configManager);
-     
+    this.httpApiClient = new APIClient(this.configManager);
+
     // [Class]
     this.service = new Service(this.httpApiClient);
     this.organization = new Organization(this.httpApiClient);
@@ -70,8 +71,9 @@ export class SMPClient {
     this.media = new Media(this.httpApiClient);
     this.waitingList = new WaitingList(this.httpApiClient);
     this.wallet = new Wallet(this.httpApiClient);
+    this.affiliate = new AffiliateController(this.httpApiClient);
 
-    
+
     this.authTokenManager = new AuthTokenManager(this.configManager, this.httpApiClient);
     this.httpApiClient.updateHeaderAppID(this.configManager.appId);
     this.httpApiClient.updateHeaderAppSecret(this.configManager.appSecret);
@@ -97,25 +99,25 @@ export class SMPClient {
 
   async authenticateUser(username: string, password: string) {
     try {
-        const access = await this.getUserAccessToken();
-        if (access) {
-            logger.info("User already authenticated");
-        }
-        const login = await this.authTokenManager.authenticateUser(username, password);
-        console.log("Login succeed");
-        console.log(JSON.stringify(login));
-        if (login) {
-            this.loggedUser = login;
-            this.configManager.loggedUser = login.user;
-        }
+      const access = await this.getUserAccessToken();
+      if (access) {
+        logger.info("User already authenticated");
+      }
+      const login = await this.authTokenManager.authenticateUser(username, password);
+      console.log("Login succeed");
+      console.log(JSON.stringify(login));
+      if (login) {
+        this.loggedUser = login;
+        this.configManager.loggedUser = login.user;
+      }
     }
     catch (error) {
-        ErrorHandler.handleError(error, "USER_AUTH_FAILED");
+      ErrorHandler.handleError(error, "USER_AUTH_FAILED");
     }
     return this.loggedUser;
-}
+  }
 
-  async getAppAccessToken(){
+  async getAppAccessToken() {
     try {
       return await this.authTokenManager.getAppAccessToken();
     } catch (error) {
@@ -123,7 +125,7 @@ export class SMPClient {
     }
   }
 
-  async getUserAccessToken(){
+  async getUserAccessToken() {
     try {
       return await this.authTokenManager.getUserAccessToken();
     } catch (error) {
@@ -131,7 +133,7 @@ export class SMPClient {
     }
   }
 
-  async getAppRefreshToken(){
+  async getAppRefreshToken() {
     try {
       return await this.authTokenManager.getAppRefreshToken();
     } catch (error) {
@@ -139,7 +141,7 @@ export class SMPClient {
     }
   }
 
-  async getUserRefreshToken(){
+  async getUserRefreshToken() {
     try {
       return await this.authTokenManager.getUserRefreshToken();
     } catch (error) {
@@ -147,7 +149,7 @@ export class SMPClient {
     }
   }
 
-  async logoutApp(){
+  async logoutApp() {
     try {
       if (!this.loggedApp?.app?.applicationID) {
         throw new Error("Application ID non trouvé dans les données récupérées !");
@@ -161,37 +163,37 @@ export class SMPClient {
 
   async logoutUser() {
     try {
-        // Récupération des données utilisateur  le localStorage
-        const storedUser = localStorage.getItem("smp_user_0");
-        const refreshToken = localStorage.getItem("smp_user_refresh_token");
+      // Récupération des données utilisateur  le localStorage
+      const storedUser = localStorage.getItem("smp_user_0");
+      const refreshToken = localStorage.getItem("smp_user_refresh_token");
 
-        if (!storedUser) {
-            throw new Error("No user data found in local storage !");
-        }
+      if (!storedUser) {
+        throw new Error("No user data found in local storage !");
+      }
 
-        if (!refreshToken) {
-            throw new Error("No refresh token found in local storage !");
-        }
-        const parsedUser = JSON.parse(storedUser);
+      if (!refreshToken) {
+        throw new Error("No refresh token found in local storage !");
+      }
+      const parsedUser = JSON.parse(storedUser);
 
-        if (!parsedUser || !parsedUser.userID) {
-            throw new Error("No user ID found in user data !");
-        }
-        await this.authTokenManager.logoutUser(parsedUser.userID, refreshToken);
-        // Supprime les données utilisateur connecté
-        localStorage.removeItem("smp_user_0");
-        this.loggedUser = undefined;
-        console.log("Déconnexion réussie");
+      if (!parsedUser || !parsedUser.userID) {
+        throw new Error("No user ID found in user data !");
+      }
+      await this.authTokenManager.logoutUser(parsedUser.userID, refreshToken);
+      // Supprime les données utilisateur connecté
+      localStorage.removeItem("smp_user_0");
+      this.loggedUser = undefined;
+      console.log("Déconnexion réussie");
     } catch (error) {
-        ErrorHandler.handleError(error, "USER_RETRIEVED_REFRESH_TOKEN_FAILED");
-        throw error;
+      ErrorHandler.handleError(error, "USER_RETRIEVED_REFRESH_TOKEN_FAILED");
+      throw error;
     }
-}
+  }
 
   // Méthode pour initier une connexion WebSocket pour les notifications
   private initWebSocket() {
     this.wsClient = new WebSocket(`wss://${this.configManager.apiUrl}/subscriptions`);
-    
+
     this.wsClient.onopen = () => {
       console.log('WebSocket connection established.');
       this.wsClient?.send(JSON.stringify({
@@ -257,7 +259,7 @@ export class SMPClient {
     return this.httpApiClient.trackDataReceived(dataSize);
   }
 
-  printState(){
+  printState() {
     console.log("SMPClient State:");
     console.log("  AppId: ", this.configManager.appId);
     console.log("  AppSecret: ", this.configManager.appSecret);
@@ -265,9 +267,9 @@ export class SMPClient {
     console.log("  Persistence: ", this.configManager.persistence);
     console.log("  Default Language: ", this.configManager.defaultLanguage);
   }
-  
-  clean(){
-    
+
+  clean() {
+
   }
 }
 
