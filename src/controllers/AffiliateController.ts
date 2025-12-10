@@ -46,6 +46,11 @@ export class AffiliateController {
           isValidated
           validatedAt
           referredUserId
+          referredUser {
+            username
+            firstName
+            lastName
+          }
           createdAt
         }
       }
@@ -71,5 +76,23 @@ export class AffiliateController {
         const variables = { input };
         const response = await this.client.mutate(mutation, variables) as { generateAffiliateToken: AffiliateTokenResponse };
         return response.generateAffiliateToken;
+    }
+
+    async createAffiliate(input: any): Promise<Affiliate> {
+        const mutation = `
+            mutation CreateAffiliate($input: CreateAffiliateInput!) {
+                createAffiliate(input: $input) {
+                    affiliateId
+                    affiliateToken
+                    email
+                    isValidated
+                    referrerUserId
+                    createdAt
+                }
+            }
+        `;
+        const variables = { input };
+        const response = await this.client.mutate(mutation, variables) as { createAffiliate: Affiliate };
+        return response.createAffiliate;
     }
 }
