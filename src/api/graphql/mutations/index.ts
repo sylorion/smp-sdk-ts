@@ -13,6 +13,7 @@ export { walletMutations } from "./wallet/walletMutations.js";
 export { waitingListMutations } from "./authentication/waitingListMutations.js";
 export { engagementMutations } from "./engagement/engagementMutations.js";
 export { timeSlotMutations } from "./timeSlot/timeSlotMutations.js";
+export { affiliateMutations } from "./authentication/affiliateMutations.js";
 
 // Import named exports and re-export as named exports for compatibility
 import { bookingMutations } from "./command/bookingMutations.js";

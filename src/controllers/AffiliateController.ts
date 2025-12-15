@@ -1,17 +1,32 @@
 import { APIClient } from '../api/APIClient.js';
+import { affiliateQueries } from '../api/graphql/queries/authentication/affiliateQueries.js';
+import { affiliateMutations } from '../api/graphql/mutations/authentication/affiliateMutations.js';
 
 export interface Affiliate {
     affiliateId: string;
+    uniqRef?: string;
+    slug?: string;
     referrerUserId: string;
     referredUserId?: string;
+    referredUser?: {
+        userID: string;
+        username?: string;
+        email?: string;
+        profileID?: string;
+        loginDuration?: number;
+        lastLogin?: string;
+    };
     affiliateToken: string;
     email?: string;
     isValidated: boolean;
     validatedAt?: string;
+    expiresAt?: string;
     commissionRate?: number;
     metadata?: any;
+    state?: any;
     createdAt: string;
     updatedAt: string;
+    deletedAt?: string;
 }
 
 export interface GenerateAffiliateTokenInput {
@@ -29,6 +44,15 @@ export interface AffiliateTokenResponse {
     errors?: any[];
 }
 
+export interface AffiliateTokenInfo {
+    referrerUserId: string;
+    referrerUsername?: string;
+    type: string;
+    createdAt?: string;
+    isValid: boolean;
+    message?: string;
+}
+
 export class AffiliateController {
     private client: APIClient;
 
@@ -37,62 +61,30 @@ export class AffiliateController {
     }
 
     async getAffiliatesByReferrer(referrerUserId: string): Promise<Affiliate[]> {
-        const query = `
-      query AffiliatesByReferrer($referrerUserId: ID!) {
-        affiliatesByReferrer(referrerUserId: $referrerUserId) {
-          affiliateId
-          affiliateToken
-          email
-          isValidated
-          validatedAt
-          referredUserId
-          referredUser {
-            username
-            firstName
-            lastName
-          }
-          createdAt
-        }
-      }
-    `;
+        const query = affiliateQueries.GET_AFFILIATES_BY_REFERRER;
         const variables = { referrerUserId };
         const response = await this.client.query(query, variables) as { affiliatesByReferrer: Affiliate[] };
         return response.affiliatesByReferrer;
     }
 
     async generateAffiliateToken(input: GenerateAffiliateTokenInput): Promise<AffiliateTokenResponse> {
-        const mutation = `
-      mutation GenerateAffiliateToken($input: GenerateAffiliateTokenInput!) {
-        generateAffiliateToken(input: $input) {
-          affiliateToken
-          expiresAt
-          message
-          errors {
-            message
-          }
-        }
-      }
-    `;
+        const mutation = affiliateMutations.GENERATE_AFFILIATE_TOKEN;
         const variables = { input };
         const response = await this.client.mutate(mutation, variables) as { generateAffiliateToken: AffiliateTokenResponse };
         return response.generateAffiliateToken;
     }
 
     async createAffiliate(input: any): Promise<Affiliate> {
-        const mutation = `
-            mutation CreateAffiliate($input: CreateAffiliateInput!) {
-                createAffiliate(input: $input) {
-                    affiliateId
-                    affiliateToken
-                    email
-                    isValidated
-                    referrerUserId
-                    createdAt
-                }
-            }
-        `;
+        const mutation = affiliateMutations.CREATE_AFFILIATE;
         const variables = { input };
         const response = await this.client.mutate(mutation, variables) as { createAffiliate: Affiliate };
         return response.createAffiliate;
+    }
+
+    async decodeAffiliateToken(token: string): Promise<AffiliateTokenInfo> {
+        const mutation = affiliateMutations.DECODE_AFFILIATE_TOKEN;
+        const variables = { token };
+        const response = await this.client.mutate(mutation, variables) as { decodeAffiliateToken: AffiliateTokenInfo };
+        return response.decodeAffiliateToken;
     }
 }

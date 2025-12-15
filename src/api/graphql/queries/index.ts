@@ -7,6 +7,7 @@ export {paymentMutations} from "./../mutations/accounting/paymentMutations.js";
 export { bookingQueries } from "./command/bookingQueries.js";
 export { engagementQueries } from "./engagement/engagementQueries.js";
 export { timeSlotQueries } from "./timeSlot/timeSlotQueries.js";
+export { affiliateQueries } from "./authentication/affiliateQueries.js";
 
 // export { userQueries } from "./user/userQueries.js";
 
