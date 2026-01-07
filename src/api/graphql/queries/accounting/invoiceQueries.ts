@@ -174,6 +174,7 @@ const invoiceQueries = {
           totalAmount
           sellerOrganizationId
           buyerOrganizationId
+          buyerUserId
           paymentStatus
           emittedDate
           dueDate
