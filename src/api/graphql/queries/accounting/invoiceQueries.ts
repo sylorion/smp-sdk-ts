@@ -134,7 +134,6 @@ const invoiceQueries = {
           totalAmount
           sellerOrganizationId
           buyerOrganizationId
-          buyerUserId
           paymentStatus
           emittedDate
           dueDate
@@ -174,7 +173,6 @@ const invoiceQueries = {
           totalAmount
           sellerOrganizationId
           buyerOrganizationId
-          buyerUserId
           paymentStatus
           emittedDate
           dueDate
@@ -213,7 +211,6 @@ const invoiceQueries = {
           totalAmount
           sellerOrganizationId
           buyerOrganizationId
-          buyerUserId
           paymentStatus
           emittedDate
           dueDate
@@ -249,7 +246,6 @@ const invoiceQueries = {
           totalAmount
           sellerOrganizationId
           buyerOrganizationId
-          buyerUserId
           paymentStatus
           emittedDate
           dueDate
@@ -285,7 +281,6 @@ const invoiceQueries = {
           totalAmount
           sellerOrganizationId
           buyerOrganizationId
-          buyerUserId
           paymentStatus
           emittedDate
           dueDate
