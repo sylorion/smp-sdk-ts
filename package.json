@@ -53,6 +53,7 @@
     "axios": "^1.7.5",
     "intl-messageformat": "^10.5.14",
     "graphql": "^16.8.1",
+    "graphql-request": "^6.1.0",
     "graphql-tag": "^2.12.6"
   }
 }
