@@ -120,6 +120,15 @@ export class Invoice {
   }
 
   /**
+   * Updates an existing invoice
+   */
+  async update(invoiceId: string, data: any): Promise<InvoiceResponse> {
+    const mutation = invoiceMutations.UPDATE_INVOICE;
+    const response = await this.client.mutate<{ updateInvoice: InvoiceResponse }>(mutation, { invoiceId, input: data });
+    return response.updateInvoice;
+  }
+
+  /**
    * Updates the download status of an invoice
    */
   async updateDownloadStatus(invoiceId: string, data: UpdateInvoiceDownloadStatusInput): Promise<InvoiceResponse> {
