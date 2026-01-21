@@ -34,6 +34,10 @@ export interface CreateWalletInput {
 
 export interface DepositInput {
   walletId: string;
+  /**
+   * Monetary amount in minor units (e.g. cents for EUR/USD/GBP).
+   * For XAF, this is the smallest currency unit (no decimals).
+   */
   amount: number;
   currency: string;
   convertToTokens?: boolean;
@@ -43,6 +47,10 @@ export interface DepositInput {
 
 export interface WithdrawInput {
   walletId: string;
+  /**
+   * Monetary amount in minor units (e.g. cents for EUR/USD/GBP).
+   * For XAF, this is the smallest currency unit (no decimals).
+   */
   amount: number;
   currency: string;
   metadata?: string;
@@ -50,6 +58,10 @@ export interface WithdrawInput {
 
 export interface ConvertToTokensInput {
   walletId: string;
+  /**
+   * Monetary amount in minor units (e.g. cents for EUR/USD/GBP).
+   * For XAF, this is the smallest currency unit (no decimals).
+   */
   amount: number;
   currency: string;
   reason?: string;
@@ -65,6 +77,10 @@ export interface ConvertTokensToMoneyInput {
 
 export interface PayWithWalletInput {
   walletId: string;
+  /**
+   * Monetary amount in minor units (e.g. cents for EUR/USD/GBP).
+   * For XAF, this is the smallest currency unit (no decimals).
+   */
   amount: number;
   currency: string;
   serviceId: string;
@@ -76,6 +92,10 @@ export interface PayWithWalletInput {
 
 export interface AddRevenueInput {
   walletId: string;
+  /**
+   * Monetary amount in minor units (e.g. cents for EUR/USD/GBP).
+   * For XAF, this is the smallest currency unit (no decimals).
+   */
   amount: number;
   currency: string;
   serviceId: string;
@@ -88,6 +108,10 @@ export interface AddRevenueInput {
 
 export interface BankWithdrawInput {
   walletId: string;
+  /**
+   * Monetary amount in minor units (e.g. cents for EUR/USD/GBP).
+   * For XAF, this is the smallest currency unit (no decimals).
+   */
   amount: number;
   currency: string;
   destinationIban: string;
@@ -98,6 +122,10 @@ export interface BankWithdrawInput {
 export interface TransferInput {
   sourceWalletId: string;
   destinationWalletId: string;
+  /**
+   * Monetary amount in minor units (e.g. cents for EUR/USD/GBP).
+   * For XAF, this is the smallest currency unit (no decimals).
+   */
   amount: number;
   currency: string;
   metadata?: string;

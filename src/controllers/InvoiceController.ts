@@ -110,6 +110,8 @@ export class Invoice {
     paymentStatus?: string;
     notes?: string;
     transactionData?: any;
+    thirdPartyFees?: number;
+    servicesFees?: number;
     // disclaimers?: string;
     paymentTerms?: string;
     profile?: string;

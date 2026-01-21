@@ -44,6 +44,14 @@ export class Wallet {
     this.client = client;
   }
 
+  private assertIntegerMinorUnits(params: { amount: number; currency: string; operation: string }) {
+    const { amount, currency, operation } = params
+    if (Number.isInteger(amount)) return
+    throw new Error(
+      `[Wallet.${operation}] amount must be an integer in minor units (cents). Received ${amount} (${currency})`
+    )
+  }
+
   /**
    * Creates a new wallet
    */
@@ -57,6 +65,7 @@ export class Wallet {
    * Deposits money into a wallet
    */
   async deposit(data: DepositInput): Promise<WalletEntity> {
+    this.assertIntegerMinorUnits({ amount: data.amount, currency: data.currency, operation: 'deposit' })
     const query = walletMutations.DEPOSIT;
     const response = await this.client.mutate<DepositResponse>(query, { data });
     return response.deposit;
@@ -66,6 +75,7 @@ export class Wallet {
    * Withdraws money from a wallet
    */
   async withdraw(data: WithdrawInput): Promise<WalletEntity> {
+    this.assertIntegerMinorUnits({ amount: data.amount, currency: data.currency, operation: 'withdraw' })
     const query = walletMutations.WITHDRAW;
     const response = await this.client.mutate<WithdrawResponse>(query, { data });
     return response.withdraw;
@@ -75,6 +85,7 @@ export class Wallet {
    * Converts money to tokens
    */
   async convertToTokens(data: ConvertToTokensInput): Promise<WalletEntity> {
+    this.assertIntegerMinorUnits({ amount: data.amount, currency: data.currency, operation: 'convertToTokens' })
     const query = walletMutations.CONVERT_TO_TOKENS;
     const response = await this.client.mutate<ConvertToTokensResponse>(query, { data });
     return response.convertToTokens;
@@ -93,6 +104,7 @@ export class Wallet {
    * Pays for a service using wallet funds
    */
   async payWithWallet(data: PayWithWalletInput): Promise<WalletEntity> {
+    this.assertIntegerMinorUnits({ amount: data.amount, currency: data.currency, operation: 'payWithWallet' })
     const query = walletMutations.PAY_WITH_WALLET;
     const response = await this.client.mutate<PayWithWalletResponse>(query, { data });
     return response.payWithWallet;
@@ -102,6 +114,7 @@ export class Wallet {
    * Adds revenue to a wallet
    */
   async addRevenue(data: AddRevenueInput): Promise<WalletEntity> {
+    this.assertIntegerMinorUnits({ amount: data.amount, currency: data.currency, operation: 'addRevenue' })
     const query = walletMutations.ADD_REVENUE;
     const response = await this.client.mutate<AddRevenueResponse>(query, { data });
     return response.addRevenue;
@@ -111,6 +124,7 @@ export class Wallet {
    * Withdraws money to a bank account
    */
   async bankWithdraw(data: BankWithdrawInput): Promise<WalletEntity> {
+    this.assertIntegerMinorUnits({ amount: data.amount, currency: data.currency, operation: 'bankWithdraw' })
     const query = walletMutations.BANK_WITHDRAW;
     const response = await this.client.mutate<BankWithdrawResponse>(query, { data });
     return response.bankWithdraw;
@@ -120,6 +134,7 @@ export class Wallet {
    * Transfers money between wallets
    */
   async transfer(data: TransferInput): Promise<TransferResponse> {
+    this.assertIntegerMinorUnits({ amount: data.amount, currency: data.currency, operation: 'transfer' })
     const query = walletMutations.TRANSFER;
     const response = await this.client.mutate<TransferMutationResponse>(query, { data });
     return response.transfer;
@@ -254,6 +269,7 @@ export class Wallet {
       metadata?: string;
     }
   ): Promise<WalletEntity> {
+    this.assertIntegerMinorUnits({ amount, currency, operation: 'depositWithTokenConversion' })
     const data: DepositInput = {
       walletId,
       amount,

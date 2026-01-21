@@ -168,7 +168,7 @@ export class Organization {
   async list(pagination?: any, sort?: any, filter?: any): Promise<Organization[]> {
     const query = organizationQueries.GET_ORGANIZATIONS;
     const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as { organizations: Organization[]  };
+    const response = await this.client.query(query, variables) as { organizations: Organization[] };
     return response.organizations;
   }
 
@@ -178,7 +178,7 @@ export class Organization {
   async getById(organizationID: string): Promise<Organization> {
     const query = organizationQueries.GET_ORGANIZATION_BY_ID;
     const variables = { organizationID };
-    const response = await this.client.query(query, variables) as { organization: Organization  };
+    const response = await this.client.query(query, variables) as { organization: Organization };
     return response.organization;
   }
 
