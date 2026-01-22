@@ -97,8 +97,8 @@ export const MUTATION_AUTH_LOGOUT_APP = /* GraphQL */ `
 `;
 
 export const MUTATION_CREATE_USER = /* GraphQL */ `
-  mutation Signup($input: CreateUserInput!) {
-    signup(input: $input) {
+  mutation Signup($input: CreateUserInput!, $affiliateToken: String) {
+    signup(input: $input, affiliateToken: $affiliateToken) {
       userID
       uniqRef
       slug

@@ -47,22 +47,9 @@ export class Signup {
    * @returns Les informations de l'utilisateur créé
    */
   async createUser(input: CreateUserInput, affiliateToken?: string): Promise<CreateUserResponse> {
-    const mutation = `
-            mutation Signup($input: CreateUserInput!, $affiliateToken: String) {
-                signup(input: $input, affiliateToken: $affiliateToken) {
-                    token
-                    user {
-                        userID
-                        username
-                        email
-                        role
-                    }
-                }
-            }
-        `;
     const variables = { input, affiliateToken };
     try {
-      const response = await this.client.mutate(mutation, variables) as { signup: CreateUserResponse };
+      const response = await this.client.mutate(MUTATION_CREATE_USER, variables) as { signup: CreateUserResponse };
       return response.signup;
     } catch (error) {
       console.error('Error in createUser:', error);
