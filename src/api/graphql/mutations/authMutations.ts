@@ -125,7 +125,6 @@ export const MUTATION_FORGOT_PASSWORD = /* GraphQL */ `
     success
     message
     token
-    code
   }
 }
 `;
