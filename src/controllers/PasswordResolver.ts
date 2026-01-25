@@ -10,6 +10,7 @@ export interface ForgotPasswordInput {
 export interface ForgotPasswordResponse {
     message: string;
     success: boolean;
+    token?: string;
 }
 
 export interface ResetPasswordInput {
@@ -40,7 +41,7 @@ export class Password {
         console.log(input);
         const mutation = MUTATION_RESET_PASSWORD;
         console.log(mutation);
-        const variables = { input }; 
+        const variables = { input };
         const response = await this.client.mutate(mutation, variables) as { resetPassword: ResetPasswordResponse };
         return response.resetPassword;
     }

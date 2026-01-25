@@ -124,10 +124,11 @@ export const MUTATION_FORGOT_PASSWORD = /* GraphQL */ `
   forgotPassword(email: $email) {
     success
     message
+    token
     code
   }
 }
-`; 
+`;
 
 export const MUTATION_RESET_PASSWORD = /* GraphQL */ `
 mutation resetPassword($input: ResetPasswordInput!) {
