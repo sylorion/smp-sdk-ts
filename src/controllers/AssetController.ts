@@ -40,9 +40,9 @@ export interface AssetEntity {
   quantity: number;
   stockQuantity?: number;
   maxPerReservation?: number;
-  conflictingAssets?: JSON;
-  applyableAssets?: JSON;
-  details?: JSON;
+  conflictingAssets?: any;
+  applyableAssets?: any;
+  details?: any;
   state: string;
   createdAt: string;
   updatedAt: string;
@@ -114,9 +114,9 @@ export interface CreateAssetInput {
   legalVatPercent?: number;
   quantity: number;
   maxPerReservation?: number;
-  conflictingAssets?: JSON;
-  applyableAssets?: JSON;
-  details?: JSON;
+  conflictingAssets?: any;
+  applyableAssets?: any;
+  details?: any;
   state: string;
 }
 
