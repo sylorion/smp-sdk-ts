@@ -59,7 +59,7 @@ interface CreateServiceInput {
   uptakeForm?: string;
   billingPlan?: string;
   onlineService?: boolean;
-  advancedAttributes?: string; 
+  advancedAttributes?: string;
   poweredByAgent?: boolean; // Indique si le service utilise un agent
   agentConfiguration?: string; // JSON stringifié contenant l'ID de l'agent et son endpoint
   state: string;
@@ -84,7 +84,7 @@ interface UpdateServiceInput {
   uptakeForm?: string;
   billingPlan?: string;
   onlineService?: boolean;
-  advancedAttributes?: string; 
+  advancedAttributes?: string;
   poweredByAgent?: boolean; // Indique si le service utilise un agent
   agentConfiguration?: string; // JSON stringifié contenant l'ID de l'agent et son endpoint
   state?: string;
@@ -155,28 +155,28 @@ export class Service {
   async list(pagination?: any, sort?: any, filter?: any): Promise<ServiceEntity[]> {
     const query = serviceQueries.GET_SERVICES;
     const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as { services: ServiceEntity[]  };
-    return response.services; 
+    const response = await this.client.query(query, variables) as { services: ServiceEntity[] };
+    return response.services;
   }
 
   async getById(serviceID: string): Promise<ServiceEntity> {
     const query = serviceQueries.GET_SERVICE_BY_ID;
     const variables = { serviceID };
-    const response = await this.client.query(query, variables) as { service: ServiceEntity } ;
+    const response = await this.client.query(query, variables) as { service: ServiceEntity };
     return response.service;
   }
 
   async getByAuthorID(authorID: string): Promise<ServiceEntity[]> {
     const query = serviceQueries.GET_SERVICE_BY_AUTHOR_ID;
     const variables = { authorID };
-    const response = await this.client.query(query, variables) as { servicesByUserId: ServiceEntity[]  };
+    const response = await this.client.query(query, variables) as { servicesByUserId: ServiceEntity[] };
     return response.servicesByUserId;
   }
 
   async getByUniqRef(uniqRef: string): Promise<ServiceEntity> {
     const query = serviceQueries.GET_SERVICE_BY_UNIQ_REF;
     const variables = { uniqRef };
-    const response = await this.client.query(query, variables) as  { serviceByUniqRef: ServiceEntity};
+    const response = await this.client.query(query, variables) as { serviceByUniqRef: ServiceEntity };
     return response.serviceByUniqRef;
   }
 
@@ -190,8 +190,8 @@ export class Service {
   async getByIDs(serviceIDs: string[]): Promise<ServiceEntity[]> {
     const query = serviceQueries.GET_SERVICES_BY_IDS;
     const variables = { serviceIDs };
-    const response = await this.client.query(query, variables) as { data: { servicesByIDs: ServiceEntity[] } };
-    return response.data.servicesByIDs;
+    const response = await this.client.query(query, variables) as { servicesByIDs: ServiceEntity[] };
+    return response.servicesByIDs;
   }
 
   async getBySlugs(slugs: string[]): Promise<ServiceEntity[]> {
@@ -204,14 +204,14 @@ export class Service {
   async listByOrganization(input: ListServicesByOrganizationInput): Promise<ServiceEntity[]> {
     const query = serviceQueries.LIST_SERVICES_BY_ORGANIZATION;
     const variables = { input };
-    const response = await this.client.query(query, variables) as  { listServicesByOrganization: ServiceEntity[]  };
+    const response = await this.client.query(query, variables) as { listServicesByOrganization: ServiceEntity[] };
     return response.listServicesByOrganization;
   }
 
   async search(input: SearchServiceInput): Promise<ServiceEntity[]> {
     const query = serviceQueries.SEARCH_SERVICES;
     const variables = { input };
-    const response = await this.client.query(query, variables) as  { searchServices: ServiceEntity[]  };
+    const response = await this.client.query(query, variables) as { searchServices: ServiceEntity[] };
     return response.searchServices;
   }
 
@@ -296,7 +296,7 @@ export class Service {
   async addServiceToFavorites(input: { serviceID: string; userID?: string }): Promise<ServiceToFavorites> {
     const mutation = serviceMutations.ADD_SERVICE_TO_FAVORITES;
     const variables = { input };
-    const response = await this.client.mutate(mutation, variables) as  { addServiceToFavorites: ServiceToFavorites  };
+    const response = await this.client.mutate(mutation, variables) as { addServiceToFavorites: ServiceToFavorites };
     return response.addServiceToFavorites;
   }
 
