@@ -129,9 +129,9 @@ export interface UpdateAssetInput {
   legalVatPercent?: number;
   quantity?: number;
   maxPerReservation?: number;
-  conflictingAssets?: string;
-  applyableAssets?: string;
-  details?: string;
+  conflictingAssets?: any;
+  applyableAssets?: any;
+  details?: any;
   state?: string;
 }
 
