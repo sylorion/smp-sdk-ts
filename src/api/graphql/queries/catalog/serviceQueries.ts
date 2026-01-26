@@ -151,7 +151,7 @@ const serviceQueries = {
     }
   `,
   GET_SERVICES_BY_IDS: `
-    query GetServicesByIDs($serviceIDs: [String!]!) {
+    query GetServicesByIDs($serviceIDs: [ID!]!) {
       servicesByIDs(serviceIDs: $serviceIDs) {
         serviceID
         uniqRef
