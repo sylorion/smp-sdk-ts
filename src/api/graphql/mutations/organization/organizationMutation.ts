@@ -157,6 +157,12 @@ export const organizationMutations = {
       inviteUserToOrganization(input: $input) {
         success
         message
+        token
+        email
+        organizationID
+        organizationName
+        firstName
+        lastName
       }
     }
   `,

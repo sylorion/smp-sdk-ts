@@ -1,6 +1,6 @@
 import { APIClient } from '../api/APIClient';
 import { organizationMutations } from './../api/graphql/mutations/organization/organizationMutation';
-import {MUTATION_SIGNUP_AFTER_INVITATION} from './../api/graphql/mutations/authMutations'
+import { MUTATION_SIGNUP_AFTER_INVITATION } from './../api/graphql/mutations/authMutations'
 import { organizationQueries } from '../api/graphql/queries/organization/organizationQueries';
 
 
@@ -9,129 +9,135 @@ import { organizationQueries } from '../api/graphql/queries/organization/organiz
 
 // Types des réponses
 export interface AddUserToOrganizationResponse {
-    success: boolean;
-    message: string;
-  }
-  
-  export interface InvitationResponse {
-    success: boolean;
-    message: string;
-    email: string;
-    organizationID: string;
-    userExists: boolean;
-    userID: string | null;
-    firstName?: string;
-    lastName?: string;
-  }
-  
-  export interface CreateUserOrganizationResponse {
-    userOrganizationID: string;
-    uniqRef: string;
-    slug: string;
-    authorID: string;
-    legend: string;
-    userID: string;
-    roleID: string;
-    organizationID: string;
-    state: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt?: string;
-  }
-  
-  export interface SignupAfterInvitationResponse {
-    username: string;
-    userID: string;
-    email: string;
-    deletedAt?: string;
-    profileID: string;
-    firstName?: string;
-    lastName?: string;
-    organizationName?: string;
-    state: string;
-  }
-  
-  // Types des inputs
-  export interface InviteUserToOrganizationInput {
-    email: string;
-    organizationID: string;
-    message?: string;
-    firstName?: string;
-    lastName?: string;
-  }
-  
-  export interface CreateUserOrganizationInput {
-    userID: string;
-    organizationID: string;
-    roleID: string;
-  }
-  
-  export interface VerifyInvitationTokenInput {
-    token: string;
-  }
-  
-  export interface CreateUserInput {
-    username: string;
-    userKind: string;
-    twoFactorEnabled?: boolean | null;
-    state: string;
-    profileID?: string | null;
-    plan?: string | null;
-    password: string;
-    email: string;
-    rsaPublicKey?: string;
-  }
+  success: boolean;
+  message: string;
+  token?: string;
+  email?: string;
+  organizationID?: string;
+  organizationName?: string;
+  firstName?: string;
+  lastName?: string;
+}
 
-  /** 
-   * The `OrganizationMember` interface represents a member of an organization.
- */
-export  interface OrganizationMember {
-    userID: string;
-    role: string;
-    username: string;
-    email: string;
-    name: string;
-    lastname: string;
-    joinedAt: string;
-    profilePicture?: string;
-  }
+export interface InvitationResponse {
+  success: boolean;
+  message: string;
+  email: string;
+  organizationID: string;
+  userExists: boolean;
+  userID: string | null;
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface CreateUserOrganizationResponse {
+  userOrganizationID: string;
+  uniqRef: string;
+  slug: string;
+  authorID: string;
+  legend: string;
+  userID: string;
+  roleID: string;
+  organizationID: string;
+  state: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
+}
+
+export interface SignupAfterInvitationResponse {
+  username: string;
+  userID: string;
+  email: string;
+  deletedAt?: string;
+  profileID: string;
+  firstName?: string;
+  lastName?: string;
+  organizationName?: string;
+  state: string;
+}
+
+// Types des inputs
+export interface InviteUserToOrganizationInput {
+  email: string;
+  organizationID: string;
+  message?: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface CreateUserOrganizationInput {
+  userID: string;
+  organizationID: string;
+  roleID: string;
+}
+
+export interface VerifyInvitationTokenInput {
+  token: string;
+}
+
+export interface CreateUserInput {
+  username: string;
+  userKind: string;
+  twoFactorEnabled?: boolean | null;
+  state: string;
+  profileID?: string | null;
+  plan?: string | null;
+  password: string;
+  email: string;
+  rsaPublicKey?: string;
+}
+
+/** 
+ * The `OrganizationMember` interface represents a member of an organization.
+*/
+export interface OrganizationMember {
+  userID: string;
+  role: string;
+  username: string;
+  email: string;
+  name: string;
+  lastname: string;
+  joinedAt: string;
+  profilePicture?: string;
+}
 /**
  * The `OrganizationMembers` interface represents the response of the `listOrganizationMembers` query.
  */
-  export interface OrganizationMembers {
-    members: OrganizationMember[];
-    totalMembers: number; 
-  }
+export interface OrganizationMembers {
+  members: OrganizationMember[];
+  totalMembers: number;
+}
 
-  export interface UpdateUserRoleInOrganizationInput {
-    organizationID: string;
-    userID: string;
-    newRoleID: string; 
-  }
+export interface UpdateUserRoleInOrganizationInput {
+  organizationID: string;
+  userID: string;
+  newRoleID: string;
+}
 
-  export interface UpdateUserRoleInOrganizationResponse {
-    success: boolean;
-    message: string;
-  }
+export interface UpdateUserRoleInOrganizationResponse {
+  success: boolean;
+  message: string;
+}
 
-  export interface UserRole {
-    roleID: string;
-    roleName: string;
-  }
-  
-  export interface OrganizationMedia {
-    mediaID: string;
-    url: string;
-    state: string;
-    originalName: string;
-  }
-  
-  export interface OrganizationsByUserResponse {
-    organizationID: string;
-    organizationName: string;
-    organizationMedia: OrganizationMedia[];
-    userRole: UserRole;
-  }
+export interface UserRole {
+  roleID: string;
+  roleName: string;
+}
+
+export interface OrganizationMedia {
+  mediaID: string;
+  url: string;
+  state: string;
+  originalName: string;
+}
+
+export interface OrganizationsByUserResponse {
+  organizationID: string;
+  organizationName: string;
+  organizationMedia: OrganizationMedia[];
+  userRole: UserRole;
+}
 /**
  * The `MemberOrganization` class manages member-organization-related requests within the application.
  */
@@ -163,7 +169,7 @@ export class ManageOrganization {
     const response = await this.client.mutate(mutation, variables) as { addUserToOrganization: AddUserToOrganizationResponse };
     return response.addUserToOrganization;
   }
-  
+
   /**
    * Verifies an invitation token.
    */
@@ -183,7 +189,7 @@ export class ManageOrganization {
     const response = await this.client.mutate(mutation, variables) as { signupAfterInvitation: SignupAfterInvitationResponse };
     return response.signupAfterInvitation;
   }
- 
+
   async updateUserRoleInOrganization(input: UpdateUserRoleInOrganizationInput): Promise<UpdateUserRoleInOrganizationResponse> {
     const mutation = organizationMutations.UPDATE_USER_ROLE_IN_ORGANIZATION;
     const variables = { input };
@@ -215,7 +221,7 @@ export class ManageOrganization {
     return response.addUserToOrganization;
   }
 
-    // ========================== QUERIES =============================================================
+  // ========================== QUERIES =============================================================
 
   /** 
    * Lists the members of an organization.
@@ -225,7 +231,7 @@ export class ManageOrganization {
   async members(organizationId: string): Promise<OrganizationMembers> {
     const query = organizationQueries.GET_ORGANIZATION_MEMBERS;
     const variables = { organizationId };
-    const response = await this.client.query(query, variables) as { listOrganizationMembers: OrganizationMembers  };
+    const response = await this.client.query(query, variables) as { listOrganizationMembers: OrganizationMembers };
     return response.listOrganizationMembers;
   }
 
