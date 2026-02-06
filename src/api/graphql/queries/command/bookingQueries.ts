@@ -234,6 +234,7 @@ const bookingQueries = {
         minBookingDuration
         maxBookingDuration
         dateRangeBookingAllowed
+        advanceBookingLimit
         createdAt
         updatedAt
         deletedAt
@@ -254,6 +255,7 @@ const bookingQueries = {
         minBookingDuration
         maxBookingDuration
         dateRangeBookingAllowed
+        advanceBookingLimit
         createdAt
         updatedAt
         deletedAt
@@ -274,6 +276,7 @@ const bookingQueries = {
         minBookingDuration
         maxBookingDuration
         dateRangeBookingAllowed
+        advanceBookingLimit
         createdAt
         updatedAt
         deletedAt

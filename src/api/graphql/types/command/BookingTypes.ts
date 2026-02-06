@@ -31,17 +31,17 @@ export interface Booking {
   availabilityId: string;
   userId?: string; // Peut être null pour les utilisateurs non connectés
   status: BookingStatus;
-  
+
   // NOUVEAUX CHAMPS pour l'autodétermination des créneaux
   weeklyAvailabilityId?: string;
   slotDate?: Date;
   slotStartTime?: number;
   slotEndTime?: number;
   slotDuration?: number;
-  
+
   // Détails du client en JSON
   customerDetails?: any;
-  
+
   createdAt: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -136,6 +136,7 @@ export interface BookingConfiguration {
   minBookingDuration: number;
   maxBookingDuration: number;
   dateRangeBookingAllowed: boolean;
+  advanceBookingLimit?: number; // NOUVEAU
   createdAt: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -143,7 +144,8 @@ export interface BookingConfiguration {
 
 export enum BookingMode {
   TIME_SLOT = 'TIME_SLOT',
-  DATE_RANGE = 'DATE_RANGE'
+  DATE_RANGE = 'DATE_RANGE',
+  CONTINUOUS = 'CONTINUOUS' // NOUVEAU
 }
 
 export enum ServiceType {
@@ -170,14 +172,14 @@ export interface CreateBookingInput {
   availabilityId?: string; // Maintenant optionnel pour les bookings sur disponibilité hebdomadaire
   userId?: string; // Peut être null pour les utilisateurs non connectés
   serviceId: string;
-  
+
   // NOUVEAUX CHAMPS pour l'autodétermination des créneaux
   weeklyAvailabilityId?: string;
   slotDate?: Date;
   slotStartTime?: number;
   slotEndTime?: number;
   slotDuration?: number;
-  
+
   // Détails du client en JSON
   customerDetails?: any;
 }
@@ -260,6 +262,7 @@ export interface CreateBookingConfigurationInput {
   minBookingDuration: number;
   maxBookingDuration: number;
   dateRangeBookingAllowed: boolean;
+  advanceBookingLimit?: number; // NOUVEAU
 }
 
 export interface CreateServiceTypeBookingInput {
@@ -280,6 +283,7 @@ export interface UpdateBookingConfigurationInput {
   minBookingDuration?: number;
   maxBookingDuration?: number;
   dateRangeBookingAllowed?: boolean;
+  advanceBookingLimit?: number; // NOUVEAU
 }
 
 // NOUVELLE INTERFACE pour les données du calendrier

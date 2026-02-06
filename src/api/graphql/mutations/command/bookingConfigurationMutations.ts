@@ -12,6 +12,7 @@ const bookingConfigurationMutations = {
         minBookingDuration
         maxBookingDuration
         dateRangeBookingAllowed
+        advanceBookingLimit
         createdAt
         updatedAt
         deletedAt
@@ -32,6 +33,7 @@ const bookingConfigurationMutations = {
         minBookingDuration
         maxBookingDuration
         dateRangeBookingAllowed
+        advanceBookingLimit
         createdAt
         updatedAt
         deletedAt
@@ -52,6 +54,7 @@ const bookingConfigurationMutations = {
         minBookingDuration
         maxBookingDuration
         dateRangeBookingAllowed
+        advanceBookingLimit
         createdAt
         updatedAt
         deletedAt
