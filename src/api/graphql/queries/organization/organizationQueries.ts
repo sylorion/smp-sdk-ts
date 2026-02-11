@@ -184,8 +184,8 @@ const organizationQueries = {
 
   // QUERY TO GET AN ORGANIZATION BY ITS SLUG
   GET_ORGANIZATION_BY_SLUG: `
-    query GetOrganizationBySlug($slug: String!) {
-      organizationBySlug(slug: $slug) {
+    query GetOrganizationBySlug($Slug: String!) {
+      organizationBySlug(Slug: $Slug) {
         organizationID
         uniqRef
         slug
@@ -272,7 +272,7 @@ const organizationQueries = {
     }
   `,
 
-   // QUERY TO GET A LIST OF ORGANIZATION MEMBERS
+  // QUERY TO GET A LIST OF ORGANIZATION MEMBERS
   GET_ORGANIZATION_MEMBERS: `
     query ListOrganizationMembers($organizationId: ID!) {
       listOrganizationMembers(organizationID: $organizationId) {
@@ -292,7 +292,7 @@ const organizationQueries = {
   `,
 
   // QUERY TO GET A LIST OF ORGANIZATION MEMBERS
-  GET_USER_ORGANIZATIONS:`
+  GET_USER_ORGANIZATIONS: `
     query GetUserOrganizations($userId: ID!) {
       getUserOrganizations(userID: $userId) {
         organizationID
