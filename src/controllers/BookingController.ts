@@ -1,5 +1,5 @@
 import { APIClient } from '../api/APIClient.js';
-import { 
+import {
   EstimateRequest,
   Booking,
   Availability,
@@ -11,6 +11,7 @@ import {
   CreateBookingInput,
   CreateAvailabilityInput,
   UpdateAvailabilityInput,
+  UpdateBookingInput,
   CreateWeeklyAvailabilityInput,
   CreateWeeklyAvailabilityBatchInput,
   CreateDailySlotsInput,
@@ -19,15 +20,15 @@ import {
   AvailableSlotsInput,
   SearchDailySlotsInput
 } from '../api/graphql/types/command/BookingTypes.js';
-import { 
-  bookingMutations 
+import {
+  bookingMutations
 } from '../api/graphql/mutations/command/bookingMutations.js';
-import { 
-  bookingQueries 
+import {
+  bookingQueries
 } from '../api/graphql/queries/command/bookingQueries.js';
 
 export class BookingController {
-  constructor(private apiClient: APIClient) {}
+  constructor(private apiClient: APIClient) { }
 
   // ===== DEMANDES DE DEVIS =====
 
@@ -36,7 +37,7 @@ export class BookingController {
    */
   async createEstimateRequest(input: CreateEstimateRequestInput): Promise<EstimateRequest> {
     const response = await this.apiClient.mutate(
-      bookingMutations.CREATE_ESTIMATE_REQUEST, 
+      bookingMutations.CREATE_ESTIMATE_REQUEST,
       { input }
     ) as { createEstimateRequest: EstimateRequest };
     return response.createEstimateRequest;
@@ -47,7 +48,7 @@ export class BookingController {
    */
   async getEstimateRequests(serviceId: string, userId?: string): Promise<EstimateRequest[]> {
     const response = await this.apiClient.query(
-      bookingQueries.GET_ESTIMATE_REQUESTS, 
+      bookingQueries.GET_ESTIMATE_REQUESTS,
       { serviceId, userId }
     ) as { estimateRequests: EstimateRequest[] };
     return response.estimateRequests;
@@ -58,7 +59,7 @@ export class BookingController {
    */
   async getEstimateRequest(estimateRequestId: string): Promise<EstimateRequest | null> {
     const response = await this.apiClient.query(
-      bookingQueries.GET_ESTIMATE_REQUEST, 
+      bookingQueries.GET_ESTIMATE_REQUEST,
       { estimateRequestId }
     ) as { estimateRequest: EstimateRequest | null };
     return response.estimateRequest;
@@ -71,7 +72,7 @@ export class BookingController {
    */
   async createBooking(input: CreateBookingInput): Promise<Booking> {
     const response = await this.apiClient.mutate(
-      bookingMutations.CREATE_BOOKING, 
+      bookingMutations.CREATE_BOOKING,
       { input }
     ) as { createBooking: Booking };
     return response.createBooking;
@@ -82,7 +83,7 @@ export class BookingController {
    */
   async getBookingsByService(serviceId: string): Promise<Booking[]> {
     const response = await this.apiClient.query(
-      bookingQueries.GET_BOOKINGS_BY_SERVICE, 
+      bookingQueries.GET_BOOKINGS_BY_SERVICE,
       { serviceId }
     ) as { bookingsByService: Booking[] };
     return response.bookingsByService;
@@ -93,7 +94,7 @@ export class BookingController {
    */
   async getBookingsByUser(userId: string): Promise<Booking[]> {
     const response = await this.apiClient.query(
-      bookingQueries.GET_BOOKINGS_BY_USER, 
+      bookingQueries.GET_BOOKINGS_BY_USER,
       { userId }
     ) as { bookingsByUser: Booking[] };
     return response.bookingsByUser;
@@ -104,7 +105,7 @@ export class BookingController {
    */
   async createBookingWithSlot(input: CreateBookingInput): Promise<Booking> {
     const response = await this.apiClient.mutate(
-      bookingMutations.CREATE_BOOKING_WITH_SLOT, 
+      bookingMutations.CREATE_BOOKING_WITH_SLOT,
       { input }
     ) as { createBooking: Booking };
     return response.createBooking;
@@ -120,7 +121,7 @@ export class BookingController {
     calendarSlots: AvailableSlot[];
   }> {
     const response = await this.apiClient.query(
-      bookingQueries.GET_CALENDAR_DATA, 
+      bookingQueries.GET_CALENDAR_DATA,
       { serviceId, startDate, endDate }
     ) as {
       weeklyAvailabilities: WeeklyAvailability[];
@@ -136,10 +137,32 @@ export class BookingController {
    */
   async getBookingsByAvailability(availabilityId: string): Promise<Booking[]> {
     const response = await this.apiClient.query(
-      bookingQueries.GET_BOOKINGS_BY_AVAILABILITY, 
+      bookingQueries.GET_BOOKINGS_BY_AVAILABILITY,
       { availabilityId }
     ) as { bookingsByAvailability: Booking[] };
     return response.bookingsByAvailability;
+  }
+
+  /**
+   * Annuler une réservation
+   */
+  async cancelBooking(bookingId: string, message?: string): Promise<Booking> {
+    const response = await this.apiClient.mutate(
+      bookingMutations.CANCEL_BOOKING,
+      { bookingId, message }
+    ) as { cancelBooking: Booking };
+    return response.cancelBooking;
+  }
+
+  /**
+   * Mettre à jour une réservation
+   */
+  async updateBooking(input: UpdateBookingInput): Promise<Booking> {
+    const response = await this.apiClient.mutate(
+      bookingMutations.UPDATE_BOOKING,
+      { input }
+    ) as { updateBooking: Booking };
+    return response.updateBooking;
   }
 
   // ===== DISPONIBILITÉS =====
@@ -149,7 +172,7 @@ export class BookingController {
    */
   async createAvailability(input: CreateAvailabilityInput): Promise<Availability> {
     const response = await this.apiClient.mutate(
-      bookingMutations.CREATE_AVAILABILITY, 
+      bookingMutations.CREATE_AVAILABILITY,
       { input }
     ) as { createAvailability: Availability };
     return response.createAvailability;
@@ -160,7 +183,7 @@ export class BookingController {
    */
   async updateAvailability(id: string, input: UpdateAvailabilityInput): Promise<Availability> {
     const response = await this.apiClient.mutate(
-      bookingMutations.UPDATE_AVAILABILITY, 
+      bookingMutations.UPDATE_AVAILABILITY,
       { id, input }
     ) as { updateAvailability: Availability };
     return response.updateAvailability;
@@ -171,7 +194,7 @@ export class BookingController {
    */
   async cancelAvailability(id: string): Promise<Availability> {
     const response = await this.apiClient.mutate(
-      bookingMutations.CANCEL_AVAILABILITY, 
+      bookingMutations.CANCEL_AVAILABILITY,
       { id }
     ) as { cancelAvailability: Availability };
     return response.cancelAvailability;
@@ -182,7 +205,7 @@ export class BookingController {
    */
   async searchAvailabilities(input: SearchAvailabilityInput): Promise<Availability[]> {
     const response = await this.apiClient.query(
-      bookingQueries.SEARCH_AVAILABILITIES, 
+      bookingQueries.SEARCH_AVAILABILITIES,
       { input }
     ) as { searchAvailabilities: Availability[] };
     return response.searchAvailabilities;
@@ -195,7 +218,7 @@ export class BookingController {
    */
   async createWeeklyAvailability(input: CreateWeeklyAvailabilityInput): Promise<WeeklyAvailability> {
     const response = await this.apiClient.mutate(
-      bookingMutations.CREATE_WEEKLY_AVAILABILITY, 
+      bookingMutations.CREATE_WEEKLY_AVAILABILITY,
       { input }
     ) as { createWeeklyAvailability: WeeklyAvailability };
     return response.createWeeklyAvailability;
@@ -206,7 +229,7 @@ export class BookingController {
    */
   async createWeeklyAvailabilityBatch(input: CreateWeeklyAvailabilityBatchInput): Promise<WeeklyAvailability[]> {
     const response = await this.apiClient.mutate(
-      bookingMutations.CREATE_WEEKLY_AVAILABILITY_BATCH, 
+      bookingMutations.CREATE_WEEKLY_AVAILABILITY_BATCH,
       { input }
     ) as { createWeeklyAvailabilityBatch: WeeklyAvailability[] };
     return response.createWeeklyAvailabilityBatch;
@@ -217,7 +240,7 @@ export class BookingController {
    */
   async getWeeklyAvailabilities(serviceId: string, userId: string): Promise<WeeklyAvailability[]> {
     const response = await this.apiClient.query(
-      bookingQueries.GET_WEEKLY_AVAILABILITIES, 
+      bookingQueries.GET_WEEKLY_AVAILABILITIES,
       { serviceId, userId }
     ) as { weeklyAvailabilities: WeeklyAvailability[] };
     return response.weeklyAvailabilities;
@@ -230,7 +253,7 @@ export class BookingController {
    */
   async createDailySlots(input: CreateDailySlotsInput): Promise<DailySlot[]> {
     const response = await this.apiClient.mutate(
-      bookingMutations.CREATE_DAILY_SLOTS, 
+      bookingMutations.CREATE_DAILY_SLOTS,
       { input }
     ) as { createDailySlots: DailySlot[] };
     return response.createDailySlots;
@@ -241,7 +264,7 @@ export class BookingController {
    */
   async getDailySlots(input: SearchDailySlotsInput): Promise<DailySlot[]> {
     const response = await this.apiClient.query(
-      bookingQueries.GET_DAILY_SLOTS, 
+      bookingQueries.GET_DAILY_SLOTS,
       { input }
     ) as { dailySlots: DailySlot[] };
     return response.dailySlots;
@@ -254,7 +277,7 @@ export class BookingController {
    */
   async getAvailableSlots(input: AvailableSlotsInput): Promise<AvailableSlot[]> {
     const response = await this.apiClient.query(
-      bookingQueries.GET_AVAILABLE_SLOTS, 
+      bookingQueries.GET_AVAILABLE_SLOTS,
       { input }
     ) as { availableSlots: AvailableSlot[] };
     return response.availableSlots;
@@ -264,13 +287,13 @@ export class BookingController {
    * Récupérer les créneaux du calendrier
    */
   async getCalendarSlots(
-    serviceId: string, 
-    startDate: Date, 
-    endDate: Date, 
+    serviceId: string,
+    startDate: Date,
+    endDate: Date,
     userId?: string
   ): Promise<AvailableSlot[]> {
     const response = await this.apiClient.query(
-      bookingQueries.GET_CALENDAR_SLOTS, 
+      bookingQueries.GET_CALENDAR_SLOTS,
       { serviceId, startDate, endDate, userId }
     ) as { calendarSlots: AvailableSlot[] };
     return response.calendarSlots;
@@ -283,7 +306,7 @@ export class BookingController {
    */
   async createAvailabilityException(input: CreateAvailabilityExceptionInput): Promise<AvailabilityException> {
     const response = await this.apiClient.mutate(
-      bookingMutations.CREATE_AVAILABILITY_EXCEPTION, 
+      bookingMutations.CREATE_AVAILABILITY_EXCEPTION,
       { input }
     ) as { createAvailabilityException: AvailabilityException };
     return response.createAvailabilityException;
@@ -293,13 +316,13 @@ export class BookingController {
    * Récupérer les exceptions de disponibilité
    */
   async getAvailabilityExceptions(
-    serviceId: string, 
-    userId: string, 
-    startDate: Date, 
+    serviceId: string,
+    userId: string,
+    startDate: Date,
     endDate: Date
   ): Promise<AvailabilityException[]> {
     const response = await this.apiClient.query(
-      bookingQueries.GET_AVAILABILITY_EXCEPTIONS, 
+      bookingQueries.GET_AVAILABILITY_EXCEPTIONS,
       { serviceId, userId, startDate, endDate }
     ) as { availabilityExceptions: AvailabilityException[] };
     return response.availabilityExceptions;
@@ -311,9 +334,9 @@ export class BookingController {
    * Vérifier si un créneau est disponible
    */
   async isSlotAvailable(
-    serviceId: string, 
-    date: Date, 
-    startTime: string, 
+    serviceId: string,
+    date: Date,
+    startTime: string,
     endTime: string
   ): Promise<boolean> {
     const input: AvailableSlotsInput = {
@@ -323,8 +346,8 @@ export class BookingController {
     };
 
     const slots = await this.getAvailableSlots(input);
-    return slots.some(slot => 
-      slot.isAvailable && 
+    return slots.some(slot =>
+      slot.isAvailable &&
       slot.startTime <= new Date(`${date.toISOString().split('T')[0]}T${startTime}`) &&
       slot.endTime >= new Date(`${date.toISOString().split('T')[0]}T${endTime}`)
     );

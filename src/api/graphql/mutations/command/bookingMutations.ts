@@ -187,6 +187,36 @@ const bookingMutations = {
       }
     }
   `,
+  // MUTATION POUR ANNULER UNE RÉSERVATION
+  CANCEL_BOOKING: `
+    mutation CancelBooking($bookingId: String!, $message: String) {
+      cancelBooking(bookingId: $bookingId, message: $message) {
+        bookingId
+        serviceId
+        availabilityId
+        userId
+        status
+        weeklyAvailabilityId
+        slotDate
+        slotStartTime
+        slotEndTime
+        slotDuration
+        customerDetails
+        createdAt
+        updatedAt
+        deletedAt
+      }
+    }
+  `,
+  // MUTATION POUR METTRE À JOUR UNE RÉSERVATION
+  UPDATE_BOOKING: `
+    mutation UpdateBooking($input: UpdateBookingInput!) {
+      updateBooking(input: $input) {
+        bookingId
+        customerDetails
+      }
+    }
+  `,
 };
 
 export { bookingMutations };

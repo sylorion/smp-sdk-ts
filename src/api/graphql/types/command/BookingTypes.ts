@@ -184,6 +184,11 @@ export interface CreateBookingInput {
   customerDetails?: any;
 }
 
+export interface UpdateBookingInput {
+  bookingId: string;
+  customerDetails?: string;
+}
+
 export interface CreateAvailabilityInput {
   providerId: string;
   serviceId: string;
