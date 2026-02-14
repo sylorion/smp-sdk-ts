@@ -7,13 +7,13 @@ import { Persistence } from './config/Persistence.js';
 import { defaultLanguage } from './i18n/languages.js';
 
 // Export types
-export type { 
-  EstimateDetails, 
-  Negotiation, 
-  CreateNegotiationInput, 
+export type {
+  EstimateDetails,
+  Negotiation,
+  CreateNegotiationInput,
   NegotiationResponse,
-  NegotiationStatus 
-} from './types/Estimate';
+  NegotiationStatus
+} from './types/Estimate.js';
 
 export type {
   ContractResponse,
@@ -24,7 +24,7 @@ export type {
   ContractStatus,
   SignerRole,
   SignatureType
-} from './types/Contract';
+} from './types/Contract.js';
 
 // Export booking types
 export type {
@@ -56,11 +56,11 @@ export type {
   AvailableSlotsInput,
   SearchDailySlotsInput,
   AvailabilityStatus
-} from './api/graphql/types/command/BookingTypes';
+} from './api/graphql/types/command/BookingTypes.js';
 
 // Export controllers
-export * from './controllers';
+export * from './controllers/index.js';
 
-export { SMPClient, APIClient, serviceQueries, statusByServices } ;
+export { SMPClient, APIClient, serviceQueries, statusByServices };
 export { Persistence, defaultLanguage, logger };
 export type { SMPClientOptions } from './config/SMPConfig.js';

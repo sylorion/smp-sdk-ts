@@ -1,5 +1,5 @@
 
-export type EventType = "click" | "view" | "purchase" | "scroll" | "form_submit" | "hover" | "section_time_spent" | "inactivity" | "abandon_form_event" | "submission_form_event" | "submit_form_event" ;
+export type EventType = "click" | "view" | "purchase" | "scroll" | "form_submit" | "hover" | "section_time_spent" | "inactivity" | "abandon_form_event" | "submission_form_event" | "submit_form_event";
 
 export type FormField = {
   fieldName: string;
@@ -17,8 +17,8 @@ export type FormAbandonmentEvent = {
 export type FormSubmissionEvent = {
   formId: string;
   fields: FormField[];
-  };
-  
+};
+
 export type FormEvent = FormAbandonmentEvent | FormSubmissionEvent;
 
 export type ScrollCapturedEvent = {
@@ -98,7 +98,7 @@ export type UserHistoryCapturedEvent = {
 };
 
 export type UserContextCapturedEvent = {
-  userId?: string; 
+  userId?: string;
   attributes?: UserAttributes;
   historyEvents?: UserHistoryCapturedEvent;
 };
@@ -199,4 +199,11 @@ export type SMPEvent = {
 };
 
 
-export type CapturedEvent = ScrollCapturedEvent | ButtonClickCapturedEvent | SectionTimeSpentCapturedEvent | InactivityCapturedEvent | VideoEvent | MouseEvent | FormEvent ;
+export type VideoEvent = {
+  elementId: string;
+  action: 'play' | 'pause' | 'end' | 'seek';
+  timestamp: string;
+  metadata?: any;
+};
+
+export type CapturedEvent = ScrollCapturedEvent | ButtonClickCapturedEvent | SectionTimeSpentCapturedEvent | InactivityCapturedEvent | VideoEvent | MouseCapturedEvent | FormEvent;

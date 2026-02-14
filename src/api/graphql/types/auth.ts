@@ -1,89 +1,89 @@
-type ObjectStatus = 
+export type ObjectStatus =
   'offline' |
   'staging' |
-  'awaiting' | 
-  'reviewed' | 
-  'rejected' | 
-  'signaled' | 
-  'online' | 
+  'awaiting' |
+  'reviewed' |
+  'rejected' |
+  'signaled' |
+  'online' |
   'archived'
 
-type LoginResponse = {
+export type LoginResponse = {
   login: LogIn,
 }
 
-type LogIn = {
-  accessToken   : string,
-  refreshToken  : string,
+export type LogIn = {
+  accessToken: string,
+  refreshToken: string,
   refreshValidityDuration: number,
-  accessValidityDuration: number,     
-  user      : UserLoggedIn,
-  message   : string,
-  errors    : [MutationError],
+  accessValidityDuration: number,
+  user: UserLoggedIn,
+  message: string,
+  errors: [MutationError],
 }
 
-type UserLoggedIn = {
-  userID        : number,
-  uniqRef       : string,
-  slug          : string,
-  username      : string,
-  email         : string,
-  plan          : string,
-  profileID?    : number,
-  lastLogin     : Date,
-  loginDuration : number,
-  state         : string,
-  createdAt?     : Date,
-  updatedAt     : Date,
+export type UserLoggedIn = {
+  userID: number,
+  uniqRef: string,
+  slug: string,
+  username: string,
+  email: string,
+  plan: string,
+  profileID?: number,
+  lastLogin: Date,
+  loginDuration: number,
+  state: string,
+  createdAt?: Date,
+  updatedAt: Date,
   twoFactorEnabled: Boolean,
 }
 
-type TokenRefreshResponse = {
+export type TokenRefreshResponse = {
   accessToken: string,
   expiresIn: number,
   message: string,
   errors: [MutationError],
 }
 
-type MutationError = {
-  message : string,
+export type MutationError = {
+  message: string,
 }
 
-type LogoutResponse = {
+export type LogoutResponse = {
   success: boolean,
   message: string,
 }
 
-type AppLoginResponse = {
+export type AppLoginResponse = {
   authenticateApp: AppLogIn,
 }
 
-type AppLogIn = {
-  accessToken   : string,
-  refreshToken  : string,
+export type AppLogIn = {
+  accessToken: string,
+  refreshToken: string,
   refreshValidityDuration: number,
-  accessValidityDuration: number,     
-  app      : AppLoggedIn, 
-  errors    : [MutationError],
+  accessValidityDuration: number,
+  app: AppLoggedIn,
+  errors: [MutationError],
 }
 
-type AppLoggedIn = {
-  applicationID : string,
-  uniqRef       : string,
-  slug          : string,
-  authKey?       : string,
-  authID?        : string,
-  description?   : string,
-  name?          : string,
-  email?         : string,
-  logo?          : string,
-  url?           : string,
-  plan?          : string,
-  isOfficialApp? : Boolean,
-  appConfiguration? : string,
-  developerID?   : number,
-  authorID?      : number,
-  state         : ObjectStatus,
-  createdAt     : Date,
-  updatedAt     : Date,  
+export type AppLoggedIn = {
+  applicationID: string,
+  uniqRef: string,
+  slug: string,
+  authKey?: string,
+  authID?: string,
+  description?: string,
+  name?: string,
+  email?: string,
+  logo?: string,
+  url?: string,
+  plan?: string,
+  isOfficialApp?: Boolean,
+  appConfiguration?: string,
+  developerID?: number,
+  authorID?: number,
+  state: ObjectStatus,
+  createdAt: Date,
+  updatedAt: Date,
 }
