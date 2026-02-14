@@ -1,6 +1,6 @@
-import { APIClient } from '../api/APIClient';
-import { waitingListMutations } from './../api/graphql/mutations/authentication/waitingListMutations';
-import { waitingListQueries } from './../api/graphql/queries/authentication/waitingListQueries';
+import { APIClient } from '../api/APIClient.js';
+import { waitingListMutations } from './../api/graphql/mutations/authentication/waitingListMutations.js';
+import { waitingListQueries } from './../api/graphql/queries/authentication/waitingListQueries.js';
 
 // Types d'entrée pour les mutations de la liste d'attente
 interface WaitingListInput {

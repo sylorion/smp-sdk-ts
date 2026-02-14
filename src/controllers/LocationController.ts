@@ -1,6 +1,6 @@
-import { APIClient } from '../api/APIClient';
-import { placeQueries } from '../api/graphql/queries/location/placeQueries';
-import { placeMutations } from '../api/graphql/mutations/location/placeMutation';
+import { APIClient } from '../api/APIClient.js';
+import { placeQueries } from '../api/graphql/queries/location/placeQueries.js';
+import { placeMutations } from '../api/graphql/mutations/location/placeMutation.js';
 
 // Types des réponses
 export interface Place {

@@ -155,7 +155,6 @@ const bookingQueries = {
       bookingsByService(serviceId: $serviceId) {
         bookingId
         serviceId
-        availabilityId
         userId
         status
         weeklyAvailabilityId
@@ -179,7 +178,6 @@ const bookingQueries = {
       bookingsByUser(userId: $userId) {
         bookingId
         serviceId
-        availabilityId
         userId
         status
         weeklyAvailabilityId
@@ -203,7 +201,6 @@ const bookingQueries = {
       bookingsByAvailability(availabilityId: $availabilityId) {
         bookingId
         serviceId
-        availabilityId
         userId
         status
         weeklyAvailabilityId
@@ -313,7 +310,6 @@ const bookingQueries = {
       bookingsByService(serviceId: $serviceId) {
         bookingId
         serviceId
-        availabilityId
         userId
         status
         weeklyAvailabilityId

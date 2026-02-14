@@ -1,9 +1,9 @@
 // src/api/paymentController.ts
-import { APIClient } from '../api/APIClient';
-import { paymentMutations } from '../api/graphql/mutations/accounting/paymentMutations';
-import { orderQueries } from '../api/graphql/queries/accounting/orderQueries';
-import { transactionQueries } from '../api/graphql/queries/accounting/transactionQueries';
-import { transactionMutations } from '../api/graphql/mutations/accounting/transactionMutations';
+import { APIClient } from '../api/APIClient.js';
+import { paymentMutations } from '../api/graphql/mutations/accounting/paymentMutations.js';
+import { orderQueries } from '../api/graphql/queries/accounting/orderQueries.js';
+import { transactionQueries } from '../api/graphql/queries/accounting/transactionQueries.js';
+import { transactionMutations } from '../api/graphql/mutations/accounting/transactionMutations.js';
 /* -------------------------------------
    Interfaces d'Input et Types de Retour
 ------------------------------------- */

@@ -1,7 +1,7 @@
 // src/api/controllers/Mailing.ts
-import { mailingQueries } from '../api/graphql/queries/notification/mailingQueries';
-import { mailingMutations } from '../api/graphql/mutations/notification/mailingMutations';
-import { APIClient } from '../api/APIClient';
+import { mailingQueries } from '../api/graphql/queries/notification/mailingQueries.js';
+import { mailingMutations } from '../api/graphql/mutations/notification/mailingMutations.js';
+import { APIClient } from '../api/APIClient.js';
 
 //
 // Types des réponses et inputs pour les campagnes

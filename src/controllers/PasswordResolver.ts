@@ -1,7 +1,7 @@
 // smp-sdk-ts/src/forgotpassword/estimate.ts
 
-import { APIClient } from '../api/APIClient';
-import { MUTATION_FORGOT_PASSWORD, MUTATION_RESET_PASSWORD } from '../api/graphql/mutations/authMutations';
+import { APIClient } from '../api/APIClient.js';
+import { MUTATION_FORGOT_PASSWORD, MUTATION_RESET_PASSWORD } from '../api/graphql/mutations/authMutations.js';
 
 export interface ForgotPasswordInput {
     email: string;

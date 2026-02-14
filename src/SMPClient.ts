@@ -1,15 +1,15 @@
-import { APIClient } from "./api/APIClient.js";
-import { AuthTokenManager } from "./auth/AuthTokenManager.js";
-import { ErrorHandler } from "./utils/ErrorHandler.js";
+import { APIClient } from './api/APIClient.js';
+import { AuthTokenManager } from './auth/AuthTokenManager.js';
+import { ErrorHandler } from './utils/ErrorHandler.js';
 import { logger } from './utils/Logger.js';
 import { i18n } from './i18n/index.js';
-import { SMPClientOptions } from "./config/SMPConfig.js";
-import { ConfigManager } from "./config/ConfigManager.js";
-import { Persistence, PersistenceKind } from "./config/Persistence.js";
+import { SMPClientOptions } from './config/SMPConfig.js';
+import { ConfigManager } from './config/ConfigManager.js';
+import { Persistence, PersistenceKind } from './config/Persistence.js';
 import { AxiosRequestConfig } from "axios";
 import { GraphQLClient, ClientError } from 'graphql-request';
-import { Service, Organization, Invoice, Estimate, Contract, SMPPayment, Signup, Password, Profile, Location, ManageOrganization, Asset, ServiceAsset, Mailing, Order, Media, WaitingList, Wallet, BookingController, BookingConfigurationController, EngagementController, TimeSlotController, AffiliateController } from "./controllers/index.js";
-import { LogIn, AppLogIn } from "./api/graphql/types/auth.js";
+import { Service, Organization, Invoice, Estimate, Contract, SMPPayment, Signup, Password, Profile, Location, ManageOrganization, Asset, ServiceAsset, Mailing, Order, Media, WaitingList, Wallet, BookingController, BookingConfigurationController, EngagementController, TimeSlotController, AffiliateController } from './controllers/index.js';
+import { LogIn, AppLogIn } from './api/graphql/types/auth.js';
 export class SMPClient {
   public httpApiClient: APIClient;
   public authTokenManager: AuthTokenManager;

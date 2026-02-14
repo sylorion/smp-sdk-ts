@@ -1,5 +1,5 @@
-import { APIClient } from "../api/APIClient.js";
-import { MUTATION_CREATE_USER } from "../api/graphql/mutations/authMutations.js";
+import { APIClient } from '../api/APIClient.js';
+import { MUTATION_CREATE_USER } from '../api/graphql/mutations/authMutations.js';
 
 // Types d'input pour la création d'utilisateur
 export interface CreateUserInput {

@@ -1,5 +1,5 @@
 
-import { CapturedEvent } from "./types/SMPServicesEventType.js";
+import { CapturedEvent } from './types/SMPServicesEventType.js';
 
 interface TrackingEvent {
   eventType: string;

@@ -1,6 +1,6 @@
 import { EventType, UserContextCapturedEvent, UserAttributes, ContextCapturedEvent, UserHistoryCapturedEvent, DeviceInfoCapturedEvent, NetworkInfoCapturedEvent, PageContextCapturedEvent, SessionCapturedEvent, SMPEvent, CapturedEvent
- } from "./../types/SMPServicesEventType.js";
-import { getDeviceInfo } from "../deviceInfo.js";
+ } from './../types/SMPServicesEventType.js';
+import { getDeviceInfo } from '../deviceInfo.js';
 // Fonction pour récupérer les informations de l'utilisateur
 export function getUserContextCapturedEvent(): UserContextCapturedEvent {
   // Simuler des attributs d'utilisateur

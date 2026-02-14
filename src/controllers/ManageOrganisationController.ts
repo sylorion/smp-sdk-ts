@@ -1,7 +1,7 @@
-import { APIClient } from '../api/APIClient';
-import { organizationMutations } from './../api/graphql/mutations/organization/organizationMutation';
-import { MUTATION_SIGNUP_AFTER_INVITATION } from './../api/graphql/mutations/authMutations'
-import { organizationQueries } from '../api/graphql/queries/organization/organizationQueries';
+import { APIClient } from '../api/APIClient.js';
+import { organizationMutations } from './../api/graphql/mutations/organization/organizationMutation.js';
+import { MUTATION_SIGNUP_AFTER_INVITATION } from './../api/graphql/mutations/authMutations.js'
+import { organizationQueries } from '../api/graphql/queries/organization/organizationQueries.js';
 
 
 

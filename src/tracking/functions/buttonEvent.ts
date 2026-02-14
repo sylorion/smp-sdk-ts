@@ -1,6 +1,6 @@
-import { transmitEvent } from "../trackingBatch.js";
-import { ButtonClickCapturedEvent, SMPEvent } from "./../types/SMPServicesEventType.js";
-import { createSMPEvent } from "./index.js"; // TODO move to the right place ...
+import { transmitEvent } from '../trackingBatch.js';
+import { ButtonClickCapturedEvent, SMPEvent } from './../types/SMPServicesEventType.js';
+import { createSMPEvent } from './index.js'; // TODO move to the right place ...
 
 export function trackButtonClick(elementId: string) {
   const button = document.getElementById(elementId);

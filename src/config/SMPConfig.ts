@@ -1,6 +1,6 @@
 import type { Agent } from "http";
-import { SupportedLang } from "../i18n/languages.js";
-import { PersistenceKind, PersistenceType } from "./Persistence.js";
+import { SupportedLang } from '../i18n/languages.js';
+import { PersistenceKind, PersistenceType } from './Persistence.js';
 
 export interface RateLimitOptions {
   maxRequests: number;  // Nombre maximal de requêtes

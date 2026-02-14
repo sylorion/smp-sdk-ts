@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
 import { GraphQLClient, ClientError } from 'graphql-request'; 
 import { ConfigManager } from '../config/ConfigManager.js';
-import { ErrorHandler } from "../utils/ErrorHandler.js";
+import { ErrorHandler } from '../utils/ErrorHandler.js';
 import { logger } from '../utils/Logger.js';
 
 /**

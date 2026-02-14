@@ -1,13 +1,13 @@
 // smp-sdk-ts/src/estimate/estimate.ts
 
-import { APIClient } from '../api/APIClient';
-import { estimateQueries } from '../api/graphql/queries/accounting/estimateQueries';
+import { APIClient } from '../api/APIClient.js';
+import { estimateQueries } from '../api/graphql/queries/accounting/estimateQueries.js';
 import type { 
   Negotiation, 
   CreateNegotiationInput, 
   NegotiationResponse,
   NegotiationStatus 
-} from '../types/Estimate';
+} from '../types/Estimate.js';
 
 interface EstimateResponse {
   estimateId: string;

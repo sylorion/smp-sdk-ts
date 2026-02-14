@@ -1,5 +1,5 @@
-import { APIClient } from '../api/APIClient';
-import { orderQueries } from '../api/graphql/queries/order/orderQueries';
+import { APIClient } from '../api/APIClient.js';
+import { orderQueries } from '../api/graphql/queries/order/orderQueries.js';
 
 interface OrderResponse {
   orderId: string;

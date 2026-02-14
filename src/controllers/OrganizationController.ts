@@ -1,8 +1,8 @@
-import { APIClient } from '../api/APIClient';
-import { organizationQueries } from '../api/graphql/queries/organization/organizationQueries';
-import { organizationMutations } from '../api/graphql/mutations/organization/organizationMutation';
-import { organizationMediaQueries } from '../api/graphql/queries/organization/organizationMediaQueries';
-import { organizationMediaMutations } from '../api/graphql/mutations/organization/organizationMediaMutations';
+import { APIClient } from '../api/APIClient.js';
+import { organizationQueries } from '../api/graphql/queries/organization/organizationQueries.js';
+import { organizationMutations } from '../api/graphql/mutations/organization/organizationMutation.js';
+import { organizationMediaQueries } from '../api/graphql/queries/organization/organizationMediaQueries.js';
+import { organizationMediaMutations } from '../api/graphql/mutations/organization/organizationMediaMutations.js';
 
 // Types des réponses
 export interface Organization {

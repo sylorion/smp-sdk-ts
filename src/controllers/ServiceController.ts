@@ -1,8 +1,8 @@
-import { APIClient } from '../api/APIClient';
-import { serviceQueries } from '../api/graphql/queries/index';
-import { serviceMutations } from '../api/graphql/mutations/catalog/serviceMutation';
-import { serviceMediaQueries } from '../api/graphql/queries/catalog/serviceMediaQueries';
-import { serviceMediaMutations } from '../api/graphql/mutations/catalog/serviceMediaMutation';
+import { APIClient } from '../api/APIClient.js';
+import { serviceQueries } from '../api/graphql/queries/index.js';
+import { serviceMutations } from '../api/graphql/mutations/catalog/serviceMutation.js';
+import { serviceMediaQueries } from '../api/graphql/queries/catalog/serviceMediaQueries.js';
+import { serviceMediaMutations } from '../api/graphql/mutations/catalog/serviceMediaMutation.js';
 
 // Types pour les entités et les inputs
 interface ServiceEntity {

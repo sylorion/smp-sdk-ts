@@ -1,4 +1,4 @@
-// import { transmitEvent } from "./transmitEvent.js";
+// import { transmitEvent } from './transmitEvent.js';
 
 // export function trackInactivity(timeout: number) {
 //   let inactivityTimer: NodeJS.Timeout;

@@ -1,8 +1,8 @@
-import { APIClient } from '../api/APIClient';
-import { assetQueries } from '../api/graphql/queries/catalog/assetQueries';
-import { assetMutations } from '../api/graphql/mutations/catalog/assetMutations';
-import { assetMediaQueries } from '../api/graphql/queries/catalog/assetMediaQueries';
-import { assetMediaMutations } from '../api/graphql/mutations/catalog/assetMediaMutations';
+import { APIClient } from '../api/APIClient.js';
+import { assetQueries } from '../api/graphql/queries/catalog/assetQueries.js';
+import { assetMutations } from '../api/graphql/mutations/catalog/assetMutations.js';
+import { assetMediaQueries } from '../api/graphql/queries/catalog/assetMediaQueries.js';
+import { assetMediaMutations } from '../api/graphql/mutations/catalog/assetMediaMutations.js';
 
 // --- Entity Interfaces ---
 interface MediaEntity {

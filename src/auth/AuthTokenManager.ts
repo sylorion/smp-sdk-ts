@@ -1,15 +1,15 @@
 
-import { ConfigManager } from "../config/ConfigManager.js";
-import { AuthTokenStorage } from "./AuthTokenStorage.js";
-import { TokenStorage, TokenStorageKind } from "./TokenStorageType.js";
-import { APIClient } from "../api/APIClient.js";
+import { ConfigManager } from '../config/ConfigManager.js';
+import { AuthTokenStorage } from './AuthTokenStorage.js';
+import { TokenStorage, TokenStorageKind } from './TokenStorageType.js';
+import { APIClient } from '../api/APIClient.js';
 import {
   MUTATION_AUTH_APP, MUTATION_AUTH_LOGOUT_APP, MUTATION_AUTH_LOGOUT_USER, MUTATION_AUTH_USER,
   MUTATION_REFRESH_APP_TOKEN, MUTATION_REFRESH_USER_TOKEN
-} from "../api/graphql/mutations/authMutations.js";
-import { ErrorHandler } from "../utils/ErrorHandler.js";
+} from '../api/graphql/mutations/authMutations.js';
+import { ErrorHandler } from '../utils/ErrorHandler.js';
 import { logger } from '../utils/Logger.js';
-import { AppLogIn, AppLoginResponse, LogIn, LoginResponse } from "../api/graphql/types/auth.js";
+import { AppLogIn, AppLoginResponse, LogIn, LoginResponse } from '../api/graphql/types/auth.js';
 
 interface TokenDataResponse {
   accessToken: string;

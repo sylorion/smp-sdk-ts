@@ -1,4 +1,4 @@
-// import { transmitEvent } from "./transmitEvent.js";
+// import { transmitEvent } from './transmitEvent.js';
 
 // export function trackTimeSpentInSection(sectionId: string) {
 //   const section = document.getElementById(sectionId);

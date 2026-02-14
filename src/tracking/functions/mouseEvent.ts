@@ -1,4 +1,4 @@
-// import { transmitEvent } from "./transmitEvent.js"; 
+// import { transmitEvent } from './transmitEvent.js'; 
 
 // export function trackMouseMovement() {
 //   document.addEventListener('mousemove', (event) => {

@@ -1,7 +1,7 @@
 // smp-sdk-ts/src/notification/notification.ts
 
-import { APIClient } from '../api/APIClient';
-import { notificationQueries } from '../api/graphql/queries/notification/notificationQueries';
+import { APIClient } from '../api/APIClient.js';
+import { notificationQueries } from '../api/graphql/queries/notification/notificationQueries.js';
 
 /**
  * The `Notification` class manages notification-related requests within the application.

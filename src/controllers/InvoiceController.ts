@@ -1,8 +1,8 @@
 // smp-sdk-ts/src/invoice/invoice.ts
 
-import { APIClient } from '../api/APIClient';
-import { invoiceQueries } from '../api/graphql/queries/accounting/invoiceQueries';
-import invoiceMutations from '../api/graphql/mutations/accounting/invoiceMutations';
+import { APIClient } from '../api/APIClient.js';
+import { invoiceQueries } from '../api/graphql/queries/accounting/invoiceQueries.js';
+import invoiceMutations from '../api/graphql/mutations/accounting/invoiceMutations.js';
 
 interface InvoiceResponse {
   invoiceId: string;

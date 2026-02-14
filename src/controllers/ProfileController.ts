@@ -1,6 +1,6 @@
-import { APIClient } from '../api/APIClient';
-import { profileMutations } from './../api/graphql/mutations/user-space/profileMutation';
-import { profileQueries } from './../api/graphql/queries/user-space/profileQueries';
+import { APIClient } from '../api/APIClient.js';
+import { profileMutations } from './../api/graphql/mutations/user-space/profileMutation.js';
+import { profileQueries } from './../api/graphql/queries/user-space/profileQueries.js';
 
 // Types d'entrée pour les mutations des profils
 interface CreateProfileInput {

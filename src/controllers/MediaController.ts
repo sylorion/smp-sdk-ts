@@ -1,6 +1,6 @@
-import { APIClient } from '../api/APIClient';
-import { mediaMutations } from '../api/graphql/mutations/document/mediaMutation';
-import { mediaQueries } from '../api/graphql/queries/document/mediaQueries';
+import { APIClient } from '../api/APIClient.js';
+import { mediaMutations } from '../api/graphql/mutations/document/mediaMutation.js';
+import { mediaQueries } from '../api/graphql/queries/document/mediaQueries.js';
 
 // Types d'entrée pour les mutations des médias
 interface CreateMediaInput {

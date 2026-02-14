@@ -1,9 +1,9 @@
-import { APIClient } from '../api/APIClient';
-import { contractQueries } from '../api/graphql/queries/contract/contractQueries';
-import { contractMutations } from '../api/graphql/mutations/contract/contractMutations';
+import { APIClient } from '../api/APIClient.js';
+import { contractQueries } from '../api/graphql/queries/contract/contractQueries.js';
+import { contractMutations } from '../api/graphql/mutations/contract/contractMutations.js';
 import { 
   ContractStatus
-} from '../types/Contract';
+} from '../types/Contract.js';
 import type { 
   ContractResponse,
   CreateContractInput,
@@ -19,7 +19,7 @@ import type {
   GetContractsByOrganizationIdResponse,
   VerifyTokenResponse,
   VerifyTokenGraphQLResponse
-} from '../types/Contract';
+} from '../types/Contract.js';
 
 /**
  * The `Contract` class manages contract-related requests within the application.

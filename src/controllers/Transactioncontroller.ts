@@ -1,7 +1,7 @@
 // smp-sdk-ts/src/transaction/transaction.ts
 
-import { APIClient } from '../api/APIClient';
-import { transactionQueries } from '../api/graphql/queries/accounting/transactionQueries';
+import { APIClient } from '../api/APIClient.js';
+import { transactionQueries } from '../api/graphql/queries/accounting/transactionQueries.js';
 
 /**
  * The `Transaction` class manages transaction-related requests within the application.

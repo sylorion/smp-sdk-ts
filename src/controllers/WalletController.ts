@@ -1,6 +1,6 @@
-import { APIClient } from '../api/APIClient';
-import { walletQueries } from '../api/graphql/queries/wallet/walletQueries';
-import { walletMutations } from '../api/graphql/mutations/wallet/walletMutations';
+import { APIClient } from '../api/APIClient.js';
+import { walletQueries } from '../api/graphql/queries/wallet/walletQueries.js';
+import { walletMutations } from '../api/graphql/mutations/wallet/walletMutations.js';
 import type { 
   Wallet as WalletEntity,
   CreateWalletInput,
@@ -31,7 +31,7 @@ import type {
   GetConversionDetailsResponse,
   GetWalletResponse,
   GetWalletsResponse
-} from '../types/Wallet';
+} from '../types/Wallet.js';
 
 /**
  * The `Wallet` class manages wallet-related operations within the application.

@@ -1,5 +1,5 @@
-import { Persistence, PersistenceType } from "../config/Persistence.js";
-import { TokenStorage, TokenStorageKind } from "./TokenStorageType.js";
+import { Persistence, PersistenceType } from '../config/Persistence.js';
+import { TokenStorage, TokenStorageKind } from './TokenStorageType.js';
 
 export class AuthTokenStorage implements TokenStorage {
   private accessTokenKey = 'smp_access_token';

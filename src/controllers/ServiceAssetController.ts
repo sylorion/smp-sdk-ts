@@ -1,6 +1,6 @@
-import { APIClient } from '../api/APIClient';
-import { serviceAssetQueries } from '../api/graphql/queries/catalog/serviceAssetQueries';
-import { serviceAssetMutations } from '../api/graphql/mutations/catalog/serviceAssetMutations';
+import { APIClient } from '../api/APIClient.js';
+import { serviceAssetQueries } from '../api/graphql/queries/catalog/serviceAssetQueries.js';
+import { serviceAssetMutations } from '../api/graphql/mutations/catalog/serviceAssetMutations.js';
 
 /**
  * Représente une entité ServiceAsset telle que définie dans le schéma GraphQL.
