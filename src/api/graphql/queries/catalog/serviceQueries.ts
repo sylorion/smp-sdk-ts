@@ -1,5 +1,5 @@
 const serviceQueries = {
-    GET_SERVICE_BY_AUTHOR_ID: `
+  GET_SERVICE_BY_AUTHOR_ID: `
     query GetServicesByUserId($authorID: String!) {
       servicessByUserId(userID: $authorID) {
         serviceID
@@ -11,7 +11,7 @@ const serviceQueries = {
       }
     }
   `,
-    GET_SERVICE_BY_ID: `
+  GET_SERVICE_BY_ID: `
     query GetServiceByID($serviceID: ID!) {
       service(serviceID: $serviceID) {
         serviceID
@@ -43,10 +43,18 @@ const serviceQueries = {
         state
         createdAt
         updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,
-    GET_SERVICE_BY_UNIQ_REF: `
+  GET_SERVICE_BY_UNIQ_REF: `
     query GetServiceByUniqRef($uniqRef: String!) {
       serviceByUniqRef(uniqRef: $uniqRef) {
         serviceID
@@ -78,10 +86,18 @@ const serviceQueries = {
         state
         createdAt
         updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,
-    GET_SERVICE_BY_SLUG: `
+  GET_SERVICE_BY_SLUG: `
     query GetServiceBySlug($slug: String!) {
       serviceBySlug(slug: $slug) {
         serviceID
@@ -113,10 +129,18 @@ const serviceQueries = {
         state
         createdAt
         updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,
-    GET_SERVICES_BY_IDS: `
+  GET_SERVICES_BY_IDS: `
     query GetServicesByIDs($serviceIDs: [String!]!) {
       servicesByIDs(serviceIDs: $serviceIDs) {
         serviceID
@@ -143,10 +167,18 @@ const serviceQueries = {
         state
         createdAt
         updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,
-    GET_SERVICES_BY_SLUGS: `
+  GET_SERVICES_BY_SLUGS: `
     query GetServicesBySlugs($slugs: [String!]!) {
       servicesBySlugs(slugs: $slugs) {
         serviceID
@@ -173,10 +205,18 @@ const serviceQueries = {
         state
         createdAt
         updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,
-    LIST_SERVICES_BY_ORGANIZATION: `
+  LIST_SERVICES_BY_ORGANIZATION: `
     query ListServicesByOrganization($input: ListServicesByOrganizationInput!) {
       listServicesByOrganization(input: $input) {
         serviceID
@@ -207,10 +247,18 @@ const serviceQueries = {
         state
         createdAt
         updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,
-    SEARCH_SERVICES: `
+  SEARCH_SERVICES: `
     query SearchServices($input: SearchServiceInput!) {
       searchServices(input: $input) {
         serviceID
@@ -237,10 +285,18 @@ const serviceQueries = {
         state
         createdAt
         updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,
-    GET_SERVICES: `
+  GET_SERVICES: `
     query GetServices($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
       services(pagination: $pagination, sort: $sort, filter: $filter) {
         serviceID
@@ -268,10 +324,18 @@ const serviceQueries = {
         state
         createdAt
         updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,
-    GET_SERVICES_BY_AGENT_ID: `
+  GET_SERVICES_BY_AGENT_ID: `
     query GetServicesByAgentID($agentID: String!) {
       servicesByAgentID(agentID: $agentID) {
         serviceID
@@ -299,6 +363,14 @@ const serviceQueries = {
         state
         createdAt
         updatedAt
+        serviceMedias {
+          serviceMediaID
+          listingPosition
+          legend
+          media {
+            url
+          }
+        }
       }
     }
   `,

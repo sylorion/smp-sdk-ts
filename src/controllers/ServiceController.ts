@@ -36,6 +36,7 @@ interface ServiceEntity {
   createdAt: string; // ISO 8601
   updatedAt: string; // ISO 8601
   deletedAt?: string; // ISO 8601
+  serviceMedias?: ServiceMediaEntity[];
 }
 
 interface CreateServiceInput {
