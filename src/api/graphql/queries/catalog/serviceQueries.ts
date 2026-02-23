@@ -219,161 +219,161 @@ const serviceQueries = {
   LIST_SERVICES_BY_ORGANIZATION: `
     query ListServicesByOrganization($input: ListServicesByOrganizationInput!) {
       listServicesByOrganization(input: $input) {
-        serviceID
-        uniqRef
-        slug
-        authorID
-        title
-        description
-        mediaBannerID
-        parentServiceID
-        topicID
-        organizationID
-        locationID
-        paymentConfigID
-        price
-        negotiable
-        perimeter
-        supplyType
-        uptakeForm
-        billingPlan
-        onlineService
-        upperPrice
-        lowerPrice
-        legalVatPercent
-        advancedAttributes
-        poweredByAgent
-        agentConfiguration
-        state
-        createdAt
-        updatedAt
+      serviceID
+      uniqRef
+      slug
+      authorID
+      title
+      description
+      mediaBannerID
+      parentServiceID
+      topicID
+      organizationID
+      locationID
+      paymentConfigID
+      price
+      negotiable
+      perimeter
+      supplyType
+      uptakeForm
+      billingPlan
+      onlineService
+      upperPrice
+      lowerPrice
+      legalVatPercent
+      advancedAttributes
+      poweredByAgent
+      agentConfiguration
+      state
+      createdAt
+      updatedAt
         serviceMedias {
-          serviceMediaID
-          listingPosition
-          legend
+        serviceMediaID
+        listingPosition
+        legend
           media {
-            url
-          }
+          url
         }
       }
     }
+  }
   `,
   SEARCH_SERVICES: `
     query SearchServices($input: SearchServiceInput!) {
-      searchServices(input: $input) {
-        serviceID
-        uniqRef
-        slug
-        authorID
-        title
-        description
-        mediaBannerID
-        parentServiceID
-        topicID
-        organizationID
-        locationID
-        paymentConfigID
-        price
-        negotiable
-        perimeter
-        supplyType
-        uptakeForm
-        billingPlan
-        onlineService
-        poweredByAgent
-        agentConfiguration
-        state
-        createdAt
-        updatedAt
+  searchServices(input: $input) {
+    serviceID
+    uniqRef
+    slug
+    authorID
+    title
+    description
+    mediaBannerID
+    parentServiceID
+    topicID
+    organizationID
+    locationID
+    paymentConfigID
+    price
+    negotiable
+    perimeter
+    supplyType
+    uptakeForm
+    billingPlan
+    onlineService
+    poweredByAgent
+    agentConfiguration
+    state
+    createdAt
+    updatedAt
         serviceMedias {
-          serviceMediaID
-          listingPosition
-          legend
+      serviceMediaID
+      listingPosition
+      legend
           media {
-            url
-          }
-        }
+        url
       }
     }
-  `,
+  }
+}
+`,
   GET_SERVICES: `
     query GetServices($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-      services(pagination: $pagination, sort: $sort, filter: $filter) {
-        serviceID
-        uniqRef
-        slug
-        authorID
-        title
-        description
-        mediaBannerID
-        parentServiceID
-        topicID 
-        organizationID
-        locationID
-        paymentConfigID
-        price
-        negotiable
-        perimeter
-        supplyType
-        uptakeForm
-        billingPlan
-        onlineService
-        advancedAttributes
-        poweredByAgent
-        agentConfiguration
-        state
-        createdAt
-        updatedAt
+  services(pagination: $pagination, sort: $sort, filter: $filter) {
+    serviceID
+    uniqRef
+    slug
+    authorID
+    title
+    description
+    mediaBannerID
+    parentServiceID
+    topicID
+    organizationID
+    locationID
+    paymentConfigID
+    price
+    negotiable
+    perimeter
+    supplyType
+    uptakeForm
+    billingPlan
+    onlineService
+    advancedAttributes
+    poweredByAgent
+    agentConfiguration
+    state
+    createdAt
+    updatedAt
         serviceMedias {
-          serviceMediaID
-          listingPosition
-          legend
+      serviceMediaID
+      listingPosition
+      legend
           media {
-            url
-          }
-        }
+        url
       }
     }
-  `,
+  }
+}
+`,
   GET_SERVICES_BY_AGENT_ID: `
     query GetServicesByAgentID($agentID: String!) {
-      servicesByAgentID(agentID: $agentID) {
-        serviceID
-        uniqRef
-        slug
-        authorID
-        title
-        description
-        mediaBannerID
-        parentServiceID
-        topicID
-        organizationID
-        locationID
-        paymentConfigID
-        price
-        negotiable
-        perimeter
-        supplyType
-        uptakeForm
-        billingPlan
-        onlineService
-        advancedAttributes
-        poweredByAgent
-        agentConfiguration
-        state
-        createdAt
-        updatedAt
+  servicesByAgentID(agentID: $agentID) {
+    serviceID
+    uniqRef
+    slug
+    authorID
+    title
+    description
+    mediaBannerID
+    parentServiceID
+    topicID
+    organizationID
+    locationID
+    paymentConfigID
+    price
+    negotiable
+    perimeter
+    supplyType
+    uptakeForm
+    billingPlan
+    onlineService
+    advancedAttributes
+    poweredByAgent
+    agentConfiguration
+    state
+    createdAt
+    updatedAt
         serviceMedias {
-          serviceMediaID
-          listingPosition
-          legend
+      serviceMediaID
+      listingPosition
+      legend
           media {
-            url
-          }
-        }
+        url
       }
     }
-  `,
+  }
+}
+`,
 };
 
 export { serviceQueries };

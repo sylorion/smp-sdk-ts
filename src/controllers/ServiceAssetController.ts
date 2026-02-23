@@ -158,4 +158,29 @@ export class ServiceAsset {
     const response = await this.client.mutate(mutation, variables) as { data: { deleteServiceAsset: MutationResponse } };
     return response.data.deleteServiceAsset;
   }
+
+  /**
+   * Lie un Asset à un Service (Création d'un ServiceAsset).
+   * @param serviceID - L'identifiant du Service.
+   * @param assetID - L'identifiant de l'Asset (Option).
+   * @param authorID - L'identifiant de l'auteur.
+   */
+  async linkAssetToService(serviceID: string, assetID: string, authorID: string): Promise<ServiceAssetEntity> {
+    const mutation = serviceAssetMutations.LINK_ASSET_TO_SERVICE;
+    const variables = { serviceID, assetID, authorID };
+    const response = await this.client.mutate(mutation, variables) as { data: { linkAssetToService: ServiceAssetEntity } };
+    return response.data.linkAssetToService;
+  }
+
+  /**
+   * Délie un Asset d'un Service (Suppression du ServiceAsset).
+   * @param serviceID - L'identifiant du Service.
+   * @param assetID - L'identifiant de l'Asset (Option).
+   */
+  async unlinkAssetFromService(serviceID: string, assetID: string): Promise<MutationResponse> {
+    const mutation = serviceAssetMutations.UNLINK_ASSET_FROM_SERVICE;
+    const variables = { serviceID, assetID };
+    const response = await this.client.mutate(mutation, variables) as { data: { unlinkAssetFromService: MutationResponse } };
+    return response.data.unlinkAssetFromService;
+  }
 }
