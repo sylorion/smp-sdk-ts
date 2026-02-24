@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
-import { GraphQLClient, ClientError } from 'graphql-request'; 
+import { GraphQLClient, ClientError } from 'graphql-request';
 import { ConfigManager } from '../config/ConfigManager.js';
 import { ErrorHandler } from '../utils/ErrorHandler.js';
 import { logger } from '../utils/Logger.js';
@@ -10,18 +10,18 @@ import { logger } from '../utils/Logger.js';
 export class APIClient {
   private restClient: AxiosInstance;
   private graphqlClient: GraphQLClient;
-  private config: ConfigManager; 
+  private config: ConfigManager;
   private requestCount: number = 0;
-  private requestWindowStart: number = Date.now(); 
+  private requestWindowStart: number = Date.now();
   private dataSent: number = 0;
   private dataReceived: number = 0;
   private dataWindowStart: number = Date.now();
   constructor(config: ConfigManager) {
-    this.config = config; 
+    this.config = config;
     this.restClient = axios.create({
       baseURL: config.apiUrl,
       httpsAgent: config.requestAgent,
-    }); 
+    });
     const graphqlOptions: { fetch?: typeof fetch } = {};
     if (config.customFetch) graphqlOptions.fetch = config.customFetch;
     this.graphqlClient = new GraphQLClient(config.graphqlUrl, graphqlOptions);
@@ -31,7 +31,7 @@ export class APIClient {
    * updateHeaderAppSecret  
   */
   public updateHeaderAppSecret(secret: string): GraphQLClient {
-    this.graphqlClient = this.graphqlClient.setHeader("x-services-app-token",  `${secret}`);
+    this.graphqlClient = this.graphqlClient.setHeader("x-services-app-token", `${secret}`);
     return this.graphqlClient;
   }
 
@@ -45,7 +45,7 @@ export class APIClient {
     return this.graphqlClient;
   }
 
-    public resetHeaderAppSecret(): void {
+  public resetHeaderAppSecret(): void {
     this.graphqlClient = this.graphqlClient.setHeader("x-services-app-token", "");
   }
 
@@ -78,13 +78,13 @@ export class APIClient {
 
   async mutate<T>(mutation: string, variables?: any): Promise<T> {
     try {
-      this.checkRateLimit(); 
+      this.checkRateLimit();
       const body = JSON.stringify({ mutation, variables });
       this.trackDataSent(body.length);
 
       logger.info("CALL TO APIClient.MUTATE Method");
       const response = await this.graphqlClient.request<T>(mutation, variables);
-      console.log("GraphQL Response:", response);
+
       const respJson = JSON.stringify(response);
       this.trackDataReceived(respJson.length);
       logger.info(`Total Data received : ${this.dataReceived}`);
@@ -95,7 +95,7 @@ export class APIClient {
       throw ce;
     }
   }
-  
+
   async query<T>(query: string, variables?: any): Promise<T> {
     try {
       this.checkRateLimit(); // Check rate limit before making the request

@@ -3,7 +3,7 @@ import type { Agent } from 'http';
 import { SupportedLang, defaultLanguage } from '../i18n/languages.js';
 import { Persistence, PersistenceKind, PersistenceType } from './Persistence.js';
 import { DataLimitOptions, RateLimitOptions, SMPClientOptions, SMPToken } from './SMPConfig.js';
-import { UserLoggedIn } from '../api/graphql/types/auth.js';
+import { UserLoggedIn } from '../types/auth/index.js';
 
 /**
  * Gère la configuration de la SDK.

@@ -6,10 +6,10 @@ import { APIClient } from '../api/APIClient.js';
 import {
   MUTATION_AUTH_APP, MUTATION_AUTH_LOGOUT_APP, MUTATION_AUTH_LOGOUT_USER, MUTATION_AUTH_USER,
   MUTATION_REFRESH_APP_TOKEN, MUTATION_REFRESH_USER_TOKEN
-} from '../api/graphql/mutations/authMutations.js';
+} from '../api/graphql/user/mutations.js';
 import { ErrorHandler } from '../utils/ErrorHandler.js';
 import { logger } from '../utils/Logger.js';
-import { AppLogIn, AppLoginResponse, LogIn, LoginResponse } from '../api/graphql/types/auth.js';
+import { AppLogIn, AppLoginResponse, LogIn, LoginResponse } from '../types/auth/index.js';
 
 interface TokenDataResponse {
   accessToken: string;
@@ -28,6 +28,7 @@ export class AuthTokenManager {
   private appTokenExpiresAt?: number;
   private appRefreshInterval?: NodeJS.Timeout;
   private userRefreshInterval?: NodeJS.Timeout;
+  private userRefreshPromise?: Promise<void>;
 
   constructor(configManager: ConfigManager, apiClient: APIClient) {
     this.apiClient = apiClient;
@@ -129,40 +130,46 @@ export class AuthTokenManager {
     return accessToken;
   }
 
-  /**
-  *
-  */
   private async refreshUserAccessToken(): Promise<void> {
-    const refreshToken = this.userTokenStorage.getRefreshToken();
-    if (!refreshToken) {
-      throw new Error('No user refresh token available');
-    } else {
-      logger.info(`Refresh Token USED ${Date.now().toLocaleString()}: ${refreshToken}\n\n`);
+    if (this.userRefreshPromise) {
+      return this.userRefreshPromise;
     }
 
-    const response = await this.apiClient.query<{ refreshUserToken: TokenDataResponse }>(MUTATION_REFRESH_USER_TOKEN, { refreshToken });
+    this.userRefreshPromise = (async () => {
+      try {
+        const refreshToken = this.userTokenStorage.getRefreshToken();
+        if (!refreshToken) {
+          throw new Error('No user refresh token available');
+        } else {
+          logger.info(`Refresh Token USED ${Date.now().toLocaleString()}: [HIDDEN]\n\n`);
+        }
 
-    console.log("REFRESH TOKEN RESPONSE", JSON.stringify(response.refreshUserToken, null, 2));
-    const accessToken = response.refreshUserToken.accessToken;
-    const expiresIn = response.refreshUserToken.expiresIn;
-    const expiresInMilli = expiresIn * 1000;
-    const refreshDuration = this.configManager.userAccessDuration < expiresInMilli ?
-      this.configManager.userAccessDuration : expiresInMilli;
+        const response = await this.apiClient.query<{ refreshUserToken: TokenDataResponse }>(MUTATION_REFRESH_USER_TOKEN, { refreshToken });
 
-    this.userTokenStorage.saveAccessToken(accessToken);
-    this.apiClient.updateHeaderUserAccessToken(accessToken);
-    logger.info(`Refresh User token, new token: ${accessToken}`);
-    this.userTokenExpiresAt = Date.now() + expiresInMilli;
-    this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
-    return;
+        const accessToken = response.refreshUserToken.accessToken;
+        const expiresIn = response.refreshUserToken.expiresIn;
+        const expiresInMilli = expiresIn * 1000;
+        const refreshDuration = this.configManager.userAccessDuration < expiresInMilli ?
+          this.configManager.userAccessDuration : expiresInMilli;
 
+        this.userTokenStorage.saveAccessToken(accessToken);
+        this.apiClient.updateHeaderUserAccessToken(accessToken);
+        logger.info(`Refresh User token, new token: [HIDDEN]`);
+        this.userTokenExpiresAt = Date.now() + expiresInMilli;
+        this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
+      } finally {
+        this.userRefreshPromise = undefined;
+      }
+    })();
+
+    return this.userRefreshPromise;
   }
 
   /**
    * 
    */
   private async refreshAppAccessToken(): Promise<void> {
-    const refreshToken = this.userTokenStorage.getRefreshToken();
+    const refreshToken = this.appTokenStorage.getRefreshToken();
 
     if (!refreshToken) {
       throw new Error('No app refresh token available');
@@ -197,12 +204,23 @@ export class AuthTokenManager {
     if (refreshInterval) {
       clearTimeout(refreshInterval);
     }
-    const triggerTime = 3600 // timeUntilExpiration - refreshDuration;
-    console.error(`tokenExpiresAt: ${tokenExpiresAt} TimeUntilExpiration: ${timeUntilExpiration} Refresh Token ${refreshDuration} milli second`)
-    console.error(`SCHEDULE TO RUN ${triggerTime} milli second`)
-    // Rafraîchir le token juste avant son expiration
-    const timeOutInterval = setTimeout(() => type === AuthTokenStorage.AppKind ? console.warn("Refraiching APP TOKEN") : this.refreshUserAccessToken(),
-      triggerTime);
+
+    // Rafraîchir le token avant son expiration (en soustrayant le paramètre refreshDuration configuré)
+    const triggerTime = Math.max(0, timeUntilExpiration - refreshDuration);
+
+    const timeout = setTimeout(() => {
+      if (type === AuthTokenStorage.AppKind) {
+        this.refreshAppAccessToken().catch(e => logger.error("Failed to refresh app token", e));
+      } else {
+        this.refreshUserAccessToken().catch(e => logger.error("Failed to refresh user token", e));
+      }
+    }, triggerTime);
+
+    if (type === AuthTokenStorage.AppKind) {
+      this.appRefreshInterval = timeout;
+    } else {
+      this.userRefreshInterval = timeout;
+    }
   }
 
   // Déconnexion de l'utilisateur

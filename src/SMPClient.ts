@@ -8,71 +8,39 @@ import { ConfigManager } from './config/ConfigManager.js';
 import { Persistence, PersistenceKind } from './config/Persistence.js';
 import { AxiosRequestConfig } from "axios";
 import { GraphQLClient, ClientError } from 'graphql-request';
-import { Service, Organization, Invoice, Estimate, Contract, SMPPayment, Signup, Password, Profile, Location, ManageOrganization, Asset, ServiceAsset, Mailing, Order, Media, WaitingList, Wallet, BookingController, BookingConfigurationController, EngagementController, TimeSlotController, AffiliateController } from './controllers/index.js';
-import { LogIn, AppLogIn } from './api/graphql/types/auth.js';
+import { AuthDomain, CatalogDomain, AccountingDomain, OrganizationDomain, UserDomain, BookingDomain, CommunicationDomain } from './domains/index.js';
+import { LogIn, AppLogIn } from './types/auth/index.js';
+
 export class SMPClient {
   public httpApiClient: APIClient;
   public authTokenManager: AuthTokenManager;
-  // [Class]  
-  public service: Service;
-  public organization: Organization;
-  public estimate: Estimate;
-  public contract: Contract;
-  public invoice: Invoice;
-  public booking: BookingController;
-  public bookingConfiguration: BookingConfigurationController;
-  public engagement: EngagementController;
-  public timeSlot: TimeSlotController;
-  public smpPayment: SMPPayment
-  public signup: Signup;
-  public Password: Password;
-  public profile: Profile;
-  public location: Location;
-  public manageOrganization: ManageOrganization;
-  public asset: Asset;
-  public serviceAsset: ServiceAsset;
-  public mailing: Mailing;
-  public order: Order;
-  public media: Media;
-  public waitingList: WaitingList;
-  public wallet: Wallet;
-  public affiliate: AffiliateController;
 
+  // Nouveaux domaines (Architecture V2)
+  public auth: AuthDomain;
+  public catalog: CatalogDomain;
+  public accounting: AccountingDomain;
+  public organization: OrganizationDomain;
+  public user: UserDomain;
+  public booking: BookingDomain;
+  public communication: CommunicationDomain;
 
-
-  // public notificationManager: AuthTokenManager;
-  private loggedUser?: LogIn;  /// A créer account et mettre en loggedUser dedans
-  private loggedApp?: AppLogIn; /// A créer application et mettre en loggedApp dedans
+  private loggedUser?: LogIn;
+  private loggedApp?: AppLogIn;
   private wsClient?: WebSocket;
   private configManager: ConfigManager;
+
   constructor(options: SMPClientOptions) {
     this.configManager = new ConfigManager(options)
     this.httpApiClient = new APIClient(this.configManager);
 
-    // [Class]
-    this.service = new Service(this.httpApiClient);
-    this.organization = new Organization(this.httpApiClient);
-    this.estimate = new Estimate(this.httpApiClient);
-    this.contract = new Contract(this.httpApiClient);
-    this.invoice = new Invoice(this.httpApiClient);
-    this.smpPayment = new SMPPayment(this.httpApiClient);
-    this.signup = new Signup(this.httpApiClient);
-    this.booking = new BookingController(this.httpApiClient);
-    this.bookingConfiguration = new BookingConfigurationController(this.httpApiClient);
-    this.engagement = new EngagementController(this.httpApiClient);
-    this.timeSlot = new TimeSlotController(this.httpApiClient);
-    this.Password = new Password(this.httpApiClient);
-    this.profile = new Profile(this.httpApiClient);
-    this.location = new Location(this.httpApiClient);
-    this.manageOrganization = new ManageOrganization(this.httpApiClient);
-    this.asset = new Asset(this.httpApiClient);
-    this.serviceAsset = new ServiceAsset(this.httpApiClient);
-    this.mailing = new Mailing(this.httpApiClient);
-    this.order = new Order(this.httpApiClient);
-    this.media = new Media(this.httpApiClient);
-    this.waitingList = new WaitingList(this.httpApiClient);
-    this.wallet = new Wallet(this.httpApiClient);
-    this.affiliate = new AffiliateController(this.httpApiClient);
+    // Initialisation des Domaines
+    this.auth = new AuthDomain(this.httpApiClient);
+    this.catalog = new CatalogDomain(this.httpApiClient);
+    this.accounting = new AccountingDomain(this.httpApiClient);
+    this.organization = new OrganizationDomain(this.httpApiClient);
+    this.user = new UserDomain(this.httpApiClient);
+    this.booking = new BookingDomain(this.httpApiClient);
+    this.communication = new CommunicationDomain(this.httpApiClient);
 
 
     this.authTokenManager = new AuthTokenManager(this.configManager, this.httpApiClient);
@@ -103,10 +71,10 @@ export class SMPClient {
       const access = await this.getUserAccessToken();
       if (access) {
         logger.info("User already authenticated");
+        return this.loggedUser;
       }
       const login = await this.authTokenManager.authenticateUser(username, password);
-      console.log("Login succeed");
-      console.log(JSON.stringify(login));
+      logger.info("Login succeed");
       if (login) {
         this.loggedUser = login;
         this.configManager.loggedUser = login.user;
@@ -164,29 +132,25 @@ export class SMPClient {
 
   async logoutUser() {
     try {
-      // Récupération des données utilisateur  le localStorage
-      const storedUser = localStorage.getItem("smp_user_0");
-      const refreshToken = localStorage.getItem("smp_user_refresh_token");
+      const refreshToken = await this.getUserRefreshToken();
+      const userId = this.loggedUser?.user?.userID || this.configManager.loggedUser?.userID;
 
-      if (!storedUser) {
-        throw new Error("No user data found in local storage !");
+      if (!userId) {
+        logger.warn("No user ID found in loggedUser data, clearing local tokens only");
+        this.authTokenManager['userTokenStorage'].clearTokens();
+        this.loggedUser = undefined;
+        return;
       }
 
       if (!refreshToken) {
-        throw new Error("No refresh token found in local storage !");
+        throw new Error("No refresh token found !");
       }
-      const parsedUser = JSON.parse(storedUser);
 
-      if (!parsedUser || !parsedUser.userID) {
-        throw new Error("No user ID found in user data !");
-      }
-      await this.authTokenManager.logoutUser(parsedUser.userID, refreshToken);
-      // Supprime les données utilisateur connecté
-      localStorage.removeItem("smp_user_0");
+      await this.authTokenManager.logoutUser(userId, refreshToken);
       this.loggedUser = undefined;
-      console.log("Déconnexion réussie");
+      logger.info("Déconnexion réussie");
     } catch (error) {
-      ErrorHandler.handleError(error, "USER_RETRIEVED_REFRESH_TOKEN_FAILED");
+      ErrorHandler.handleError(error, "USER_LOGOUT_FAILED");
       throw error;
     }
   }
