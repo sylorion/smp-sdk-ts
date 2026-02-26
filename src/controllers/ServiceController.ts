@@ -138,7 +138,11 @@ export interface ServiceToFavorites {
 }
 
 export interface SearchServiceInput {
-  searchTerm: String
+  searchTerm?: String;
+  priceMin?: number;
+  priceMax?: number;
+  performance?: number;
+  topicID?: string;
 }
 
 /**

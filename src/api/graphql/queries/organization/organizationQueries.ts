@@ -297,6 +297,7 @@ const organizationQueries = {
       getUserOrganizations(userID: $userId) {
         organizationID
         organizationName
+        sectorID
         smallLogoUrl
         userRole {
           roleID

@@ -24,3 +24,4 @@ export { BookingConfigurationController } from './BookingConfigurationController
 export { EngagementController } from './EngagementController.js';
 export { TimeSlotController } from './TimeSlotController.js';
 export { AffiliateController } from './AffiliateController.js';
+export { Topic } from './TopicController.js';

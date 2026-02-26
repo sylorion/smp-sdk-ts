@@ -8,7 +8,7 @@ import { ConfigManager } from './config/ConfigManager.js';
 import { Persistence, PersistenceKind } from './config/Persistence.js';
 import { AxiosRequestConfig } from "axios";
 import { GraphQLClient, ClientError } from 'graphql-request';
-import { Service, Organization, Invoice, Estimate, Contract, SMPPayment, Signup, Password, Profile, Location, ManageOrganization, Asset, ServiceAsset, Mailing, Order, Media, WaitingList, Wallet, BookingController, BookingConfigurationController, EngagementController, TimeSlotController, AffiliateController } from './controllers/index.js';
+import { Service, Organization, Invoice, Estimate, Contract, SMPPayment, Signup, Password, Profile, Location, ManageOrganization, Asset, ServiceAsset, Mailing, Order, Media, WaitingList, Wallet, BookingController, BookingConfigurationController, EngagementController, TimeSlotController, AffiliateController, Topic } from './controllers/index.js';
 import { LogIn, AppLogIn } from './api/graphql/types/auth.js';
 export class SMPClient {
   public httpApiClient: APIClient;
@@ -37,6 +37,7 @@ export class SMPClient {
   public waitingList: WaitingList;
   public wallet: Wallet;
   public affiliate: AffiliateController;
+  public topic: Topic;
 
 
 
@@ -73,6 +74,7 @@ export class SMPClient {
     this.waitingList = new WaitingList(this.httpApiClient);
     this.wallet = new Wallet(this.httpApiClient);
     this.affiliate = new AffiliateController(this.httpApiClient);
+    this.topic = new Topic(this.httpApiClient);
 
 
     this.authTokenManager = new AuthTokenManager(this.configManager, this.httpApiClient);
