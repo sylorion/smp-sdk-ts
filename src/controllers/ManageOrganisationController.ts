@@ -135,7 +135,9 @@ export interface OrganizationMedia {
 export interface OrganizationsByUserResponse {
   organizationID: string;
   organizationName: string;
-  organizationMedia: OrganizationMedia[];
+  sectorID?: string;
+  smallLogoUrl?: string;
+  organizationMedia?: OrganizationMedia[];
   userRole: UserRole;
 }
 /**
