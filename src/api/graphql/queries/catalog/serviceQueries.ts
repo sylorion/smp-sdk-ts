@@ -12,8 +12,8 @@ const serviceQueries = {
     }
   `,
   GET_SERVICE_BY_ID: `
-    query GetServiceByID($serviceID: ID!) {
-      service(serviceID: $serviceID) {
+    query GetServiceByID($serviceID: ID!, $admin: Boolean) {
+      service(serviceID: $serviceID, admin: $admin) {
         serviceID
         uniqRef
         slug
@@ -55,8 +55,8 @@ const serviceQueries = {
     }
   `,
   GET_SERVICE_BY_UNIQ_REF: `
-    query GetServiceByUniqRef($uniqRef: String!) {
-      serviceByUniqRef(uniqRef: $uniqRef) {
+    query GetServiceByUniqRef($uniqRef: String!, $admin: Boolean) {
+      serviceByUniqRef(uniqRef: $uniqRef, admin: $admin) {
         serviceID
         uniqRef
         slug
@@ -98,8 +98,8 @@ const serviceQueries = {
     }
   `,
   GET_SERVICE_BY_SLUG: `
-    query GetServiceBySlug($slug: String!) {
-      serviceBySlug(slug: $slug) {
+    query GetServiceBySlug($slug: String!, $admin: Boolean) {
+      serviceBySlug(slug: $slug, admin: $admin) {
         serviceID
         uniqRef
         slug
@@ -141,8 +141,8 @@ const serviceQueries = {
     }
   `,
   GET_SERVICES_BY_IDS: `
-    query GetServicesByIDs($serviceIDs: [String!]!) {
-      servicesByIDs(serviceIDs: $serviceIDs) {
+    query GetServicesByIDs($serviceIDs: [String!]!, $admin: Boolean) {
+      servicesByIDs(serviceIDs: $serviceIDs, admin: $admin) {
         serviceID
         uniqRef
         slug
@@ -179,8 +179,8 @@ const serviceQueries = {
     }
   `,
   GET_SERVICES_BY_SLUGS: `
-    query GetServicesBySlugs($slugs: [String!]!) {
-      servicesBySlugs(slugs: $slugs) {
+    query GetServicesBySlugs($slugs: [String!]!, $admin: Boolean) {
+      servicesBySlugs(slugs: $slugs, admin: $admin) {
         serviceID
         uniqRef
         slug

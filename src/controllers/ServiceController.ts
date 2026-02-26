@@ -129,6 +129,7 @@ export interface MutationResponse {
 
 export interface ListServicesByOrganizationInput {
   organizationID: string;
+  admin?: boolean;
 }
 
 export interface ServiceToFavorites {
@@ -164,9 +165,9 @@ export class Service {
     return response.services;
   }
 
-  async getById(serviceID: string): Promise<ServiceEntity> {
+  async getById(serviceID: string, admin?: boolean): Promise<ServiceEntity> {
     const query = serviceQueries.GET_SERVICE_BY_ID;
-    const variables = { serviceID };
+    const variables = { serviceID, admin };
     const response = await this.client.query(query, variables) as { service: ServiceEntity };
     return response.service;
   }
@@ -178,30 +179,30 @@ export class Service {
     return response.servicesByUserId;
   }
 
-  async getByUniqRef(uniqRef: string): Promise<ServiceEntity> {
+  async getByUniqRef(uniqRef: string, admin?: boolean): Promise<ServiceEntity> {
     const query = serviceQueries.GET_SERVICE_BY_UNIQ_REF;
-    const variables = { uniqRef };
+    const variables = { uniqRef, admin };
     const response = await this.client.query(query, variables) as { serviceByUniqRef: ServiceEntity };
     return response.serviceByUniqRef;
   }
 
-  async getBySlug(slug: string): Promise<ServiceEntity> {
+  async getBySlug(slug: string, admin?: boolean): Promise<ServiceEntity> {
     const query = serviceQueries.GET_SERVICE_BY_SLUG;
-    const variables = { slug };
+    const variables = { slug, admin };
     const response = await this.client.query(query, variables) as { data: { serviceBySlug: ServiceEntity } };
     return response.data.serviceBySlug;
   }
 
-  async getByIDs(serviceIDs: string[]): Promise<ServiceEntity[]> {
+  async getByIDs(serviceIDs: string[], admin?: boolean): Promise<ServiceEntity[]> {
     const query = serviceQueries.GET_SERVICES_BY_IDS;
-    const variables = { serviceIDs };
+    const variables = { serviceIDs, admin };
     const response = await this.client.query(query, variables) as { servicesByIDs: ServiceEntity[] };
     return response.servicesByIDs;
   }
 
-  async getBySlugs(slugs: string[]): Promise<ServiceEntity[]> {
+  async getBySlugs(slugs: string[], admin?: boolean): Promise<ServiceEntity[]> {
     const query = serviceQueries.GET_SERVICES_BY_SLUGS;
-    const variables = { slugs };
+    const variables = { slugs, admin };
     const response = await this.client.query(query, variables) as { data: { servicesBySlugs: ServiceEntity[] } };
     return response.data.servicesBySlugs;
   }
