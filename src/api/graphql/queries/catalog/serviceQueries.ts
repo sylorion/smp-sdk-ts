@@ -162,6 +162,10 @@ const serviceQueries = {
         uptakeForm
         billingPlan
         onlineService
+        advancedAttributes
+        legalVatPercent
+        lowerPrice
+        upperPrice
         poweredByAgent
         agentConfiguration
         state
@@ -200,6 +204,10 @@ const serviceQueries = {
         uptakeForm
         billingPlan
         onlineService
+        advancedAttributes
+        legalVatPercent
+        lowerPrice
+        upperPrice
         poweredByAgent
         agentConfiguration
         state
@@ -280,6 +288,10 @@ const serviceQueries = {
     uptakeForm
     billingPlan
     onlineService
+    advancedAttributes
+    legalVatPercent
+    lowerPrice
+    upperPrice
     poweredByAgent
     agentConfiguration
     state
@@ -319,6 +331,9 @@ const serviceQueries = {
     billingPlan
     onlineService
     advancedAttributes
+    legalVatPercent
+    lowerPrice
+    upperPrice
     poweredByAgent
     agentConfiguration
     state
@@ -358,6 +373,9 @@ const serviceQueries = {
     billingPlan
     onlineService
     advancedAttributes
+    legalVatPercent
+    lowerPrice
+    upperPrice
     poweredByAgent
     agentConfiguration
     state
