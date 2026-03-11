@@ -35,7 +35,9 @@ import type {
   StripeOnboardingLink as StripeOnboardingLinkEntity,
   StripeConnectStatusResponse,
   CreateStripeConnectAccountResponse,
-  GenerateStripeOnboardingLinkResponse
+  GenerateStripeOnboardingLinkResponse,
+  StripeAccountSession as StripeAccountSessionEntity,
+  CreateStripeAccountSessionResponse,
 } from '../types/Wallet.js';
 
 /**
@@ -366,5 +368,14 @@ export class Wallet {
       refreshUrl
     });
     return response.generateStripeOnboardingLink;
+  }
+
+  /**
+   * Creates a Stripe account session for embedded components
+   */
+  async createStripeAccountSession(organizationID: string): Promise<StripeAccountSessionEntity> {
+    const query = walletMutations.CREATE_STRIPE_ACCOUNT_SESSION;
+    const response = await this.client.mutate<CreateStripeAccountSessionResponse>(query, { organizationID });
+    return response.createStripeAccountSession;
   }
 }

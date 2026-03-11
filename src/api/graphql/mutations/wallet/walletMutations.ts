@@ -254,6 +254,13 @@ const walletMutations = {
       }
     }
   `,
+  CREATE_STRIPE_ACCOUNT_SESSION: `
+    mutation CreateStripeAccountSession($organizationID: String!) {
+      createStripeAccountSession(organizationID: $organizationID) {
+        clientSecret
+      }
+    }
+  `,
 };
 
 export { walletMutations }; 

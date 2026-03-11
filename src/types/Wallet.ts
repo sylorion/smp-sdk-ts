@@ -243,6 +243,14 @@ export interface GenerateStripeOnboardingLinkResponse {
   generateStripeOnboardingLink: StripeOnboardingLink;
 }
 
+export interface StripeAccountSession {
+  clientSecret: string;
+}
+
+export interface CreateStripeAccountSessionResponse {
+  createStripeAccountSession: StripeAccountSession;
+}
+
 // Response types for queries
 export interface GetWalletResponse {
   wallet: Wallet;
