@@ -153,6 +153,20 @@ const walletQueries = {
       }
     }
   `,
+  GET_STRIPE_CONNECT_STATUS: `
+    query GetStripeConnectStatus($organizationID: String!) {
+      stripeConnectStatus(organizationID: $organizationID) {
+        stripeAccountId
+        onboardingCompleted
+        chargesEnabled
+        payoutsEnabled
+        detailsSubmitted
+        requirements
+        connectedAt
+        lastStatusCheck
+      }
+    }
+  `,
 };
 
 export { walletQueries }; 

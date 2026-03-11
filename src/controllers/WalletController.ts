@@ -1,7 +1,7 @@
 import { APIClient } from '../api/APIClient.js';
 import { walletQueries } from '../api/graphql/queries/wallet/walletQueries.js';
 import { walletMutations } from '../api/graphql/mutations/wallet/walletMutations.js';
-import type { 
+import type {
   Wallet as WalletEntity,
   CreateWalletInput,
   DepositInput,
@@ -30,7 +30,12 @@ import type {
   AdjustmentResponse,
   GetConversionDetailsResponse,
   GetWalletResponse,
-  GetWalletsResponse
+  GetWalletsResponse,
+  StripeConnectStatus as StripeConnectStatusEntity,
+  StripeOnboardingLink as StripeOnboardingLinkEntity,
+  StripeConnectStatusResponse,
+  CreateStripeConnectAccountResponse,
+  GenerateStripeOnboardingLinkResponse
 } from '../types/Wallet.js';
 
 /**
@@ -234,8 +239,8 @@ export class Wallet {
    * Helper method to create a wallet with initial balances
    */
   async createWithBalances(
-    userId: string, 
-    mainCurrency: string, 
+    userId: string,
+    mainCurrency: string,
     initialBalances: Record<string, number> = {},
     initialTokens: Record<string, number> = {},
     options?: {
@@ -260,9 +265,9 @@ export class Wallet {
    * Helper method to deposit with automatic token conversion
    */
   async depositWithTokenConversion(
-    walletId: string, 
-    amount: number, 
-    currency: string, 
+    walletId: string,
+    amount: number,
+    currency: string,
     convertToTokens: boolean = false,
     options?: {
       paymentSessionId?: string;
@@ -327,4 +332,39 @@ export class Wallet {
     };
     return this.transfer(data);
   }
-} 
+
+  /**
+   * Retrieves Stripe Connect status for an organization
+   */
+  async getStripeConnectStatus(organizationID: string): Promise<StripeConnectStatusEntity> {
+    const query = walletQueries.GET_STRIPE_CONNECT_STATUS;
+    const response = await this.client.query<StripeConnectStatusResponse>(query, { organizationID });
+    return response.stripeConnectStatus;
+  }
+
+  /**
+   * Creates a Stripe Connect account for an organization
+   */
+  async createStripeConnectAccount(organizationID: string): Promise<StripeConnectStatusEntity> {
+    const query = walletMutations.CREATE_STRIPE_CONNECT_ACCOUNT;
+    const response = await this.client.mutate<CreateStripeConnectAccountResponse>(query, { organizationID });
+    return response.createStripeConnectAccount;
+  }
+
+  /**
+   * Generates a Stripe onboarding link for an organization
+   */
+  async generateStripeOnboardingLink(
+    organizationID: string,
+    returnUrl: string,
+    refreshUrl: string
+  ): Promise<StripeOnboardingLinkEntity> {
+    const query = walletMutations.GENERATE_STRIPE_ONBOARDING_LINK;
+    const response = await this.client.mutate<GenerateStripeOnboardingLinkResponse>(query, {
+      organizationID,
+      returnUrl,
+      refreshUrl
+    });
+    return response.generateStripeOnboardingLink;
+  }
+}

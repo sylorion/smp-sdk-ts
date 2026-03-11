@@ -49,7 +49,7 @@ interface MediaEntity {
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;
-} 
+}
 
 interface MutationResponse {
   success: boolean;

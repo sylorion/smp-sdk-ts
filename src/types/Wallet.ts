@@ -215,6 +215,34 @@ export interface GetConversionDetailsResponse {
   getConversionDetails: ConversionDetails;
 }
 
+export interface StripeConnectStatus {
+  stripeAccountId: string;
+  onboardingCompleted: boolean;
+  chargesEnabled: boolean;
+  payoutsEnabled: boolean;
+  detailsSubmitted: boolean;
+  requirements?: string;
+  connectedAt?: string;
+  lastStatusCheck?: string;
+}
+
+export interface StripeOnboardingLink {
+  url: string;
+  expiresAt: string;
+}
+
+export interface StripeConnectStatusResponse {
+  stripeConnectStatus: StripeConnectStatus;
+}
+
+export interface CreateStripeConnectAccountResponse {
+  createStripeConnectAccount: StripeConnectStatus;
+}
+
+export interface GenerateStripeOnboardingLinkResponse {
+  generateStripeOnboardingLink: StripeOnboardingLink;
+}
+
 // Response types for queries
 export interface GetWalletResponse {
   wallet: Wallet;

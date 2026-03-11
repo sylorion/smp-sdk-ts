@@ -235,6 +235,25 @@ const walletMutations = {
       }
     }
   `,
+  CREATE_STRIPE_CONNECT_ACCOUNT: `
+    mutation CreateStripeConnectAccount($organizationID: String!) {
+      createStripeConnectAccount(organizationID: $organizationID) {
+        stripeAccountId
+        onboardingCompleted
+        chargesEnabled
+        payoutsEnabled
+        detailsSubmitted
+      }
+    }
+  `,
+  GENERATE_STRIPE_ONBOARDING_LINK: `
+    mutation GenerateStripeOnboardingLink($organizationID: String!, $returnUrl: String!, $refreshUrl: String!) {
+      generateStripeOnboardingLink(organizationID: $organizationID, returnUrl: $returnUrl, refreshUrl: $refreshUrl) {
+        url
+        expiresAt
+      }
+    }
+  `,
 };
 
 export { walletMutations }; 
