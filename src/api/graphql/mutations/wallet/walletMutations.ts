@@ -15,6 +15,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -35,6 +36,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -55,6 +57,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -75,6 +78,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -95,6 +99,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -115,6 +120,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -135,6 +141,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -155,6 +162,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -212,6 +220,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -232,6 +241,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,

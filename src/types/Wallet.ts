@@ -19,6 +19,7 @@ export interface Wallet {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
+  externalProviderData?: string;
 }
 
 export interface CreateWalletInput {
