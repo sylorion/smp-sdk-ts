@@ -161,8 +161,8 @@ const walletQueries = {
     }
   `,
   GET_STRIPE_CONNECT_STATUS: `
-    query GetStripeConnectStatus($organizationID: String!) {
-      stripeConnectStatus(organizationID: $organizationID) {
+    query GetStripeConnectStatus($organizationID: String!, $forceRefresh: Boolean) {
+      stripeConnectStatus(organizationID: $organizationID, forceRefresh: $forceRefresh) {
         stripeAccountId
         onboardingCompleted
         chargesEnabled

@@ -338,9 +338,9 @@ export class Wallet {
   /**
    * Retrieves Stripe Connect status for an organization
    */
-  async getStripeConnectStatus(organizationID: string): Promise<StripeConnectStatusEntity> {
+  async getStripeConnectStatus(organizationID: string, forceRefresh?: boolean): Promise<StripeConnectStatusEntity> {
     const query = walletQueries.GET_STRIPE_CONNECT_STATUS;
-    const response = await this.client.query<StripeConnectStatusResponse>(query, { organizationID });
+    const response = await this.client.query<StripeConnectStatusResponse>(query, { organizationID, forceRefresh });
     return response.stripeConnectStatus;
   }
 
