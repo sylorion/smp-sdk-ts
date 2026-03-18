@@ -165,3 +165,21 @@ export interface GetWalletResponse {
 export interface GetWalletsResponse {
   wallets: Wallet[];
 }
+
+export interface StripeConnectStatusEntity {
+  stripeAccountId: string;
+  onboardingCompleted: boolean;
+  chargesEnabled: boolean;
+  payoutsEnabled: boolean;
+  detailsSubmitted: boolean;
+  requirements: any;
+  connectedAt: string;
+  lastStatusCheck: string;
+  blockingRequirements: string[];
+  eventuallyRequirements: string[];
+  disabledReason: string | null;
+}
+
+export interface GetStripeConnectStatusResponse {
+  stripeConnectStatus: StripeConnectStatusEntity;
+}

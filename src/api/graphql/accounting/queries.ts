@@ -191,62 +191,62 @@ const estimateQueries = {
     `,
 
   GET_ESTIMATE_BY_UNIQ_REF: `
-      query GetEstimateByUniqRef($uniqRef: String!) {
-        estimateByUniqRef(uniqRef: $uniqRef) {
-          estimateID
-          uniqRef
-          slug
-          authorID
-          operatorUserID
-          buyerOrganizationID
-          sellerOrganizationID
-          serviceID
-          expirationDueDate
-          expirationTimeLeft
-          referencePrice
-          previewPrice
-          proposedPrice
-          comment
-          negociatedPrice
-          discountID
-          propositionCount
-          lastProposition
-          stage
-          state
-          createdAt
-          updatedAt
-        }
+    query GetEstimateByUniqRef($uniqRef: String!) {
+      estimateByUniqRef(uniqRef: $uniqRef) {
+        estimateID
+        uniqRef
+        slug
+        authorID
+        operatorUserID
+        buyerOrganizationID
+        sellerOrganizationID
+        serviceID
+        expirationDueDate
+        expirationTimeLeft
+        referencePrice
+        previewPrice
+        proposedPrice
+        comment
+        negociatedPrice
+        discountID
+        propositionCount
+        lastProposition
+        stage
+        state
+        createdAt
+        updatedAt
       }
-    `,
+    }
+  `,
 
   GET_ESTIMATE_BY_SLUG: `
-      query GetEstimateBySlug($slug: String!) {
-        estimateBySlug(slug: $slug) {
-          estimateID
-          uniqRef
-          slug
-          authorID
-          operatorUserID
-          buyerOrganizationID
-          sellerOrganizationID
-          serviceID
-          expirationDueDate
-          expirationTimeLeft
-          referencePrice
-          previewPrice
-          proposedPrice
-          comment
-          negociatedPrice
-          discountID
-          propositionCount
-          lastProposition
-          stage
-          state
-          createdAt
-          updatedAt
-        }
+    query GetEstimateBySlug($slug: String!) {
+      estimateBySlug(slug: $slug) {
+        estimateID
+        uniqRef
+        slug
+        authorID
+        operatorUserID
+        buyerOrganizationID
+        sellerOrganizationID
+        serviceID
+        expirationDueDate
+        expirationTimeLeft
+        referencePrice
+        previewPrice
+        proposedPrice
+        comment
+        negociatedPrice
+        discountID
+        propositionCount
+        lastProposition
+        stage
+        state
+        createdAt
+        updatedAt
       }
-    `,
+    }
+  `,
 
   GET_ESTIMATES_BY_IDS: `
       query GetEstimatesByIDs($estimateIDs: [String!]!) {
@@ -530,8 +530,6 @@ const estimateQueries = {
       }
     `
 };
-
-
 
 export { estimateQueries };
 
@@ -1082,6 +1080,7 @@ const walletQueries = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -1102,6 +1101,7 @@ const walletQueries = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -1122,6 +1122,7 @@ const walletQueries = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -1142,6 +1143,7 @@ const walletQueries = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -1162,6 +1164,7 @@ const walletQueries = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -1182,6 +1185,7 @@ const walletQueries = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -1202,6 +1206,7 @@ const walletQueries = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -1220,9 +1225,28 @@ const walletQueries = {
       }
     }
   `,
+
+  GET_STRIPE_CONNECT_STATUS: `
+    query GetStripeConnectStatus($organizationID: String!, $forceRefresh: Boolean) {
+      stripeConnectStatus(organizationID: $organizationID, forceRefresh: $forceRefresh) {
+        stripeAccountId
+        onboardingCompleted
+        chargesEnabled
+        payoutsEnabled
+        detailsSubmitted
+        requirements
+        connectedAt
+        lastStatusCheck
+        blockingRequirements
+        eventuallyRequirements
+        disabledReason
+      }
+    }
+  `,
 };
 
 export { walletQueries };
+
 // =========================================
 // Source: order/orderQueries.ts
 // =========================================
@@ -1355,6 +1379,7 @@ export const orderQueries = {
     }
   `
 };
+
 // =========================================
 // Source: contract/contractQueries.ts
 // =========================================
@@ -1423,4 +1448,4 @@ const contractQueries = {
   `,
 };
 
-export { contractQueries }; 
+export { contractQueries };

@@ -5,6 +5,7 @@ import { ServiceAsset } from './catalog/ServiceAssetController.js';
 import { Media } from './catalog/MediaController.js';
 import { Location } from './catalog/LocationController.js';
 import { EngagementController } from './catalog/EngagementController.js';
+import { Topic } from './catalog/TopicController.js';
 
 export class CatalogDomain {
   public service: Service;
@@ -13,6 +14,7 @@ export class CatalogDomain {
   public media: Media;
   public location: Location;
   public engagementController: EngagementController;
+  public topic: Topic;
 
   constructor(client: APIClient) {
     this.service = new Service(client);
@@ -21,5 +23,6 @@ export class CatalogDomain {
     this.media = new Media(client);
     this.location = new Location(client);
     this.engagementController = new EngagementController(client);
+    this.topic = new Topic(client);
   }
 }

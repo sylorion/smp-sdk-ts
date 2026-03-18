@@ -6,7 +6,7 @@ import {
   CreateServiceTypeBookingInput,
   ServiceType
 } from '../../types/booking/index.js';
-import { bookingMutations } from '../../api/graphql/booking/mutations.js';
+import { bookingMutations, bookingConfigurationMutations } from '../../api/graphql/booking/mutations.js';
 import { bookingQueries } from '../../api/graphql/booking/queries.js';
 
 export class BookingConfigurationController {
@@ -19,7 +19,7 @@ export class BookingConfigurationController {
     input: CreateBookingConfigurationInput
   ): Promise<BookingConfiguration> {
     const response = await this.apiClient.mutate(
-      bookingMutations.CREATE_BOOKING_CONFIGURATION,
+      bookingConfigurationMutations.CREATE_BOOKING_CONFIGURATION,
       { input }
     ) as { createBookingConfiguration: BookingConfiguration };
     return response.createBookingConfiguration;
@@ -32,7 +32,7 @@ export class BookingConfigurationController {
     input: CreateServiceTypeBookingInput
   ): Promise<BookingConfiguration> {
     const response = await this.apiClient.mutate(
-      bookingMutations.CREATE_SERVICE_TYPE_BOOKING,
+      bookingConfigurationMutations.CREATE_SERVICE_TYPE_BOOKING,
       { input }
     ) as { createServiceTypeBooking: BookingConfiguration };
     return response.createServiceTypeBooking;
@@ -46,7 +46,7 @@ export class BookingConfigurationController {
     input: UpdateBookingConfigurationInput
   ): Promise<BookingConfiguration> {
     const response = await this.apiClient.mutate(
-      bookingMutations.UPDATE_BOOKING_CONFIGURATION,
+      bookingConfigurationMutations.UPDATE_BOOKING_CONFIGURATION,
       { id, input }
     ) as { updateBookingConfiguration: BookingConfiguration };
     return response.updateBookingConfiguration;

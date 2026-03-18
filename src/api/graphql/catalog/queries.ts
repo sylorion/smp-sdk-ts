@@ -60,7 +60,7 @@ export const assetMediaQueries = {
       }
     }
   `
-}; 
+};
 // =========================================
 // Source: catalog/assetQueries.ts
 // =========================================
@@ -412,6 +412,8 @@ const assetQueries = {
           billingPlan
           onlineService
           advancedAttributes
+          poweredByAgent
+          agentConfiguration
           state
           createdAt
           updatedAt
@@ -428,8 +430,8 @@ export { assetQueries };
 // Source: catalog/serviceAssetQueries.ts
 // =========================================
 const serviceAssetQueries = {
-    // Récupère un ServiceAsset via son ID
-    GET_SERVICE_ASSET: `
+  // Récupère un ServiceAsset via son ID
+  GET_SERVICE_ASSET: `
       query GetServiceAsset($serviceAssetID: ID!) {
         serviceAsset(serviceAssetID: $serviceAssetID) {
           serviceAssetID
@@ -445,9 +447,9 @@ const serviceAssetQueries = {
         }
       }
     `,
-  
-    // Récupère la liste des ServiceAssets (avec pagination, tri et filtres optionnels)
-    GET_SERVICE_ASSETS: `
+
+  // Récupère la liste des ServiceAssets (avec pagination, tri et filtres optionnels)
+  GET_SERVICE_ASSETS: `
       query GetServiceAssets($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
         serviceAssets(pagination: $pagination, sort: $sort, filter: $filter) {
           serviceAssetID
@@ -463,9 +465,9 @@ const serviceAssetQueries = {
         }
       }
     `,
-  
-    // Récupère un ServiceAsset via son slug
-    GET_SERVICE_ASSET_BY_SLUG: `
+
+  // Récupère un ServiceAsset via son slug
+  GET_SERVICE_ASSET_BY_SLUG: `
       query GetServiceAssetBySlug($slug: String!) {
         serviceAssetBySlug(slug: $slug) {
           serviceAssetID
@@ -481,9 +483,9 @@ const serviceAssetQueries = {
         }
       }
     `,
-  
-    // Récupère plusieurs ServiceAssets via un tableau d'IDs
-    GET_SERVICE_ASSETS_BY_IDS: `
+
+  // Récupère plusieurs ServiceAssets via un tableau d'IDs
+  GET_SERVICE_ASSETS_BY_IDS: `
       query GetServiceAssetsByIDs($serviceAssetIDs: [ID!]!) {
         serviceAssetsByIDs(serviceAssetIDs: $serviceAssetIDs) {
           serviceAssetID
@@ -499,9 +501,9 @@ const serviceAssetQueries = {
         }
       }
     `,
-  
-    // Récupère plusieurs ServiceAssets via un tableau de slugs
-    GET_SERVICE_ASSETS_BY_SLUGS: `
+
+  // Récupère plusieurs ServiceAssets via un tableau de slugs
+  GET_SERVICE_ASSETS_BY_SLUGS: `
       query GetServiceAssetsBySlugs($slugs: [String!]!) {
         serviceAssetsBySlugs(slugs: $slugs) {
           serviceAssetID
@@ -517,28 +519,28 @@ const serviceAssetQueries = {
         }
       }
     `,
-  
-    // Récupère un ServiceAsset via sa référence unique
-    GET_SERVICE_ASSET_BY_UNIQ_REF: `
-      query GetServiceAssetByUniqRef($uniqRef: String!) {
-        serviceAssetByUniqRef(uniqRef: $uniqRef) {
-          serviceAssetID
-          uniqRef
-          slug
-          assetID
-          serviceID
-          legend
-          state
-          createdAt
-          updatedAt
-          deletedAt
-        }
+
+  // Récupère un ServiceAsset via sa référence unique
+  GET_SERVICE_ASSET_BY_UNIQ_REF: `
+    query GetServiceAssetByUniqRef($uniqRef: String!) {
+      serviceAssetByUniqRef(uniqRef: $uniqRef) {
+        serviceAssetID
+        uniqRef
+        slug
+        assetID
+        serviceID
+        legend
+        state
+        createdAt
+        updatedAt
+        deletedAt
       }
-    `
-  };
-  
-  export { serviceAssetQueries };
-  
+    }
+  `
+};
+
+export { serviceAssetQueries };
+
 // =========================================
 // Source: catalog/serviceMediaQueries.ts
 // =========================================
@@ -652,7 +654,46 @@ const serviceMediaQueries = {
   `
 };
 
-export { serviceMediaQueries }; 
+export { serviceMediaQueries };
+
+// =========================================
+// Source: catalog/topicQueries.ts
+// =========================================
+const topicQueries = {
+  GET_TOPICS: `
+    query GetTopics {
+      topics {
+        topicID
+        authorID
+        title
+        description
+        parentTopicID
+        level
+        state
+        createdAt
+        updatedAt
+      }
+    }
+  `,
+  GET_TOPIC_BY_ID: `
+    query GetTopicByID($topicID: ID!) {
+      topic(topicID: $topicID) {
+        topicID
+        authorID
+        title
+        description
+        parentTopicID
+        level
+        state
+        createdAt
+        updatedAt
+      }
+    }
+  `,
+};
+
+export { topicQueries };
+
 // =========================================
 // Source: catalog/serviceQueries.ts
 // =========================================
@@ -670,8 +711,8 @@ const serviceQueries = {
     }
   `,
   GET_SERVICE_BY_ID: `
-    query GetServiceByID($serviceID: ID!) {
-      service(serviceID: $serviceID) {
+    query GetServiceByID($serviceID: ID!, $admin: Boolean) {
+      service(serviceID: $serviceID, admin: $admin) {
         serviceID
         uniqRef
         slug
@@ -713,8 +754,8 @@ const serviceQueries = {
     }
   `,
   GET_SERVICE_BY_UNIQ_REF: `
-    query GetServiceByUniqRef($uniqRef: String!) {
-      serviceByUniqRef(uniqRef: $uniqRef) {
+    query GetServiceByUniqRef($uniqRef: String!, $admin: Boolean) {
+      serviceByUniqRef(uniqRef: $uniqRef, admin: $admin) {
         serviceID
         uniqRef
         slug
@@ -756,8 +797,8 @@ const serviceQueries = {
     }
   `,
   GET_SERVICE_BY_SLUG: `
-    query GetServiceBySlug($slug: String!) {
-      serviceBySlug(slug: $slug) {
+    query GetServiceBySlug($slug: String!, $admin: Boolean) {
+      serviceBySlug(slug: $slug, admin: $admin) {
         serviceID
         uniqRef
         slug
@@ -799,8 +840,8 @@ const serviceQueries = {
     }
   `,
   GET_SERVICES_BY_IDS: `
-    query GetServicesByIDs($serviceIDs: [String!]!) {
-      servicesByIDs(serviceIDs: $serviceIDs) {
+    query GetServicesByIDs($serviceIDs: [String!]!, $admin: Boolean) {
+      servicesByIDs(serviceIDs: $serviceIDs, admin: $admin) {
         serviceID
         uniqRef
         slug
@@ -814,12 +855,16 @@ const serviceQueries = {
         locationID
         paymentConfigID
         price
+        legalVatPercent
+        lowerPrice
+        upperPrice
         negotiable
         perimeter
         supplyType
         uptakeForm
         billingPlan
         onlineService
+        advancedAttributes
         poweredByAgent
         agentConfiguration
         state
@@ -837,8 +882,8 @@ const serviceQueries = {
     }
   `,
   GET_SERVICES_BY_SLUGS: `
-    query GetServicesBySlugs($slugs: [String!]!) {
-      servicesBySlugs(slugs: $slugs) {
+    query GetServicesBySlugs($slugs: [String!]!, $admin: Boolean) {
+      servicesBySlugs(slugs: $slugs, admin: $admin) {
         serviceID
         uniqRef
         slug
@@ -852,12 +897,16 @@ const serviceQueries = {
         locationID
         paymentConfigID
         price
+        legalVatPercent
+        lowerPrice
+        upperPrice
         negotiable
         perimeter
         supplyType
         uptakeForm
         billingPlan
         onlineService
+        advancedAttributes
         poweredByAgent
         agentConfiguration
         state
@@ -890,15 +939,15 @@ const serviceQueries = {
       locationID
       paymentConfigID
       price
+      legalVatPercent
+      lowerPrice
+      upperPrice
       negotiable
       perimeter
       supplyType
       uptakeForm
       billingPlan
       onlineService
-      upperPrice
-      lowerPrice
-      legalVatPercent
       advancedAttributes
       poweredByAgent
       agentConfiguration
@@ -932,12 +981,16 @@ const serviceQueries = {
     locationID
     paymentConfigID
     price
+    legalVatPercent
+    lowerPrice
+    upperPrice
     negotiable
     perimeter
     supplyType
     uptakeForm
     billingPlan
     onlineService
+    advancedAttributes
     poweredByAgent
     agentConfiguration
     state
@@ -955,8 +1008,8 @@ const serviceQueries = {
 }
 `,
   GET_SERVICES: `
-    query GetServices($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-  services(pagination: $pagination, sort: $sort, filter: $filter) {
+    query GetServices($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!], $admin: Boolean) {
+  services(pagination: $pagination, sort: $sort, filter: $filter, admin: $admin) {
     serviceID
     uniqRef
     slug
@@ -970,6 +1023,9 @@ const serviceQueries = {
     locationID
     paymentConfigID
     price
+    legalVatPercent
+    lowerPrice
+    upperPrice
     negotiable
     perimeter
     supplyType
@@ -1009,6 +1065,9 @@ const serviceQueries = {
     locationID
     paymentConfigID
     price
+    legalVatPercent
+    lowerPrice
+    upperPrice
     negotiable
     perimeter
     supplyType
@@ -1197,7 +1256,7 @@ export { mediaQueries };
 // Source: location/placeQueries.ts
 // =========================================
 const placeQueries = {
-    GET_PLACE_BY_ID: `
+  GET_PLACE_BY_ID: `
         query Place($placeId: ID!) {
             place(placeID: $placeId) {
     placeID

@@ -3,7 +3,7 @@ import { gql } from 'graphql-request';
 // =========================================
 // Source: accounting/estimateMutation.ts
 // =========================================
- 
+
 // =========================================
 // Source: accounting/invoiceMutation.ts
 // =========================================
@@ -248,7 +248,7 @@ const invoiceMutations = {
   `
 };
 
-export { invoiceMutations }; 
+export { invoiceMutations };
 // =========================================
 // Source: accounting/paymentMutations.ts
 // =========================================
@@ -564,8 +564,8 @@ export { paymentMutations };
 // =========================================
 const transactionMutations = {
 
-    // MUTATION POUR CRÉER UNE TRANSACTION
-    CREATE_TRANSACTION: `
+  // MUTATION POUR CRÉER UNE TRANSACTION
+  CREATE_TRANSACTION: `
   mutation Mutation($input: CreateTransactionInput!) {
     initiateTransaction(input: $input) {
       transactionId
@@ -585,8 +585,8 @@ const transactionMutations = {
       deletedAt
     }
   }`,
-    // MUTATION POUR METTRE À JOUR UNE TRANSACTION
-    UPDATE_TRANSACTION: `
+  // MUTATION POUR METTRE À JOUR UNE TRANSACTION
+  UPDATE_TRANSACTION: `
   mutation UpdateTransaction($transactionId: String!, $input: UpdateTransactionInput!) {
     updateTransaction(transactionId: $transactionId, input: $input) {
       transactionId
@@ -609,7 +609,7 @@ const transactionMutations = {
 
 };
 
-export  {transactionMutations};
+export { transactionMutations };
 // =========================================
 // Source: wallet/walletMutations.ts
 // =========================================
@@ -630,6 +630,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -650,6 +651,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -670,6 +672,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -690,6 +693,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -710,6 +714,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -730,6 +735,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -750,6 +756,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -770,6 +777,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -827,6 +835,7 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
       }
     }
   `,
@@ -847,12 +856,39 @@ const walletMutations = {
         createdAt
         updatedAt
         deletedAt
+        externalProviderData
+      }
+    }
+  `,
+  CREATE_STRIPE_CONNECT_ACCOUNT: `
+    mutation CreateStripeConnectAccount($organizationID: String!) {
+      createStripeConnectAccount(organizationID: $organizationID) {
+        stripeAccountId
+        onboardingCompleted
+        chargesEnabled
+        payoutsEnabled
+        detailsSubmitted
+      }
+    }
+  `,
+  GENERATE_STRIPE_ONBOARDING_LINK: `
+    mutation GenerateStripeOnboardingLink($organizationID: String!, $returnUrl: String!, $refreshUrl: String!) {
+      generateStripeOnboardingLink(organizationID: $organizationID, returnUrl: $returnUrl, refreshUrl: $refreshUrl) {
+        url
+        expiresAt
+      }
+    }
+  `,
+  CREATE_STRIPE_ACCOUNT_SESSION: `
+    mutation CreateStripeAccountSession($organizationID: String!) {
+      createStripeAccountSession(organizationID: $organizationID) {
+        clientSecret
       }
     }
   `,
 };
 
-export { walletMutations }; 
+export { walletMutations };
 // =========================================
 // Source: contract/contractMutations.ts
 // =========================================

@@ -138,6 +138,7 @@ export interface OrganizationsByUserResponse {
   organizationName: string;
   organizationMedia: OrganizationMedia[];
   userRole: UserRole;
+  sectorID?: string;
 }
 /**
  * The `MemberOrganization` class manages member-organization-related requests within the application.

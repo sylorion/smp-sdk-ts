@@ -30,8 +30,11 @@ import type {
   AdjustmentResponse,
   GetConversionDetailsResponse,
   GetWalletResponse,
-  GetWalletsResponse
+  GetWalletsResponse,
+  StripeConnectStatusEntity,
+  GetStripeConnectStatusResponse
 } from '../../types/accounting/index.js';
+
 
 /**
  * The `Wallet` class manages wallet-related operations within the application.
@@ -229,6 +232,17 @@ export class Wallet {
     const response = await this.client.query<GetConversionDetailsResponse>(query, { data });
     return response.getConversionDetails;
   }
+
+  /**
+   * Retrieves the Stripe Connect status of an organization
+   */
+  async getStripeConnectStatus(organizationID: string, forceRefresh?: boolean): Promise<StripeConnectStatusEntity> {
+    const query = walletQueries.GET_STRIPE_CONNECT_STATUS;
+    const variables = { organizationID, forceRefresh };
+    const response = await this.client.query<GetStripeConnectStatusResponse>(query, variables);
+    return response.stripeConnectStatus;
+  }
+
 
   /**
    * Helper method to create a wallet with initial balances
