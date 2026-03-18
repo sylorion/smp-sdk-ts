@@ -1008,8 +1008,8 @@ const serviceQueries = {
 }
 `,
   GET_SERVICES: `
-    query GetServices($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!], $admin: Boolean) {
-  services(pagination: $pagination, sort: $sort, filter: $filter, admin: $admin) {
+    query GetServices($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
+  services(pagination: $pagination, sort: $sort, filter: $filter) {
     serviceID
     uniqRef
     slug
