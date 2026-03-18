@@ -137,6 +137,14 @@ export class BookingController {
     return response.updateBooking;
   }
 
+  async getById(bookingId: string): Promise<Booking | null> {
+    const response = await this.apiClient.query(
+      bookingQueries.GET_BOOKING,
+      { bookingId }
+    ) as { booking: Booking | null };
+    return response.booking;
+  }
+
   // ===== DISPONIBILITÉS =====
 
   /**

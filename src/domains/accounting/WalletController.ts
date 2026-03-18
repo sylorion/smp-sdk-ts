@@ -341,4 +341,35 @@ export class Wallet {
     };
     return this.transfer(data);
   }
-} 
+
+  /**
+   * Creates a Stripe Connect account for an organization
+   */
+  async createStripeConnectAccount(organizationID: string): Promise<any> {
+    const mutation = walletMutations.CREATE_STRIPE_CONNECT_ACCOUNT;
+    const response = await this.client.mutate<any>(mutation, { organizationID });
+    return response.createStripeConnectAccount;
+  }
+
+  /**
+   * Generates a Stripe onboarding link
+   */
+  async generateStripeOnboardingLink(params: {
+    organizationID: string;
+    returnUrl: string;
+    refreshUrl: string;
+  }): Promise<{ url: string; expiresAt: string }> {
+    const mutation = walletMutations.GENERATE_STRIPE_ONBOARDING_LINK;
+    const response = await this.client.mutate<any>(mutation, params);
+    return response.generateStripeOnboardingLink;
+  }
+
+  /**
+   * Creates a Stripe account session (for embedded onboarding)
+   */
+  async createStripeAccountSession(organizationID: string): Promise<{ clientSecret: string }> {
+    const mutation = walletMutations.CREATE_STRIPE_ACCOUNT_SESSION;
+    const response = await this.client.mutate<any>(mutation, { organizationID });
+    return response.createStripeAccountSession;
+  }
+}

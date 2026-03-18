@@ -214,6 +214,20 @@ export class SMPPayment {
     return response.estimatesByBuyerUserId;
   }
 
+  async listEstimatesBySellerOrganizationId(sellerOrganizationId: string): Promise<Estimate[]> {
+    const query = estimateQueries.GET_ESTIMATES_BY_SELLER_ORGANIZATION_ID;
+    const variables = { sellerOrganizationId };
+    const response = await this.client.query(query, variables) as { estimatesBySellerOrganizationId: Estimate[] };
+    return response.estimatesBySellerOrganizationId;
+  }
+
+  async listEstimatesByBuyerOrganizationId(buyerOrganizationId: string): Promise<Estimate[]> {
+    const query = estimateQueries.GET_ESTIMATES_BY_BUYER_ORGANIZATION_ID;
+    const variables = { buyerOrganizationId };
+    const response = await this.client.query(query, variables) as { estimatesByBuyerOrganizationId: Estimate[] };
+    return response.estimatesByBuyerOrganizationId;
+  }
+
   /*---------------------- Contrat ----------------------*/
   async updateContract(updateContractId: string, data: UpdateContractInput): Promise<any> {
     const mutation = paymentMutations.UPDATE_CONTRACT;

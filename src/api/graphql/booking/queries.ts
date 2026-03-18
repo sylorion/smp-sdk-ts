@@ -339,6 +339,28 @@ const bookingQueries = {
       }
     }
   `,
+  // QUERY POUR RÉCUPÉRER UNE RÉSERVATION PAR SON ID
+  GET_BOOKING: `
+    query GetBooking($bookingId: String!) {
+      booking(bookingId: $bookingId) {
+        bookingId
+        serviceId
+        userId
+        status
+        weeklyAvailabilityId
+        slotDate
+        slotStartTime
+        slotEndTime
+        slotDuration
+        bookingStartDate
+        bookingEndDate
+        customerDetails
+        createdAt
+        updatedAt
+        deletedAt
+      }
+    }
+  `,
 };
 
 export { bookingQueries };
