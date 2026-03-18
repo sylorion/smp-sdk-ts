@@ -1,5 +1,6 @@
 import { APIClient } from '../../api/APIClient.js';
 import { Invoice } from './InvoiceController.js';
+import { Estimate } from './EstimateController.js';
 import { SMPPayment } from './PaymentController.js';
 import { Contract } from './ContractController.js';
 import { Order } from './OrderController.js';
@@ -8,7 +9,8 @@ import { Wallet } from './WalletController.js';
 
 export class AccountingDomain {
   public invoice: Invoice;
-  public sMPPayment: SMPPayment;
+  public smpPayment: SMPPayment;
+  public estimate: Estimate;
   public contract: Contract;
   public order: Order;
   public transaction: Transaction;
@@ -16,7 +18,8 @@ export class AccountingDomain {
 
   constructor(client: APIClient) {
     this.invoice = new Invoice(client);
-    this.sMPPayment = new SMPPayment(client);
+    this.smpPayment = new SMPPayment(client);
+    this.estimate = new Estimate(client);
     this.contract = new Contract(client);
     this.order = new Order(client);
     this.transaction = new Transaction(client);
