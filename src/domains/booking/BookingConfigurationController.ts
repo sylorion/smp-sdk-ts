@@ -12,10 +12,7 @@ import { bookingQueries } from '../../api/graphql/booking/queries.js';
 export class BookingConfigurationController {
   constructor(private apiClient: APIClient) { }
 
-  /**
-   * Créer une configuration de booking pour un service
-   */
-  async createBookingConfiguration(
+  async create(
     input: CreateBookingConfigurationInput
   ): Promise<BookingConfiguration> {
     const response = await this.apiClient.mutate(
@@ -38,10 +35,7 @@ export class BookingConfigurationController {
     return response.createServiceTypeBooking;
   }
 
-  /**
-   * Mettre à jour une configuration de booking
-   */
-  async updateBookingConfiguration(
+  async update(
     id: string,
     input: UpdateBookingConfigurationInput
   ): Promise<BookingConfiguration> {
@@ -52,10 +46,7 @@ export class BookingConfigurationController {
     return response.updateBookingConfiguration;
   }
 
-  /**
-   * Récupérer une configuration de booking par ID
-   */
-  async getBookingConfigurationById(id: string): Promise<BookingConfiguration | null> {
+  async getById(id: string): Promise<BookingConfiguration | null> {
     const response = await this.apiClient.query(
       bookingQueries.GET_BOOKING_CONFIGURATION,
       { id }
@@ -63,10 +54,7 @@ export class BookingConfigurationController {
     return response.bookingConfiguration;
   }
 
-  /**
-   * Récupérer une configuration de booking par service
-   */
-  async getBookingConfigurationByService(serviceId: string): Promise<BookingConfiguration | null> {
+  async getByServiceId(serviceId: string): Promise<BookingConfiguration | null> {
     const response = await this.apiClient.query(
       bookingQueries.GET_BOOKING_CONFIGURATION_BY_SERVICE,
       { serviceId }
@@ -74,10 +62,7 @@ export class BookingConfigurationController {
     return response.bookingConfigurationByService;
   }
 
-  /**
-   * Récupérer toutes les configurations de booking d'un utilisateur
-   */
-  async getBookingConfigurationsByUser(userId: string): Promise<BookingConfiguration[]> {
+  async listByUserId(userId: string): Promise<BookingConfiguration[]> {
     const response = await this.apiClient.query(
       bookingQueries.GET_BOOKING_CONFIGURATIONS_BY_USER,
       { userId }
@@ -110,7 +95,7 @@ export class BookingConfigurationController {
    * Vérifier si une configuration existe pour un service
    */
   async hasConfigurationForService(serviceId: string): Promise<boolean> {
-    const config = await this.getBookingConfigurationByService(serviceId);
+    const config = await this.getByServiceId(serviceId);
     return config !== null;
   }
 
@@ -161,7 +146,7 @@ export class BookingConfigurationController {
     input: CreateBookingConfigurationInput & { allowUnloggedUsers: boolean }
   ): Promise<BookingConfiguration> {
     // Créer la configuration de base
-    const baseConfig = await this.createBookingConfiguration(input);
+    const baseConfig = await this.create(input);
 
     // Logique supplémentaire pour gérer les utilisateurs non connectés
     // (peut être étendue selon les besoins)

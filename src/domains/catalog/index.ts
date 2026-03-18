@@ -12,7 +12,7 @@ export class CatalogDomain {
   public serviceAsset: ServiceAsset;
   public media: Media;
   public location: Location;
-  public engagement: EngagementController;
+  public engagementController: EngagementController;
 
   constructor(client: APIClient) {
     this.service = new Service(client);
@@ -20,6 +20,6 @@ export class CatalogDomain {
     this.serviceAsset = new ServiceAsset(client);
     this.media = new Media(client);
     this.location = new Location(client);
-    this.engagement = new EngagementController(client);
+    this.engagementController = new EngagementController(client);
   }
 }

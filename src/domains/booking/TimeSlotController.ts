@@ -25,10 +25,7 @@ export class TimeSlotController {
 
   // ===== QUERIES =====
 
-  /**
-   * Récupérer les timeSlots par service (disponibilités générales)
-   */
-  async listTimeSlotsByService(serviceId: string): Promise<TimeSlot[]> {
+  async listByServiceId(serviceId: string): Promise<TimeSlot[]> {
     const response = await this.apiClient.query(
       timeSlotQueries.GET_TIME_SLOTS_BY_SERVICE,
       { serviceId }
@@ -36,10 +33,7 @@ export class TimeSlotController {
     return response.timeSlotsByService;
   }
 
-  /**
-   * Récupérer les timeSlots par engagement
-   */
-  async listTimeSlotsByEngagement(engagementId: string): Promise<TimeSlot[]> {
+  async listByEngagementId(engagementId: string): Promise<TimeSlot[]> {
     const response = await this.apiClient.query(
       timeSlotQueries.GET_TIME_SLOTS_BY_ENGAGEMENT,
       { engagementId }
@@ -47,10 +41,7 @@ export class TimeSlotController {
     return response.timeSlotsByEngagement;
   }
 
-  /**
-   * Récupérer les timeSlots par milestone
-   */
-  async listTimeSlotsByMilestone(engagementMilestoneId: string): Promise<TimeSlot[]> {
+  async listByMilestoneId(engagementMilestoneId: string): Promise<TimeSlot[]> {
     const response = await this.apiClient.query(
       timeSlotQueries.GET_TIME_SLOTS_BY_MILESTONE,
       { engagementMilestoneId }
@@ -58,10 +49,7 @@ export class TimeSlotController {
     return response.timeSlotsByMilestone;
   }
 
-  /**
-   * Récupérer les timeSlots par utilisateur
-   */
-  async listTimeSlotsByUser(userId: string): Promise<TimeSlot[]> {
+  async listByUserId(userId: string): Promise<TimeSlot[]> {
     const response = await this.apiClient.query(
       timeSlotQueries.GET_TIME_SLOTS_BY_USER,
       { userId }
@@ -80,10 +68,7 @@ export class TimeSlotController {
     return response.timeSlotsByDateRange;
   }
 
-  /**
-   * Récupérer un timeSlot spécifique
-   */
-  async getTimeSlotById(timeSlotId: string): Promise<TimeSlot> {
+  async getById(timeSlotId: string): Promise<TimeSlot> {
     const response = await this.apiClient.query(
       timeSlotQueries.GET_TIME_SLOT,
       { timeSlotId }
@@ -104,10 +89,7 @@ export class TimeSlotController {
 
   // ===== MUTATIONS =====
 
-  /**
-   * Créer un timeSlot
-   */
-  async createTimeSlot(data: CreateTimeSlotInput): Promise<TimeSlot> {
+  async create(data: CreateTimeSlotInput): Promise<TimeSlot> {
     const response = await this.apiClient.mutate(
       timeSlotMutations.CREATE_TIME_SLOT,
       { data }
@@ -115,10 +97,7 @@ export class TimeSlotController {
     return response.createTimeSlot;
   }
 
-  /**
-   * Mettre à jour un timeSlot
-   */
-  async updateTimeSlot(timeSlotId: string, data: UpdateTimeSlotInput): Promise<TimeSlot> {
+  async update(timeSlotId: string, data: UpdateTimeSlotInput): Promise<TimeSlot> {
     const response = await this.apiClient.mutate(
       timeSlotMutations.UPDATE_TIME_SLOT,
       { timeSlotId, data }
@@ -126,10 +105,7 @@ export class TimeSlotController {
     return response.updateTimeSlot;
   }
 
-  /**
-   * Supprimer un timeSlot
-   */
-  async deleteTimeSlot(timeSlotId: string): Promise<TimeSlot> {
+  async delete(timeSlotId: string): Promise<TimeSlot> {
     const response = await this.apiClient.mutate(
       timeSlotMutations.DELETE_TIME_SLOT,
       { timeSlotId }

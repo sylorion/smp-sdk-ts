@@ -237,7 +237,7 @@ export class ManageOrganization {
     return response.listOrganizationMembers;
   }
 
-  async listByUser(userId: string): Promise<OrganizationsByUserResponse[]> {
+  async listByUserId(userId: string): Promise<OrganizationsByUserResponse[]> {
     const query = organizationQueries.GET_USER_ORGANIZATIONS;
     const variables = { userId };
     const response = await this.client.query(query, variables) as { getUserOrganizations: OrganizationsByUserResponse[] };

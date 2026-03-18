@@ -202,9 +202,9 @@ export class Service {
     return response.data.servicesBySlugs;
   }
 
-  async listByOrganization(input: ListServicesByOrganizationInput): Promise<ServiceEntity[]> {
+  async listByOrganizationId(organizationID: string): Promise<ServiceEntity[]> {
     const query = serviceQueries.LIST_SERVICES_BY_ORGANIZATION;
-    const variables = { input };
+    const variables = { input: { organizationID } };
     const response = await this.client.query(query, variables) as { listServicesByOrganization: ServiceEntity[] };
     return response.listServicesByOrganization;
   }

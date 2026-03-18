@@ -169,25 +169,19 @@ export class Invoice {
   /**
    * Retrieves all invoices for a seller organization
    */
-  async listBySeller(sellerOrganizationId: string): Promise<InvoiceResponse[]> {
+  async listBySellerOrganizationId(sellerOrganizationId: string): Promise<InvoiceResponse[]> {
     const query = invoiceQueries.GET_INVOICES_BY_SELLER;
     const response = await this.client.query<GetInvoicesBySellerResponse>(query, { sellerOrganizationId });
     return response.invoicesBySeller;
   }
 
-  /**
-   * Retrieves all invoices for a buyer organization
-   */
-  async listByBuyer(buyerOrganizationId: string): Promise<InvoiceResponse[]> {
+  async listByBuyerOrganizationId(buyerOrganizationId: string): Promise<InvoiceResponse[]> {
     const query = invoiceQueries.GET_INVOICES_BY_BUYER;
     const response = await this.client.query<GetInvoicesByBuyerResponse>(query, { buyerOrganizationId });
     return response.invoicesByBuyer;
   }
 
-  /**
-   * Retrieves all invoices for a buyer user
-   */
-  async listByBuyerUser(buyerUserId: string): Promise<InvoiceResponse[]> {
+  async listByBuyerUserId(buyerUserId: string): Promise<InvoiceResponse[]> {
     const query = invoiceQueries.GET_INVOICES_BY_BUYER_USER;
     const response = await this.client.query<GetInvoicesByBuyerUserResponse>(query, { buyerUserId });
     return response.invoicesByBuyerUser;
@@ -198,7 +192,7 @@ export class Invoice {
    * @param invoiceIDs - An array of invoice IDs.
    * @returns A list of invoices.
    */
-  async getByIDs(invoiceIDs: string[]) {
+  async getByIds(invoiceIDs: string[]) {
     const query = invoiceQueries.GET_INVOICES_BY_IDS;
     const variables = { invoiceIDs };
     const response = await this.client.query(query, variables) as { data: { invoicesByIDs: any[] } };

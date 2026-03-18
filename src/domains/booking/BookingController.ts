@@ -39,9 +39,6 @@ export class BookingController {
     return response.createEstimateRequest;
   }
 
-  /**
-   * Récupérer les demandes de devis d'un service
-   */
   async listEstimateRequests(serviceId: string, userId?: string): Promise<EstimateRequest[]> {
     const response = await this.apiClient.query(
       bookingQueries.GET_ESTIMATE_REQUESTS,
@@ -50,9 +47,6 @@ export class BookingController {
     return response.estimateRequests;
   }
 
-  /**
-   * Récupérer une demande de devis spécifique
-   */
   async getEstimateRequestById(estimateRequestId: string): Promise<EstimateRequest | null> {
     const response = await this.apiClient.query(
       bookingQueries.GET_ESTIMATE_REQUEST,
@@ -63,10 +57,7 @@ export class BookingController {
 
   // ===== RÉSERVATIONS =====
 
-  /**
-   * Créer une réservation
-   */
-  async createBooking(input: CreateBookingInput): Promise<Booking> {
+  async create(input: CreateBookingInput): Promise<Booking> {
     const response = await this.apiClient.mutate(
       bookingMutations.CREATE_BOOKING,
       { input }
@@ -74,10 +65,7 @@ export class BookingController {
     return response.createBooking;
   }
 
-  /**
-   * Récupérer les réservations d'un service
-   */
-  async listBookingsByService(serviceId: string): Promise<Booking[]> {
+  async listByServiceId(serviceId: string): Promise<Booking[]> {
     const response = await this.apiClient.query(
       bookingQueries.GET_BOOKINGS_BY_SERVICE,
       { serviceId }
@@ -85,10 +73,7 @@ export class BookingController {
     return response.bookingsByService;
   }
 
-  /**
-   * Récupérer les réservations d'un utilisateur
-   */
-  async listBookingsByUser(userId: string): Promise<Booking[]> {
+  async listByUserId(userId: string): Promise<Booking[]> {
     const response = await this.apiClient.query(
       bookingQueries.GET_BOOKINGS_BY_USER,
       { userId }
@@ -96,10 +81,7 @@ export class BookingController {
     return response.bookingsByUser;
   }
 
-  /**
-   * Créer une réservation avec créneau auto-déterminé
-   */
-  async createBookingWithSlot(input: CreateBookingInput): Promise<Booking> {
+  async createWithSlot(input: CreateBookingInput): Promise<Booking> {
     const response = await this.apiClient.mutate(
       bookingMutations.CREATE_BOOKING_WITH_SLOT,
       { input }
@@ -131,7 +113,7 @@ export class BookingController {
   /**
    * Récupérer les réservations d'une disponibilité
    */
-  async listBookingsByAvailability(availabilityId: string): Promise<Booking[]> {
+  async listByAvailabilityId(availabilityId: string): Promise<Booking[]> {
     const response = await this.apiClient.query(
       bookingQueries.GET_BOOKINGS_BY_AVAILABILITY,
       { availabilityId }
@@ -139,10 +121,7 @@ export class BookingController {
     return response.bookingsByAvailability;
   }
 
-  /**
-   * Annuler une réservation
-   */
-  async cancelBooking(bookingId: string, message?: string): Promise<Booking> {
+  async cancel(bookingId: string, message?: string): Promise<Booking> {
     const response = await this.apiClient.mutate(
       bookingMutations.CANCEL_BOOKING,
       { bookingId, message }
@@ -150,10 +129,7 @@ export class BookingController {
     return response.cancelBooking;
   }
 
-  /**
-   * Mettre à jour une réservation
-   */
-  async updateBooking(input: UpdateBookingInput): Promise<Booking> {
+  async update(input: UpdateBookingInput): Promise<Booking> {
     const response = await this.apiClient.mutate(
       bookingMutations.UPDATE_BOOKING,
       { input }

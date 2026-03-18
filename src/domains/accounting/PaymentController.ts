@@ -1,8 +1,7 @@
 // src/api/paymentController.ts
 import { APIClient } from '../../api/APIClient.js';
 import { paymentMutations } from '../../api/graphql/accounting/mutations.js';
-import { orderQueries } from '../../api/graphql/accounting/queries.js';
-import { transactionQueries } from '../../api/graphql/accounting/queries.js';
+import { orderQueries, estimateQueries, transactionQueries } from '../../api/graphql/accounting/queries.js';
 import { transactionMutations } from '../../api/graphql/accounting/mutations.js';
 /* -------------------------------------
    Interfaces d'Input et Types de Retour
@@ -201,6 +200,20 @@ export class SMPPayment {
     return response.updateEstimate;
   }
 
+  async getById(estimateId: string): Promise<Estimate> {
+    const query = estimateQueries.GET_ESTIMATE_BY_ID;
+    const variables = { estimateId };
+    const response = await this.client.query(query, variables) as { estimate: Estimate };
+    return response.estimate;
+  }
+
+  async getByBuyerUserId(buyerUserId: string): Promise<Estimate[]> {
+    const query = estimateQueries.GET_ESTIMATES_BY_BUYER_USER_ID;
+    const variables = { buyerUserId };
+    const response = await this.client.query(query, variables) as { estimatesByBuyerUserId: Estimate[] };
+    return response.estimatesByBuyerUserId;
+  }
+
   /*---------------------- Contrat ----------------------*/
   async updateContract(updateContractId: string, data: UpdateContractInput): Promise<any> {
     const mutation = paymentMutations.UPDATE_CONTRACT;
@@ -267,7 +280,7 @@ export class SMPPayment {
   }
 
   /*---------------------- Orders Queries ----------------------*/
-  async listOrdersByUser(userId: string): Promise<Order[]> {
+  async listOrdersByUserId(userId: string): Promise<Order[]> {
     const query = orderQueries.GET_ORDERS_BY_USER_ID;
     const variables = { userId };
     const response = await this.client.query(query, variables) as { ordersByUser: Order[] };
@@ -320,7 +333,7 @@ export class SMPPayment {
   }
 
   /*---------------------- Transaction Mutations ----------------------*/
-  async initiateTransaction(input: CreateTransactionInput): Promise<Transaction> {
+  async createTransaction(input: CreateTransactionInput): Promise<Transaction> {
     const mutation = transactionMutations.CREATE_TRANSACTION;
     const variables = { input };
     const response = await this.client.mutate(mutation, variables) as { initiateTransaction: Transaction };

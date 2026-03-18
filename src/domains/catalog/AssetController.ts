@@ -227,11 +227,11 @@ export class Asset {
   /**
    * Récupère la liste des Assets associés à un service, avec pivot.
    */
-  async listByService(
-    input: ListAssetsByServiceInput
+  async listByServiceId(
+    serviceID: string
   ): Promise<AssetWithServiceAssetEntity[]> {
     const query = assetQueries.LIST_ASSETS_BY_SERVICE;
-    const variables = { input };
+    const variables = { input: { serviceID } };
     const response = await this.client.query<{
       listAssetsByService: AssetWithServiceAssetEntity[];
     }>(query, variables);
@@ -255,11 +255,11 @@ export class Asset {
   /**
    * Récupère la liste des Assets d'une organisation, avec tous leurs pivots.
    */
-  async listByOrganization(
-    input: ListAssetsByOrganizationInput
+  async listByOrganizationId(
+    organizationID: string
   ): Promise<AssetWithLinksEntity[]> {
     const query = assetQueries.LIST_ASSETS_BY_ORGANIZATION;
-    const variables = { input };
+    const variables = { input: { organizationID } };
     const response = await this.client.query<{
       listAssetsByOrganization: AssetWithLinksEntity[];
     }>(query, variables);

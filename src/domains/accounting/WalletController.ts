@@ -182,7 +182,7 @@ export class Wallet {
   /**
    * Retrieves wallets by user ID only
    */
-  async listByUser(userId: string): Promise<WalletEntity[]> {
+  async listByUserId(userId: string): Promise<WalletEntity[]> {
     const query = walletQueries.GET_WALLETS_BY_USER;
     const response = await this.client.query<GetWalletsResponse>(query, { userId });
     return response.wallets;
@@ -191,7 +191,7 @@ export class Wallet {
   /**
    * Retrieves wallets by organization ID only
    */
-  async listByOrganization(organizationId: string): Promise<WalletEntity[]> {
+  async listByOrganizationId(organizationId: string): Promise<WalletEntity[]> {
     const query = walletQueries.GET_WALLETS_BY_ORGANIZATION;
     const response = await this.client.query<GetWalletsResponse>(query, { organizationId });
     return response.wallets;
