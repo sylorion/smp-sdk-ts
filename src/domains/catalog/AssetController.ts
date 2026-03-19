@@ -137,14 +137,17 @@ export interface UpdateAssetInput {
 
 export interface ListAssetsByServiceInput {
   serviceID: string;
+  admin?: boolean;
 }
 
 export interface ListServicesByAssetInput {
   assetID: string;
+  admin?: boolean;
 }
 
 export interface ListAssetsByOrganizationInput {
   organizationID: string;
+  admin?: boolean;
 }
 
 export interface MutationResponse {
@@ -178,9 +181,9 @@ export class Asset {
 
   // ------------------------ QUERIES ------------------------
 
-  async getById(assetID: string): Promise<AssetEntity> {
+  async getById(assetID: string, admin?: boolean): Promise<AssetEntity> {
     const query = assetQueries.GET_ASSET;
-    const variables = { assetID };
+    const variables = { assetID, admin };
     const response = await this.client.query<{ asset: AssetEntity }>(query, variables);
     return response.asset;
   }
@@ -188,38 +191,39 @@ export class Asset {
   async list(
     pagination?: any,
     sort?: any,
-    filter?: any
+    filter?: any,
+    admin?: boolean
   ): Promise<AssetEntity[]> {
     const query = assetQueries.GET_ASSETS;
-    const variables = { pagination, sort, filter };
+    const variables = { pagination, sort, filter, admin };
     const response = await this.client.query<{ assets: AssetEntity[] }>(query, variables);
     return response.assets;
   }
 
-  async getBySlug(slug: string): Promise<AssetEntity> {
+  async getBySlug(slug: string, admin?: boolean): Promise<AssetEntity> {
     const query = assetQueries.GET_ASSET_BY_SLUG;
-    const variables = { slug };
+    const variables = { slug, admin };
     const response = await this.client.query<{ assetBySlug: AssetEntity }>(query, variables);
     return response.assetBySlug;
   }
 
-  async getByIds(assetIDs: string[]): Promise<AssetEntity[]> {
+  async getByIds(assetIDs: string[], admin?: boolean): Promise<AssetEntity[]> {
     const query = assetQueries.GET_ASSETS_BY_IDS;
-    const variables = { assetIDs };
+    const variables = { assetIDs, admin };
     const response = await this.client.query<{ assetsByIDs: AssetEntity[] }>(query, variables);
     return response.assetsByIDs;
   }
 
-  async getBySlugs(slugs: string[]): Promise<AssetEntity[]> {
+  async getBySlugs(slugs: string[], admin?: boolean): Promise<AssetEntity[]> {
     const query = assetQueries.GET_ASSETS_BY_SLUGS;
-    const variables = { slugs };
+    const variables = { slugs, admin };
     const response = await this.client.query<{ assetsBySlugs: AssetEntity[] }>(query, variables);
     return response.assetsBySlugs;
   }
 
-  async getByUniqRef(uniqRef: string): Promise<AssetEntity> {
+  async getByUniqRef(uniqRef: string, admin?: boolean): Promise<AssetEntity> {
     const query = assetQueries.GET_ASSET_BY_UNIQ_REF;
-    const variables = { uniqRef };
+    const variables = { uniqRef, admin };
     const response = await this.client.query<{ assetByUniqRef: AssetEntity }>(query, variables);
     return response.assetByUniqRef;
   }
@@ -256,10 +260,11 @@ export class Asset {
    * Récupère la liste des Assets d'une organisation, avec tous leurs pivots.
    */
   async listByOrganizationId(
-    organizationID: string
+    organizationID: string,
+    admin?: boolean
   ): Promise<AssetWithLinksEntity[]> {
     const query = assetQueries.LIST_ASSETS_BY_ORGANIZATION;
-    const variables = { input: { organizationID } };
+    const variables = { input: { organizationID, admin } };
     const response = await this.client.query<{
       listAssetsByOrganization: AssetWithLinksEntity[];
     }>(query, variables);

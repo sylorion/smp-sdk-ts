@@ -67,8 +67,8 @@ export const assetMediaQueries = {
 const assetQueries = {
   // Récupère un asset via son ID
   GET_ASSET: `
-    query GetAsset($assetID: ID!) {
-      asset(assetID: $assetID) {
+    query GetAsset($assetID: ID!, $admin: Boolean) {
+      asset(assetID: $assetID, admin: $admin) {
         assetID
         uniqRef
         slug
@@ -104,8 +104,8 @@ const assetQueries = {
 
   // Récupère la liste de tous les assets avec pagination, tri et filtres éventuels
   GET_ASSETS: `
-    query GetAssets($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-      assets(pagination: $pagination, sort: $sort, filter: $filter) {
+    query GetAssets($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!], $admin: Boolean) {
+      assets(pagination: $pagination, sort: $sort, filter: $filter, admin: $admin) {
         assetID
         uniqRef
         slug
@@ -141,8 +141,8 @@ const assetQueries = {
 
   // Récupère un asset via son slug
   GET_ASSET_BY_SLUG: `
-    query GetAssetBySlug($slug: String!) {
-      assetBySlug(slug: $slug) {
+    query GetAssetBySlug($slug: String!, $admin: Boolean) {
+      assetBySlug(slug: $slug, admin: $admin) {
         assetID
         uniqRef
         slug
@@ -178,8 +178,8 @@ const assetQueries = {
 
   // Récupère plusieurs assets via un tableau d'IDs
   GET_ASSETS_BY_IDS: `
-    query GetAssetsByIDs($assetIDs: [ID!]!) {
-      assetsByIDs(assetIDs: $assetIDs) {
+    query GetAssetsByIDs($assetIDs: [ID!]!, $admin: Boolean) {
+      assetsByIDs(assetIDs: $assetIDs, admin: $admin) {
         assetID
         uniqRef
         slug
@@ -215,8 +215,8 @@ const assetQueries = {
 
   // Récupère plusieurs assets via un tableau de slugs
   GET_ASSETS_BY_SLUGS: `
-    query GetAssetsBySlugs($slugs: [String!]!) {
-      assetsBySlugs(slugs: $slugs) {
+    query GetAssetsBySlugs($slugs: [String!]!, $admin: Boolean) {
+      assetsBySlugs(slugs: $slugs, admin: $admin) {
         assetID
         uniqRef
         slug
@@ -252,8 +252,8 @@ const assetQueries = {
 
   // Récupère un asset via sa référence unique
   GET_ASSET_BY_UNIQ_REF: `
-    query GetAssetByUniqRef($uniqRef: String!) {
-      assetByUniqRef(uniqRef: $uniqRef) {
+    query GetAssetByUniqRef($uniqRef: String!, $admin: Boolean) {
+      assetByUniqRef(uniqRef: $uniqRef, admin: $admin) {
         assetID
         uniqRef
         slug
@@ -1008,8 +1008,8 @@ const serviceQueries = {
 }
 `,
   GET_SERVICES: `
-    query GetServices($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-  services(pagination: $pagination, sort: $sort, filter: $filter) {
+    query GetServices($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!], $admin: Boolean) {
+  services(pagination: $pagination, sort: $sort, filter: $filter, admin: $admin) {
     serviceID
     uniqRef
     slug
@@ -1050,8 +1050,8 @@ const serviceQueries = {
 }
 `,
   GET_SERVICES_BY_AGENT_ID: `
-    query GetServicesByAgentID($agentID: String!) {
-  servicesByAgentID(agentID: $agentID) {
+    query GetServicesByAgentID($agentID: String!, $admin: Boolean) {
+  servicesByAgentID(agentID: $agentID, admin: $admin) {
     serviceID
     uniqRef
     slug

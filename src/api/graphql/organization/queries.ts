@@ -172,8 +172,8 @@ export { organizationMediaQueries };
 const organizationQueries = {
   // QUERY TO GET A SINGLE ORGANIZATION BY ITS ID
   GET_ORGANIZATION_BY_ID: `
-      query GetOrganizationByID($organizationID: ID!) {
-        organization(organizationID: $organizationID) {
+      query GetOrganizationByID($organizationID: ID!, $admin: Boolean) {
+        organization(organizationID: $organizationID, admin: $admin) {
           organizationID
           uniqRef
           slug
@@ -218,8 +218,8 @@ const organizationQueries = {
 
   // QUERY TO GET ALL ORGANIZATIONS WITH OPTIONAL PAGINATION, SORTING, AND FILTERING
   GET_ORGANIZATIONS: `
-      query GetOrganizations($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-        organizations(pagination: $pagination, sort: $sort, filter: $filter) {
+      query GetOrganizations($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!], $admin: Boolean) {
+        organizations(pagination: $pagination, sort: $sort, filter: $filter, admin: $admin) {
           organizationID
           uniqRef
           slug
@@ -264,8 +264,8 @@ const organizationQueries = {
 
   // QUERY TO GET AN ORGANIZATION BY ITS UNIQUE REFERENCE
   GET_ORGANIZATION_BY_UNIQ_REF: `
-      query GetOrganizationByUniqRef($uniqRef: String!) {
-        organizationByUniqRef(uniqRef: $uniqRef) {
+      query GetOrganizationByUniqRef($uniqRef: String!, $admin: Boolean) {
+        organizationByUniqRef(uniqRef: $uniqRef, admin: $admin) {
           organizationID
           uniqRef
           slug
@@ -310,8 +310,8 @@ const organizationQueries = {
 
   // QUERY TO GET AN ORGANIZATION BY ITS SLUG
   GET_ORGANIZATION_BY_SLUG: `
-      query GetOrganizationBySlug($slug: String!) {
-        organizationBySlug(slug: $slug) {
+      query GetOrganizationBySlug($slug: String!, $admin: Boolean) {
+        organizationBySlug(slug: $slug, admin: $admin) {
           organizationID
           uniqRef
           slug
@@ -356,8 +356,8 @@ const organizationQueries = {
 
   // QUERY TO GET MULTIPLE ORGANIZATIONS BY AN ARRAY OF IDS
   GET_ORGANIZATIONS_BY_IDS: `
-      query GetOrganizationsByIDs($organizationIDs: [ID!]!) {
-        organizationsByIDs(organizationIDs: $organizationIDs) {
+      query GetOrganizationsByIDs($organizationIDs: [ID!]!, $admin: Boolean) {
+        organizationsByIDs(organizationIDs: $organizationIDs, admin: $admin) {
           organizationID
           uniqRef
           slug
@@ -402,8 +402,8 @@ const organizationQueries = {
 
   // QUERY TO GET MULTIPLE ORGANIZATIONS BY AN ARRAY OF SLUGS
   GET_ORGANIZATIONS_BY_SLUGS: `
-      query GetOrganizationsBySlugs($slugs: [String!]!) {
-        organizationsBySlugs(slugs: $slugs) {
+      query GetOrganizationsBySlugs($slugs: [String!]!, $admin: Boolean) {
+        organizationsBySlugs(slugs: $slugs, admin: $admin) {
           organizationID
           uniqRef
           slug

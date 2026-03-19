@@ -165,9 +165,9 @@ export class Organization {
   /**
    * Fetches a list of organizations with optional pagination, sorting, and filters.
    */
-  async list(pagination?: any, sort?: any, filter?: any): Promise<Organization[]> {
+  async list(pagination?: any, sort?: any, filter?: any, admin?: boolean): Promise<Organization[]> {
     const query = organizationQueries.GET_ORGANIZATIONS;
-    const variables = { pagination, sort, filter };
+    const variables = { pagination, sort, filter, admin };
     const response = await this.client.query(query, variables) as { organizations: Organization[] };
     return response.organizations;
   }
@@ -175,9 +175,9 @@ export class Organization {
   /**
    * Fetches a single organization by its ID.
    */
-  async getById(organizationID: string): Promise<Organization> {
+  async getById(organizationID: string, admin?: boolean): Promise<Organization> {
     const query = organizationQueries.GET_ORGANIZATION_BY_ID;
-    const variables = { organizationID };
+    const variables = { organizationID, admin };
     const response = await this.client.query(query, variables) as { organization: Organization };
     return response.organization;
   }
@@ -185,9 +185,9 @@ export class Organization {
   /**
    * Fetches multiple organizations by their IDs.
    */
-  async getByIds(organizationIDs: string[]): Promise<Organization[]> {
+  async getByIds(organizationIDs: string[], admin?: boolean): Promise<Organization[]> {
     const query = organizationQueries.GET_ORGANIZATIONS_BY_IDS;
-    const variables = { organizationIDs };
+    const variables = { organizationIDs, admin };
     const response = await this.client.query(query, variables) as { data: { organizationsByIDs: Organization[] } };
     return response.data.organizationsByIDs;
   }
@@ -195,9 +195,9 @@ export class Organization {
   /**
    * Fetches a single organization by its unique reference.
    */
-  async getByUniqRef(uniqRef: string): Promise<Organization> {
+  async getByUniqRef(uniqRef: string, admin?: boolean): Promise<Organization> {
     const query = organizationQueries.GET_ORGANIZATION_BY_UNIQ_REF;
-    const variables = { uniqRef };
+    const variables = { uniqRef, admin };
     const response = await this.client.query(query, variables) as { data: { organizationByUniqRef: Organization } };
     return response.data.organizationByUniqRef;
   }
@@ -205,9 +205,9 @@ export class Organization {
   /**
    * Fetches a single organization by its slug.
    */
-  async getBySlug(slug: string): Promise<Organization> {
+  async getBySlug(slug: string, admin?: boolean): Promise<Organization> {
     const query = organizationQueries.GET_ORGANIZATION_BY_SLUG;
-    const variables = { Slug: slug };
+    const variables = { Slug: slug, admin };
     const response = await this.client.query(query, variables) as { organizationBySlug: Organization };
     return response.organizationBySlug;
   }
@@ -215,9 +215,9 @@ export class Organization {
   /**
    * Fetches multiple organizations by their slugs.
    */
-  async getBySlugs(slugs: string[]): Promise<Organization[]> {
+  async getBySlugs(slugs: string[], admin?: boolean): Promise<Organization[]> {
     const query = organizationQueries.GET_ORGANIZATIONS_BY_SLUGS;
-    const variables = { slugs };
+    const variables = { slugs, admin };
     const response = await this.client.query(query, variables) as { data: { organizationsBySlugs: Organization[] } };
     return response.data.organizationsBySlugs;
   }
