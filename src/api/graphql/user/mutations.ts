@@ -4,8 +4,8 @@ import { gql } from 'graphql-request';
 // Source: user-space/profileMutation.ts
 // =========================================
 const profileMutations = {
-    // MUTATION TO CREATE A PROFILE
-    CREATE_PROFILE: `
+  // MUTATION TO CREATE A PROFILE
+  CREATE_PROFILE: `
       mutation CreateProfile($input: CreateProfileInput!) {
         createProfile(input: $input) {
           profileID
@@ -25,12 +25,16 @@ const profileMutations = {
           createdAt
           updatedAt
           deletedAt
+          profilePictureID
+          profilePicture {
+            url
+          }
         }
       }
     `,
-  
-   // MUTATION TO UPDATE A PROFILE
-UPDATE_PROFILE: `
+
+  // MUTATION TO UPDATE A PROFILE
+  UPDATE_PROFILE: `
 mutation UpdateProfile($input: UpdateProfileInput!, $profileId: ID!) {
   updateProfile(profileID: $profileId ,input: $input) {
     profileID
@@ -58,9 +62,9 @@ mutation UpdateProfile($input: UpdateProfileInput!, $profileId: ID!) {
 }
 `,
 
-  
-    // MUTATION TO DELETE A PROFILE
-    DELETE_PROFILE: `
+
+  // MUTATION TO DELETE A PROFILE
+  DELETE_PROFILE: `
       mutation DeleteProfile($profileID: ID!) {
         deleteProfile(profileID: $profileID) {
           success
@@ -68,10 +72,10 @@ mutation UpdateProfile($input: UpdateProfileInput!, $profileId: ID!) {
         }
       }
     `,
-  };
-  
-  export { profileMutations };
-  
+};
+
+export { profileMutations };
+
 // =========================================
 // Source: authentication/affiliateMutations.ts
 // =========================================
@@ -251,7 +255,7 @@ export const waitingListMutations = {
       }
     }
   `
-}; 
+};
 export const MUTATION_AUTH_APP = /* GraphQL */`
   mutation AuthenticateApp($appLoginInput: AppLoginInput!) {
     authenticateApp(input: $appLoginInput) {

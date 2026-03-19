@@ -1,64 +1,11 @@
 import { APIClient } from '../../api/APIClient.js';
 import { profileMutations } from '../../api/graphql/user/mutations.js';
 import { profileQueries } from '../../api/graphql/user/queries.js';
-
-// Types d'entrée pour les mutations des profils
-interface CreateProfileInput {
-  firstName?: string;
-  lastName?: string;
-  dateOfBirth?: string; // ISO 8601 format
-  gender?: string; // ProfileGender
-  nationality?: string;
-  phoneNumber?: string;
-  locationID?: string;
-  idCardNumber?: string;
-  authorID: string;
-  passportNumber?: string;
-  socialSecurityNumber?: string;
-  state: string;
-}
-
-interface UpdateProfileInput {
-  firstName?: string;
-  lastName?: string;
-  dateOfBirth?: string;
-  gender?: string;
-  nationality?: string;
-  phoneNumber?: string;
-  locationID?: string;
-  idCardNumber?: string;
-  passportNumber?: string;
-  socialSecurityNumber?: string;
-  state?: string; // ObjectStatus
-  profilePictureID?: string;
-}
-
-interface MediaEntity {
-  url: string;
-}
-
-// Types de réponse pour les mutations et les requêtes
-interface ProfileEntity {
-  profileID: string;
-  uniqRef: string;
-  slug: string;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string;
-  gender: string;
-  nationality: string;
-  phoneNumber: string;
-  locationID: string;
-  idCardNumber?: string;
-  passportNumber?: string;
-  socialSecurityNumber?: string;
-  state: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt?: string;
-  profilePicture?: MediaEntity;
-  profilePictureID?: string;
-}
+import {
+  CreateProfileInput,
+  UpdateProfileInput,
+  ProfileEntity
+} from '../../types/user/index.js';
 
 interface MutationResponse {
   success: boolean;

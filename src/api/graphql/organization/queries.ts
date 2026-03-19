@@ -6,8 +6,8 @@ import { gql } from 'graphql-request';
 const organizationMediaQueries = {
   // QUERY TO GET A SINGLE ORGANIZATION MEDIA BY ID
   GET_ORGANIZATION_MEDIA: `
-      query GetOrganizationMediaByID($organizationMediaID: ID!) {
-        organizationMediaByID(organizationMediaID: $organizationMediaID) {
+      query GetOrganizationMedia($organizationMediaID: ID!) {
+        organizationMedia(organizationMediaID: $organizationMediaID) {
           organizationMediaID
           uniqRef
           slug
@@ -28,7 +28,7 @@ const organizationMediaQueries = {
     `,
   GET_ORGANIZATION_MEDIA_BY_ID: `
       query GetOrganizationMediaByID($organizationMediaID: ID!) {
-        organizationMediaByID(organizationMediaID: $organizationMediaID) {
+        organizationMedia(organizationMediaID: $organizationMediaID) {
           organizationMediaID
           uniqRef
           slug
@@ -173,7 +173,7 @@ const organizationQueries = {
   // QUERY TO GET A SINGLE ORGANIZATION BY ITS ID
   GET_ORGANIZATION_BY_ID: `
       query GetOrganizationByID($organizationID: ID!) {
-        organizationByID(organizationID: $organizationID) {
+        organization(organizationID: $organizationID) {
           organizationID
           uniqRef
           slug

@@ -68,6 +68,7 @@ export interface CreateProfileInput {
     passportNumber?: string;
     socialSecurityNumber?: string;
     state: string;
+    profilePictureID?: string;
 }
 
 export interface UpdateProfileInput {
