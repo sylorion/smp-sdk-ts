@@ -39,6 +39,7 @@ const bookingMutations = {
         bookingStartDate
         bookingEndDate
         customerDetails
+        engagementId
         createdAt
         updatedAt
         deletedAt
@@ -127,6 +128,7 @@ const bookingMutations = {
         bookingStartDate
         bookingEndDate
         customerDetails
+        engagementId
         createdAt
         updatedAt
         deletedAt
@@ -204,6 +206,7 @@ const bookingMutations = {
         slotEndTime
         slotDuration
         customerDetails
+        engagementId
         createdAt
         updatedAt
         deletedAt
@@ -237,6 +240,8 @@ const bookingConfigurationMutations = {
         minBookingDuration
         maxBookingDuration
         dateRangeBookingAllowed
+        cancellationWindow
+        cancellationPolicy
         advanceBookingLimit
         createdAt
         updatedAt
@@ -258,6 +263,8 @@ const bookingConfigurationMutations = {
         minBookingDuration
         maxBookingDuration
         dateRangeBookingAllowed
+        cancellationWindow
+        cancellationPolicy
         advanceBookingLimit
         createdAt
         updatedAt
@@ -279,6 +286,8 @@ const bookingConfigurationMutations = {
         minBookingDuration
         maxBookingDuration
         dateRangeBookingAllowed
+        cancellationWindow
+        cancellationPolicy
         advanceBookingLimit
         createdAt
         updatedAt

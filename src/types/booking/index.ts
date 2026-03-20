@@ -42,6 +42,8 @@ export interface Booking {
   // Détails du client en JSON
   customerDetails?: any;
 
+  engagementId?: string;
+
   createdAt: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -136,6 +138,8 @@ export interface BookingConfiguration {
   minBookingDuration: number;
   maxBookingDuration: number;
   dateRangeBookingAllowed: boolean;
+  cancellationWindow: number;
+  cancellationPolicy?: string;
   advanceBookingLimit?: number; // NOUVEAU
   createdAt: Date;
   updatedAt?: Date;
@@ -182,7 +186,12 @@ export interface CreateBookingInput {
 
   // Détails du client en JSON
   customerDetails?: any;
+
+  bookingStartDate?: Date;
+  bookingEndDate?: Date;
+  engagementId?: string;
 }
+
 
 export interface UpdateBookingInput {
   bookingId: string;
@@ -267,6 +276,8 @@ export interface CreateBookingConfigurationInput {
   minBookingDuration: number;
   maxBookingDuration: number;
   dateRangeBookingAllowed: boolean;
+  cancellationWindow?: number;
+  cancellationPolicy?: string;
   advanceBookingLimit?: number; // NOUVEAU
 }
 
@@ -288,6 +299,8 @@ export interface UpdateBookingConfigurationInput {
   minBookingDuration?: number;
   maxBookingDuration?: number;
   dateRangeBookingAllowed?: boolean;
+  cancellationWindow?: number;
+  cancellationPolicy?: string;
   advanceBookingLimit?: number; // NOUVEAU
 }
 

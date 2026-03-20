@@ -167,6 +167,7 @@ const bookingQueries = {
         bookingStartDate
         bookingEndDate
         customerDetails
+        engagementId
         createdAt
         updatedAt
         deletedAt
@@ -190,6 +191,7 @@ const bookingQueries = {
         bookingStartDate
         bookingEndDate
         customerDetails
+        engagementId
         createdAt
         updatedAt
         deletedAt
@@ -213,6 +215,7 @@ const bookingQueries = {
         bookingStartDate
         bookingEndDate
         customerDetails
+        engagementId
         createdAt
         updatedAt
         deletedAt
@@ -233,6 +236,8 @@ const bookingQueries = {
         minBookingDuration
         maxBookingDuration
         dateRangeBookingAllowed
+        cancellationWindow
+        cancellationPolicy
         createdAt
         updatedAt
         deletedAt
@@ -253,6 +258,8 @@ const bookingQueries = {
         minBookingDuration
         maxBookingDuration
         dateRangeBookingAllowed
+        cancellationWindow
+        cancellationPolicy
         createdAt
         updatedAt
         deletedAt
@@ -273,6 +280,8 @@ const bookingQueries = {
         minBookingDuration
         maxBookingDuration
         dateRangeBookingAllowed
+        cancellationWindow
+        cancellationPolicy
         createdAt
         updatedAt
         deletedAt
@@ -319,6 +328,7 @@ const bookingQueries = {
         bookingStartDate
         bookingEndDate
         customerDetails
+        engagementId
         createdAt
         updatedAt
         deletedAt
@@ -352,6 +362,7 @@ const bookingQueries = {
         bookingStartDate
         bookingEndDate
         customerDetails
+        engagementId
         createdAt
         updatedAt
         deletedAt
