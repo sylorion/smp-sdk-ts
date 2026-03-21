@@ -207,7 +207,7 @@ export class Organization {
    */
   async getBySlug(slug: string, admin?: boolean): Promise<Organization> {
     const query = organizationQueries.GET_ORGANIZATION_BY_SLUG;
-    const variables = { Slug: slug, admin };
+    const variables = { slug, admin };
     const response = await this.client.query(query, variables) as { organizationBySlug: Organization };
     return response.organizationBySlug;
   }

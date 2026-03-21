@@ -28,7 +28,7 @@ export enum EstimateRequestStatus {
 export interface Booking {
   bookingId: string;
   serviceId: string;
-  availabilityId: string;
+  availabilityId?: string;
   userId?: string; // Peut être null pour les utilisateurs non connectés
   status: BookingStatus;
 

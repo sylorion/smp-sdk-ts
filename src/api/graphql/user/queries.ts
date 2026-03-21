@@ -4,8 +4,8 @@ import { gql } from 'graphql-request';
 // Source: user-space/profileQueries.ts
 // =========================================
 export const profileQueries = {
-    // Query to get a single profile by ID
-    GET_PROFILE: `
+  // Query to get a single profile by ID
+  GET_PROFILE: `
       query Profile($profileId: ID!) {
         profile(profileID: $profileId) {
           profileID
@@ -32,9 +32,9 @@ export const profileQueries = {
         }
       }
     `,
-    
-    // Query to get all profiles
-    GET_PROFILES: `
+
+  // Query to get all profiles
+  GET_PROFILES: `
       query Profiles {
         profiles {
           profileID
@@ -62,8 +62,8 @@ export const profileQueries = {
       }
     `,
 
-    // Query to get a profile by slug
-    GET_PROFILE_BY_SLUG: `
+  // Query to get a profile by slug
+  GET_PROFILE_BY_SLUG: `
       query ProfileBySlug($slug: String!) {
         profileBySlug(Slug: $slug) {
           profileID
@@ -91,8 +91,8 @@ export const profileQueries = {
       }
     `,
 
-    // Query to get a profile by uniqRef
-    GET_PROFILE_BY_UNIQ_REF: `
+  // Query to get a profile by uniqRef
+  GET_PROFILE_BY_UNIQ_REF: `
       query ProfileByUniqRef($uniqRef: String!) {
         profileByUniqRef(uniqRef: $uniqRef) {
           profileID
@@ -120,8 +120,8 @@ export const profileQueries = {
       }
     `,
 
-    // Query to get profiles by IDs
-    GET_PROFILES_BY_IDS: `
+  // Query to get profiles by IDs
+  GET_PROFILES_BY_IDS: `
       query ProfilesByIds($profileIDs: [ID!]!) {
         profilesByIDs(profileIDs: $profileIDs) {
           profileID
@@ -149,8 +149,8 @@ export const profileQueries = {
       }
     `,
 
-    // Query to get profiles by slugs
-    GET_PROFILES_BY_SLUGS: `
+  // Query to get profiles by slugs
+  GET_PROFILES_BY_SLUGS: `
       query ProfilesBySlugs($slugs: [String!]!) {
         profilesBySlugs(slugs: $slugs) {
           profileID
@@ -177,8 +177,8 @@ export const profileQueries = {
         }
       }
     `,
-  };
-  
+};
+
 // =========================================
 // Source: authentication/affiliateQueries.ts
 // =========================================
@@ -219,7 +219,7 @@ export const affiliateQueries = {
 // =========================================
 // Source: authentication/userQueries.ts
 // =========================================
- 
+
 // =========================================
 // Source: authentication/waitingListQueries.ts
 // =========================================

@@ -25,10 +25,9 @@ const bookingMutations = {
   // MUTATION POUR CRÉER UNE RÉSERVATION
   CREATE_BOOKING: `
     mutation CreateBooking($input: CreateBookingInput!) {
-      createBooking(input: $input) {
+      createBooking(data: $input) {
         bookingId
         serviceId
-        availabilityId
         userId
         status
         weeklyAvailabilityId
@@ -114,10 +113,9 @@ const bookingMutations = {
   // NOUVELLE MUTATION POUR CRÉER UNE RÉSERVATION AVEC CRÉNEAU AUTO-DÉTERMINÉ
   CREATE_BOOKING_WITH_SLOT: `
     mutation CreateBookingWithSlot($input: CreateBookingInput!) {
-      createBooking(input: $input) {
+      createBooking(data: $input) {
         bookingId
         serviceId
-        availabilityId
         userId
         status
         weeklyAvailabilityId
@@ -197,7 +195,6 @@ const bookingMutations = {
       cancelBooking(bookingId: $bookingId, message: $message) {
         bookingId
         serviceId
-        availabilityId
         userId
         status
         weeklyAvailabilityId
