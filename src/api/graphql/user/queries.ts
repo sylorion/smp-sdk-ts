@@ -267,4 +267,55 @@ export const waitingListQueries = {
       }
     }
   `
-}; 
+};
+
+export const preferenceQueries = {
+  GET_USER_PREFERENCES: `
+    query GetUserPreferences($userPreferencesID: ID!) {
+      userPreferences(userPreferencesID: $userPreferencesID) {
+        userPreferencesID
+        userID
+        lang
+        timeZone
+        notificationPreferences
+        privacySettings
+        theme
+        marketplaceConfig
+        defaultCurrency
+        defaultPaymentMethodID
+        notificationFrequency
+        showRecommendations
+        otherSettings
+        onboardingData
+        state
+        createdAt
+        updatedAt
+        deletedAt
+      }
+    }
+  `,
+  GET_USER_PREFERENCES_BY_USER_ID: `
+    query GetUserPreferencesByUserId($userID: String!) {
+      userPreferencesByUserId(userID: $userID) {
+        userPreferencesID
+        userID
+        lang
+        timeZone
+        notificationPreferences
+        privacySettings
+        theme
+        marketplaceConfig
+        defaultCurrency
+        defaultPaymentMethodID
+        notificationFrequency
+        showRecommendations
+        otherSettings
+        onboardingData
+        state
+        createdAt
+        updatedAt
+        deletedAt
+      }
+    }
+  `
+};

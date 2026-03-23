@@ -163,3 +163,59 @@ export interface AffiliateTokenInfo {
     isValid: boolean;
     message?: string;
 }
+
+// ==============================
+// USER PREFERENCES
+// ==============================
+
+export interface UserPreferences {
+    userPreferencesID: string;
+    userID: string;
+    lang?: string;
+    timeZone?: string;
+    notificationPreferences?: any;
+    privacySettings?: any;
+    theme?: number;
+    marketplaceConfig?: any;
+    defaultCurrency?: string;
+    defaultPaymentMethodID?: string;
+    notificationFrequency?: string;
+    showRecommendations?: boolean;
+    otherSettings?: any;
+    onboardingData?: any;
+    state: string;
+    createdAt: string;
+    updatedAt?: string;
+    deletedAt?: string;
+}
+
+export interface CreateUserPreferencesInput {
+    userID: string;
+    lang?: string;
+    timeZone?: string;
+    notificationPreferences?: any;
+    privacySettings?: any;
+    theme?: number;
+    marketplaceConfig?: any;
+    defaultCurrency?: string;
+    defaultPaymentMethodID?: string;
+    notificationFrequency?: string;
+    showRecommendations?: boolean;
+    otherSettings?: any;
+    onboardingData?: any;
+}
+
+export interface UpdateUserPreferencesInput {
+    lang?: string;
+    timeZone?: string;
+    notificationPreferences?: any;
+    privacySettings?: any;
+    theme?: number;
+    marketplaceConfig?: any;
+    defaultCurrency?: string;
+    defaultPaymentMethodID?: string;
+    notificationFrequency?: string;
+    showRecommendations?: boolean;
+    otherSettings?: any;
+    onboardingData?: any;
+}

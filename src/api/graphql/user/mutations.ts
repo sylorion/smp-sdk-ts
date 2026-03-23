@@ -409,3 +409,39 @@ mutation SignupAfterInvitation($input: CreateUserInput!, $organizationId: ID!, $
 } `;
 
 
+
+export const preferenceMutations = {
+  CREATE_USER_PREFERENCES: `
+    mutation CreateUserPreferences($input: CreateUserPreferencesInput!) {
+      createUserPreferences(input: $input) {
+        userPreferencesID
+        userID
+        onboardingData
+      }
+    }
+  `,
+  UPDATE_USER_PREFERENCES: `
+    mutation UpdateUserPreferences($userPreferencesID: ID!, $input: UpdateUserPreferencesInput!) {
+      updateUserPreferences(userPreferencesID: $userPreferencesID, input: $input) {
+        userPreferencesID
+        userID
+        lang
+        timeZone
+        notificationPreferences
+        privacySettings
+        theme
+        marketplaceConfig
+        defaultCurrency
+        defaultPaymentMethodID
+        notificationFrequency
+        showRecommendations
+        otherSettings
+        onboardingData
+        state
+        createdAt
+        updatedAt
+        deletedAt
+      }
+    }
+  `
+};
