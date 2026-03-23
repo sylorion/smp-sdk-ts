@@ -213,7 +213,7 @@ const bookingMutations = {
   // MUTATION POUR METTRE À JOUR UNE RÉSERVATION
   UPDATE_BOOKING: `
     mutation UpdateBooking($input: UpdateBookingInput!) {
-      updateBooking(input: $input) {
+      updateBooking(data: $input) {
         bookingId
         customerDetails
       }
