@@ -95,7 +95,6 @@ export class AuthTokenManager {
       const refreshToken = response.login.refreshToken;
       const expiresInMilli = 1000 * response.login.accessValidityDuration;
 
-      logger.info(`[AuthTokenManager] Saving user tokens...`);
       this.userTokenStorage.saveRefreshToken(refreshToken);
       this.userTokenStorage.saveAccessToken(accessToken);
       this.apiClient.updateHeaderUserAccessToken(accessToken);
@@ -104,7 +103,6 @@ export class AuthTokenManager {
         this.configManager.userAccessDuration : expiresInMilli;
 
       this.userTokenExpiresAt = Date.now() + expiresInMilli;
-      logger.info(`[AuthTokenManager] Scheduling user token refresh in ${refreshDuration}ms`);
       this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
       return response.login
     } catch (error) {
@@ -126,7 +124,6 @@ export class AuthTokenManager {
     if (this.isUserTokenExpired() || !currentToken) {
       const refreshToken = this.userTokenStorage.getRefreshToken();
       if (!refreshToken) return '';
-      logger.info('User Access token expired, refreshing...');
       return await this.refreshUserAccessToken();
     }
     return currentToken;
@@ -137,7 +134,6 @@ export class AuthTokenManager {
     if (this.isAppTokenExpired() || !currentToken) {
       const refreshToken = this.appTokenStorage.getRefreshToken();
       if (!refreshToken) return '';
-      logger.info('App Access token expired, refreshing...');
       return await this.refreshAppAccessToken();
     }
     return currentToken;
@@ -151,13 +147,9 @@ export class AuthTokenManager {
 
     this.userRefreshPromise = (async () => {
       try {
-        console.log(`[AuthTokenManager] refreshUserAccessToken triggered`);
         const refreshToken = this.userTokenStorage.getRefreshToken();
         if (!refreshToken) {
-          console.error(`[AuthTokenManager] CRITICAL: Refresh token is MISSING from storage!`);
           throw new Error('No user refresh token available');
-        } else {
-          logger.info(`Refresh Token USED ${Date.now().toLocaleString()}: [HIDDEN]\n\n`);
         }
 
         const response = await this.apiClient.query<{ refreshUserToken: TokenDataResponse }>(MUTATION_REFRESH_USER_TOKEN, { refreshToken });
@@ -170,7 +162,6 @@ export class AuthTokenManager {
 
         this.userTokenStorage.saveAccessToken(accessToken);
         this.apiClient.updateHeaderUserAccessToken(accessToken);
-        logger.info(`Refresh User token, new token: [HIDDEN]`);
         this.userTokenExpiresAt = Date.now() + expiresInMilli;
         this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
       } finally {
@@ -254,7 +245,6 @@ export class AuthTokenManager {
         input: { userID, refreshToken },
       };
 
-      console.log("LOGOUT USER - Start of logout ");
       await this.apiClient.query(query, variables);
 
       // Suppression des tokens
@@ -263,8 +253,6 @@ export class AuthTokenManager {
 
       this.apiClient.resetHeadersForUser();
       this.userTokenExpiresAt = undefined;
-
-      console.log("logout successful");
     } catch (error) {
       console.error("Error during logout", error);
       throw new Error("logout failed, please try again");

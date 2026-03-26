@@ -82,12 +82,10 @@ export class APIClient {
       const body = JSON.stringify({ mutation, variables });
       this.trackDataSent(body.length);
 
-      logger.info("CALL TO APIClient.MUTATE Method");
       const response = await this.graphqlClient.request<T>(mutation, variables);
 
       const respJson = JSON.stringify(response);
       this.trackDataReceived(respJson.length);
-      logger.info(`Total Data received : ${this.dataReceived}`);
       return response;
     } catch (error: any) {
       console.error("GraphQL Error:", error);
@@ -102,11 +100,9 @@ export class APIClient {
       const body = JSON.stringify({ query, variables });
       this.trackDataSent(body.length);
 
-      logger.info("CALL TO APIClient.QUERY Method");
       const response = await this.graphqlClient.request<T>(query, variables);
       const respJson = JSON.stringify(response);
       this.trackDataReceived(respJson.length);
-      logger.info(`Total Data received : ${this.dataReceived}`);
       return response;
     } catch (error: any) {
       // ErrorHandler.handleError(error, "GRAPHQL_ERROR");

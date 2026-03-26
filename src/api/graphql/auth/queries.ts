@@ -28,7 +28,36 @@ export const affiliateQueries = {
         deletedAt
       }
     }
+  `,
+
+  GET_AFFILIATE_LINKS_BY_REFERRER: `
+    query AffiliateLinksByReferrer($referrerUserId: ID!) {
+      affiliateLinksByReferrer(referrerUserId: $referrerUserId) {
+        id
+        token
+        label
+        isActive
+        referrerUserId
+        usageCount
+        createdAt
+        updatedAt
+      }
+    }
+  `,
+
+  GET_AFFILIATE_LINK_BY_TOKEN: `
+    query AffiliateLinkByToken($token: String!) {
+      affiliateLinkByToken(token: $token) {
+        id
+        token
+        label
+        isActive
+        referrerUserId
+        usageCount
+        createdAt
+        updatedAt
+      }
+    }
   `
 };
 
- 

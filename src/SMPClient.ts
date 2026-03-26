@@ -57,7 +57,6 @@ export class SMPClient {
     try {
       const access = await this.getAppAccessToken();
       if (access) {
-        logger.info("App already authenticated");
         return;
       }
       const app = await this.authTokenManager.authenticateApp(this.configManager.appId, this.configManager.appSecret);

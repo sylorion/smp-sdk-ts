@@ -189,6 +189,42 @@ export const affiliateMutations = {
         message
       }
     }
+  `,
+
+  CREATE_AFFILIATE_LINK: `
+    mutation CreateAffiliateLink($input: CreateAffiliateLinkInput!) {
+      createAffiliateLink(input: $input) {
+        id
+        token
+        label
+        isActive
+        referrerUserId
+        usageCount
+        createdAt
+      }
+    }
+  `,
+
+  UPDATE_AFFILIATE_LINK: `
+    mutation UpdateAffiliateLink($id: ID!, $input: UpdateAffiliateLinkInput!) {
+      updateAffiliateLink(id: $id, input: $input) {
+        id
+        token
+        label
+        isActive
+        usageCount
+        updatedAt
+      }
+    }
+  `,
+
+  DELETE_AFFILIATE_LINK: `
+    mutation DeleteAffiliateLink($id: ID!) {
+      deleteAffiliateLink(id: $id) {
+        success
+        message
+      }
+    }
   `
 };
 
