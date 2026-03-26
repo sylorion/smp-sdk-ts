@@ -88,7 +88,7 @@ export class AuthTokenManager {
       }
 
       if (!response.login.accessToken) {
-        throw new Error(response.login.message || "Authentication failed: No access token received");
+        throw new Error(response.login.message || " Authentication failed: No access token received");
       }
 
       const accessToken = response.login.accessToken;
