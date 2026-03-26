@@ -114,6 +114,8 @@ export class AuthTokenManager {
   public async getUserAccessToken(): Promise<string> {
     const currentToken = this.userTokenStorage.getAccessToken() || '';
     if (this.isUserTokenExpired() || !currentToken) {
+      const refreshToken = this.userTokenStorage.getRefreshToken();
+      if (!refreshToken) return '';
       logger.info('User Access token expired, refreshing...');
       return await this.refreshUserAccessToken();
     }
@@ -123,6 +125,8 @@ export class AuthTokenManager {
   public async getAppAccessToken(): Promise<string> {
     const currentToken = this.appTokenStorage.getAccessToken() || '';
     if (this.isAppTokenExpired() || !currentToken) {
+      const refreshToken = this.appTokenStorage.getRefreshToken();
+      if (!refreshToken) return '';
       logger.info('App Access token expired, refreshing...');
       return await this.refreshAppAccessToken();
     }
