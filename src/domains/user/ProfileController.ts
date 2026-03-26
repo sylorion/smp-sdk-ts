@@ -1,5 +1,6 @@
 import { APIClient } from '../../api/APIClient.js';
 import { profileMutations } from '../../api/graphql/user/mutations.js';
+import { MUTATION_UPDATE_USERNAME } from '../../api/graphql/auth/mutations.js';
 import { profileQueries } from '../../api/graphql/user/queries.js';
 import {
   CreateProfileInput,
@@ -41,6 +42,12 @@ export class Profile {
     const variables = { profileID };
     const response = await this.client.mutate(mutation, variables) as { deleteProfile: MutationResponse };
     return response.deleteProfile;
+  }
+
+  async updateUsername(newUsername: string): Promise<MutationResponse> {
+    const variables = { input: { newUsername } };
+    const response = await this.client.mutate(MUTATION_UPDATE_USERNAME, variables) as { updateUsername: MutationResponse };
+    return response.updateUsername;
   }
 
   // ======================= QUERIES =======================

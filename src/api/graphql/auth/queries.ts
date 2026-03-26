@@ -59,5 +59,15 @@ export const affiliateQueries = {
       }
     }
   `
+
 };
+
+export const QUERY_CHECK_USERNAME_AVAILABILITY = /* GraphQL */ `
+  query CheckUsernameAvailability($input: CheckUsernameInput!) {
+    checkUsernameAvailability(input: $input) {
+      available
+      message
+    }
+  }
+`;
 

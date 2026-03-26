@@ -1,5 +1,6 @@
 import { APIClient } from '../../api/APIClient.js';
 import { MUTATION_CREATE_USER } from '../../api/graphql/auth/mutations.js';
+import { QUERY_CHECK_USERNAME_AVAILABILITY } from '../../api/graphql/auth/queries.js';
 
 // Types d'input pour la création d'utilisateur
 export interface CreateUserInput {
@@ -39,6 +40,22 @@ export class Signup {
 
   constructor(client: APIClient) {
     this.client = client;
+  }
+
+  /**
+   * Vérifie la disponibilité d'un nom d'utilisateur
+   * @param username Le nom d'utilisateur à vérifier
+   * @returns La disponibilité et un message
+   */
+  async checkAvailability(username: string): Promise<{ available: boolean; message: string }> {
+    const variables = { input: { username } };
+    try {
+      const response = await this.client.query(QUERY_CHECK_USERNAME_AVAILABILITY, variables) as { checkUsernameAvailability: { available: boolean; message: string } };
+      return response.checkUsernameAvailability;
+    } catch (error) {
+      console.error('Error in checkAvailability:', error);
+      throw error;
+    }
   }
 
   /**

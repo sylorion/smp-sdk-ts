@@ -228,3 +228,12 @@ export const affiliateMutations = {
   `
 };
 
+export const MUTATION_UPDATE_USERNAME = /* GraphQL */ `
+  mutation UpdateUsername($input: UpdateUsernameInput!) {
+    updateUsername(input: $input) {
+      success
+      message
+    }
+  }
+`;
+
