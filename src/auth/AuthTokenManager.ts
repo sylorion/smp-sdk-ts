@@ -81,22 +81,30 @@ export class AuthTokenManager {
 
   public async authenticateUser(username: string, password: string): Promise<LogIn> {
     try {
-      const response = await this.apiClient.query<LoginResponse>(MUTATION_AUTH_USER, { loginInput: { email: username, password } });
-      // const { accessToken, refreshToken, accessValidityDuration } = response.user;
+      const response = await this.apiClient.query<any>(MUTATION_AUTH_USER, { loginInput: { email: username, password } });
+
+      if (response.login.errors && response.login.errors.length > 0) {
+        throw new Error(response.login.errors[0].message || response.login.message || "Authentication failed");
+      }
+
+      if (!response.login.accessToken) {
+        throw new Error(response.login.message || "Authentication failed: No access token received");
+      }
+
       const accessToken = response.login.accessToken;
       const refreshToken = response.login.refreshToken;
       const expiresInMilli = 1000 * response.login.accessValidityDuration;
-      console.log(`[AuthTokenManager] Saving user tokens...`);
+
+      logger.info(`[AuthTokenManager] Saving user tokens...`);
       this.userTokenStorage.saveRefreshToken(refreshToken);
       this.userTokenStorage.saveAccessToken(accessToken);
-      // Register the new access to the future queries
       this.apiClient.updateHeaderUserAccessToken(accessToken);
 
       const refreshDuration = this.configManager.userAccessDuration < expiresInMilli ?
         this.configManager.userAccessDuration : expiresInMilli;
 
       this.userTokenExpiresAt = Date.now() + expiresInMilli;
-      console.log(`[AuthTokenManager] Scheduling user token refresh in ${refreshDuration}ms`);
+      logger.info(`[AuthTokenManager] Scheduling user token refresh in ${refreshDuration}ms`);
       this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
       return response.login
     } catch (error) {
