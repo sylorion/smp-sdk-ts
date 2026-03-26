@@ -86,6 +86,7 @@ export class AuthTokenManager {
       const accessToken = response.login.accessToken;
       const refreshToken = response.login.refreshToken;
       const expiresInMilli = 1000 * response.login.accessValidityDuration;
+      console.log(`[AuthTokenManager] Saving user tokens...`);
       this.userTokenStorage.saveRefreshToken(refreshToken);
       this.userTokenStorage.saveAccessToken(accessToken);
       // Register the new access to the future queries
@@ -95,6 +96,7 @@ export class AuthTokenManager {
         this.configManager.userAccessDuration : expiresInMilli;
 
       this.userTokenExpiresAt = Date.now() + expiresInMilli;
+      console.log(`[AuthTokenManager] Scheduling user token refresh in ${refreshDuration}ms`);
       this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
       return response.login
     } catch (error) {
@@ -141,8 +143,10 @@ export class AuthTokenManager {
 
     this.userRefreshPromise = (async () => {
       try {
+        console.log(`[AuthTokenManager] refreshUserAccessToken triggered`);
         const refreshToken = this.userTokenStorage.getRefreshToken();
         if (!refreshToken) {
+          console.error(`[AuthTokenManager] CRITICAL: Refresh token is MISSING from storage!`);
           throw new Error('No user refresh token available');
         } else {
           logger.info(`Refresh Token USED ${Date.now().toLocaleString()}: [HIDDEN]\n\n`);
