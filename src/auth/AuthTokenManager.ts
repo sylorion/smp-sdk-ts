@@ -202,6 +202,10 @@ export class AuthTokenManager {
    * scheduleAppTokenRefresh
    */
   private scheduleTokenRefresh(refreshDuration: number, type: TokenStorageKind): void {
+    // DO NOT schedule background refresh on server-side (SSR)
+    if (typeof window === 'undefined') {
+      return;
+    }
     const tokenExpiresAt = type === AuthTokenStorage.AppKind ? this.appTokenExpiresAt : this.userTokenExpiresAt;
     const refreshInterval = type === AuthTokenStorage.AppKind ? this.appRefreshInterval : this.userRefreshInterval
     if (!tokenExpiresAt) {
