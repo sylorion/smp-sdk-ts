@@ -22,14 +22,20 @@ export class Persistence implements PersistenceType {
         if (this.persistenceKind === 'cookie') {
             if (typeof document !== 'undefined') {
                 document.cookie = `${key}=${value}; Secure; HttpOnly;`;
+            } else {
+                this.memoryStore[key] = value;
             }
         } else if (this.persistenceKind === 'localStorage') {
             if (typeof window !== 'undefined' && window.localStorage) {
                 window.localStorage.setItem(key, JSON.stringify(value));
+            } else {
+                this.memoryStore[key] = value;
             }
         } else if (this.persistenceKind === 'sessionStorage') {
             if (typeof window !== 'undefined' && window.sessionStorage) {
                 window.sessionStorage.setItem(key, JSON.stringify(value));
+            } else {
+                this.memoryStore[key] = value;
             }
         } else {
             this.memoryStore[key] = value;
@@ -44,17 +50,17 @@ export class Persistence implements PersistenceType {
                 const cookie = cookies.find((c) => c.startsWith(key));
                 return cookie ? cookie.split('=')[1] : null;
             }
-            return null;
+            return this.memoryStore[key] || null;
         } else if (this.persistenceKind === 'localStorage') {
             if (typeof window !== 'undefined' && window.localStorage) {
                 return JSON.parse(window.localStorage.getItem(key) || 'null');
             }
-            return null;
+            return this.memoryStore[key] || null;
         } else if (this.persistenceKind === 'sessionStorage') {
             if (typeof window !== 'undefined' && window.sessionStorage) {
                 return JSON.parse(window.sessionStorage.getItem(key) || 'null');
             }
-            return null;
+            return this.memoryStore[key] || null;
         } else {
             return this.memoryStore[key] || null;
         }
@@ -73,9 +79,8 @@ export class Persistence implements PersistenceType {
             if (typeof window !== 'undefined' && window.sessionStorage) {
                 window.sessionStorage.removeItem(key);
             }
-        } else {
-            delete this.memoryStore[key];
         }
+        delete this.memoryStore[key];
         return true;
     }
 }

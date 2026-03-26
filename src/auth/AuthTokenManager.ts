@@ -112,27 +112,27 @@ export class AuthTokenManager {
 
   // Récupérer le token d'accès actuel ou rafraîchir s'il a expiré
   public async getUserAccessToken(): Promise<string> {
-    const accessToken = this.userTokenStorage.getAccessToken() || '';
-    if (this.isUserTokenExpired() || !accessToken) {
+    const currentToken = this.userTokenStorage.getAccessToken() || '';
+    if (this.isUserTokenExpired() || !currentToken) {
       logger.info('User Access token expired, refreshing...');
-      await this.refreshUserAccessToken();
+      return await this.refreshUserAccessToken();
     }
-    return accessToken;
+    return currentToken;
   }
 
   public async getAppAccessToken(): Promise<string> {
-    const accessToken = this.appTokenStorage.getAccessToken() || '';
-    if (this.isAppTokenExpired() || !accessToken) {
+    const currentToken = this.appTokenStorage.getAccessToken() || '';
+    if (this.isAppTokenExpired() || !currentToken) {
       logger.info('App Access token expired, refreshing...');
-      await this.refreshAppAccessToken();
-      return this.appTokenStorage.getAccessToken() || '';
+      return await this.refreshAppAccessToken();
     }
-    return accessToken;
+    return currentToken;
   }
 
-  private async refreshUserAccessToken(): Promise<void> {
+  private async refreshUserAccessToken(): Promise<string> {
     if (this.userRefreshPromise) {
-      return this.userRefreshPromise;
+      await this.userRefreshPromise;
+      return this.userTokenStorage.getAccessToken() || '';
     }
 
     this.userRefreshPromise = (async () => {
@@ -162,13 +162,14 @@ export class AuthTokenManager {
       }
     })();
 
-    return this.userRefreshPromise;
+    await this.userRefreshPromise;
+    return this.userTokenStorage.getAccessToken() || '';
   }
 
   /**
    * 
    */
-  private async refreshAppAccessToken(): Promise<void> {
+  private async refreshAppAccessToken(): Promise<string> {
     const refreshToken = this.appTokenStorage.getRefreshToken();
 
     if (!refreshToken) {
@@ -178,14 +179,15 @@ export class AuthTokenManager {
     const response = await this.apiClient.query<TokenDataResponse>(MUTATION_REFRESH_APP_TOKEN, { refreshToken });
     const { accessToken, expiresIn } = response;
     const expiresInMilli = expiresIn * 1000;
-    const refreshDuration = this.configManager.userAccessDuration < expiresInMilli ?
-      this.configManager.userAccessDuration : expiresInMilli;
+    const refreshDuration = this.configManager.appAccessDuration < expiresInMilli ?
+      this.configManager.appAccessDuration : expiresInMilli;
 
-    this.userTokenStorage.saveAccessToken(accessToken);
+    this.appTokenStorage.saveAccessToken(accessToken);
     // Register the new access to the future queries
     this.apiClient.updateHeaderAppAccessToken(accessToken);
-    this.userTokenExpiresAt = Date.now() + expiresInMilli;
-    this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.UserKind);
+    this.appTokenExpiresAt = Date.now() + expiresInMilli;
+    this.scheduleTokenRefresh(refreshDuration, AuthTokenStorage.AppKind);
+    return accessToken;
   }
 
   /**
