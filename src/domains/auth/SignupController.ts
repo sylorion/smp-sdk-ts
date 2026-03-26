@@ -13,6 +13,7 @@ export interface CreateUserInput {
   password: string;
   email: string;
   rsaPublicKey?: string;
+  acceptNewsletter?: boolean;
 }
 
 // Types de réponse pour la création d'utilisateur

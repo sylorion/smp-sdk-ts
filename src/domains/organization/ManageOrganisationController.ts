@@ -87,6 +87,7 @@ export interface CreateUserInput {
   password: string;
   email: string;
   rsaPublicKey?: string;
+  acceptNewsletter?: boolean;
 }
 
 /** 
