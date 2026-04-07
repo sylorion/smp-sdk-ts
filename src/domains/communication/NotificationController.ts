@@ -54,4 +54,25 @@ export class Notification {
     const response = await this.client.query(query, variables) as { data: { notificationsBySlugs: any[] } };
     return response.data.notificationsBySlugs;
   }
+
+  async getByUserId(userID: string): Promise<any[]> {
+    const query = notificationQueries.GET_NOTIFICATIONS_BY_USER_ID;
+    const variables = { userID };
+    const response = await this.client.query(query, variables) as { data: { notificationsByUserID: any[] } };
+    return response.data.notificationsByUserID;
+  }
+
+  async getByOrganizationId(organizationID: string): Promise<any[]> {
+    const query = notificationQueries.GET_NOTIFICATIONS_BY_ORGANIZATION_ID;
+    const variables = { organizationID };
+    const response = await this.client.query(query, variables) as { data: { notificationsByOrganizationID: any[] } };
+    return response.data.notificationsByOrganizationID;
+  }
+
+  async markAsRead(notificationID: string): Promise<any> {
+    const query = notificationQueries.MARK_NOTIFICATION_AS_READ;
+    const variables = { notificationID };
+    const response = await this.client.mutate(query, variables) as { data: { markNotificationAsRead: any } };
+    return response.data.markNotificationAsRead;
+  }
 }

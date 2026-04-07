@@ -164,6 +164,7 @@ const notificationQueries = {
         notifications(pagination: $pagination, sort: $sort, filter: $filter) {
           notificationID
           userID
+          organizationID
           title
           message
           readAt
@@ -186,6 +187,7 @@ const notificationQueries = {
         notificationByID(notificationID: $notificationID) {
           notificationID
           userID
+          organizationID
           title
           message
           readAt
@@ -208,6 +210,7 @@ const notificationQueries = {
         notificationsByIDs(notificationIDs: $notificationIDs) {
           notificationID
           userID
+          organizationID
           title
           message
           readAt
@@ -230,6 +233,7 @@ const notificationQueries = {
         notificationByUniqRef(uniqRef: $uniqRef) {
           notificationID
           userID
+          organizationID
           title
           message
           readAt
@@ -252,6 +256,7 @@ const notificationQueries = {
         notificationBySlug(slug: $slug) {
           notificationID
           userID
+          organizationID
           title
           message
           readAt
@@ -274,6 +279,7 @@ const notificationQueries = {
         notificationsBySlugs(slugs: $slugs) {
           notificationID
           userID
+          organizationID
           title
           message
           readAt
@@ -286,6 +292,60 @@ const notificationQueries = {
           createdAt
           updatedAt
           deletedAt
+        }
+      }
+    `,
+
+    // QUERY TO GET NOTIFICATIONS BY USER ID
+    GET_NOTIFICATIONS_BY_USER_ID: `
+      query GetNotificationsByUserID($userID: ID!) {
+        notificationsByUserID(userID: $userID) {
+          notificationID
+          userID
+          organizationID
+          title
+          message
+          readAt
+          link
+          state
+          slug
+          uniqRef
+          type
+          notificationTemplateID
+          createdAt
+          updatedAt
+        }
+      }
+    `,
+
+    // QUERY TO GET NOTIFICATIONS BY ORGANIZATION ID
+    GET_NOTIFICATIONS_BY_ORGANIZATION_ID: `
+      query GetNotificationsByOrganizationID($organizationID: ID!) {
+        notificationsByOrganizationID(organizationID: $organizationID) {
+          notificationID
+          userID
+          organizationID
+          title
+          message
+          readAt
+          link
+          state
+          slug
+          uniqRef
+          type
+          notificationTemplateID
+          createdAt
+          updatedAt
+        }
+      }
+    `,
+
+    // MUTATION TO MARK A NOTIFICATION AS READ
+    MARK_NOTIFICATION_AS_READ: `
+      mutation MarkNotificationAsRead($notificationID: ID!) {
+        markNotificationAsRead(notificationID: $notificationID) {
+          notificationID
+          readAt
         }
       }
     `
