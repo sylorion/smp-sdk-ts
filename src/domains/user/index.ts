@@ -4,6 +4,7 @@ import { UserPreferencesController } from './UserPreferencesController.js';
 import { AffiliateController } from './AffiliateController.js';
 import { Password } from '../auth/PasswordController.js';
 import { Signup } from '../auth/SignupController.js';
+import { Social } from './SocialController.js';
 
 export class UserDomain {
   public profile: Profile;
@@ -11,6 +12,7 @@ export class UserDomain {
   public affiliateController: AffiliateController;
   public password: Password;
   public signup: Signup;
+  public social: Social;
 
   constructor(client: APIClient) {
     this.profile = new Profile(client);
@@ -18,5 +20,6 @@ export class UserDomain {
     this.affiliateController = new AffiliateController(client);
     this.password = new Password(client);
     this.signup = new Signup(client);
+    this.social = new Social(client);
   }
 }
