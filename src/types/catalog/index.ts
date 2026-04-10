@@ -115,6 +115,7 @@ export interface ServiceEntity {
     createdAt?: string;
     updatedAt?: string;
     deletedAt?: string;
+    likes?: number;
     serviceMedias?: ServiceMediaEntity[];
 }
 

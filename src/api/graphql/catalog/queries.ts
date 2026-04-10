@@ -418,6 +418,7 @@ const assetQueries = {
           createdAt
           updatedAt
           deletedAt
+          likes
         }
       }
     }
@@ -742,6 +743,7 @@ const serviceQueries = {
         state
         createdAt
         updatedAt
+        likes
         serviceMedias {
           serviceMediaID
           listingPosition
@@ -785,6 +787,7 @@ const serviceQueries = {
         state
         createdAt
         updatedAt
+        likes
         serviceMedias {
           serviceMediaID
           listingPosition
@@ -828,6 +831,7 @@ const serviceQueries = {
         state
         createdAt
         updatedAt
+        likes
         serviceMedias {
           serviceMediaID
           listingPosition
@@ -954,6 +958,7 @@ const serviceQueries = {
       state
       createdAt
       updatedAt
+      likes
         serviceMedias {
         serviceMediaID
         listingPosition
@@ -996,6 +1001,7 @@ const serviceQueries = {
     state
     createdAt
     updatedAt
+    likes
         serviceMedias {
       serviceMediaID
       listingPosition
@@ -1038,6 +1044,7 @@ const serviceQueries = {
     state
     createdAt
     updatedAt
+    likes
         serviceMedias {
       serviceMediaID
       listingPosition
