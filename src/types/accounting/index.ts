@@ -207,6 +207,14 @@ export interface EstimateDetails {
         total: number;
         actions: any[];
         isNegotiable: boolean;
+        booking?: {
+            slotDate?: string;
+            slotStartTime?: number;
+            slotEndTime?: number;
+            slotDuration?: number;
+            timeSlotId?: string;
+            location?: string;
+        };
     };
     items: any[];
 }
