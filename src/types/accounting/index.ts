@@ -1,4 +1,11 @@
 // ==============================
+// BILLING & INVOICING
+// ==============================
+export * from './billing.js';
+import { BillingInformation } from './billing.js';
+
+
+// ==============================
 // CONTRACT
 // ==============================
 export enum ContractStatus {
@@ -334,7 +341,7 @@ export interface OrderResponse {
     createdAt: string;
     updatedAt?: string;
     deletedAt?: string;
-    unloggedUser?: any;
+    billingInformation?: BillingInformation;
     lines: OrderAsset[];
 }
 
@@ -347,7 +354,7 @@ export interface CreateOrderInput {
     sellerOrganizationId: string;
     buyerOrganizationId: string;
     currency: string;
-    unloggedUser?: string;
+    billingInformation?: BillingInformation;
 }
 
 export interface AddLineInput {

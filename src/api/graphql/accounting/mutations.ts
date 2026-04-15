@@ -263,7 +263,7 @@ const paymentMutations = {
         userId
         totalPrice
         status
-        unloggedUser
+        billingInformation
         createdAt
         updatedAt
         lines {
@@ -288,7 +288,7 @@ const paymentMutations = {
         userId
         totalPrice
         status
-        unloggedUser
+        billingInformation
         createdAt
         updatedAt
       }
@@ -303,7 +303,7 @@ const paymentMutations = {
         userId
         totalPrice
         status
-        unloggedUser
+        billingInformation
         lines {
           orderAssetId
           assetId
@@ -409,7 +409,7 @@ const paymentMutations = {
         userId
         totalPrice
         status
-        unloggedUser
+        billingInformation
         lines {
           orderAssetId
           assetId
@@ -434,7 +434,7 @@ const paymentMutations = {
         userId
         totalPrice
         status
-        unloggedUser
+        billingInformation
         lines {
           orderAssetId
           assetId
@@ -460,7 +460,7 @@ const paymentMutations = {
         userId
         totalPrice
         status
-        unloggedUser
+        billingInformation
         lines {
           orderAssetId
           assetId
@@ -486,7 +486,7 @@ const paymentMutations = {
         userId
         totalPrice
         status
-        unloggedUser
+        billingInformation
         lines {
           orderAssetId
           assetId
@@ -512,7 +512,7 @@ const paymentMutations = {
         userId
         totalPrice
         status
-        unloggedUser
+        billingInformation
         lines {
           orderAssetId
           assetId
@@ -538,7 +538,7 @@ const paymentMutations = {
         userId
         totalPrice
         status
-        unloggedUser
+        billingInformation
         lines {
           orderAssetId
           assetId

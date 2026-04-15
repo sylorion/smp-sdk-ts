@@ -3,6 +3,7 @@ import { APIClient } from '../../api/APIClient.js';
 import { paymentMutations } from '../../api/graphql/accounting/mutations.js';
 import { orderQueries, estimateQueries, transactionQueries } from '../../api/graphql/accounting/queries.js';
 import { transactionMutations } from '../../api/graphql/accounting/mutations.js';
+import { BillingInformation } from '../../types/accounting/billing.js';
 /* -------------------------------------
    Interfaces d'Input et Types de Retour
 ------------------------------------- */
@@ -26,7 +27,7 @@ export interface CreateOrderInput {
   sellerOrganizationId: string;
   buyerOrganizationId: string;
   currency: string;
-  unloggedUser?: string;
+  billingInformation?: BillingInformation;
 }
 
 export interface AddLineInput {
@@ -132,7 +133,7 @@ export interface Order {
   userId?: string;
   totalPrice: number;
   status: string;
-  unloggedUser?: any;
+  billingInformation?: BillingInformation;
   lines: OrderAsset[];
   createdAt: string;
 

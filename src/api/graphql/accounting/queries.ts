@@ -1269,7 +1269,7 @@ export const orderQueries = {
         createdAt
         updatedAt
         deletedAt
-        unloggedUser
+        billingInformation
         lines {
           assetId
           quantity
@@ -1301,7 +1301,7 @@ export const orderQueries = {
         createdAt
         updatedAt
         deletedAt
-        unloggedUser
+        billingInformation
         lines {
           assetId
           quantity
@@ -1333,7 +1333,7 @@ export const orderQueries = {
         createdAt
         updatedAt
         deletedAt
-        unloggedUser
+        billingInformation
         lines {
           assetId
           quantity
@@ -1365,7 +1365,7 @@ export const orderQueries = {
         createdAt
         updatedAt
         deletedAt
-        unloggedUser
+        billingInformation
         lines {
           assetId
           quantity

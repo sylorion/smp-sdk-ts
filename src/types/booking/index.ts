@@ -1,4 +1,5 @@
 // Types pour le système de booking et de commande
+import { BillingInformation } from '../accounting/billing.js';
 
 export interface EstimateRequest {
   estimateRequestId: string;
@@ -9,7 +10,7 @@ export interface EstimateRequest {
   requestedDuration?: number;
   description?: string;
   status: EstimateRequestStatus;
-  unloggedUser?: string;
+  billingInformation?: BillingInformation;
   additionalRequirements?: string;
   createdAt: Date;
   updatedAt?: Date;
@@ -168,7 +169,7 @@ export interface CreateEstimateRequestInput {
   requestedEndDate?: Date;
   requestedDuration?: number;
   description?: string;
-  unloggedUser?: string;
+  billingInformation?: BillingInformation;
   additionalRequirements?: string;
 }
 

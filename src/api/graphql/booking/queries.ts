@@ -121,7 +121,7 @@ const bookingQueries = {
         requestedDuration
         description
         status
-        unloggedUser
+        billingInformation
         additionalRequirements
         createdAt
         updatedAt
@@ -142,7 +142,7 @@ const bookingQueries = {
         requestedDuration
         description
         status
-        unloggedUser
+        billingInformation
         additionalRequirements
         createdAt
         updatedAt

@@ -13,7 +13,7 @@ const bookingMutations = {
         requestedDuration
         description
         status
-        unloggedUser
+        billingInformation
         additionalRequirements
         createdAt
         updatedAt
