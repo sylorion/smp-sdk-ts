@@ -46,10 +46,10 @@ export class EngagementController {
   /**
    * Récupérer les engagements par service
    */
-  async listByServiceId(serviceId: string): Promise<Engagement[]> {
+  async listByServiceId(serviceId: string, organizationId?: string): Promise<Engagement[]> {
     const response = await this.apiClient.query(
       engagementQueries.GET_ENGAGEMENTS_BY_SERVICE_ID,
-      { serviceId }
+      { serviceId, organizationId }
     ) as { engagementsByService: Engagement[] };
     return response.engagementsByService;
   }
