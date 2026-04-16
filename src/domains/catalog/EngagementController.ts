@@ -66,6 +66,17 @@ export class EngagementController {
   }
 
   /**
+   * Récupérer les engagements par acheteur
+   */
+  async listByBuyerUserId(buyerUserId: string): Promise<Engagement[]> {
+    const response = await this.apiClient.query(
+      engagementQueries.GET_ENGAGEMENTS_BY_BUYER,
+      { buyerUserId }
+    ) as { engagementsByBuyer: Engagement[] };
+    return response.engagementsByBuyer;
+  }
+
+  /**
    * Récupérer les engagements par organisation
    */
   async listByOrganizationId(organizationId: string): Promise<Engagement[]> {

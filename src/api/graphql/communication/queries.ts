@@ -431,6 +431,7 @@ const engagementQueries = {
         engagementId
         consultantUserId
         organizationId
+        buyerUserId
         estimateId
         serviceId
         projectName
@@ -466,6 +467,43 @@ const engagementQueries = {
         engagementId
         consultantUserId
         organizationId
+        buyerUserId
+        estimateId
+        serviceId
+        projectName
+        projectDescription
+        startDate
+        endDate
+        hourlyRate
+        estimatedHours
+        actualHours
+        status
+        priority
+        notes
+        attachments
+        deliverables
+        metadata
+        createdAt
+        updatedAt
+        deletedAt
+        timeSlots {
+          ${TIME_SLOT_FIELDS}
+        }
+        reports {
+          ${ENGAGEMENT_REPORT_FIELDS}
+        }
+      }
+    }
+  `,
+
+  // QUERY POUR RÉCUPÉRER LES ENGAGEMENTS PAR ACHETEUR
+  GET_ENGAGEMENTS_BY_BUYER: `
+    query GetEngagementsByBuyer($buyerUserId: String!) {
+      engagementsByBuyer(buyerUserId: $buyerUserId) {
+        engagementId
+        consultantUserId
+        organizationId
+        buyerUserId
         estimateId
         serviceId
         projectName
@@ -501,6 +539,7 @@ const engagementQueries = {
         engagementId
         consultantUserId
         organizationId
+        buyerUserId
         estimateId
         serviceId
         projectName
@@ -536,6 +575,7 @@ const engagementQueries = {
         engagementId
         consultantUserId
         organizationId
+        buyerUserId
         estimateId
         serviceId
         projectName
@@ -571,6 +611,7 @@ const engagementQueries = {
         engagementId
         consultantUserId
         organizationId
+        buyerUserId
         estimateId
         serviceId
         projectName

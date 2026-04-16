@@ -83,6 +83,7 @@ const engagementMutations = {
         engagementId
         consultantUserId
         organizationId
+        buyerUserId
         estimateId
         serviceId
         projectName
@@ -112,6 +113,7 @@ const engagementMutations = {
         engagementId
         consultantUserId
         organizationId
+        buyerUserId
         estimateId
         serviceId
         projectName
@@ -141,6 +143,7 @@ const engagementMutations = {
         engagementId
         consultantUserId
         organizationId
+        buyerUserId
         estimateId
         serviceId
         projectName

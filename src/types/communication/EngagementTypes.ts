@@ -3,6 +3,7 @@ export interface Engagement {
   engagementId: string;
   consultantUserId: string;
   organizationId: string;
+  buyerUserId?: string;
   estimateId?: string;
   serviceId: string;
   projectName: string;
@@ -141,6 +142,7 @@ export enum EngagementReportStatus {
 export interface CreateEngagementInput {
   consultantUserId: string;
   organizationId: string;
+  buyerUserId?: string;
   estimateId?: string;
   serviceId: string;
   projectName: string;
