@@ -63,6 +63,12 @@ export interface CreateEstimateInput {
   sellerOrganizationId?: string;
   negotiationCount?: number;
   details?: any;
+  /**
+   * 'manual'   : org dashboard creation → counts toward plan limits.
+   * 'pipeline' : payment/booking flow → excluded from plan limit counting.
+   * Defaults to 'manual' if omitted (safe for dashboard calls).
+   */
+  source?: 'manual' | 'pipeline';
 }
 
 export interface UpdateEstimateInput {

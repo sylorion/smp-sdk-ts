@@ -174,6 +174,8 @@ const notificationQueries = {
           uniqRef
           type
           notificationTemplateID
+          entityType
+          entityID
           createdAt
           updatedAt
           deletedAt
@@ -197,6 +199,8 @@ const notificationQueries = {
           uniqRef
           type
           notificationTemplateID
+          entityType
+          entityID
           createdAt
           updatedAt
           deletedAt
@@ -220,6 +224,8 @@ const notificationQueries = {
           uniqRef
           type
           notificationTemplateID
+          entityType
+          entityID
           createdAt
           updatedAt
           deletedAt
@@ -243,6 +249,8 @@ const notificationQueries = {
           uniqRef
           type
           notificationTemplateID
+          entityType
+          entityID
           createdAt
           updatedAt
           deletedAt
@@ -266,6 +274,8 @@ const notificationQueries = {
           uniqRef
           type
           notificationTemplateID
+          entityType
+          entityID
           createdAt
           updatedAt
           deletedAt
@@ -289,6 +299,8 @@ const notificationQueries = {
           uniqRef
           type
           notificationTemplateID
+          entityType
+          entityID
           createdAt
           updatedAt
           deletedAt
@@ -312,6 +324,8 @@ const notificationQueries = {
           uniqRef
           type
           notificationTemplateID
+          entityType
+          entityID
           createdAt
           updatedAt
         }
@@ -334,6 +348,8 @@ const notificationQueries = {
           uniqRef
           type
           notificationTemplateID
+          entityType
+          entityID
           createdAt
           updatedAt
         }
@@ -352,10 +368,12 @@ const notificationQueries = {
   };
   
   export { notificationQueries };
-  
+
+
 // =========================================
 // Source: engagement/engagementQueries.ts
 // =========================================
+
 const TIME_SLOT_FIELDS = `
   timeSlotId
   slotType

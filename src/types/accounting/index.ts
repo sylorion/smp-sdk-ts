@@ -54,6 +54,11 @@ export interface CreateContractInput {
     variables: any;
     details?: any;
     authorId?: string;
+    /**
+     * 'manual'   : created by org owner from dashboard → counts toward plan limits.
+     * 'pipeline' : auto-created after order.paid → does NOT count.
+     */
+    source?: 'manual' | 'pipeline';
 }
 
 export interface UpdateContractInput {
@@ -257,6 +262,13 @@ export interface CreateEstimateInput {
     sellerOrganizationId?: string;
     negotiationCount?: number;
     details?: any;
+    /**
+     * Discriminates manual creations (dashboard) from automated pipeline creations.
+     * - 'manual'   : created by the org owner → counts toward plan limits.
+     * - 'pipeline' : created by the payment/booking flow → does NOT count.
+     * Defaults to 'manual' if omitted.
+     */
+    source?: 'manual' | 'pipeline';
 }
 
 export interface UpdateEstimateInput {
@@ -264,6 +276,24 @@ export interface UpdateEstimateInput {
     status?: string;
     proposalPrice?: number;
     details?: any;
+}
+
+// ==============================
+// PLAN LIMIT ERROR  (returned in HTTP 402 responses)
+// ==============================
+
+/**
+ * Structured payload returned by Next.js API routes when a plan limit is exceeded.
+ * Present in the JSON body as { planLimitError: PlanLimitError }.
+ */
+export interface PlanLimitError {
+    code: 'PLAN_LIMIT_EXCEEDED';
+    action: string;
+    limit: number;
+    currentCount: number;
+    remaining: number;
+    upgradeToTier: string;
+    message: string;
 }
 
 // ==============================

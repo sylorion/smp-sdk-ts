@@ -16,6 +16,7 @@ export * from './types/organization/index.js';
 export * from './types/user/index.js';
 export * from './types/communication/index.js';
 export * from './types/booking/index.js';
+export * from './types/plan/index.js';
 
 // ==========================================
 // CORE CLASSES & CONFIG
