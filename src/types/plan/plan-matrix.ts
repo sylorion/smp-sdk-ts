@@ -179,7 +179,7 @@ export const PLAN_DISPLAY_CONFIG: Record<PlanTier, PlanDisplayConfig> = {
     colorLight: '#F3F4F6',
     gradient: 'from-gray-400 to-gray-600',
     badgeGlow: '0 0 20px rgba(107, 114, 128, 0.3)',
-    icon: '🌱',
+    icon: 'S',
     featured: false,
   },
   [PlanTier.STARTER]: {
@@ -190,7 +190,7 @@ export const PLAN_DISPLAY_CONFIG: Record<PlanTier, PlanDisplayConfig> = {
     colorLight: '#EFF6FF',
     gradient: 'from-blue-400 to-blue-600',
     badgeGlow: '0 0 20px rgba(59, 130, 246, 0.4)',
-    icon: '🚀',
+    icon: 'St',
     featured: false,
   },
   [PlanTier.PRO]: {
@@ -201,7 +201,7 @@ export const PLAN_DISPLAY_CONFIG: Record<PlanTier, PlanDisplayConfig> = {
     colorLight: '#FFF1F2',
     gradient: 'from-pink-500 to-rose-600',
     badgeGlow: '0 0 20px rgba(255, 49, 93, 0.4)',
-    icon: '⚡',
+    icon: 'P',
     featured: true,
   },
   [PlanTier.BUSINESS]: {
@@ -212,7 +212,7 @@ export const PLAN_DISPLAY_CONFIG: Record<PlanTier, PlanDisplayConfig> = {
     colorLight: '#FFFBEB',
     gradient: 'from-amber-400 to-yellow-600',
     badgeGlow: '0 0 20px rgba(245, 158, 11, 0.4)',
-    icon: '👑',
+    icon: 'B',
     featured: false,
   },
 };

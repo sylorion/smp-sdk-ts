@@ -219,6 +219,29 @@ export const affiliateQueries = {
 // =========================================
 // Source: authentication/userQueries.ts
 // =========================================
+export const userPlanQueries = {
+  /**
+   * Fetch the authenticated user's live plan data directly from the DB.
+   * Bypasses the JWT token (which may be stale after a Stripe subscription event).
+   *
+   * Usage:
+   *   const data = await gqlClient.request(userPlanQueries.GET_MY_PLAN, { userID });
+   *   const { plan, stripeCustomerId, planTrialEndsAt, planExpiresAt } = data.getMyPlan;
+   */
+  GET_MY_PLAN: `
+    query GetMyPlan($userID: ID!) {
+      getMyPlan(userID: $userID) {
+        userID
+        plan
+        planSubscriptionId
+        planExpiresAt
+        planTrialEndsAt
+        stripeCustomerId
+      }
+    }
+  `,
+};
+
 
 // =========================================
 // Source: authentication/waitingListQueries.ts

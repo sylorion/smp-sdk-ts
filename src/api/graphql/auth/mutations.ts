@@ -42,7 +42,11 @@ export const MUTATION_AUTH_USER = /* GraphQL */ `
           slug          
           username      
           email         
-          plan          
+          plan
+          stripeCustomerId
+          planSubscriptionId
+          planTrialEndsAt
+          planExpiresAt
           profileID    
           lastLogin     
           loginDuration  
