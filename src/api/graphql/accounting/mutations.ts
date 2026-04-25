@@ -382,6 +382,16 @@ const paymentMutations = {
       }
     }
   `,
+  // MUTATION POUR ENVOYER UN DEVIS AU CLIENT (génère token + notif async)
+  SEND_ESTIMATE: `
+    mutation SendEstimate($id: String!) {
+      sendEstimate(id: $id) {
+        estimateId
+        status
+        details
+      }
+    }
+  `,
   // MUTATION POUR METTRE À JOUR UN CONTRAT
   UPDATE_CONTRACT: `
     mutation UpdateContract($updateContractId: String!, $data: UpdateContractInput!) {
@@ -552,6 +562,22 @@ const paymentMutations = {
         createdAt
         updatedAt
         deletedAt
+      }
+    }
+  `,
+  // MUTATION POUR ÉMETTRE UNE PROPOSITION DE NÉGOCIATION (async notifications)
+  EMIT_NEGOTIATION_PROPOSAL: `
+    mutation EmitNegotiationProposal($estimateId: String!, $proposedBy: String!, $proposedPrice: Float, $comment: String) {
+      emitNegotiationProposal(estimateId: $estimateId, proposedBy: $proposedBy, proposedPrice: $proposedPrice, comment: $comment) {
+        estimateId
+      }
+    }
+  `,
+  // MUTATION POUR ÉMETTRE LA NOTIFICATION D'ACCEPTATION D'UN DEVIS
+  EMIT_ESTIMATE_ACCEPTED: `
+    mutation EmitEstimateAccepted($estimateId: String!) {
+      emitEstimateAccepted(estimateId: $estimateId) {
+        estimateId
       }
     }
   `,

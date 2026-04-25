@@ -426,6 +426,17 @@ const estimateQueries = {
       }
     `,
 
+  // Query all estimates from mu-contract (used for viewToken resolution)
+  GET_ALL_MU_CONTRACT_ESTIMATES: `
+      query GetAllEstimates {
+        estimates {
+          estimateId
+          status
+          details
+        }
+      }
+    `,
+
   // Negotiation Queries
   GET_NEGOTIATION_HISTORY: `
       query GetNegotiationHistory($estimateId: String!) {

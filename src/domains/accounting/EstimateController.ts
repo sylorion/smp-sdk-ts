@@ -51,4 +51,44 @@ export class Estimate {
         const response = await this.client.query(query, variables) as { estimatesByBuyerOrganizationId: EstimateEntity[] };
         return response.estimatesByBuyerOrganizationId;
     }
+
+    /**
+     * Envoie le devis au client et génère un token de consultation.
+     * Déclenche les notifications async via RabbitMQ → mu-notification.
+     */
+    async send(estimateId: string): Promise<EstimateEntity> {
+        const mutation = paymentMutations.SEND_ESTIMATE;
+        const variables = { id: estimateId };
+        const response = await this.client.mutate(mutation, variables) as { sendEstimate: EstimateEntity };
+        return response.sendEstimate;
+    }
+
+    /**
+     * Liste tous les estimates (utilisé pour la résolution de viewToken).
+     */
+    async listAll(): Promise<EstimateEntity[]> {
+        const query = estimateQueries.GET_ALL_MU_CONTRACT_ESTIMATES;
+        const response = await this.client.query(query, {}) as { estimates: EstimateEntity[] };
+        return response.estimates ?? [];
+    }
+
+    /**
+     * Émet les notifications de proposition de négociation via RabbitMQ (async pipeline).
+     */
+    async emitNegotiationProposal(estimateId: string, proposedBy: string, proposedPrice?: number | null, comment?: string | null): Promise<EstimateEntity> {
+        const mutation = paymentMutations.EMIT_NEGOTIATION_PROPOSAL;
+        const variables = { estimateId, proposedBy, proposedPrice: proposedPrice ?? null, comment: comment ?? null };
+        const response = await this.client.mutate(mutation, variables) as { emitNegotiationProposal: EstimateEntity };
+        return response.emitNegotiationProposal;
+    }
+
+    /**
+     * Émet les notifications d'acceptation d'un devis via RabbitMQ (async pipeline).
+     */
+    async emitEstimateAccepted(estimateId: string): Promise<EstimateEntity> {
+        const mutation = paymentMutations.EMIT_ESTIMATE_ACCEPTED;
+        const variables = { estimateId };
+        const response = await this.client.mutate(mutation, variables) as { emitEstimateAccepted: EstimateEntity };
+        return response.emitEstimateAccepted;
+    }
 }

@@ -136,7 +136,7 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasEmailSupport: true,
   },
   [PlanTier.BUSINESS]: {
-    maxOrganizations: 10,
+    maxOrganizations: 5,
     maxServicesPerOrg: UNLIMITED,
     maxMembersPerOrg: 20,
     maxEstimatesPerMonth: UNLIMITED,
