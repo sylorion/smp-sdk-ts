@@ -324,6 +324,20 @@ export interface InvoiceResponse {
     notes?: string;
     paymentTerms?: string;
     profile?: string;
+    // ── JSON string fields (stored as scalar String in GraphQL) ─────────────
+    /** JSON string — payment info: { dueDate?, paymentTermsText?, ... } */
+    payment?: string;
+    /** JSON string — buyer billing address & contact info */
+    buyer?: string;
+    /** JSON string — array of invoice line items */
+    lines?: string;
+    /** JSON string — array of VAT totals: { taxRate, taxableAmount, taxAmount }[] */
+    taxTotals?: string;
+    /** JSON string — seller identity & legal info */
+    seller?: string;
+    /** JSON string — document header metadata { invoiceNumber, issueDate, ... } */
+    header?: string;
+    // ── PDF / download fields ─────────────────────────────────────────────
     downloadStatus?: {
         downloaded: boolean;
         downloadedAt?: string;
@@ -332,6 +346,7 @@ export interface InvoiceResponse {
     };
     pdfGeneratedAt?: string;
     pdfHash?: string;
+    /** JSON string — { pdfDownloadUrl, pdfFilePath, ... } */
     additionalInfo?: string;
 }
 

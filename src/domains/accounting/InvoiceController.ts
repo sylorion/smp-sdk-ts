@@ -25,12 +25,24 @@ interface InvoiceResponse {
   createdAt: string;
   updatedAt?: string;
   deletedAt?: string;
-  transactionData?: any; // JSON object
+  transactionData?: any;
   notes?: string;
-  // disclaimers?: string;
   paymentTerms?: string;
   profile?: string;
-  // Champs PDF existants dans Prisma
+  // ── JSON string fields (stored as scalar String in GraphQL) ─────────────
+  /** JSON string — payment info: { dueDate?, paymentTermsText?, ... } */
+  payment?: string;
+  /** JSON string — buyer billing address & contact info */
+  buyer?: string;
+  /** JSON string — array of invoice line items */
+  lines?: string;
+  /** JSON string — array of VAT totals: { taxRate, taxableAmount, taxAmount }[] */
+  taxTotals?: string;
+  /** JSON string — seller identity & legal info */
+  seller?: string;
+  /** JSON string — document header metadata { invoiceNumber, issueDate, ... } */
+  header?: string;
+  // ── PDF / download fields ────────────────────────────────────────────────
   downloadStatus?: {
     downloaded: boolean;
     downloadedAt?: string;
@@ -39,7 +51,8 @@ interface InvoiceResponse {
   };
   pdfGeneratedAt?: string;
   pdfHash?: string;
-  additionalInfo?: string; // JSON string contenant pdfDownloadUrl, pdfFilePath, etc.
+  /** JSON string — { pdfDownloadUrl, pdfFilePath, ... } */
+  additionalInfo?: string;
 }
 
 interface CreateInvoiceResponse {
