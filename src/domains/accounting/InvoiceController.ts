@@ -315,6 +315,7 @@ export class Invoice {
     downloadUrl?: string;
     digitalSignature?: string;
     downloadCount?: number;
+    pdfBase64?: string;
   }> {
     const mutation = invoiceMutations.GENERATE_INVOICE_PDF;
     const response = await this.client.mutate(mutation, { invoiceId, input: data }) as { generateInvoicePDF: any };

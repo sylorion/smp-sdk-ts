@@ -232,6 +232,7 @@ const invoiceMutations = {
         downloadUrl
         digitalSignature
         downloadCount
+        pdfBase64
       }
     }
   `,
