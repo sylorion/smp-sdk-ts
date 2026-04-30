@@ -403,6 +403,8 @@ const paymentMutations = {
         clientSignHash
         providerSignHash
         status
+        content
+        variables
         details
         clientSignDate
         providerSignDate
