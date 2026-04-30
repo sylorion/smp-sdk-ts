@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "build": "tsc",
+    "prepare": "tsc",
     "lint": "eslint 'src/**/*.ts'",
     "test": "jest",
     "start": "npm run build ; node  --trace-deprecation dist/index.js ",
