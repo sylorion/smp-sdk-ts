@@ -73,8 +73,7 @@ export interface BankWithdrawInput {
   walletId: string;
   amount: number;
   currency: string;
-  bankAccountId: string;
-  metadata?: string;
+  reference?: string;
 }
 
 export interface TransferInput {

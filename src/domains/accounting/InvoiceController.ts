@@ -308,6 +308,8 @@ export class Invoice {
     sellerOrganizationId: string;
     buyerOrganizationId?: string;
     ipAddress?: string;
+    /** Force draft mode (watermark) regardless of invoice paymentStatus in DB */
+    forceDraft?: boolean;
   }): Promise<{
     success: boolean;
     message: string;

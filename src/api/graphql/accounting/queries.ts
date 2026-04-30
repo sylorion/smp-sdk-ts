@@ -1457,6 +1457,35 @@ const contractQueries = {
       }
     }
   `,
+
+  GET_CONTRACT_TEMPLATES: `
+    query GetContractTemplates {
+      getContractTemplates {
+        id
+        title
+        description
+        category
+        style
+        variableKeys
+      }
+    }
+  `,
+
+  GET_CONTRACT_TEMPLATE: `
+    query GetContractTemplate($templateId: String!) {
+      getContractTemplate(templateId: $templateId) {
+        id
+        title
+        description
+        category
+        style
+        version
+        sections
+        variables
+        details
+      }
+    }
+  `,
 };
 
 export { contractQueries };

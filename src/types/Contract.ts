@@ -1,123 +1,31 @@
-export enum ContractStatus {
-  PENDING = 'PENDING',
-  PROVIDER_SIGNED = 'PROVIDER_SIGNED',
-  CLIENT_SIGNED = 'CLIENT_SIGNED',
-  ACTIVE = 'ACTIVE',
-  REJECTED = 'REJECTED'
-}
-
-export enum SignerRole {
-  CLIENT = 'client',
-  PROVIDER = 'provider'
-}
-
-export enum SignatureType {
-  HASH = 'hash',
-  IMAGE = 'image',
-  UPLOAD = 'upload',
-  DIGITAL = 'digital'
-}
-
-export interface ContractResponse {
-  contractId: string;
-  estimateId?: string;
-  serviceId: string;
-  organizationId?: string;
-  clientSignHash?: string;
-  providerSignHash?: string;
-  status: ContractStatus;
-  content: any;
-  variables: any;
-  details: any;
-
-  clientSignDate?: string;
-  providerSignDate?: string;
-  createdAt: string;
-  updatedAt?: string;
-}
-
-export interface CreateContractInput {
-  serviceId: string;
-  estimateId?: string;
-  organizationId?: string;
-  status?: string;
-  content: any;
-  variables: any;
-  details?: any;
-  authorId?: string;
-}
-
-export interface UpdateContractInput {
-  contractId: string;
-  status?: string;
-  content?: any;
-  variables?: any;
-  details?: any;
-  organizationId?: string;
-}
-
-export interface SignContractInput {
-  contractId: string;
-  role: SignerRole;
-  signatureText?: string;
-}
-
-export interface SendContractInput {
-  contractId: string;
-  email: string;
-  message?: string;
-  firstName?: string;
-  lastName?: string;
-  expirationDays?: number;
-}
-
-export interface CreateContractResponse {
-  createContract: ContractResponse;
-}
-
-export interface UpdateContractResponse {
-  updateContract: ContractResponse;
-}
-
-export interface SignContractResponse {
-  signContract: ContractResponse;
-}
-
-export interface SendContractResponse {
-  sendContract: {
-    success: boolean;
-    message: string;
-    invitationToken?: string;
-    expiresAt?: string;
-  };
-}
-
-export interface GetContractResponse {
-  getContract: ContractResponse;
-}
-
-export interface GetContractsResponse {
-  contracts: ContractResponse[];
-}
-
-export interface GetContractsByOrganizationIdResponse {
-  getContractsByOrganizationId: ContractResponse[];
-}
-
-export interface VerifyTokenInput {
-  token: string;
-}
-
-export interface VerifyTokenResponse {
-  isValid: boolean;
-  message?: string;
-  contractId?: string;
-  email?: string;
-  role?: string;
-  expiresAt?: string;
-  isExpired?: boolean;
-}
-
-export interface VerifyTokenGraphQLResponse {
-  verifyToken: VerifyTokenResponse;
-} 
+// Re-export all contract types from the accounting index (single source of truth)
+export {
+  ContractStatus,
+  SignerRole,
+  SignatureType,
+  ContractStyleTheme,
+  type ContractCategory,
+  type ContractResponse,
+  type CreateContractInput,
+  type UpdateContractInput,
+  type SignContractInput,
+  type SendContractInput,
+  type CreateContractResponse,
+  type UpdateContractResponse,
+  type SignContractResponse,
+  type SendContractResponse,
+  type GetContractResponse,
+  type GetContractsResponse,
+  type GetContractsByOrganizationIdResponse,
+  type VerifyTokenInput,
+  type VerifyTokenResponse,
+  type VerifyTokenGraphQLResponse,
+  type ContractTemplateSummary,
+  type ContractTemplateDetail,
+  type ContractTemplateSection,
+  type ContractTemplateVariable,
+  type ContractSignatureEntry,
+  type ContractSignatureBlock,
+  type GetContractTemplatesResponse,
+  type GetContractTemplateResponse,
+} from './accounting/index.js';

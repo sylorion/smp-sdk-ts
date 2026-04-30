@@ -22,11 +22,22 @@ export enum SignerRole {
 }
 
 export enum SignatureType {
+    DRAW = 'draw',
+    TYPE = 'type',
+    UPLOAD = 'upload',
     HASH = 'hash',
     IMAGE = 'image',
-    UPLOAD = 'upload',
     DIGITAL = 'digital'
 }
+
+export enum ContractStyleTheme {
+    CLASSIC = 'classic',
+    MODERN = 'modern',
+    MINIMAL = 'minimal',
+    CORPORATE = 'corporate'
+}
+
+export type ContractCategory = 'commercial' | 'hr' | 'legal' | 'partnership';
 
 export interface ContractResponse {
     contractId: string;
@@ -46,14 +57,21 @@ export interface ContractResponse {
 }
 
 export interface CreateContractInput {
-    serviceId: string;
+    serviceId?: string;
     estimateId?: string;
     organizationId?: string;
     status?: string;
-    content: any;
-    variables: any;
+    content?: any;
+    variables?: any;
     details?: any;
     authorId?: string;
+    /**
+     * Template ID to create the contract from.
+     * When provided, the backend loads the template and populates content/variables.
+     */
+    templateId?: string;
+    /** Visual style theme for the contract preview */
+    style?: ContractStyleTheme;
     /**
      * 'manual'   : created by org owner from dashboard → counts toward plan limits.
      * 'pipeline' : auto-created after order.paid → does NOT count.
@@ -75,6 +93,15 @@ export interface SignContractInput {
     contractId: string;
     role: SignerRole;
     signatureText?: string;
+    /** Signature data for tactile/upload signatures */
+    signatureData?: {
+        /** Base64 PNG image from canvas or uploaded file */
+        image?: string;
+        /** Typed name (displayed in cursive font) */
+        text?: string;
+        /** How the signature was captured */
+        type?: SignatureType;
+    };
 }
 
 export interface SendContractInput {
@@ -84,6 +111,12 @@ export interface SendContractInput {
     firstName?: string;
     lastName?: string;
     expirationDays?: number;
+    /** Organization name for email branding */
+    organizationName?: string;
+    /** Sender name for email */
+    senderName?: string;
+    /** Role of the signer being invited */
+    role?: SignerRole;
 }
 
 export interface CreateContractResponse {
@@ -135,6 +168,72 @@ export interface VerifyTokenResponse {
 
 export interface VerifyTokenGraphQLResponse {
     verifyToken: VerifyTokenResponse;
+}
+
+// ── Contract Template Types ──────────────────────────────────────
+
+/** Lightweight template summary for listing (frontend registry) */
+export interface ContractTemplateSummary {
+    id: string;
+    title: string;
+    description: string;
+    category: ContractCategory;
+    style: ContractStyleTheme;
+    /** List of variable keys expected by this template */
+    variableKeys: string[];
+}
+
+/** Full template definition (returned by getContractTemplate) */
+export interface ContractTemplateDetail {
+    id: string;
+    title: string;
+    description: string;
+    category: ContractCategory;
+    style: ContractStyleTheme;
+    version: string;
+    sections: ContractTemplateSection[];
+    variables: Record<string, ContractTemplateVariable>;
+    details: Record<string, any>;
+}
+
+export interface ContractTemplateSection {
+    id: string;
+    title: string;
+    level: number;
+    content: any; // TipTap JSON
+    children?: ContractTemplateSection[];
+}
+
+export interface ContractTemplateVariable {
+    label: string;
+    type: 'text' | 'number' | 'date' | 'select' | 'textarea';
+    required?: boolean;
+    default?: string | number;
+    options?: string[];
+}
+
+/** Signature data stored in contract details */
+export interface ContractSignatureEntry {
+    image?: string;        // base64 PNG
+    text?: string;         // typed name
+    type: SignatureType;
+    hash: string;          // crypto hash
+    signedAt: string;      // ISO timestamp
+    ip?: string;
+    userAgent?: string;
+}
+
+export interface ContractSignatureBlock {
+    client?: ContractSignatureEntry;
+    provider?: ContractSignatureEntry;
+}
+
+export interface GetContractTemplatesResponse {
+    getContractTemplates: ContractTemplateSummary[];
+}
+
+export interface GetContractTemplateResponse {
+    getContractTemplate: ContractTemplateDetail;
 }
 
 // ==============================

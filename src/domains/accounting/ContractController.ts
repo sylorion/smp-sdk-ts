@@ -18,7 +18,11 @@ import type {
   GetContractsResponse,
   GetContractsByOrganizationIdResponse,
   VerifyTokenResponse,
-  VerifyTokenGraphQLResponse
+  VerifyTokenGraphQLResponse,
+  ContractTemplateSummary,
+  ContractTemplateDetail,
+  GetContractTemplatesResponse,
+  GetContractTemplateResponse,
 } from '../../types/accounting/index.js';
 
 /**
@@ -112,5 +116,23 @@ export class Contract {
     return response.verifyToken;
   }
 
+  // ── Template Methods ────────────────────────────────────────────────
 
+  /**
+   * Lists all available contract templates (lightweight summary)
+   */
+  async listTemplates(): Promise<ContractTemplateSummary[]> {
+    const query = contractQueries.GET_CONTRACT_TEMPLATES;
+    const response = await this.client.query<GetContractTemplatesResponse>(query, {});
+    return response.getContractTemplates;
+  }
+
+  /**
+   * Retrieves a full contract template by its ID (includes sections + variables)
+   */
+  async getTemplate(templateId: string): Promise<ContractTemplateDetail> {
+    const query = contractQueries.GET_CONTRACT_TEMPLATE;
+    const response = await this.client.query<GetContractTemplateResponse>(query, { templateId });
+    return response.getContractTemplate;
+  }
 } 

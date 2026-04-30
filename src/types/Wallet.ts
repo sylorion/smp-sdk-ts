@@ -114,8 +114,6 @@ export interface BankWithdrawInput {
    */
   amount: number;
   currency: string;
-  destinationIban: string;
-  accountHolderName: string;
   reference?: string;
 }
 
