@@ -10,11 +10,10 @@
   ],
   "scripts": {
     "build": "tsc",
-    "prepare": "tsc",
+    "prepare": "tsc --outDir ./dist",
     "lint": "eslint 'src/**/*.ts'",
     "test": "jest",
-    "start": "npm run build ; node  --trace-deprecation dist/index.js ",
-    "prepare": "tsc --outDir ./dist"
+    "start": "npm run build ; node --trace-deprecation dist/index.js"
   },
   "repository": {
     "type": "git",
