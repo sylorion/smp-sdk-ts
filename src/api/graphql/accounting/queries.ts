@@ -1479,10 +1479,7 @@ const contractQueries = {
         description
         category
         style
-        version
-        sections
-        variables
-        details
+        variableKeys
       }
     }
   `,
