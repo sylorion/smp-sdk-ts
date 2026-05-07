@@ -1,4 +1,41 @@
 // Types pour les engagements
+
+/**
+ * Informations client liées à un engagement.
+ * Stockées dans `metadata.clientInfo`.
+ */
+export interface EngagementClientInfo {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  companyName?: string;
+  siret?: string;
+  address?: {
+    street?: string;
+    city?: string;
+    zip?: string;
+    country?: string;
+  };
+}
+
+/**
+ * Métadonnées structurées d'un engagement.
+ * Stockées dans le champ JSON `metadata`.
+ */
+export interface EngagementMetadata {
+  /** Coordonnées du client (extraites de billingInformation ou saisies manuellement) */
+  clientInfo?: EngagementClientInfo;
+  /** Référence facture associée */
+  invoiceId?: string;
+  /** Référence commande d'origine */
+  orderId?: string;
+  /** Référence devis lié */
+  quoteRef?: string;
+  /** Champs libres supplémentaires */
+  [key: string]: unknown;
+}
+
 export interface Engagement {
   engagementId: string;
   consultantUserId: string;
@@ -16,9 +53,9 @@ export interface Engagement {
   status: EngagementStatus;
   priority: EngagementPriority;
   notes?: string;
-  attachments?: Record<string, any>;
-  deliverables?: Record<string, any>;
-  metadata?: Record<string, any>;
+  attachments?: Record<string, unknown>;
+  deliverables?: Record<string, unknown>;
+  metadata?: EngagementMetadata;
   createdAt: string;
   updatedAt?: string;
   deletedAt?: string;
@@ -154,6 +191,7 @@ export interface CreateEngagementInput {
   status?: EngagementStatus;
   priority?: EngagementPriority;
   notes?: string;
+  metadata?: EngagementMetadata;
 }
 
 export interface UpdateEngagementInput {
@@ -166,7 +204,8 @@ export interface UpdateEngagementInput {
   status?: EngagementStatus;
   priority?: EngagementPriority;
   notes?: string;
-  deliverables?: Record<string, any>;
+  deliverables?: Record<string, unknown>;
+  metadata?: EngagementMetadata;
 }
 
 export interface CreateTimeSlotInput {

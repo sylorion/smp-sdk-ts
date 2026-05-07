@@ -81,7 +81,12 @@ export class AuthTokenManager {
 
   public async authenticateUser(username: string, password: string): Promise<LogIn> {
     try {
-      const response = await this.apiClient.query<any>(MUTATION_AUTH_USER, { loginInput: { email: username, password } });
+      // Detect whether the identifier is an email or a username and send it in the correct field
+      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username.trim());
+      const loginInput = isEmail
+        ? { email: username.trim(), password }
+        : { username: username.trim(), password };
+      const response = await this.apiClient.query<any>(MUTATION_AUTH_USER, { loginInput });
 
       if (response.login.errors && response.login.errors.length > 0) {
         throw new Error(response.login.errors[0].message || response.login.message || "Authentication failed");
@@ -183,8 +188,9 @@ export class AuthTokenManager {
       throw new Error('No app refresh token available');
     }
 
-    const response = await this.apiClient.query<TokenDataResponse>(MUTATION_REFRESH_APP_TOKEN, { refreshToken });
-    const { accessToken, expiresIn } = response;
+    // FIX: response is wrapped under response.refreshAppToken (matches GraphQL mutation shape)
+    const response = await this.apiClient.query<{ refreshAppToken: TokenDataResponse }>(MUTATION_REFRESH_APP_TOKEN, { refreshToken });
+    const { accessToken, expiresIn } = response.refreshAppToken;
     const expiresInMilli = expiresIn * 1000;
     const refreshDuration = this.configManager.appAccessDuration < expiresInMilli ?
       this.configManager.appAccessDuration : expiresInMilli;
