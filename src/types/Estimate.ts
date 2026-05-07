@@ -1,8 +1,8 @@
 export enum NegotiationStatus {
-  NONE = 'NONE',
-  IN_PROGRESS = 'IN_PROGRESS',
-  ACCEPTED = 'ACCEPTED',
-  REJECTED = 'REJECTED'
+  NONE = 'none',
+  IN_PROGRESS = 'in_progress',
+  ACCEPTED = 'accepted',
+  REJECTED = 'rejected'
 }
 
 export interface Negotiation {
@@ -85,11 +85,11 @@ export interface NegotiationResponse {
 }
 
 export enum EstimateStatus {
-  PENDING = 'PENDING',
-  NEGOTIATING = 'NEGOTIATING',
-  CLIENT_VALIDATED = 'CLIENT_VALIDATED',
-  PROVIDER_VALIDATED = 'PROVIDER_VALIDATED',
-  ACCEPTED = 'ACCEPTED',
-  REJECTED = 'REJECTED',
-  CLOSED = 'CLOSED'
+  PENDING = 'pending',
+  NEGOTIATING = 'negotiating',
+  CLIENT_VALIDATED = 'client_validated',
+  PROVIDER_VALIDATED = 'provider_validated',
+  ACCEPTED = 'accepted',
+  REJECTED = 'rejected',
+  CLOSED = 'closed'
 } 

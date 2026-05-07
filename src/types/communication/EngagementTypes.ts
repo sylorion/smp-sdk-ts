@@ -133,46 +133,46 @@ export interface EngagementReport {
 
 // Enums
 export enum EngagementStatus {
-  ACTIVE = 'ACTIVE',
-  ON_HOLD = 'ON_HOLD',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED'
+  ACTIVE = 'active',
+  ON_HOLD = 'on_hold',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled'
 }
 
 export enum EngagementPriority {
-  LOW = 'LOW',
-  MEDIUM = 'MEDIUM',
-  HIGH = 'HIGH',
-  URGENT = 'URGENT'
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+  URGENT = 'urgent'
 }
 
 export enum TimeSlotType {
-  TIMESHEET_ENTRY = 'TIMESHEET_ENTRY',
-  AVAILABILITY_SLOT = 'AVAILABILITY_SLOT'
+  TIMESHEET_ENTRY = 'timesheet_entry',
+  AVAILABILITY_SLOT = 'availability_slot'
 }
 
 export enum TimeSlotStatus {
-  ACTIVE = 'ACTIVE',
-  CANCELLED = 'CANCELLED',
-  COMPLETED = 'COMPLETED',
-  ON_HOLD = 'ON_HOLD'
+  ACTIVE = 'active',
+  CANCELLED = 'cancelled',
+  COMPLETED = 'completed',
+  ON_HOLD = 'on_hold'
 }
 
 export enum TimeSlotPriority {
-  LOW = 'LOW',
-  MEDIUM = 'MEDIUM',
-  HIGH = 'HIGH',
-  URGENT = 'URGENT',
-  CRITICAL = 'CRITICAL'
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+  URGENT = 'urgent',
+  CRITICAL = 'critical'
 }
 
 export enum EngagementReportStatus {
-  DRAFT = 'DRAFT',
-  SUBMITTED = 'SUBMITTED',
-  APPROVED = 'APPROVED',
-  PAID = 'PAID',
-  REJECTED = 'REJECTED',
-  CANCELLED = 'CANCELLED'
+  DRAFT = 'draft',
+  SUBMITTED = 'submitted',
+  APPROVED = 'approved',
+  PAID = 'paid',
+  REJECTED = 'rejected',
+  CANCELLED = 'cancelled'
 }
 
 // Input types
