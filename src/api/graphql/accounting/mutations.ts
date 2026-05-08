@@ -584,6 +584,14 @@ const paymentMutations = {
       }
     }
   `,
+  // MUTATION POUR ÉMETTRE LES NOTIFICATIONS DE SOUMISSION D'UN DEVIS (pipeline PRESTATION)
+  EMIT_ESTIMATE_SUBMITTED: `
+    mutation EmitEstimateSubmitted($estimateId: String!) {
+      emitEstimateSubmitted(estimateId: $estimateId) {
+        estimateId
+      }
+    }
+  `,
 };
 
 export { paymentMutations };

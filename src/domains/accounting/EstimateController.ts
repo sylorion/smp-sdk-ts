@@ -91,4 +91,15 @@ export class Estimate {
         const response = await this.client.mutate(mutation, variables) as { emitEstimateAccepted: EstimateEntity };
         return response.emitEstimateAccepted;
     }
+
+    /**
+     * Émet les notifications de soumission d'un devis (pipeline PRESTATION).
+     * À appeler quand l'estimate était un draft et est finalisé à l'étape COMMENTS.
+     */
+    async emitEstimateSubmitted(estimateId: string): Promise<EstimateEntity> {
+        const mutation = paymentMutations.EMIT_ESTIMATE_SUBMITTED;
+        const variables = { estimateId };
+        const response = await this.client.mutate(mutation, variables) as { emitEstimateSubmitted: EstimateEntity };
+        return response.emitEstimateSubmitted;
+    }
 }
