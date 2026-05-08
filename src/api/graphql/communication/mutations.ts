@@ -412,6 +412,13 @@ const engagementMutations = {
       }
     }
   `,
+
+  // MUTATION POUR ENVOYER UNE NOTIFICATION DE RAPPORT DE TRAVAIL PAR EMAIL
+  SEND_WORK_REPORT_NOTIFICATION: `
+    mutation SendWorkReportNotification($data: SendWorkReportNotificationInput!) {
+      sendWorkReportNotification(data: $data)
+    }
+  `,
 };
 
 export { engagementMutations };

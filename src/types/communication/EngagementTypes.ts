@@ -298,3 +298,19 @@ export interface UpdateEngagementReportInput {
   notes?: string;
 }
 
+export interface SendWorkReportNotificationInput {
+  engagementReportId: string;
+  recipientEmail: string;
+  recipientName?: string;
+  consultantName?: string;
+  organizationName?: string;
+  projectName?: string;
+  month: number;
+  year: number;
+  totalHours?: number;
+  totalAmount?: number;
+  hourlyRate?: number;
+  billingPlan?: string;
+  senderName?: string;
+  senderEmail?: string;
+}

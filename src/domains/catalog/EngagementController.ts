@@ -18,7 +18,8 @@ import {
   CreateTimeSlotInput,
   UpdateTimeSlotInput,
   CreateEngagementReportInput,
-  UpdateEngagementReportInput
+  UpdateEngagementReportInput,
+  SendWorkReportNotificationInput
 } from '../../types/communication/index.js';
 
 // Re-export des types pour faciliter l'utilisation
@@ -39,7 +40,8 @@ export {
   CreateTimeSlotInput,
   UpdateTimeSlotInput,
   CreateEngagementReportInput,
-  UpdateEngagementReportInput
+  UpdateEngagementReportInput,
+  SendWorkReportNotificationInput
 } from '../../types/communication/index.js';
 
 export class EngagementController {
@@ -286,5 +288,16 @@ export class EngagementController {
       { engagementId, periodType, periodValue, year }
     ) as { createReportForNewPeriod: EngagementReport };
     return response.createReportForNewPeriod;
+  }
+
+  /**
+   * Envoyer une notification de rapport de travail par email
+   */
+  async sendWorkReportNotification(data: SendWorkReportNotificationInput): Promise<boolean> {
+    const response = await this.apiClient.mutate(
+      engagementMutations.SEND_WORK_REPORT_NOTIFICATION,
+      { data }
+    ) as { sendWorkReportNotification: boolean };
+    return response.sendWorkReportNotification;
   }
 }
