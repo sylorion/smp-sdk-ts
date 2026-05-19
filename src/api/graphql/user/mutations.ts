@@ -117,6 +117,27 @@ export const affiliateMutations = {
         message
       }
     }
+  `,
+
+  SEND_AFFILIATION_INVITATION: `
+    mutation SendAffiliationInvitation(
+      $recipientEmail: String!
+      $referrerUserId: ID!
+      $referrerName: String
+      $invitationToken: String
+      $message: String
+    ) {
+      sendAffiliationInvitation(
+        recipientEmail: $recipientEmail
+        referrerUserId: $referrerUserId
+        referrerName: $referrerName
+        invitationToken: $invitationToken
+        message: $message
+      ) {
+        success
+        message
+      }
+    }
   `
 };
 

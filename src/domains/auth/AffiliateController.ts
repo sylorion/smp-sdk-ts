@@ -87,4 +87,16 @@ export class AffiliateController {
         const response = await this.client.mutate(mutation, variables) as { decodeAffiliateToken: AffiliateTokenInfo };
         return response.decodeAffiliateToken;
     }
+
+    async sendAffiliationInvitation(input: {
+        recipientEmail: string;
+        referrerUserId: string;
+        referrerName?: string;
+        invitationToken?: string;
+        message?: string;
+    }): Promise<{ success: boolean; message: string }> {
+        const mutation = affiliateMutations.SEND_AFFILIATION_INVITATION;
+        const response = await this.client.mutate(mutation, input) as { sendAffiliationInvitation: { success: boolean; message: string } };
+        return response.sendAffiliationInvitation;
+    }
 }
