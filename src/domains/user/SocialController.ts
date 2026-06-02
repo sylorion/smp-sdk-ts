@@ -5,6 +5,7 @@ import { socialQueries } from '../../api/graphql/user/socialQueries.js';
 export interface InteractionStatus {
   isLiked: boolean;
   isFavorited: boolean;
+  likesCount?: number;
 }
 
 export class Social {

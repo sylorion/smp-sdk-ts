@@ -6,6 +6,7 @@ export const socialQueries = {
       interactionStatus(userID: $userID, serviceID: $serviceID) {
         isLiked
         isFavorited
+        likesCount
       }
     }
   `,
