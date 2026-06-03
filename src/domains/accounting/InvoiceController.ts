@@ -311,10 +311,10 @@ export class Invoice {
     /** Force draft mode (watermark) regardless of invoice paymentStatus in DB */
     forceDraft?: boolean;
     /**
-     * Logo de l'organisation vendeuse en base64 (data:image/...;base64,... ou raw base64).
-     * Prioritaire sur le logo Services par défaut. Non stocké en DB.
+     * URL du logo de l'organisation vendeuse (PNG/JPEG).
+     * Le backend fetch l'image depuis cette URL. Si absent, aucun logo.
      */
-    sellerLogoBase64?: string;
+    sellerLogoUrl?: string;
   }): Promise<{
     success: boolean;
     message: string;
