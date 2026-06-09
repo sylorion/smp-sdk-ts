@@ -3,6 +3,7 @@ import { organizationQueries } from '../../api/graphql/organization/queries.js';
 import { organizationMutations } from '../../api/graphql/organization/mutations.js';
 import { organizationMediaQueries } from '../../api/graphql/organization/queries.js';
 import { organizationMediaMutations } from '../../api/graphql/organization/mutations.js';
+import type { Place } from '../catalog/LocationController.js';
 
 // Types des réponses
 export interface Organization {
@@ -44,6 +45,8 @@ export interface Organization {
   createdAt: string; // ISO 8601 format
   updatedAt: string; // ISO 8601 format
   deletedAt?: string; // ISO 8601 format
+  /** Localisation résolue via Apollo Federation (null si locationID absent) */
+  location?: Place | null;
 }
 
 export interface UserRoleInOrganization {

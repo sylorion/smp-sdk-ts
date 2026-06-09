@@ -744,6 +744,18 @@ const serviceQueries = {
         createdAt
         updatedAt
         likes
+        location {
+          placeID
+          city
+          country
+          region
+          pstate
+          postalCode
+          addressLine1
+          addressLine2
+          placeKind
+          coordinates
+        }
         serviceMedias {
           serviceMediaID
           listingPosition
@@ -788,6 +800,18 @@ const serviceQueries = {
         createdAt
         updatedAt
         likes
+        location {
+          placeID
+          city
+          country
+          region
+          pstate
+          postalCode
+          addressLine1
+          addressLine2
+          placeKind
+          coordinates
+        }
         serviceMedias {
           serviceMediaID
           listingPosition
@@ -832,6 +856,18 @@ const serviceQueries = {
         createdAt
         updatedAt
         likes
+        location {
+          placeID
+          city
+          country
+          region
+          pstate
+          postalCode
+          addressLine1
+          addressLine2
+          placeKind
+          coordinates
+        }
         serviceMedias {
           serviceMediaID
           listingPosition
@@ -874,6 +910,16 @@ const serviceQueries = {
         state
         createdAt
         updatedAt
+        location {
+          placeID
+          city
+          country
+          region
+          pstate
+          postalCode
+          addressLine1
+          placeKind
+        }
         serviceMedias {
           serviceMediaID
           listingPosition
@@ -916,6 +962,16 @@ const serviceQueries = {
         state
         createdAt
         updatedAt
+        location {
+          placeID
+          city
+          country
+          region
+          pstate
+          postalCode
+          addressLine1
+          placeKind
+        }
         serviceMedias {
           serviceMediaID
           listingPosition
@@ -959,6 +1015,16 @@ const serviceQueries = {
       createdAt
       updatedAt
       likes
+      location {
+        placeID
+        city
+        country
+        region
+        pstate
+        postalCode
+        addressLine1
+        placeKind
+      }
         serviceMedias {
         serviceMediaID
         listingPosition
@@ -1002,6 +1068,16 @@ const serviceQueries = {
     createdAt
     updatedAt
     likes
+    location {
+      placeID
+      city
+      country
+      region
+      pstate
+      postalCode
+      addressLine1
+      placeKind
+    }
         serviceMedias {
       serviceMediaID
       listingPosition
@@ -1045,6 +1121,16 @@ const serviceQueries = {
     createdAt
     updatedAt
     likes
+    location {
+      placeID
+      city
+      country
+      region
+      pstate
+      postalCode
+      addressLine1
+      placeKind
+    }
         serviceMedias {
       serviceMediaID
       listingPosition
@@ -1087,6 +1173,16 @@ const serviceQueries = {
     state
     createdAt
     updatedAt
+    location {
+      placeID
+      city
+      country
+      region
+      pstate
+      postalCode
+      addressLine1
+      placeKind
+    }
         serviceMedias {
       serviceMediaID
       listingPosition

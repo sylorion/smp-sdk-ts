@@ -206,6 +206,18 @@ const organizationQueries = {
           description
           summary
           locationID
+          location {
+            placeID
+            city
+            country
+            region
+            pstate
+            postalCode
+            addressLine1
+            addressLine2
+            placeKind
+            coordinates
+          }
           sectorID
           parentOrganizationID
           advancedAttributes
@@ -252,6 +264,18 @@ const organizationQueries = {
           description
           summary
           locationID
+          location {
+            placeID
+            city
+            country
+            region
+            pstate
+            postalCode
+            addressLine1
+            addressLine2
+            placeKind
+            coordinates
+          }
           sectorID
           parentOrganizationID
           advancedAttributes
@@ -298,6 +322,18 @@ const organizationQueries = {
           description
           summary
           locationID
+          location {
+            placeID
+            city
+            country
+            region
+            pstate
+            postalCode
+            addressLine1
+            addressLine2
+            placeKind
+            coordinates
+          }
           sectorID
           parentOrganizationID
           advancedAttributes
@@ -344,6 +380,18 @@ const organizationQueries = {
           description
           summary
           locationID
+          location {
+            placeID
+            city
+            country
+            region
+            pstate
+            postalCode
+            addressLine1
+            addressLine2
+            placeKind
+            coordinates
+          }
           sectorID
           parentOrganizationID
           advancedAttributes
@@ -390,6 +438,18 @@ const organizationQueries = {
           description
           summary
           locationID
+          location {
+            placeID
+            city
+            country
+            region
+            pstate
+            postalCode
+            addressLine1
+            addressLine2
+            placeKind
+            coordinates
+          }
           sectorID
           parentOrganizationID
           advancedAttributes
@@ -436,6 +496,18 @@ const organizationQueries = {
           description
           summary
           locationID
+          location {
+            placeID
+            city
+            country
+            region
+            pstate
+            postalCode
+            addressLine1
+            addressLine2
+            placeKind
+            coordinates
+          }
           sectorID
           parentOrganizationID
           advancedAttributes

@@ -3,6 +3,7 @@ import { serviceQueries } from '../../api/graphql/catalog/queries.js';
 import { serviceMutations } from '../../api/graphql/catalog/mutations.js';
 import { serviceMediaQueries } from '../../api/graphql/catalog/queries.js';
 import { serviceMediaMutations } from '../../api/graphql/catalog/mutations.js';
+import type { Place } from './LocationController.js';
 
 // Types pour les entités et les inputs
 interface ServiceEntity {
@@ -38,6 +39,8 @@ interface ServiceEntity {
   deletedAt?: string; // ISO 8601
   likes?: number;
   serviceMedias?: ServiceMediaEntity[];
+  /** Localisation résolue via Apollo Federation (null si locationID absent) */
+  location?: Place | null;
 }
 
 interface CreateServiceInput {
