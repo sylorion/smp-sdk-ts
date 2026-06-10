@@ -780,7 +780,7 @@ const serviceQueries = {
             maxPerReservation
             details
             state
-            medias: assetMedias {
+            medias {
               listingPosition
               legend
               state
@@ -860,7 +860,7 @@ const serviceQueries = {
             maxPerReservation
             details
             state
-            medias: assetMedias {
+            medias {
               listingPosition
               legend
               state
@@ -940,7 +940,7 @@ const serviceQueries = {
             maxPerReservation
             details
             state
-            medias: assetMedias {
+            medias {
               listingPosition
               legend
               state
@@ -1016,7 +1016,7 @@ const serviceQueries = {
             maxPerReservation
             details
             state
-            medias: assetMedias {
+            medias {
               listingPosition
               legend
               state
@@ -1092,7 +1092,7 @@ const serviceQueries = {
             maxPerReservation
             details
             state
-            medias: assetMedias {
+            medias {
               listingPosition
               legend
               state
@@ -1169,7 +1169,7 @@ const serviceQueries = {
           maxPerReservation
           details
           state
-          medias: assetMedias {
+          medias {
             listingPosition
             legend
             state
@@ -1246,7 +1246,7 @@ const serviceQueries = {
         maxPerReservation
         details
         state
-        medias: assetMedias {
+        medias {
           listingPosition
           legend
           state
@@ -1323,7 +1323,7 @@ const serviceQueries = {
         maxPerReservation
         details
         state
-        medias: assetMedias {
+        medias {
           listingPosition
           legend
           state
@@ -1399,7 +1399,7 @@ const serviceQueries = {
         maxPerReservation
         details
         state
-        medias: assetMedias {
+        medias {
           listingPosition
           legend
           state
