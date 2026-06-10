@@ -764,6 +764,30 @@ const serviceQueries = {
             url
           }
         }
+        serviceAssets {
+          serviceAssetID
+          assetID
+          serviceID
+          legend
+          state
+          asset {
+            assetID
+            title
+            description
+            price
+            legalVatPercent
+            quantity
+            maxPerReservation
+            details
+            state
+            medias: assetMedias {
+              listingPosition
+              legend
+              state
+              media { url }
+            }
+          }
+        }
       }
     }
   `,
@@ -818,6 +842,30 @@ const serviceQueries = {
           legend
           media {
             url
+          }
+        }
+        serviceAssets {
+          serviceAssetID
+          assetID
+          serviceID
+          legend
+          state
+          asset {
+            assetID
+            title
+            description
+            price
+            legalVatPercent
+            quantity
+            maxPerReservation
+            details
+            state
+            medias: assetMedias {
+              listingPosition
+              legend
+              state
+              media { url }
+            }
           }
         }
       }
@@ -876,6 +924,30 @@ const serviceQueries = {
             url
           }
         }
+        serviceAssets {
+          serviceAssetID
+          assetID
+          serviceID
+          legend
+          state
+          asset {
+            assetID
+            title
+            description
+            price
+            legalVatPercent
+            quantity
+            maxPerReservation
+            details
+            state
+            medias: assetMedias {
+              listingPosition
+              legend
+              state
+              media { url }
+            }
+          }
+        }
       }
     }
   `,
@@ -928,6 +1000,30 @@ const serviceQueries = {
             url
           }
         }
+        serviceAssets {
+          serviceAssetID
+          assetID
+          serviceID
+          legend
+          state
+          asset {
+            assetID
+            title
+            description
+            price
+            legalVatPercent
+            quantity
+            maxPerReservation
+            details
+            state
+            medias: assetMedias {
+              listingPosition
+              legend
+              state
+              media { url }
+            }
+          }
+        }
       }
     }
   `,
@@ -978,6 +1074,30 @@ const serviceQueries = {
           legend
           media {
             url
+          }
+        }
+        serviceAssets {
+          serviceAssetID
+          assetID
+          serviceID
+          legend
+          state
+          asset {
+            assetID
+            title
+            description
+            price
+            legalVatPercent
+            quantity
+            maxPerReservation
+            details
+            state
+            medias: assetMedias {
+              listingPosition
+              legend
+              state
+              media { url }
+            }
           }
         }
       }
@@ -1033,6 +1153,30 @@ const serviceQueries = {
           url
         }
       }
+      serviceAssets {
+        serviceAssetID
+        assetID
+        serviceID
+        legend
+        state
+        asset {
+          assetID
+          title
+          description
+          price
+          legalVatPercent
+          quantity
+          maxPerReservation
+          details
+          state
+          medias: assetMedias {
+            listingPosition
+            legend
+            state
+            media { url }
+          }
+        }
+      }
     }
   }
   `,
@@ -1084,6 +1228,30 @@ const serviceQueries = {
       legend
           media {
         url
+      }
+    }
+    serviceAssets {
+      serviceAssetID
+      assetID
+      serviceID
+      legend
+      state
+      asset {
+        assetID
+        title
+        description
+        price
+        legalVatPercent
+        quantity
+        maxPerReservation
+        details
+        state
+        medias: assetMedias {
+          listingPosition
+          legend
+          state
+          media { url }
+        }
       }
     }
   }
@@ -1139,6 +1307,30 @@ const serviceQueries = {
         url
       }
     }
+    serviceAssets {
+      serviceAssetID
+      assetID
+      serviceID
+      legend
+      state
+      asset {
+        assetID
+        title
+        description
+        price
+        legalVatPercent
+        quantity
+        maxPerReservation
+        details
+        state
+        medias: assetMedias {
+          listingPosition
+          legend
+          state
+          media { url }
+        }
+      }
+    }
   }
 }
 `,
@@ -1189,6 +1381,30 @@ const serviceQueries = {
       legend
           media {
         url
+      }
+    }
+    serviceAssets {
+      serviceAssetID
+      assetID
+      serviceID
+      legend
+      state
+      asset {
+        assetID
+        title
+        description
+        price
+        legalVatPercent
+        quantity
+        maxPerReservation
+        details
+        state
+        medias: assetMedias {
+          listingPosition
+          legend
+          state
+          media { url }
+        }
       }
     }
   }

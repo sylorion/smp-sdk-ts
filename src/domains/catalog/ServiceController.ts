@@ -6,6 +6,39 @@ import { serviceMediaMutations } from '../../api/graphql/catalog/mutations.js';
 import type { Place } from './LocationController.js';
 
 // Types pour les entités et les inputs
+
+/** Asset imbriqué dans ServiceAsset — chargé via la query service */
+interface ServiceAssetMediaEntity {
+  listingPosition?: number;
+  legend?: string;
+  state?: string;
+  media?: { url: string };
+}
+
+interface AssetEntity {
+  assetID: string;
+  title?: string;
+  description?: string;
+  price?: number;
+  legalVatPercent?: number;
+  quantity?: number;
+  maxPerReservation?: number;
+  details?: Record<string, any>;
+  state?: string;
+  mediaID?: string;
+  medias?: ServiceAssetMediaEntity[];
+}
+
+interface ServiceAssetEntity {
+  serviceAssetID: string;
+  assetID?: string;
+  serviceID?: string;
+  legend?: string;
+  state?: string;
+  /** Asset complet — source de vérité unique, résolu par mu-catalog */
+  asset?: AssetEntity | null;
+}
+
 interface ServiceEntity {
   serviceID: string;
   uniqRef: string;
@@ -41,7 +74,10 @@ interface ServiceEntity {
   serviceMedias?: ServiceMediaEntity[];
   /** Localisation résolue via Apollo Federation (null si locationID absent) */
   location?: Place | null;
+  /** Assets (options) inclus dans la query — source de vérité unique, plus de fetch cascade */
+  serviceAssets?: ServiceAssetEntity[];
 }
+
 
 interface CreateServiceInput {
   authorID: string;
