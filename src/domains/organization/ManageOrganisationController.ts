@@ -102,6 +102,11 @@ export interface OrganizationMember {
   lastname: string;
   joinedAt: string;
   profilePicture?: string;
+  isInvitation?: boolean;
+  invitedAt?: string;
+  expiresAt?: string;
+  jobTitle?: string;
+  missionDescription?: string;
 }
 /**
  * The `OrganizationMembers` interface represents the response of the `listOrganizationMembers` query.
@@ -245,6 +250,86 @@ export class ManageOrganization {
     return response.getUserOrganizations;
   }
 
+  // ========================== NEW: Role Verification ==========================
 
+  async verifyUserRole(input: { userID: string; organizationID: string }): Promise<VerifyUserRoleResponse> {
+    const query = organizationQueries.VERIFY_USER_ROLE;
+    const variables = { input };
+    const response = await this.client.query(query, variables) as { verifyUserRole: VerifyUserRoleResponse };
+    return response.verifyUserRole;
+  }
 
+  // ========================== NEW: User Search ==========================
+
+  async searchUsers(query: string, limit: number = 10): Promise<SearchUsersResult[]> {
+    const gqlQuery = organizationQueries.SEARCH_USERS;
+    const variables = { query, limit };
+    const response = await this.client.query(gqlQuery, variables) as { searchUsers: SearchUsersResult[] };
+    return response.searchUsers;
+  }
+
+  // ========================== NEW: Member Profile ==========================
+
+  async getMemberProfile(organizationID: string, userID: string): Promise<MemberProfileResponse> {
+    const query = organizationQueries.GET_MEMBER_PROFILE;
+    const variables = { organizationID, userID };
+    const response = await this.client.query(query, variables) as { getMemberProfile: MemberProfileResponse };
+    return response.getMemberProfile;
+  }
+
+  async updateMemberProfile(input: UpdateMemberProfileInput): Promise<MemberProfileResponse> {
+    const mutation = organizationMutations.UPDATE_MEMBER_PROFILE;
+    const variables = { input };
+    const response = await this.client.mutate(mutation, variables) as { updateMemberProfile: MemberProfileResponse };
+    return response.updateMemberProfile;
+  }
+
+  // ========================== NEW: Resend Invitation ==========================
+
+  async resendInvitation(input: { email: string; organizationID: string }): Promise<ResendInvitationResponse> {
+    const mutation = organizationMutations.RESEND_INVITATION;
+    const variables = { input };
+    const response = await this.client.mutate(mutation, variables) as { resendInvitation: ResendInvitationResponse };
+    return response.resendInvitation;
+  }
+}
+
+// ========================== NEW INTERFACES ==========================
+
+export interface VerifyUserRoleResponse {
+  success: boolean;
+  role?: string;
+  roleID?: string;
+  message?: string;
+}
+
+export interface SearchUsersResult {
+  userID: string;
+  username: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  profilePictureUrl?: string;
+}
+
+export interface MemberProfileResponse {
+  success: boolean;
+  message?: string;
+  userID?: string;
+  jobTitle?: string;
+  missionDescription?: string;
+}
+
+export interface UpdateMemberProfileInput {
+  organizationID: string;
+  targetUserID: string;
+  callerUserID: string;
+  jobTitle?: string;
+  missionDescription?: string;
+}
+
+export interface ResendInvitationResponse {
+  success: boolean;
+  message?: string;
+  token?: string;
 }

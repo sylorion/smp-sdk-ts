@@ -531,6 +531,11 @@ const organizationQueries = {
           lastname
           joinedAt
           profilePicture
+          isInvitation
+          invitedAt
+          expiresAt
+          jobTitle
+          missionDescription
         }
         totalMembers
       }
@@ -549,6 +554,45 @@ const organizationQueries = {
           roleID
           roleName
         }
+      }
+    }
+  `,
+
+  // QUERY TO VERIFY A USER'S ROLE IN AN ORGANIZATION
+  VERIFY_USER_ROLE: `
+    query VerifyUserRole($input: VerifyUserRoleInput!) {
+      verifyUserRole(input: $input) {
+        success
+        role
+        roleID
+        message
+      }
+    }
+  `,
+
+  // QUERY TO SEARCH USERS BY USERNAME
+  SEARCH_USERS: `
+    query SearchUsers($query: String!, $limit: Float) {
+      searchUsers(query: $query, limit: $limit) {
+        userID
+        username
+        email
+        firstName
+        lastName
+        profilePictureUrl
+      }
+    }
+  `,
+
+  // QUERY TO GET A MEMBER'S PROFILE IN AN ORGANIZATION
+  GET_MEMBER_PROFILE: `
+    query GetMemberProfile($organizationID: ID!, $userID: ID!) {
+      getMemberProfile(organizationID: $organizationID, userID: $userID) {
+        success
+        message
+        userID
+        jobTitle
+        missionDescription
       }
     }
   `

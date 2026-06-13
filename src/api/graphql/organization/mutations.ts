@@ -272,6 +272,30 @@ export const organizationMutations = {
         message
       }
     }
+  `,
+
+  // MUTATION TO UPDATE A MEMBER'S PROFILE IN AN ORGANIZATION
+  UPDATE_MEMBER_PROFILE: `
+    mutation UpdateMemberProfile($input: UpdateMemberProfileInput!) {
+      updateMemberProfile(input: $input) {
+        success
+        message
+        userID
+        jobTitle
+        missionDescription
+      }
+    }
+  `,
+
+  // MUTATION TO RESEND AN INVITATION
+  RESEND_INVITATION: `
+    mutation ResendInvitation($input: ResendInvitationInput!) {
+      resendInvitation(input: $input) {
+        success
+        message
+        token
+      }
+    }
   `
 };
 
