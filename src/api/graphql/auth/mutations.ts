@@ -143,7 +143,7 @@ mutation resetPassword($input: ResetPasswordInput!) {
 
 export const MUTATION_SIGNUP_AFTER_INVITATION = /* GraphQL */ `
 mutation SignupAfterInvitation($input: CreateUserInput!, $organizationId: ID!, $firstName: String, $lastName: String) {
-  signupAfterInvitation(input: $input, organizationID: $organizationId, firstName: $firstName, lastName: $lastName) {
+  signupAfterInvitation(input: $input, organizationId: $organizationId, firstName: $firstName, lastName: $lastName) {
     username
     userID
     email
