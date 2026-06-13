@@ -470,3 +470,22 @@ export const preferenceMutations = {
     }
   `
 };
+
+export const MUTATION_REQUEST_EMAIL_CHANGE = /* GraphQL */ `
+  mutation RequestEmailChange($input: RequestEmailChangeInput!) {
+    requestEmailChange(input: $input) {
+      success
+      message
+    }
+  }
+`;
+
+export const MUTATION_CONFIRM_EMAIL_CHANGE = /* GraphQL */ `
+  mutation ConfirmEmailChange($input: ConfirmEmailChangeInput!) {
+    confirmEmailChange(input: $input) {
+      success
+      message
+    }
+  }
+`;
+

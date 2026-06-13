@@ -1,5 +1,5 @@
 import { APIClient } from '../../api/APIClient.js';
-import { profileMutations } from '../../api/graphql/user/mutations.js';
+import { profileMutations, MUTATION_REQUEST_EMAIL_CHANGE, MUTATION_CONFIRM_EMAIL_CHANGE } from '../../api/graphql/user/mutations.js';
 import { MUTATION_UPDATE_USERNAME } from '../../api/graphql/auth/mutations.js';
 import { profileQueries } from '../../api/graphql/user/queries.js';
 import {
@@ -91,5 +91,19 @@ export class Profile {
     const variables = { slugs };
     const response = await this.client.query(query, variables) as { profilesBySlugs: ProfileEntity[] };
     return response.profilesBySlugs;
+  }
+
+  // ======================= EMAIL CHANGE =======================
+
+  async requestEmailChange(input: { newEmail: string; password: string }): Promise<MutationResponse> {
+    const variables = { input };
+    const response = await this.client.mutate(MUTATION_REQUEST_EMAIL_CHANGE, variables) as { requestEmailChange: MutationResponse };
+    return response.requestEmailChange;
+  }
+
+  async confirmEmailChange(input: { code: string }): Promise<MutationResponse> {
+    const variables = { input };
+    const response = await this.client.mutate(MUTATION_CONFIRM_EMAIL_CHANGE, variables) as { confirmEmailChange: MutationResponse };
+    return response.confirmEmailChange;
   }
 }
