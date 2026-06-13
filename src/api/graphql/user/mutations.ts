@@ -472,8 +472,8 @@ export const preferenceMutations = {
 };
 
 export const MUTATION_REQUEST_EMAIL_CHANGE = /* GraphQL */ `
-  mutation RequestEmailChange($input: RequestEmailChangeInput!) {
-    requestEmailChange(input: $input) {
+  mutation RequestEmailChange($input: RequestEmailChangeInput!, $userID: ID!) {
+    requestEmailChange(input: $input, userID: $userID) {
       success
       message
     }
@@ -481,8 +481,8 @@ export const MUTATION_REQUEST_EMAIL_CHANGE = /* GraphQL */ `
 `;
 
 export const MUTATION_CONFIRM_EMAIL_CHANGE = /* GraphQL */ `
-  mutation ConfirmEmailChange($input: ConfirmEmailChangeInput!) {
-    confirmEmailChange(input: $input) {
+  mutation ConfirmEmailChange($input: ConfirmEmailChangeInput!, $userID: ID!) {
+    confirmEmailChange(input: $input, userID: $userID) {
       success
       message
     }

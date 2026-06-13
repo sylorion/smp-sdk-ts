@@ -56,9 +56,9 @@ export class Password {
         return response.resetPassword;
     }
 
-    async updatePassword(input: UpdatePasswordInput): Promise<UpdatePasswordResponse> {
+    async updatePassword(input: UpdatePasswordInput, userID: string): Promise<UpdatePasswordResponse> {
         const mutation = MUTATION_UPDATE_PASSWORD;
-        const variables = { input };
+        const variables = { input, userID };
         const response = await this.client.mutate(mutation, variables) as { updatePassword: UpdatePasswordResponse };
         return response.updatePassword;
     }

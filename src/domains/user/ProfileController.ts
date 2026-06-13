@@ -95,14 +95,14 @@ export class Profile {
 
   // ======================= EMAIL CHANGE =======================
 
-  async requestEmailChange(input: { newEmail: string; password: string }): Promise<MutationResponse> {
-    const variables = { input };
+  async requestEmailChange(input: { newEmail: string; password: string }, userID: string): Promise<MutationResponse> {
+    const variables = { input, userID };
     const response = await this.client.mutate(MUTATION_REQUEST_EMAIL_CHANGE, variables) as { requestEmailChange: MutationResponse };
     return response.requestEmailChange;
   }
 
-  async confirmEmailChange(input: { code: string }): Promise<MutationResponse> {
-    const variables = { input };
+  async confirmEmailChange(input: { code: string }, userID: string): Promise<MutationResponse> {
+    const variables = { input, userID };
     const response = await this.client.mutate(MUTATION_CONFIRM_EMAIL_CHANGE, variables) as { confirmEmailChange: MutationResponse };
     return response.confirmEmailChange;
   }

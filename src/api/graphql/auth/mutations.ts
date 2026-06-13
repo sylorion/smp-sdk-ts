@@ -242,8 +242,8 @@ export const MUTATION_UPDATE_USERNAME = /* GraphQL */ `
 `;
 
 export const MUTATION_UPDATE_PASSWORD = /* GraphQL */ `
-  mutation UpdatePassword($input: UpdatePasswordInput!) {
-    updatePassword(input: $input) {
+  mutation UpdatePassword($input: UpdatePasswordInput!, $userID: ID!) {
+    updatePassword(input: $input, userID: $userID) {
       success
       message
     }
