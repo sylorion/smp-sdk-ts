@@ -28,8 +28,8 @@ export const contactMutations = {
   `,
 
   UPDATE_CONTACT: `
-    mutation UpdateOrganizationContact($contactID: ID!, $input: UpdateContactInput!) {
-      updateOrganizationContact(contactID: $contactID, input: $input) {
+    mutation UpdateOrganizationContact($contactID: ID!, $callerUserID: ID!, $input: UpdateContactInput!) {
+      updateOrganizationContact(contactID: $contactID, callerUserID: $callerUserID, input: $input) {
         contactID
         uniqRef
         slug
@@ -61,8 +61,8 @@ export const contactMutations = {
   `,
 
   DELETE_CONTACT: `
-    mutation DeleteOrganizationContact($contactID: ID!) {
-      deleteOrganizationContact(contactID: $contactID) {
+    mutation DeleteOrganizationContact($contactID: ID!, $callerUserID: ID!) {
+      deleteOrganizationContact(contactID: $contactID, callerUserID: $callerUserID) {
         success
         message
       }
@@ -70,8 +70,8 @@ export const contactMutations = {
   `,
 
   BULK_CREATE_CONTACTS: `
-    mutation BulkCreateOrganizationContacts($organizationID: ID!, $contacts: [BulkContactInput!]!) {
-      bulkCreateOrganizationContacts(organizationID: $organizationID, contacts: $contacts) {
+    mutation BulkCreateOrganizationContacts($organizationID: ID!, $callerUserID: ID!, $contacts: [BulkContactInput!]!) {
+      bulkCreateOrganizationContacts(organizationID: $organizationID, callerUserID: $callerUserID, contacts: $contacts) {
         success
         created
         skipped
@@ -81,8 +81,8 @@ export const contactMutations = {
   `,
 
   SET_CONTACT_PRIVACY: `
-    mutation SetOrganizationContactPrivacy($contactID: ID!, $isPrivate: Boolean!) {
-      setOrganizationContactPrivacy(contactID: $contactID, isPrivate: $isPrivate) {
+    mutation SetOrganizationContactPrivacy($contactID: ID!, $callerUserID: ID!, $isPrivate: Boolean!) {
+      setOrganizationContactPrivacy(contactID: $contactID, callerUserID: $callerUserID, isPrivate: $isPrivate) {
         contactID
         isPrivate
       }

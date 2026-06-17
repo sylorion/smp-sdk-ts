@@ -2,6 +2,7 @@ export const contactQueries = {
   GET_ORGANIZATION_CONTACTS: `
     query GetOrganizationContacts(
       $organizationID: ID!,
+      $callerUserID: ID!,
       $search: String,
       $status: OrgContactStatus,
       $source: OrgContactSource,
@@ -10,6 +11,7 @@ export const contactQueries = {
     ) {
       organizationContacts(
         organizationID: $organizationID,
+        callerUserID: $callerUserID,
         search: $search,
         status: $status,
         source: $source,
@@ -64,8 +66,8 @@ export const contactQueries = {
   `,
 
   GET_ORGANIZATION_CONTACT: `
-    query GetOrganizationContact($contactID: ID!) {
-      organizationContact(contactID: $contactID) {
+    query GetOrganizationContact($contactID: ID!, $callerUserID: ID!) {
+      organizationContact(contactID: $contactID, callerUserID: $callerUserID) {
         contactID
         uniqRef
         slug
@@ -114,8 +116,8 @@ export const contactQueries = {
   `,
 
   SEARCH_ORGANIZATION_CONTACTS: `
-    query SearchOrganizationContacts($organizationID: ID!, $query: String!, $limit: Int) {
-      searchOrganizationContacts(organizationID: $organizationID, query: $query, limit: $limit) {
+    query SearchOrganizationContacts($organizationID: ID!, $callerUserID: ID!, $query: String!, $limit: Int) {
+      searchOrganizationContacts(organizationID: $organizationID, callerUserID: $callerUserID, query: $query, limit: $limit) {
         contactID
         contactType
         firstName

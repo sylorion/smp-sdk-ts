@@ -150,64 +150,66 @@ export class ContactController {
 
   async list(
     organizationID: string,
+    callerUserID: string,
     filters?: { search?: string; status?: string; source?: string; page?: number; pageSize?: number },
   ): Promise<OrganizationContact[]> {
     const query = contactQueries.GET_ORGANIZATION_CONTACTS;
-    const variables = { organizationID, ...filters };
+    const variables = { organizationID, callerUserID, ...filters };
     const response = await this.client.query(query, variables) as { organizationContacts: OrganizationContact[] };
     return response.organizationContacts;
   }
 
-  async getById(contactID: string): Promise<OrganizationContact> {
+  async getById(contactID: string, callerUserID: string): Promise<OrganizationContact> {
     const query = contactQueries.GET_ORGANIZATION_CONTACT;
-    const variables = { contactID };
+    const variables = { contactID, callerUserID };
     const response = await this.client.query(query, variables) as { organizationContact: OrganizationContact };
     return response.organizationContact;
   }
 
-  async search(organizationID: string, query: string, limit?: number): Promise<OrganizationContact[]> {
+  async search(organizationID: string, callerUserID: string, query: string, limit?: number): Promise<OrganizationContact[]> {
     const gqlQuery = contactQueries.SEARCH_ORGANIZATION_CONTACTS;
-    const variables = { organizationID, query, limit };
+    const variables = { organizationID, callerUserID, query, limit };
     const response = await this.client.query(gqlQuery, variables) as { searchOrganizationContacts: OrganizationContact[] };
     return response.searchOrganizationContacts;
   }
 
   // ── Mutations ──
 
-  async create(input: CreateContactInput): Promise<OrganizationContact> {
+  async create(input: CreateContactInput & { callerUserID: string }): Promise<OrganizationContact> {
     const mutation = contactMutations.CREATE_CONTACT;
     const variables = { input };
     const response = await this.client.mutate(mutation, variables) as { createOrganizationContact: OrganizationContact };
     return response.createOrganizationContact;
   }
 
-  async update(contactID: string, input: UpdateContactInput): Promise<OrganizationContact> {
+  async update(contactID: string, callerUserID: string, input: UpdateContactInput): Promise<OrganizationContact> {
     const mutation = contactMutations.UPDATE_CONTACT;
-    const variables = { contactID, input };
+    const variables = { contactID, callerUserID, input };
     const response = await this.client.mutate(mutation, variables) as { updateOrganizationContact: OrganizationContact };
     return response.updateOrganizationContact;
   }
 
-  async delete(contactID: string): Promise<boolean> {
+  async delete(contactID: string, callerUserID: string): Promise<boolean> {
     const mutation = contactMutations.DELETE_CONTACT;
-    const variables = { contactID };
+    const variables = { contactID, callerUserID };
     const response = await this.client.mutate(mutation, variables) as { deleteOrganizationContact: { success: boolean } };
     return response.deleteOrganizationContact.success;
   }
 
   async bulkCreate(
     organizationID: string,
+    callerUserID: string,
     contacts: BulkContactInput[],
   ): Promise<{ success: boolean; created: number; skipped?: number; message?: string }> {
     const mutation = contactMutations.BULK_CREATE_CONTACTS;
-    const variables = { organizationID, contacts };
+    const variables = { organizationID, callerUserID, contacts };
     const response = await this.client.mutate(mutation, variables) as { bulkCreateOrganizationContacts: any };
     return response.bulkCreateOrganizationContacts;
   }
 
-  async setPrivacy(contactID: string, isPrivate: boolean): Promise<OrganizationContact> {
+  async setPrivacy(contactID: string, callerUserID: string, isPrivate: boolean): Promise<OrganizationContact> {
     const mutation = contactMutations.SET_CONTACT_PRIVACY;
-    const variables = { contactID, isPrivate };
+    const variables = { contactID, callerUserID, isPrivate };
     const response = await this.client.mutate(mutation, variables) as { setOrganizationContactPrivacy: OrganizationContact };
     return response.setOrganizationContactPrivacy;
   }
