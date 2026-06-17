@@ -3,8 +3,8 @@ export const contactQueries = {
     query GetOrganizationContacts(
       $organizationID: ID!,
       $search: String,
-      $status: ContactStatus,
-      $source: ContactSource,
+      $status: OrgContactStatus,
+      $source: OrgContactSource,
       $page: Int,
       $pageSize: Int
     ) {
