@@ -925,6 +925,60 @@ const walletMutations = {
   `,
 };
 
+// =========================================
+// Source: wallet/withdrawalMutations.ts
+// =========================================
+const withdrawalMutations = {
+  CREATE_WITHDRAWAL: `
+    mutation CreateWithdrawal($data: CreateWithdrawalInput!) {
+      createWithdrawal(data: $data) {
+        withdrawalRequestId
+        walletId
+        userId
+        organizationId
+        amount
+        feeAmount
+        netAmount
+        currency
+        status
+        paymentMethodId
+        submittedBy
+        createdAt
+      }
+    }
+  `,
+
+  SUBMIT_FOR_APPROVAL: `
+    mutation SubmitWithdrawalForApproval($withdrawalRequestId: String!, $actorId: String!) {
+      submitWithdrawalForApproval(withdrawalRequestId: $withdrawalRequestId, actorId: $actorId) {
+        withdrawalRequestId
+        status
+        updatedAt
+      }
+    }
+  `,
+
+  REVIEW_WITHDRAWAL: `
+    mutation ReviewWithdrawal($data: ReviewWithdrawalInput!) {
+      reviewWithdrawal(data: $data) {
+        withdrawalRequestId
+        walletId
+        amount
+        feeAmount
+        netAmount
+        currency
+        status
+        approvedBy
+        approvedAt
+        rejectionReason
+        updatedAt
+      }
+    }
+  `,
+};
+
+export { withdrawalMutations };
+
 export { walletMutations };
 // =========================================
 // Source: contract/contractMutations.ts

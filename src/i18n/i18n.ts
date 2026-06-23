@@ -1,12 +1,14 @@
 // src/i18n/i18n.ts 
 import en_US from './locales/en_US.js';
 import fr_FR from './locales/fr_FR.js';
+import es_ES from './locales/es_ES.js';
 
 import { defaultLanguage, SupportedLang, TranslationResources } from './languages.js';
 
 const messagesMapping = {
   en_US,
   fr_FR,
+  es_ES,
 };
 
 export class I18n {

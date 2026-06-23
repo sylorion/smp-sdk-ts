@@ -1,4 +1,4 @@
 // ./src/i18n/langages.ts
 export type TranslationResources = { [key: string]: string; };
-export type SupportedLang = 'en_US' | 'fr_FR';
+export type SupportedLang = 'en_US' | 'fr_FR' | 'es_ES';
 export const defaultLanguage: SupportedLang = 'en_US';

@@ -1486,3 +1486,78 @@ const contractQueries = {
 };
 
 export { contractQueries };
+
+// =========================================
+// Source: wallet/withdrawalQueries.ts
+// =========================================
+const withdrawalQueries = {
+  GET_WITHDRAWAL: `
+    query GetWithdrawal($withdrawalRequestId: String!) {
+      withdrawalRequest(withdrawalRequestId: $withdrawalRequestId) {
+        withdrawalRequestId
+        walletId
+        userId
+        organizationId
+        amount
+        feeAmount
+        netAmount
+        currency
+        status
+        paymentMethodId
+        destinationIbanHash
+        submittedBy
+        approvedBy
+        approvedAt
+        rejectionReason
+        externalPayoutId
+        externalPayoutStatus
+        completedAt
+        createdAt
+        updatedAt
+        events {
+          withdrawalEventId
+          eventType
+          actorId
+          actorRole
+          previousStatus
+          newStatus
+          note
+          createdAt
+        }
+      }
+    }
+  `,
+
+  LIST_WITHDRAWALS: `
+    query ListWithdrawals($walletId: String, $organizationId: String, $status: String, $limit: Int, $offset: Int) {
+      withdrawalRequests(walletId: $walletId, organizationId: $organizationId, status: $status, limit: $limit, offset: $offset) {
+        withdrawalRequestId
+        walletId
+        userId
+        organizationId
+        amount
+        feeAmount
+        netAmount
+        currency
+        status
+        paymentMethodId
+        submittedBy
+        approvedBy
+        approvedAt
+        rejectionReason
+        completedAt
+        createdAt
+        updatedAt
+        events {
+          withdrawalEventId
+          eventType
+          actorId
+          newStatus
+          createdAt
+        }
+      }
+    }
+  `,
+};
+
+export { withdrawalQueries };

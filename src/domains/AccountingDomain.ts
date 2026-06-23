@@ -5,6 +5,7 @@ import { Contract } from './accounting/ContractController.js';
 import { Order } from './accounting/OrderController.js';
 import { Transaction } from './accounting/Transactioncontroller.js';
 import { Wallet } from './accounting/WalletController.js';
+import { Withdrawal } from './accounting/WithdrawalController.js';
 
 export class AccountingDomain {
   public invoice: Invoice;
@@ -13,6 +14,7 @@ export class AccountingDomain {
   public order: Order;
   public transaction: Transaction;
   public wallet: Wallet;
+  public withdrawal: Withdrawal;
 
   constructor(client: APIClient) {
     this.invoice = new Invoice(client);
@@ -21,5 +23,6 @@ export class AccountingDomain {
     this.order = new Order(client);
     this.transaction = new Transaction(client);
     this.wallet = new Wallet(client);
+    this.withdrawal = new Withdrawal(client);
   }
 }
