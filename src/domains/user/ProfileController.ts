@@ -59,6 +59,12 @@ export class Profile {
     return response.profile;
   }
 
+  async getByUserId(userID: string): Promise<ProfileEntity[]> {
+    const query = profileQueries.GET_PROFILES_BY_USER_ID;
+    const response = await this.client.query(query, { userID }) as { profilesByUserID: ProfileEntity[] };
+    return response.profilesByUserID ?? [];
+  }
+
   async list(): Promise<ProfileEntity[]> {
     const query = profileQueries.GET_PROFILES;
     const response = await this.client.query(query) as { profiles: ProfileEntity[] };

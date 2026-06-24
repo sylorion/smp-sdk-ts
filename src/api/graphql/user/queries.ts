@@ -177,6 +177,31 @@ export const profileQueries = {
         }
       }
     `,
+
+  // Query to get profiles by userID
+  GET_PROFILES_BY_USER_ID: `
+      query ProfilesByUserID($userID: ID!) {
+        profilesByUserID(userID: $userID) {
+          profileID
+          userID
+          uniqRef
+          slug
+          firstName
+          lastName
+          dateOfBirth
+          gender
+          nationality
+          phoneNumber
+          bio
+          state
+          createdAt
+          updatedAt
+          profilePicture {
+            url
+          }
+        }
+      }
+    `,
 };
 
 // =========================================
