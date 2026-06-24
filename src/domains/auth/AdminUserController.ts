@@ -5,6 +5,7 @@ export interface AdminUserEntity {
   userID: string;
   username: string;
   email: string;
+  profileID?: string;
   plan?: string;
   state?: string;
   createdAt?: Date;

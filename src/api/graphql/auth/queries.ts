@@ -95,6 +95,7 @@ export const adminAuthQueries = {
         userID
         username
         email
+        profileID
         plan
         state
         createdAt
