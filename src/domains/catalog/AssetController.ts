@@ -195,7 +195,8 @@ export class Asset {
     admin?: boolean
   ): Promise<AssetEntity[]> {
     const query = assetQueries.GET_ASSETS;
-    const variables = { pagination, sort, filter, admin };
+    // Gateway only supports `admin` arg on Query.assets — no pagination/sort/filter
+    const variables = { admin };
     const response = await this.client.query<{ assets: AssetEntity[] }>(query, variables);
     return response.assets;
   }

@@ -71,3 +71,66 @@ export const QUERY_CHECK_USERNAME_AVAILABILITY = /* GraphQL */ `
   }
 `;
 
+// ─── Admin Queries (mu-authentication) ───────────────────────────────────────
+// These queries hit the authentication service directly and have NO state filter.
+// They allow searching all users regardless of their state (online/awaiting/suspended).
+
+export const adminAuthQueries = {
+  ADMIN_SEARCH_USERS: /* GraphQL */ `
+    query AdminSearchUsers($query: String!, $limit: Float) {
+      adminSearchUsers(query: $query, limit: $limit) {
+        userID
+        username
+        email
+        plan
+        state
+        createdAt
+      }
+    }
+  `,
+
+  ADMIN_GET_USER_BY_ID: /* GraphQL */ `
+    query AdminGetUserByID($userID: ID!) {
+      adminGetUserByID(userID: $userID) {
+        userID
+        username
+        email
+        plan
+        state
+        createdAt
+        updatedAt
+      }
+    }
+  `,
+
+  ADMIN_GET_USER_BY_EMAIL: /* GraphQL */ `
+    query AdminGetUserByEmail($email: String!) {
+      adminGetUserByEmail(email: $email) {
+        userID
+        username
+        email
+        plan
+        state
+        createdAt
+        updatedAt
+      }
+    }
+  `,
+
+  ADMIN_GET_PLAN_STATS: /* GraphQL */ `
+    query AdminGetPlanStats {
+      adminGetPlanStats {
+        plan
+        count
+      }
+    }
+  `,
+
+  ADMIN_GET_USER_COUNT: /* GraphQL */ `
+    query AdminGetUserCount {
+      adminGetUserCount
+    }
+  `,
+};
+
+

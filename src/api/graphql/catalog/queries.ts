@@ -104,8 +104,8 @@ const assetQueries = {
 
   // Récupère la liste de tous les assets avec pagination, tri et filtres éventuels
   GET_ASSETS: `
-    query GetAssets($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!], $admin: Boolean) {
-      assets(pagination: $pagination, sort: $sort, filter: $filter, admin: $admin) {
+    query GetAssets($admin: Boolean) {
+      assets(admin: $admin) {
         assetID
         uniqRef
         slug
