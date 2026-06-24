@@ -1522,6 +1522,7 @@ const withdrawalQueries = {
           previousStatus
           newStatus
           note
+          metadataJson
           createdAt
         }
       }
@@ -1553,6 +1554,7 @@ const withdrawalQueries = {
           eventType
           actorId
           newStatus
+          metadataJson
           createdAt
         }
       }

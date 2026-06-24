@@ -3,6 +3,14 @@ import { withdrawalMutations } from '../../api/graphql/accounting/mutations.js';
 import { withdrawalQueries } from '../../api/graphql/accounting/queries.js';
 
 // ── Types ──────────────────────────────────────────────────────
+export interface BeneficiaryInfo {
+  accountHolder: string;
+  iban: string;
+  bic?: string;
+  bankName?: string;
+  reference?: string;
+}
+
 export interface CreateWithdrawalInput {
   walletId: string;
   userId?: string;
@@ -12,6 +20,7 @@ export interface CreateWithdrawalInput {
   paymentMethodId?: string;
   destinationIbanHash?: string;
   submittedBy: string;
+  beneficiaryInfo?: BeneficiaryInfo;
 }
 
 export interface ReviewWithdrawalInput {
@@ -30,6 +39,7 @@ export interface WithdrawalEvent {
   previousStatus?: string;
   newStatus: string;
   note?: string;
+  metadataJson?: string; // JSON stringified - contains beneficiaryInfo
   createdAt: string;
 }
 
