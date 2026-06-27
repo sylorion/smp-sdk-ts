@@ -1,6 +1,39 @@
 // ==============================
 // ORGANIZATION
 // ==============================
+
+// ── Advanced Attributes (structured JSON stored in Prisma Json? column) ──
+export type OrganizationProfileRole = 'sales' | 'director' | 'manager' | 'contact';
+
+export interface OrganizationProfile {
+  role: OrganizationProfileRole;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface OrganizationInvitation {
+  token: string;
+  userID: string | null;
+  lastName: string;
+  firstName: string;
+  expiresAt: string;
+  invitedAt?: string;
+}
+
+export interface OrganizationMemberProfile {
+  jobTitle?: string;
+  missionDescription?: string;
+  updatedAt?: string;
+}
+
+export interface OrganizationAdvancedAttributes {
+  profiles?: OrganizationProfile[];
+  invitations?: Record<string, OrganizationInvitation>;
+  invitationTokens?: Record<string, string>;
+  memberProfiles?: Record<string, OrganizationMemberProfile>;
+  [key: string]: any; // extensible for sector-specific fields (langues, modalites, etc.)
+}
 export interface Organization {
     organizationID: string;
     uniqRef: string;
@@ -35,7 +68,7 @@ export interface Organization {
     summary?: string;
     locationID?: string;
     parentOrganizationID?: string;
-    advancedAttributes?: string; // JSON stringifié
+    advancedAttributes?: OrganizationAdvancedAttributes;
     state: string;
     createdAt: string;
     updatedAt: string;
@@ -70,7 +103,7 @@ export interface CreateOrganizationInput {
     summary?: string;
     locationID?: string;
     parentOrganizationID?: string;
-    advancedAttributes?: string;
+    advancedAttributes?: OrganizationAdvancedAttributes;
     state: string;
 }
 
@@ -101,7 +134,7 @@ export interface UpdateOrganizationInput {
     summary?: string;
     locationID?: string;
     parentOrganizationID?: string;
-    advancedAttributes?: string;
+    advancedAttributes?: OrganizationAdvancedAttributes;
     state?: string;
 }
 
