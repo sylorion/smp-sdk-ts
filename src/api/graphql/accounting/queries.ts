@@ -1092,6 +1092,7 @@ const walletQueries = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
@@ -1113,6 +1114,7 @@ const walletQueries = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
@@ -1134,6 +1136,7 @@ const walletQueries = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
@@ -1155,6 +1158,7 @@ const walletQueries = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
@@ -1176,6 +1180,7 @@ const walletQueries = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
@@ -1197,6 +1202,7 @@ const walletQueries = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
@@ -1218,6 +1224,7 @@ const walletQueries = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
