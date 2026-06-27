@@ -243,6 +243,16 @@ export class Wallet {
     return response.stripeConnectStatus;
   }
 
+  /**
+   * Retrieves ledger history for a wallet (includes transfers, withdrawals, deposits, fees, etc.)
+   */
+  async getLedgerHistory(walletId: string, options?: { accountType?: string; limit?: number }): Promise<any[]> {
+    const query = walletQueries.WALLET_LEDGER_HISTORY;
+    const variables = { walletId, accountType: options?.accountType, limit: options?.limit };
+    const response = await this.client.query<any>(query, variables);
+    return response.walletLedgerHistory || [];
+  }
+
 
   /**
    * Helper method to create a wallet with initial balances

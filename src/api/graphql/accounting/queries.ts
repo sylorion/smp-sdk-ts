@@ -1254,6 +1254,28 @@ const walletQueries = {
       }
     }
   `,
+
+  WALLET_LEDGER_HISTORY: `
+    query WalletLedgerHistory($walletId: String!, $accountType: String, $limit: Float) {
+      walletLedgerHistory(walletId: $walletId, accountType: $accountType, limit: $limit) {
+        ledgerEntryId
+        accountType
+        accountId
+        entryType
+        amount
+        currency
+        balanceAfter
+        createdAt
+        transaction {
+          ledgerTransactionId
+          referenceType
+          referenceId
+          description
+          createdAt
+        }
+      }
+    }
+  `,
 };
 
 export { walletQueries };
