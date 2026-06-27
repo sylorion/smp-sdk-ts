@@ -21,6 +21,10 @@ export interface CreateWithdrawalInput {
   destinationIbanHash?: string;
   submittedBy: string;
   beneficiaryInfo?: BeneficiaryInfo;
+  /** Email de contact de l'organisation — résolu côté frontend, transmis via RabbitMQ pour notifications */
+  organizationContactEmail?: string;
+  /** Nom de l'organisation — pour l'affichage dans les emails */
+  organizationName?: string;
 }
 
 export interface ReviewWithdrawalInput {
@@ -29,6 +33,8 @@ export interface ReviewWithdrawalInput {
   action: 'approve' | 'reject';
   rejectionReason?: string;
   note?: string;
+  organizationContactEmail?: string;
+  organizationName?: string;
 }
 
 export interface WithdrawalEvent {
