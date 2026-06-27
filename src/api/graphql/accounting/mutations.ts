@@ -668,6 +668,7 @@ const walletMutations = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
@@ -689,6 +690,7 @@ const walletMutations = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
@@ -710,6 +712,7 @@ const walletMutations = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
@@ -731,6 +734,7 @@ const walletMutations = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
@@ -752,6 +756,7 @@ const walletMutations = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
@@ -773,6 +778,7 @@ const walletMutations = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
@@ -794,6 +800,7 @@ const walletMutations = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
@@ -815,6 +822,7 @@ const walletMutations = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
@@ -873,6 +881,7 @@ const walletMutations = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
@@ -894,6 +903,7 @@ const walletMutations = {
         updatedAt
         deletedAt
         externalProviderData
+        publicAddress
       }
     }
   `,
@@ -980,6 +990,55 @@ const withdrawalMutations = {
 export { withdrawalMutations };
 
 export { walletMutations };
+
+// =========================================
+// Source: wallet/secureTransferMutations.ts
+// =========================================
+const secureTransferMutations = {
+  INITIATE_SECURE_TRANSFER: `
+    mutation InitiateSecureTransfer($data: InitiateSecureTransferInput!) {
+      initiateSecureTransfer(data: $data) {
+        transferId
+        status
+        otpSentTo
+        expiresAt
+        feeAmount
+        netAmount
+      }
+    }
+  `,
+
+  CONFIRM_SECURE_TRANSFER: `
+    mutation ConfirmSecureTransfer($data: ConfirmSecureTransferInput!) {
+      confirmSecureTransfer(data: $data) {
+        transferId
+        status
+        sourceWallet {
+          walletId
+          balances
+          tokens
+          mainCurrency
+          version
+          publicAddress
+        }
+        destinationWallet {
+          walletId
+          balances
+          tokens
+          mainCurrency
+          version
+          publicAddress
+        }
+        amount
+        feeAmount
+        currency
+        ledgerTransactionId
+      }
+    }
+  `,
+};
+
+export { secureTransferMutations };
 // =========================================
 // Source: contract/contractMutations.ts
 // =========================================
