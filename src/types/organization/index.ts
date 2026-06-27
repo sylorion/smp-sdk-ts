@@ -2,7 +2,7 @@
 // ORGANIZATION
 // ==============================
 
-// ── Advanced Attributes (structured JSON stored in Prisma Json? column) ──
+// Advanced Attributes (structured JSON stored in Prisma Json? column)
 export type OrganizationProfileRole = 'sales' | 'director' | 'manager' | 'contact';
 
 export interface OrganizationProfile {
@@ -32,8 +32,9 @@ export interface OrganizationAdvancedAttributes {
   invitations?: Record<string, OrganizationInvitation>;
   invitationTokens?: Record<string, string>;
   memberProfiles?: Record<string, OrganizationMemberProfile>;
-  [key: string]: any; // extensible for sector-specific fields (langues, modalites, etc.)
+  [key: string]: any;
 }
+
 export interface Organization {
     organizationID: string;
     uniqRef: string;

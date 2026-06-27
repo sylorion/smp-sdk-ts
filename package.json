@@ -47,13 +47,16 @@
     "ts-jest": "^29.1.1",
     "typescript": "^5.3.3"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@apollo/client": "^3.8.10",
-    "@graphql-codegen/typescript-graphql-request": "^6.2.0",
     "axios": "^1.7.5",
-    "intl-messageformat": "^10.5.14",
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
-    "graphql-tag": "^2.12.6"
+    "graphql-tag": "^2.12.6",
+    "intl-messageformat": "^10.5.14"
+  },
+  "peerDependenciesMeta": {
+    "@apollo/client": { "optional": true },
+    "intl-messageformat": { "optional": true }
   }
 }
