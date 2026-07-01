@@ -240,6 +240,8 @@ const bookingConfigurationMutations = {
         cancellationWindow
         cancellationPolicy
         advanceBookingLimit
+        maxCapacity
+        customRequirements
         createdAt
         updatedAt
         deletedAt
@@ -263,6 +265,8 @@ const bookingConfigurationMutations = {
         cancellationWindow
         cancellationPolicy
         advanceBookingLimit
+        maxCapacity
+        customRequirements
         createdAt
         updatedAt
         deletedAt
@@ -286,6 +290,8 @@ const bookingConfigurationMutations = {
         cancellationWindow
         cancellationPolicy
         advanceBookingLimit
+        maxCapacity
+        customRequirements
         createdAt
         updatedAt
         deletedAt

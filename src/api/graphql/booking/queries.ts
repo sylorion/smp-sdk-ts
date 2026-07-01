@@ -236,6 +236,11 @@ const bookingQueries = {
         minBookingDuration
         maxBookingDuration
         dateRangeBookingAllowed
+        cancellationWindow
+        cancellationPolicy
+        advanceBookingLimit
+        maxCapacity
+        customRequirements
         createdAt
         updatedAt
         deletedAt
@@ -256,6 +261,11 @@ const bookingQueries = {
         minBookingDuration
         maxBookingDuration
         dateRangeBookingAllowed
+        cancellationWindow
+        cancellationPolicy
+        advanceBookingLimit
+        maxCapacity
+        customRequirements
         createdAt
         updatedAt
         deletedAt
@@ -276,6 +286,11 @@ const bookingQueries = {
         minBookingDuration
         maxBookingDuration
         dateRangeBookingAllowed
+        cancellationWindow
+        cancellationPolicy
+        advanceBookingLimit
+        maxCapacity
+        customRequirements
         createdAt
         updatedAt
         deletedAt

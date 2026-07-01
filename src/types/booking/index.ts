@@ -129,6 +129,19 @@ export enum SlotStatus {
   PAST = 'PAST'
 }
 
+export interface CustomRequirementItem {
+  label: string;
+  mandatory?: boolean;
+  type?: 'document' | 'dress_code' | 'equipment' | 'health' | 'info' | 'custom';
+  description?: string;
+}
+
+export interface CustomRequirements {
+  items: CustomRequirementItem[];
+  headerTitle?: string;
+  headerNote?: string;
+}
+
 export interface BookingConfiguration {
   bookingConfigurationId: string;
   userId: string;
@@ -141,7 +154,9 @@ export interface BookingConfiguration {
   dateRangeBookingAllowed: boolean;
   cancellationWindow: number;
   cancellationPolicy?: string;
-  advanceBookingLimit?: number; // NOUVEAU
+  advanceBookingLimit?: number;
+  maxCapacity: number;
+  customRequirements?: CustomRequirements | null;
   createdAt: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -279,7 +294,9 @@ export interface CreateBookingConfigurationInput {
   dateRangeBookingAllowed: boolean;
   cancellationWindow?: number;
   cancellationPolicy?: string;
-  advanceBookingLimit?: number; // NOUVEAU
+  advanceBookingLimit?: number;
+  maxCapacity?: number;
+  customRequirements?: CustomRequirements | null;
 }
 
 export interface CreateServiceTypeBookingInput {
@@ -302,7 +319,9 @@ export interface UpdateBookingConfigurationInput {
   dateRangeBookingAllowed?: boolean;
   cancellationWindow?: number;
   cancellationPolicy?: string;
-  advanceBookingLimit?: number; // NOUVEAU
+  advanceBookingLimit?: number;
+  maxCapacity?: number;
+  customRequirements?: CustomRequirements | null;
 }
 
 // NOUVELLE INTERFACE pour les données du calendrier
