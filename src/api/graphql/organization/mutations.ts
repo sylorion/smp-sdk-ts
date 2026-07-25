@@ -296,6 +296,26 @@ export const organizationMutations = {
         token
       }
     }
+  `,
+
+  // MUTATION TO INITIATE AN OWNER TRANSFER (generates OTP)
+  INITIATE_OWNER_TRANSFER: `
+    mutation InitiateOwnerTransfer($input: InitiateOwnerTransferInput!) {
+      initiateOwnerTransfer(input: $input) {
+        success
+        message
+      }
+    }
+  `,
+
+  // MUTATION TO VALIDATE AN OWNER TRANSFER (verifies OTP and completes transfer)
+  VALIDATE_OWNER_TRANSFER: `
+    mutation ValidateOwnerTransfer($input: ValidateOwnerTransferInput!) {
+      validateOwnerTransfer(input: $input) {
+        success
+        message
+      }
+    }
   `
 };
 

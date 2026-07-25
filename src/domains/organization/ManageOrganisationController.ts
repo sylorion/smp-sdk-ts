@@ -120,6 +120,8 @@ export interface UpdateUserRoleInOrganizationInput {
   organizationID: string;
   userID: string;
   newRoleID: string;
+  /** UserID du membre qui effectue l'action — injecté côté serveur, optionnel ici */
+  callerUserID?: string;
 }
 
 export interface UpdateUserRoleInOrganizationResponse {
@@ -292,6 +294,29 @@ export class ManageOrganization {
     const response = await this.client.mutate(mutation, variables) as { resendInvitation: ResendInvitationResponse };
     return response.resendInvitation;
   }
+
+  // ========================== NEW: Owner Transfer ==========================
+
+  /**
+   * Initiates an owner transfer. Sends an OTP to the current owner's email.
+   */
+  async initiateOwnerTransfer(input: InitiateOwnerTransferInput): Promise<OwnerTransferResponse> {
+    const mutation = organizationMutations.INITIATE_OWNER_TRANSFER;
+    const variables = { input };
+    const response = await this.client.mutate(mutation, variables) as { initiateOwnerTransfer: OwnerTransferResponse };
+    return response.initiateOwnerTransfer;
+  }
+
+  /**
+   * Validates the OTP and completes the owner transfer.
+   * The former owner is demoted to Admin, the target becomes the new Owner.
+   */
+  async validateOwnerTransfer(input: ValidateOwnerTransferInput): Promise<OwnerTransferResponse> {
+    const mutation = organizationMutations.VALIDATE_OWNER_TRANSFER;
+    const variables = { input };
+    const response = await this.client.mutate(mutation, variables) as { validateOwnerTransfer: OwnerTransferResponse };
+    return response.validateOwnerTransfer;
+  }
 }
 
 // ========================== NEW INTERFACES ==========================
@@ -332,4 +357,29 @@ export interface ResendInvitationResponse {
   success: boolean;
   message?: string;
   token?: string;
+}
+
+// ========================== NEW: Owner Transfer Interfaces ==========================
+
+export interface InitiateOwnerTransferInput {
+  organizationID: string;
+  /** UserID de l'Owner actuel qui initie le transfert */
+  callerUserID: string;
+  /** UserID du membre cible qui deviendra le nouvel Owner */
+  targetUserID: string;
+}
+
+export interface ValidateOwnerTransferInput {
+  organizationID: string;
+  /** UserID de l'Owner actuel (doit correspondre à l'initiateur) */
+  callerUserID: string;
+  /** UserID du membre cible */
+  targetUserID: string;
+  /** Code OTP 6 chiffres reçu par e-mail */
+  otpCode: string;
+}
+
+export interface OwnerTransferResponse {
+  success: boolean;
+  message?: string;
 }
