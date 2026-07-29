@@ -262,6 +262,7 @@ export const userPlanQueries = {
         planExpiresAt
         planTrialEndsAt
         stripeCustomerId
+        planBillingInterval
       }
     }
   `,

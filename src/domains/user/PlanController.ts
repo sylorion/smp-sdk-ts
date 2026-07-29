@@ -8,6 +8,7 @@ export interface UserPlanInfo {
   planExpiresAt: string | null;  // ISO string from GraphQL Date scalar
   planTrialEndsAt: string | null;
   stripeCustomerId: string | null;
+  planBillingInterval: string | null;
 }
 
 /**

@@ -8,6 +8,7 @@ export interface CreateUserInput {
     state: string;
     profileID?: string | null;
     plan?: string | null;
+    planBillingInterval?: string | null;
     password: string;
     email: string;
     rsaPublicKey?: string;
@@ -20,6 +21,7 @@ export interface CreateUserResponse {
     username: string;
     email: string;
     plan?: string;
+    planBillingInterval?: string;
     profileID?: string;
     userKind: string;
     lastLogin?: string;
