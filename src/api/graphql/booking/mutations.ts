@@ -242,6 +242,8 @@ const bookingConfigurationMutations = {
         advanceBookingLimit
         maxCapacity
         customRequirements
+        postBookingMessageTemplate
+        autoSendPostBookingMessage
         createdAt
         updatedAt
         deletedAt
@@ -267,6 +269,8 @@ const bookingConfigurationMutations = {
         advanceBookingLimit
         maxCapacity
         customRequirements
+        postBookingMessageTemplate
+        autoSendPostBookingMessage
         createdAt
         updatedAt
         deletedAt
@@ -292,6 +296,8 @@ const bookingConfigurationMutations = {
         advanceBookingLimit
         maxCapacity
         customRequirements
+        postBookingMessageTemplate
+        autoSendPostBookingMessage
         createdAt
         updatedAt
         deletedAt

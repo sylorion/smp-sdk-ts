@@ -157,6 +157,8 @@ export interface BookingConfiguration {
   advanceBookingLimit?: number;
   maxCapacity: number;
   customRequirements?: CustomRequirements | null;
+  postBookingMessageTemplate?: string;
+  autoSendPostBookingMessage?: boolean;
   createdAt: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -297,6 +299,8 @@ export interface CreateBookingConfigurationInput {
   advanceBookingLimit?: number;
   maxCapacity?: number;
   customRequirements?: CustomRequirements | null;
+  postBookingMessageTemplate?: string;
+  autoSendPostBookingMessage?: boolean;
 }
 
 export interface CreateServiceTypeBookingInput {
@@ -322,6 +326,8 @@ export interface UpdateBookingConfigurationInput {
   advanceBookingLimit?: number;
   maxCapacity?: number;
   customRequirements?: CustomRequirements | null;
+  postBookingMessageTemplate?: string;
+  autoSendPostBookingMessage?: boolean;
 }
 
 // NOUVELLE INTERFACE pour les données du calendrier

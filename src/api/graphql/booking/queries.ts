@@ -241,6 +241,8 @@ const bookingQueries = {
         advanceBookingLimit
         maxCapacity
         customRequirements
+        postBookingMessageTemplate
+        autoSendPostBookingMessage
         createdAt
         updatedAt
         deletedAt
@@ -266,6 +268,8 @@ const bookingQueries = {
         advanceBookingLimit
         maxCapacity
         customRequirements
+        postBookingMessageTemplate
+        autoSendPostBookingMessage
         createdAt
         updatedAt
         deletedAt
@@ -291,6 +295,8 @@ const bookingQueries = {
         advanceBookingLimit
         maxCapacity
         customRequirements
+        postBookingMessageTemplate
+        autoSendPostBookingMessage
         createdAt
         updatedAt
         deletedAt
