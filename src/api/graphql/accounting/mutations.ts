@@ -343,6 +343,25 @@ const paymentMutations = {
       }
     }
   `,
+  // MUTATION POUR INITIER UN PAIEMENT D'ABONNEMENT DE SERVICE
+  INITIATE_SERVICE_SUBSCRIPTION_PAYMENT: `
+    mutation InitiateServiceSubscriptionPayment($input: CreatePaymentDto!) {
+      initiateServiceSubscriptionPayment(input: $input) {
+        success
+        message
+        data {
+          clientSecret
+          sessionId
+          status
+          transactionId
+          orderId
+          type
+          amount
+          currency
+        }
+      }
+    }
+  `,
   // MUTATION POUR CRÉER UN ESTIMATE
   CREATE_ESTIMATE: `
     mutation CreateEstimate($data: CreateEstimateInput!) {

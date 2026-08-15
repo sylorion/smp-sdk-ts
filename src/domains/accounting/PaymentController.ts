@@ -192,6 +192,13 @@ export class SMPPayment {
     return response.initiatePayment;
   }
 
+  async initiateServiceSubscriptionPayment(input: CreatePaymentDto): Promise<CardPaymentResponse> {
+    const mutation = paymentMutations.INITIATE_SERVICE_SUBSCRIPTION_PAYMENT;
+    const variables = { input };
+    const response = await this.client.mutate(mutation, variables) as { initiateServiceSubscriptionPayment: CardPaymentResponse };
+    return response.initiateServiceSubscriptionPayment;
+  }
+
   /*---------------------- Estimate ----------------------*/
   async createEstimate(input: CreateEstimateInput): Promise<Estimate> {
     const mutation = paymentMutations.CREATE_ESTIMATE;
