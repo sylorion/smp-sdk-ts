@@ -72,6 +72,8 @@ export interface PlanFeatures {
   hasAdvancedAnalytics: boolean;
   hasCustomBranding: boolean;
   hasEmailSupport: boolean;
+  hasServiceSubscriptions: boolean;
+  hasServiceAiAgents: boolean;
 }
 
 export type PlanConfig = PlanLimits & PlanFeatures;
@@ -100,6 +102,8 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasAdvancedAnalytics: false,
     hasCustomBranding: false,
     hasEmailSupport: false,
+    hasServiceSubscriptions: false,
+    hasServiceAiAgents: false,
   },
   [PlanTier.STARTER]: {
     maxOrganizations: 1,
@@ -117,6 +121,8 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasAdvancedAnalytics: false,
     hasCustomBranding: false,
     hasEmailSupport: true,
+    hasServiceSubscriptions: false,
+    hasServiceAiAgents: false,
   },
   [PlanTier.PRO]: {
     maxOrganizations: 3,
@@ -134,6 +140,8 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasAdvancedAnalytics: true,
     hasCustomBranding: false,
     hasEmailSupport: true,
+    hasServiceSubscriptions: true,
+    hasServiceAiAgents: true,
   },
   [PlanTier.BUSINESS]: {
     maxOrganizations: 5,
@@ -151,6 +159,8 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasAdvancedAnalytics: true,
     hasCustomBranding: true,
     hasEmailSupport: true,
+    hasServiceSubscriptions: true,
+    hasServiceAiAgents: true,
   },
 };
 
