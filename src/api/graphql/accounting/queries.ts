@@ -1496,6 +1496,7 @@ const contractQueries = {
         category
         style
         variableKeys
+        language
       }
     }
   `,
