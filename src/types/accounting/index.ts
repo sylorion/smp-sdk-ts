@@ -181,6 +181,7 @@ export interface ContractTemplateSummary {
     style: ContractStyleTheme;
     /** List of variable keys expected by this template */
     variableKeys: string[];
+    language?: string;
 }
 
 /** Full template definition (returned by getContractTemplate) */
@@ -574,6 +575,7 @@ export interface CreatePaymentDto {
     type: string;
     amount: number;
     currency: string;
+    customerEmail?: string;
 }
 
 export interface PaymentIntent {
