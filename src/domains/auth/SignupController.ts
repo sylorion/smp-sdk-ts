@@ -1,4 +1,5 @@
 import { APIClient } from '../../api/APIClient.js';
+import { logger } from '../../utils/Logger.js';
 import { MUTATION_CREATE_USER } from '../../api/graphql/auth/mutations.js';
 import { QUERY_CHECK_USERNAME_AVAILABILITY } from '../../api/graphql/auth/queries.js';
 
@@ -54,7 +55,7 @@ export class Signup {
       const response = await this.client.query(QUERY_CHECK_USERNAME_AVAILABILITY, variables) as { checkUsernameAvailability: { available: boolean; message: string } };
       return response.checkUsernameAvailability;
     } catch (error) {
-      console.error('Error in checkAvailability:', error);
+      logger.error('Error in checkAvailability:', error);
       throw error;
     }
   }
@@ -70,7 +71,7 @@ export class Signup {
       const response = await this.client.mutate(MUTATION_CREATE_USER, variables) as { signup: CreateUserResponse };
       return response.signup;
     } catch (error) {
-      console.error('Error in createUser:', error);
+      logger.error('Error in createUser:', error);
       throw error;
     }
   }

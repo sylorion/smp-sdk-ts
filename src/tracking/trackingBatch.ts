@@ -1,5 +1,6 @@
 
 import { CapturedEvent } from './types/SMPServicesEventType.js';
+import { logger } from '../utils/Logger.js';
 
 interface TrackingEvent {
   eventType: string;
@@ -32,8 +33,10 @@ export function transmitEvent(event: CapturedEvent) {
     body: JSON.stringify(event)
   })
     .then(response => response.json())
-    .then(data => console.log('Event successfully transmitted:', data))
-    .catch(error => console.error('Error transmitting event:', error));
+    // La réponse du collecteur n'est pas journalisée : elle peut contenir
+    // l'évènement réémis, donc des identifiants utilisateur.
+    .then(() => logger.debug('Évènement de tracking transmis.'))
+    .catch(error => logger.warn('Échec de transmission d’un évènement de tracking', error));
 }
 
 // Fonction pour envoyer les événements par lot

@@ -54,11 +54,14 @@ export interface DeviceInfo {
   uaFullVersion?: string;
 }
 
+// Helper de débogage inutilisé, qui imprimait sa valeur dans la console du
+// navigateur. Conservé sans effet de bord : il retourne la valeur au lieu de la
+// journaliser. (Aucun appelant dans le SDK ni dans la webapp.)
 function getPropertyValue<T extends keyof typeof Object>(
   objectName: T,
   propertyName: keyof typeof Object[T]
 ) {
-  console.log(Object[objectName][propertyName]);
+  return Object[objectName][propertyName];
 }
 
 export function getDeviceInfo(): DeviceInfo {

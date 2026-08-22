@@ -1,5 +1,6 @@
 // src/i18n/i18n.ts 
 import en_US from './locales/en_US.js';
+import { logger } from '../utils/Logger.js';
 import fr_FR from './locales/fr_FR.js';
 import es_ES from './locales/es_ES.js';
 
@@ -29,11 +30,11 @@ export class I18n {
       if (this.messages) {
         this.lang = lang;
       } else {
-        console.warn(`Unsupported language: ${lang}. Falling back to default ${defaultLanguage}.`);
+        logger.warn(`Unsupported language: ${lang}. Falling back to default ${defaultLanguage}.`);
         this.lang = defaultLanguage;
       }
     } catch (error) {
-      console.error(`Failed to load translations for language: ${lang}`, error);
+      logger.error(`Failed to load translations for language: ${lang}`, error);
     }
   }
 
@@ -44,7 +45,7 @@ export class I18n {
   t(key: string, params: Record<string, string | number> = {}): string {
     const messageTemplate = this.messages[key] ?? key;
     if (!messageTemplate || messageTemplate == "") {
-      console.warn(`Missing translation for key: ${key} in language: ${this.lang}`);
+      logger.warn(`Missing translation for key: ${key} in language: ${this.lang}`);
       return key;
     }
     const formated = messageTemplate.replace(/{(\w+)}/g, (_, match) => params[match]?.toString() || '');

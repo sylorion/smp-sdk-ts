@@ -159,7 +159,7 @@ export class SMPClient {
     this.wsClient = new WebSocket(`wss://${this.configManager.apiUrl}/subscriptions`);
 
     this.wsClient.onopen = () => {
-      console.log('WebSocket connection established.');
+      logger.debug('WebSocket connecté.');
       this.wsClient?.send(JSON.stringify({
         query: `
           subscription {
@@ -175,15 +175,17 @@ export class SMPClient {
     this.wsClient.onmessage = (event) => {
       const data = JSON.parse(event.data);
       this.httpApiClient.trackDataReceived(event.data.length);
-      console.log('Notification received:', data);
+      // Le contenu de la notification n'est pas journalisé : il peut porter des
+      // données métier. Seule sa taille l'est, en mode débogage.
+      logger.debug('Notification reçue', `${String(event.data).length} octets`);
     };
 
     this.wsClient.onerror = (error) => {
-      console.error('WebSocket error:', error);
+      logger.error('Erreur WebSocket', error);
     };
 
     this.wsClient.onclose = () => {
-      console.log('WebSocket connection closed.');
+      logger.debug('WebSocket fermé.');
     };
   }
 
@@ -223,13 +225,21 @@ export class SMPClient {
     return this.httpApiClient.trackDataReceived(dataSize);
   }
 
+  /**
+   * État du client, à des fins de débogage.
+   *
+   * Ne divulgue plus `appSecret` ni le gestionnaire de tokens : cette méthode
+   * les imprimait en clair dans la console du navigateur. Passe par le logger,
+   * donc silencieuse en production.
+   */
   printState() {
-    console.log("SMPClient State:");
-    console.log("  AppId: ", this.configManager.appId);
-    console.log("  AppSecret: ", this.configManager.appSecret);
-    console.log("  AuthToken: ", this.authTokenManager);
-    console.log("  Persistence: ", this.configManager.persistence);
-    console.log("  Default Language: ", this.configManager.defaultLanguage);
+    logger.debug('SMPClient', {
+      appId: this.configManager.appId,
+      appSecretDefini: Boolean(this.configManager.appSecret),
+      sessionUtilisateur: Boolean(this.authTokenManager?.getUserRefreshToken()),
+      persistence: this.configManager.persistence,
+      defaultLanguage: this.configManager.defaultLanguage,
+    });
   }
 
   clean() {

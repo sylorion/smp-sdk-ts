@@ -1,4 +1,5 @@
 import { APIClient } from '../../api/APIClient.js';
+import { logger } from '../../utils/Logger.js';
 import { contractQueries } from '../../api/graphql/accounting/queries.js';
 import { contractMutations } from '../../api/graphql/accounting/mutations.js';
 import {
@@ -100,7 +101,7 @@ export class Contract {
       const response = await this.client.query<GetContractsByOrganizationIdResponse>(query, { organizationId });
       return response?.getContractsByOrganizationId || [];
     } catch (error) {
-      console.error('Error in getByOrganizationId:', error);
+      logger.error('Error in getByOrganizationId:', error);
       throw error;
     }
   }

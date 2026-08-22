@@ -260,7 +260,7 @@ export class AuthTokenManager {
       this.apiClient.resetHeadersForUser();
       this.userTokenExpiresAt = undefined;
     } catch (error) {
-      console.error("Error during logout", error);
+      logger.error("Erreur pendant la déconnexion", error);
       throw new Error("logout failed, please try again");
     }
   }

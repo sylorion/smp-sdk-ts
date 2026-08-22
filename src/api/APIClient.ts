@@ -88,7 +88,7 @@ export class APIClient {
       this.trackDataReceived(respJson.length);
       return response;
     } catch (error: any) {
-      console.error("GraphQL Error:", error);
+      logger.error("Erreur GraphQL", error);
       const ce: ClientError = error;
       throw ce;
     }
@@ -121,7 +121,11 @@ export class APIClient {
       this.trackDataSent(body.length);
       const response = await this.restClient.post<T>(url, data, config);
       const respJson = JSON.stringify(response.data);
-      logger.info(`POST ClientResponse:++++++++++-----%%%%%%%% ${respJson}`);
+      // Le corps de la réponse n'est plus journalisé : il contenait tokens,
+      // factures, devis et données personnelles, en clair dans la console du
+      // navigateur de l'utilisateur final. Seule sa taille est conservée, qui est
+      // ce dont `trackDataReceived` a besoin.
+      logger.debug('POST', url, `${respJson.length} octets reçus`);
       this.trackDataReceived(respJson.length);
       return response.data;
     } catch (error) {
@@ -135,7 +139,8 @@ export class APIClient {
       this.checkRateLimit(); // Check rate limit before making the request
       const response = await this.restClient.get<T>(url, config);
       const respJson = JSON.stringify(response.data);
-      logger.info(` GET ClientResponse:##########-----%%%%%%%% ${respJson}`);
+      // Idem : taille seulement, jamais le contenu.
+      logger.debug('GET', url, `${respJson.length} octets reçus`);
       this.trackDataReceived(respJson.length);
       return response.data;
     } catch (error) {
