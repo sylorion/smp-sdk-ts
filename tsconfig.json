@@ -109,6 +109,7 @@
     "./dist/**/*",
     "./node_modules/**/*",
     "./build/**/*",
-    "**/*.test.ts"
+    "**/*.test.ts",
+    "**/*.spec.ts"
   ]
 }

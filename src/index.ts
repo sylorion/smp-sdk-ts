@@ -27,3 +27,12 @@ export { SMPClient, APIClient };
 export { Persistence, defaultLanguage, logger };
 export type { SMPClientOptions } from './config/SMPConfig.js';
 export * from './types/auth/index.js';
+
+// ==========================================
+// PRICING — source de vérité du calcul de prix
+// ==========================================
+// Recopié depuis libs/shared/pricing du monorepo par scripts/sync-pricing.sh.
+// Le frontend doit importer `computePricing` / `computeCartPricing` d'ici plutôt
+// que de réimplémenter la formule : c'est ce qui garantit que le montant affiché
+// et le montant débité coïncident avec ce que facture le backend.
+export * from './pricing/pricing.generated.js';
