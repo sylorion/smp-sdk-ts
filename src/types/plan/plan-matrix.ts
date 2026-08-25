@@ -88,10 +88,15 @@ export const UNLIMITED = -1;
 export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
   [PlanTier.STANDARD]: {
     maxOrganizations: 1,
-    maxServicesPerOrg: 2,
-    maxMembersPerOrg: 2,
-    maxEstimatesPerMonth: 3,
-    maxInvoicesPerMonth: 3,
+    maxServicesPerOrg: 1,
+    /**
+     * NOMBRE TOTAL D'UTILISATEURS DE L'ORGANISATION, PROPRIÉTAIRE INCLUS.
+     * Le propriétaire possède une ligne UserOrganization, il est donc compté :
+     * `1` signifie « le propriétaire seul, aucun membre invitable ». Voulu.
+     */
+    maxMembersPerOrg: 1,
+    maxEstimatesPerMonth: 2,
+    maxInvoicesPerMonth: 1,
     maxContractsPerMonth: 1,
     maxAiCreditsPerMonth: 20,
     maxNativeAgents: 0,
@@ -287,6 +292,15 @@ export enum PlanAction {
   PERFORM_WITHDRAWAL = 'PERFORM_WITHDRAWAL',
   VIEW_ADVANCED_ANALYTICS = 'VIEW_ADVANCED_ANALYTICS',
   USE_CUSTOM_BRANDING = 'USE_CUSTOM_BRANDING',
+  /**
+   * Vente d'un service par abonnement. Contrôlée par le backend depuis
+   * mu-catalog ; elle manquait ici, si bien que `canPerformAction` retombait
+   * dans la branche « action inconnue » et renvoyait `allowed: true` quel que
+   * soit le plan.
+   */
+  USE_SERVICE_SUBSCRIPTIONS = 'USE_SERVICE_SUBSCRIPTIONS',
+  /** Agents IA attachés à un service. */
+  USE_SERVICE_AI_AGENTS = 'USE_SERVICE_AI_AGENTS',
 }
 
 /** Maps PlanAction to the relevant limit key in PlanLimits */
@@ -304,6 +318,8 @@ const ACTION_TO_LIMIT_KEY: Record<string, keyof PlanLimits | null> = {
   [PlanAction.USE_FORM_AGENT]: null,
   [PlanAction.VIEW_ADVANCED_ANALYTICS]: null,
   [PlanAction.USE_CUSTOM_BRANDING]: null,
+  [PlanAction.USE_SERVICE_SUBSCRIPTIONS]: null,
+  [PlanAction.USE_SERVICE_AI_AGENTS]: null,
 };
 
 /** Maps PlanAction to the relevant feature key for boolean checks */
@@ -311,6 +327,8 @@ const ACTION_TO_FEATURE_KEY: Partial<Record<string, keyof PlanFeatures>> = {
   [PlanAction.USE_FORM_AGENT]: 'hasFormAgent',
   [PlanAction.VIEW_ADVANCED_ANALYTICS]: 'hasAdvancedAnalytics',
   [PlanAction.USE_CUSTOM_BRANDING]: 'hasCustomBranding',
+  [PlanAction.USE_SERVICE_SUBSCRIPTIONS]: 'hasServiceSubscriptions',
+  [PlanAction.USE_SERVICE_AI_AGENTS]: 'hasServiceAiAgents',
 };
 
 // ============================================================================
@@ -321,13 +339,25 @@ const ACTION_TO_FEATURE_KEY: Partial<Record<string, keyof PlanFeatures>> = {
  * Resolves a plan string to a PlanTier enum value.
  * Falls back to STANDARD if the plan is not recognized.
  */
+/**
+ * Anciens noms de plans encore présents en base.
+ *
+ * Doit rester identique à `LEGACY_PLAN_ALIASES` de mu-authentication : sans
+ * cette table, `premium` était résolu en `pro` par le backend et en `standard`
+ * par le SDK — le même compte était donc Pro pour l'API et Standard pour l'UI.
+ */
+export const LEGACY_PLAN_ALIASES: Readonly<Record<string, PlanTier>> = {
+  premium: PlanTier.PRO,
+  minimal: PlanTier.STANDARD,
+};
+
 export function resolvePlanTier(plan?: string | null): PlanTier {
   if (!plan) return PlanTier.STANDARD;
   const normalized = plan.toLowerCase().trim();
   if (Object.values(PlanTier).includes(normalized as PlanTier)) {
     return normalized as PlanTier;
   }
-  return PlanTier.STANDARD;
+  return LEGACY_PLAN_ALIASES[normalized] ?? PlanTier.STANDARD;
 }
 
 /**
@@ -391,8 +421,17 @@ export function canPerformAction(
   // Check numeric limit-based actions
   const limitKey = ACTION_TO_LIMIT_KEY[action];
   if (!limitKey) {
-    // Unknown action — allow by default (fail-open for unknown actions)
-    return { allowed: true, limit: UNLIMITED, remaining: UNLIMITED, message: '' };
+    // Action inconnue → REFUSÉE. Le fail-open précédent laissait passer en
+    // illimité toute action absente de la matrice, ce qui a masqué pendant
+    // longtemps l'absence de USE_SERVICE_SUBSCRIPTIONS côté SDK.
+    // Le backend reste de toute façon l'autorité : cette valeur ne sert qu'à
+    // l'UX préventive.
+    return {
+      allowed: false,
+      limit: 0,
+      remaining: 0,
+      message: `Action inconnue : ${action}.`,
+    };
   }
 
   const limit = config[limitKey];
