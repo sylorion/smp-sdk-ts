@@ -252,7 +252,9 @@ export interface UpdateUserRoleInOrganizationResponse {
 // INVITATIONS & ONBOARDING
 // ==============================
 export interface InviteUserToOrganizationInput {
-    email: string;
+    email?: string;
+    userID?: string;
+    callerUserID?: string;
     organizationID: string;
     message?: string;
     firstName?: string;

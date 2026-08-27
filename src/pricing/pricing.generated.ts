@@ -169,6 +169,8 @@ export function computePricing(input: PricingInput): PricingBreakdown {
 
   const vatCents = calculateVat(priceHTCents, vatPercent);
   const platformFeeCents = calculatePlatformFee(priceHTCents);
+  // La commission est incluse dans le subtotal y compris en mode périodique :
+  // elle est récurrente comme l'abonnement et facturée à l'acheteur à chaque cycle.
   const subtotalCents = priceHTCents + vatCents + platformFeeCents;
   // Pas de frais Stripe sur un abonnement (voir en-tête), ni sur un montant nul :
   // la part fixe de 0,25 € ne doit pas apparaître sur un panier vide.
