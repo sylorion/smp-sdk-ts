@@ -17,6 +17,8 @@ export * from './types/user/index.js';
 export * from './types/communication/index.js';
 export * from './types/booking/index.js';
 export * from './types/plan/index.js';
+export * from './types/review/index.js';
+export * from './types/review/format.js';
 
 // ==========================================
 // CORE CLASSES & CONFIG

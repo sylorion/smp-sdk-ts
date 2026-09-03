@@ -8,7 +8,7 @@ import { ConfigManager } from './config/ConfigManager.js';
 import { Persistence, PersistenceKind } from './config/Persistence.js';
 import { AxiosRequestConfig } from "axios";
 import { GraphQLClient, ClientError } from 'graphql-request';
-import { AuthDomain, CatalogDomain, AccountingDomain, OrganizationDomain, UserDomain, BookingDomain, CommunicationDomain } from './domains/index.js';
+import { AuthDomain, CatalogDomain, AccountingDomain, OrganizationDomain, UserDomain, BookingDomain, CommunicationDomain, ReviewDomain } from './domains/index.js';
 import { LogIn, AppLogIn } from './types/auth/index.js';
 
 export class SMPClient {
@@ -23,6 +23,7 @@ export class SMPClient {
   public user: UserDomain;
   public booking: BookingDomain;
   public communication: CommunicationDomain;
+  public review: ReviewDomain;
 
   private loggedUser?: LogIn;
   private loggedApp?: AppLogIn;
@@ -41,6 +42,7 @@ export class SMPClient {
     this.user = new UserDomain(this.httpApiClient);
     this.booking = new BookingDomain(this.httpApiClient);
     this.communication = new CommunicationDomain(this.httpApiClient);
+    this.review = new ReviewDomain(this.httpApiClient);
 
 
     this.authTokenManager = new AuthTokenManager(this.configManager, this.httpApiClient);
