@@ -72,6 +72,41 @@ export class APIClient {
   }
 
 
+  /**
+   * Client dérivé portant des en-têtes supplémentaires SANS modifier l'instance partagée
+   * (sûr pour des requêtes serveur concurrentes). Utilisé pour l'assertion d'identité
+   * utilisateur signée (`x-smp-user-id` / `x-smp-user-signature`) ou un jeton utilisateur ponctuel.
+   */
+  public withHeaders(headers: Record<string, string>): APIClient {
+    const scoped = Object.create(APIClient.prototype) as APIClient;
+    Object.assign(scoped, this);
+    const graphqlOptions: { fetch?: typeof fetch; headers: Record<string, string> } = { headers: { ...this.currentHeaders(), ...headers } };
+    if (this.config.customFetch) graphqlOptions.fetch = this.config.customFetch;
+    (scoped as any).graphqlClient = new GraphQLClient(this.config.graphqlUrl, graphqlOptions);
+    return scoped;
+  }
+
+  /** Assertion d'identité signée côté serveur (HMAC partagé avec les microservices). */
+  public withUserAssertion(userID: string, signature: string): APIClient {
+    return this.withHeaders({ 'x-smp-user-id': userID, 'x-smp-user-signature': signature });
+  }
+
+  /** Jeton utilisateur ponctuel, sans toucher au client partagé. */
+  public withUserAccessToken(accessToken: string): APIClient {
+    return this.withHeaders({ Authorization: `Bearer ${accessToken}` });
+  }
+
+  private currentHeaders(): Record<string, string> {
+    const raw = (this.graphqlClient as any)?.requestConfig?.headers;
+    if (!raw) return {};
+    if (typeof Headers !== 'undefined' && raw instanceof Headers) {
+      const out: Record<string, string> = {};
+      raw.forEach((v: string, k: string) => { out[k] = v; });
+      return out;
+    }
+    return { ...(raw as Record<string, string>) };
+  }
+
   public resetHeadersForUser(): void {
     this.graphqlClient = this.graphqlClient.setHeader("Authorization", "");
   }

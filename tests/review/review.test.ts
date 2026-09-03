@@ -57,3 +57,19 @@ describe('ServiceReportController', () => {
     expect(Object.keys(reviewMutations).some((k) => /grant|credit|reward/i.test(k))).toBe(false);
   });
 });
+
+describe('APIClient scoped headers', () => {
+  test('withUserAssertion returns a derived client without mutating the shared one', async () => {
+    const { APIClient } = await import('../../src/api/APIClient');
+    const { ConfigManager } = await import('../../src/config/ConfigManager');
+    const base = new APIClient(new ConfigManager({ appId: 'a', appSecret: 's', graphqlUrl: 'https://gw.test/graphql', apiUrl: '' } as any));
+    base.updateHeaderAppID('app-1');
+    const scoped = base.withUserAssertion('u1', 'sig');
+    const headersOf = (c: any) => c.graphqlClient.requestConfig.headers as Record<string, string>;
+    expect(headersOf(scoped)['x-smp-user-id']).toBe('u1');
+    expect(headersOf(scoped)['x-smp-user-signature']).toBe('sig');
+    expect(headersOf(scoped)['x-services-app-id']).toBe('app-1');
+    expect(headersOf(base)['x-smp-user-id']).toBeUndefined();
+    expect(scoped).not.toBe(base);
+  });
+});

@@ -26,3 +26,4 @@ export class ReviewDomain {
 }
 
 export { ServiceReportController, CriteriaController, ReviewThreadController, PerformanceController, SelfAssessmentController };
+export { reviewDomainForUser, reviewDomainWithToken } from './scoped.js';
