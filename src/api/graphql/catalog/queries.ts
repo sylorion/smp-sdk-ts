@@ -419,6 +419,9 @@ const assetQueries = {
           updatedAt
           deletedAt
           likes
+          averageRating
+          reviewCount
+          performanceScore
         }
       }
     }
@@ -744,6 +747,9 @@ const serviceQueries = {
         createdAt
         updatedAt
         likes
+        averageRating
+        reviewCount
+        performanceScore
         location {
           placeID
           city
@@ -824,6 +830,9 @@ const serviceQueries = {
         createdAt
         updatedAt
         likes
+        averageRating
+        reviewCount
+        performanceScore
         location {
           placeID
           city
@@ -904,6 +913,9 @@ const serviceQueries = {
         createdAt
         updatedAt
         likes
+        averageRating
+        reviewCount
+        performanceScore
         location {
           placeID
           city
@@ -1135,6 +1147,9 @@ const serviceQueries = {
       createdAt
       updatedAt
       likes
+      averageRating
+      reviewCount
+      performanceScore
       location {
         placeID
         city
@@ -1212,6 +1227,9 @@ const serviceQueries = {
     createdAt
     updatedAt
     likes
+    averageRating
+    reviewCount
+    performanceScore
     location {
       placeID
       city
@@ -1289,6 +1307,9 @@ const serviceQueries = {
     createdAt
     updatedAt
     likes
+    averageRating
+    reviewCount
+    performanceScore
     location {
       placeID
       city

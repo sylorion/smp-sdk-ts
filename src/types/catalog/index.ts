@@ -116,6 +116,11 @@ export interface ServiceEntity {
     updatedAt?: string;
     deletedAt?: string;
     likes?: number;
+    /** Note publique moyenne /5 (Rapports de service publiés, mu-review). */
+    averageRating?: number | null;
+    reviewCount?: number;
+    /** Performance Score /100 (mu-review). */
+    performanceScore?: number | null;
     serviceMedias?: ServiceMediaEntity[];
 }
 
