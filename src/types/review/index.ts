@@ -75,6 +75,8 @@ export interface CriterionRating {
   criterionID: string;
   key: string;
   labels: LocalizedLabel[];
+  /** Aide à la notation (fr/en/es) — figée dans le snapshot du rapport. */
+  descriptions: LocalizedLabel[];
   block: CriterionBlock;
   weight: number;
   score?: number | null;

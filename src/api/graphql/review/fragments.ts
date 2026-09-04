@@ -25,6 +25,7 @@ export const SERVICE_REPORT_FRAGMENT = gql`
       criterionID
       key
       labels { ...ReviewLocalizedLabel }
+      descriptions { ...ReviewLocalizedLabel }
       block
       weight
       score
