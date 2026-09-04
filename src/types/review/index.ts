@@ -217,6 +217,8 @@ export interface CreateReviewCommentInput {
   parentCommentID?: string;
   content: string;
   gifUrl?: string;
+  /** Agir en tant que prestataire quand le compte est aussi l'auteur du rapport (espace prestataire). */
+  asProvider?: boolean;
 }
 
 export interface SelfAssessmentRating {

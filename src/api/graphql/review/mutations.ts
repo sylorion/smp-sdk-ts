@@ -33,20 +33,20 @@ export const reviewMutations = {
     ${REVIEW_COMMENT_FRAGMENT}
   `,
   LIKE_REVIEW_COMMENT: gql`
-    mutation LikeReviewComment($commentID: ID!) {
-      likeReviewComment(commentID: $commentID) { ...ReviewCommentFields }
+    mutation LikeReviewComment($commentID: ID!, $asProvider: Boolean) {
+      likeReviewComment(commentID: $commentID, asProvider: $asProvider) { ...ReviewCommentFields }
     }
     ${REVIEW_COMMENT_FRAGMENT}
   `,
   UNLIKE_REVIEW_COMMENT: gql`
-    mutation UnlikeReviewComment($commentID: ID!) {
-      unlikeReviewComment(commentID: $commentID) { ...ReviewCommentFields }
+    mutation UnlikeReviewComment($commentID: ID!, $asProvider: Boolean) {
+      unlikeReviewComment(commentID: $commentID, asProvider: $asProvider) { ...ReviewCommentFields }
     }
     ${REVIEW_COMMENT_FRAGMENT}
   `,
   REACT_TO_REVIEW_COMMENT: gql`
-    mutation ReactToReviewComment($commentID: ID!, $emoji: String!, $active: Boolean) {
-      reactToReviewComment(commentID: $commentID, emoji: $emoji, active: $active) { ...ReviewCommentFields }
+    mutation ReactToReviewComment($commentID: ID!, $emoji: String!, $active: Boolean, $asProvider: Boolean) {
+      reactToReviewComment(commentID: $commentID, emoji: $emoji, active: $active, asProvider: $asProvider) { ...ReviewCommentFields }
     }
     ${REVIEW_COMMENT_FRAGMENT}
   `,

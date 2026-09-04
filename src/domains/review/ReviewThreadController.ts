@@ -18,22 +18,23 @@ export class ReviewThreadController {
   }
 
   /** Réponse du prestataire = commentaire racine sur le rapport. */
-  async reply(serviceReportID: string, content: string, gifUrl?: string): Promise<ReviewComment> {
-    return this.createComment({ serviceReportID, content, gifUrl });
+  async reply(serviceReportID: string, content: string, gifUrl?: string, asProvider?: boolean): Promise<ReviewComment> {
+    return this.createComment({ serviceReportID, content, gifUrl, asProvider });
   }
 
-  async like(commentID: string): Promise<ReviewComment> {
-    const res = await this.client.mutate<{ likeReviewComment: ReviewComment }>(reviewMutations.LIKE_REVIEW_COMMENT, { commentID });
+  /** `asProvider` : agir en tant que prestataire quand le compte est aussi l'auteur du rapport. */
+  async like(commentID: string, asProvider?: boolean): Promise<ReviewComment> {
+    const res = await this.client.mutate<{ likeReviewComment: ReviewComment }>(reviewMutations.LIKE_REVIEW_COMMENT, { commentID, asProvider });
     return res.likeReviewComment;
   }
 
-  async unlike(commentID: string): Promise<ReviewComment> {
-    const res = await this.client.mutate<{ unlikeReviewComment: ReviewComment }>(reviewMutations.UNLIKE_REVIEW_COMMENT, { commentID });
+  async unlike(commentID: string, asProvider?: boolean): Promise<ReviewComment> {
+    const res = await this.client.mutate<{ unlikeReviewComment: ReviewComment }>(reviewMutations.UNLIKE_REVIEW_COMMENT, { commentID, asProvider });
     return res.unlikeReviewComment;
   }
 
-  async react(commentID: string, emoji: string, active = true): Promise<ReviewComment> {
-    const res = await this.client.mutate<{ reactToReviewComment: ReviewComment }>(reviewMutations.REACT_TO_REVIEW_COMMENT, { commentID, emoji, active });
+  async react(commentID: string, emoji: string, active = true, asProvider?: boolean): Promise<ReviewComment> {
+    const res = await this.client.mutate<{ reactToReviewComment: ReviewComment }>(reviewMutations.REACT_TO_REVIEW_COMMENT, { commentID, emoji, active, asProvider });
     return res.reactToReviewComment;
   }
 }
