@@ -96,6 +96,7 @@ export interface ServiceReport {
   reviewerName?: string | null;
   serviceTitle?: string | null;
   organizationName?: string | null;
+  organizationLogoUrl?: string | null;
   topicID?: string | null;
   status: ServiceReportStatus;
   criteria: CriterionRating[];

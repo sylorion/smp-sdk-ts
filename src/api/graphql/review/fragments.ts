@@ -19,6 +19,7 @@ export const SERVICE_REPORT_FRAGMENT = gql`
     reviewerName
     serviceTitle
     organizationName
+    organizationLogoUrl
     topicID
     status
     criteria {
