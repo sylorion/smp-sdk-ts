@@ -71,6 +71,17 @@ export class APIClient {
     return this.graphqlClient;
   }
 
+  /**
+   * Contexte du client final (BFF / server-side) : IP publique et User-Agent du navigateur d'origine,
+   * transmis à la gateway (`x-forwarded-for`, `user-agent`) pour la détection de nouvel appareil
+   * et les alertes de sécurité. Sans cela, un appel serveur est vu comme « réseau interne / navigateur inconnu ».
+   */
+  public setEndUserContext(context: { ip?: string | null; userAgent?: string | null }): GraphQLClient {
+    if (context.ip) this.graphqlClient = this.graphqlClient.setHeader("x-forwarded-for", context.ip);
+    if (context.userAgent) this.graphqlClient = this.graphqlClient.setHeader("user-agent", context.userAgent);
+    return this.graphqlClient;
+  }
+
 
   /**
    * Client dérivé portant des en-têtes supplémentaires SANS modifier l'instance partagée

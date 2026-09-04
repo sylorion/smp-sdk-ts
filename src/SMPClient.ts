@@ -67,6 +67,12 @@ export class SMPClient {
     }
   }
 
+  /** Propage l'IP et le User-Agent de l'utilisateur final (appels effectués côté serveur pour son compte). */
+  setEndUserContext(context: { ip?: string | null; userAgent?: string | null }): this {
+    this.httpApiClient.setEndUserContext(context);
+    return this;
+  }
+
   async authenticateUser(username: string, password: string) {
     try {
       const access = await this.getUserAccessToken();
