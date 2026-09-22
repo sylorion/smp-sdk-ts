@@ -964,7 +964,7 @@ const serviceQueries = {
     }
   `,
   GET_SERVICES_BY_IDS: `
-    query GetServicesByIDs($serviceIDs: [String!]!, $admin: Boolean) {
+    query GetServicesByIDs($serviceIDs: [ID!]!, $admin: Boolean) {
       servicesByIDs(serviceIDs: $serviceIDs, admin: $admin) {
         serviceID
         uniqRef
