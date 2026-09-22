@@ -1,0 +1,20 @@
+declare const estimateQueries: {
+    GET_ESTIMATES: string;
+    GET_ESTIMATE_BY_ID: string;
+    GET_ESTIMATE_BY_UNIQ_REF: string;
+    GET_ESTIMATE_BY_SLUG: string;
+    GET_ESTIMATES_BY_IDS: string;
+    GET_ESTIMATES_BY_SLUGS: string;
+    CREATE_ESTIMATE: string;
+    UPDATE_ESTIMATE: string;
+    VALIDATE_ESTIMATE: string;
+    GET_ESTIMATES_BY_BUYER_USER_ID: string;
+    GET_ESTIMATES_BY_BUYER_ORGANIZATION_ID: string;
+    GET_ESTIMATES_BY_SELLER_ORGANIZATION_ID: string;
+    GET_NEGOTIATION_HISTORY: string;
+    GET_CURRENT_NEGOTIATION: string;
+    CREATE_NEGOTIATION: string;
+    ACCEPT_NEGOTIATION: string;
+    REJECT_NEGOTIATION: string;
+};
+export { estimateQueries };

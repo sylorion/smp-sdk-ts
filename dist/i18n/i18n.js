@@ -1,0 +1,62 @@
+// src/i18n/i18n.ts 
+import en_US from './locales/en_US.js';
+import { logger } from '../utils/Logger.js';
+import fr_FR from './locales/fr_FR.js';
+import es_ES from './locales/es_ES.js';
+import { defaultLanguage } from './languages.js';
+const messagesMapping = {
+    en_US,
+    fr_FR,
+    es_ES,
+};
+export class I18n {
+    constructor(lang = defaultLanguage) {
+        this.messages = {};
+        this.lang = lang;
+        this.loadLanguage(lang);
+    }
+    async loadLanguage(lang = defaultLanguage) {
+        try {
+            const module = messagesMapping[lang]; //await import(`./locales/${lang}.ts`);
+            this.langModule = module;
+            this.messages = module.messages || {};
+            if (this.messages) {
+                this.lang = lang;
+            }
+            else {
+                logger.warn(`Unsupported language: ${lang}. Falling back to default ${defaultLanguage}.`);
+                this.lang = defaultLanguage;
+            }
+        }
+        catch (error) {
+            logger.error(`Failed to load translations for language: ${lang}`, error);
+        }
+    }
+    async setLanguage(lang) {
+        await this.loadLanguage(lang);
+    }
+    t(key, params = {}) {
+        const messageTemplate = this.messages[key] ?? key;
+        if (!messageTemplate || messageTemplate == "") {
+            logger.warn(`Missing translation for key: ${key} in language: ${this.lang}`);
+            return key;
+        }
+        const formated = messageTemplate.replace(/{(\w+)}/g, (_, match) => params[match]?.toString() || '');
+        return formated;
+    }
+    translate(key, params = {}) {
+        return this.t(key, params);
+    }
+    // Les autres méthodes comme formatDate et formatNumber restent inchangées.
+    formatDate(date, format = 'short') {
+        const options = this.langModule.dateTimeFormat[format];
+        return new Intl.DateTimeFormat(this.lang, options).format(date);
+    }
+    formatNumber(value, style = 'decimal') {
+        const options = this.langModule.numberFormat[style];
+        return new Intl.NumberFormat(this.lang, options).format(value);
+    }
+    getCurrentLanguage() {
+        return this.lang;
+    }
+}

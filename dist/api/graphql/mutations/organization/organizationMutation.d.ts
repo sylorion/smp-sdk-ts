@@ -1,0 +1,12 @@
+export declare const organizationMutations: {
+    CREATE_ORGANIZATION: string;
+    UPDATE_ORGANIZATION: string;
+    DELETE_ORGANIZATION: string;
+    VERIFY_INVITATION_TOKEN: string;
+    INVITE_USER_TO_ORGANIZATION: string;
+    CREATE_USER_ORGANIZATION: string;
+    UPDATE_USER_ROLE_IN_ORGANIZATION: string;
+    REMOVE_USER_FROM_ORGANIZATION: string;
+    REMOVE_INVITATION: string;
+    ADD_USER_TO_ORGANIZATION: string;
+};

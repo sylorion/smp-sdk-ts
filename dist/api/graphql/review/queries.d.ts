@@ -1,0 +1,16 @@
+export declare const reviewQueries: {
+    GET_SERVICE_REPORT: string;
+    GET_PENDING_SERVICE_REPORTS: string;
+    GET_MY_SERVICE_REPORTS: string;
+    GET_RECEIVED_SERVICE_REPORTS: string;
+    GET_SERVICE_REVIEWS: string;
+    GET_SERVICE_REVIEW_SUMMARY: string;
+    GET_SERVICE_CRITERIA: string;
+    GET_CRITERIA_LIBRARY: string;
+    GET_SERVICE_ADDITIONAL_CRITERIA: string;
+    GET_REVIEW_THREAD: string;
+    GET_SELF_ASSESSMENT: string;
+    GET_SELF_ASSESSMENT_HISTORY: string;
+    GET_PERFORMANCE_OVERVIEW: string;
+    GET_PERFORMANCE_HISTORY: string;
+};

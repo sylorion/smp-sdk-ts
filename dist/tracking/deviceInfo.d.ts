@@ -1,0 +1,42 @@
+export interface DeviceInfo {
+    userAgent?: string;
+    browserName?: string;
+    browserVersion?: string;
+    platform?: string;
+    deviceType?: 'mobile' | 'desktop' | 'tablet' | 'unknown';
+    screenResolution?: string;
+    viewportSize?: string;
+    devicePixelRatio?: number;
+    cookiesEnabled?: boolean;
+    localStorageEnabled?: boolean;
+    sessionStorageEnabled?: boolean;
+    indexedDBEnabled?: boolean;
+    serviceWorkerEnabled?: boolean;
+    hardwareConcurrency?: number | 'unknown';
+    memory?: number | 'unknown';
+    networkType?: string;
+    downlinkSpeed?: number | 'unknown';
+    rtt?: number | 'unknown';
+    mediaDevices?: {
+        audioInputSupported: boolean;
+        videoInputSupported: boolean;
+        microphones: string[];
+        cameras: string[];
+    };
+    geolocationSupported?: boolean;
+    webGLSupported?: boolean;
+    webRTCSupported?: boolean;
+    webAudioSupported?: boolean;
+    language?: string;
+    timezone?: string;
+    brands?: string;
+    mobile?: boolean;
+    architecture?: string;
+    model?: string;
+    bitness?: string;
+    uaFullVersion?: string;
+}
+export declare function getDeviceInfo(): DeviceInfo;
+export declare function getBrowserName(): "Firefox" | "Samsung Internet" | "Opera" | "Internet Explorer" | "Edge" | "Chrome" | "Safari" | "Unknown";
+export declare function getBrowserVersion(): string;
+export declare function isWebGLSupported(): boolean;

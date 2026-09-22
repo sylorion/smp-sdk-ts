@@ -1,0 +1,20 @@
+export declare const MUTATION_AUTH_APP = "\n  mutation AuthenticateApp($appLoginInput: AppLoginInput!) {\n    authenticateApp(input: $appLoginInput) {\n      accessToken\n      refreshToken\n      accessValidityDuration\n      refreshValidityDuration\n      application {\n        applicationID\n        uniqRef\n        slug\n        authKey\n        appID\n        description\n        title\n        email\n        logo\n        url\n        plan\n        isOfficialApp\n        appConfiguration\n        developerID\n        authorID\n        state\n        createdAt\n        updatedAt\n      }\n    }\n  }\n";
+export declare const MUTATION_AUTH_USER = "\n  mutation AuthenticateUser($loginInput: LoginInput!) {\n    login(input: $loginInput) {\n        accessToken  \n        refreshToken  \n        accessValidityDuration\n        refreshValidityDuration\n        user {\n          userID        \n          uniqRef       \n          slug          \n          username      \n          email         \n          plan\n          stripeCustomerId\n          planSubscriptionId\n          planTrialEndsAt\n          planExpiresAt\n          profileID    \n          lastLogin     \n          loginDuration  \n          state         \n          updatedAt     \n          twoFactorEnabled \n      }\n      message \n      errors {\n        code\n        field\n        message\n      }\n    }\n  }\n";
+export declare const MUTATION_REFRESH_APP_TOKEN = "\n  mutation RefreshAppToken($refreshToken: String!) {\n    refreshAppToken(token: $refreshToken) {\n      accessToken\n      expiresIn \n    } \n  }\n";
+export declare const MUTATION_REFRESH_USER_TOKEN = "\n  mutation RefreshUserToken($refreshToken: String!) {\n    refreshUserToken(token: $refreshToken) {\n      accessToken\n      expiresIn\n    } \n  }\n";
+export declare const MUTATION_AUTH_LOGOUT_USER = "\n  mutation logout($input: LogoutInput!) {\n  logout(input: $input) {\n    message\n    success\n  }\n}\n";
+export declare const MUTATION_AUTH_LOGOUT_APP = "\n  mutation LogoutApp($appID: ID!) {\n    logoutApp(appID: $appID) {\n      message\n      success\n    } \n  }\n";
+export declare const MUTATION_CREATE_USER = "\n  mutation Signup($input: CreateUserInput!, $affiliateToken: String) {\n    signup(input: $input, affiliateToken: $affiliateToken) {\n      userID\n      uniqRef\n      slug\n      username\n      email\n      plan\n      profileID\n      userKind\n      lastLogin\n      twoFactorEnabled\n      loginDuration\n      rsaPublicKey\n      state\n      createdAt\n      updatedAt\n      deletedAt\n    }\n  }\n";
+export declare const MUTATION_FORGOT_PASSWORD = "\n mutation ForgotPassword($email: String!) {\n  forgotPassword(email: $email) {\n    success\n    message\n    token\n  }\n}\n";
+export declare const MUTATION_RESET_PASSWORD = "\nmutation resetPassword($input: ResetPasswordInput!) {\n  resetPassword(input: $input) {\n    success\n    message\n  }\n}";
+export declare const MUTATION_SIGNUP_AFTER_INVITATION = "\nmutation SignupAfterInvitation($input: CreateUserInput!, $organizationId: ID!, $firstName: String, $lastName: String) {\n  signupAfterInvitation(input: $input, organizationId: $organizationId, firstName: $firstName, lastName: $lastName) {\n    username\n    userID\n    email\n    plan\n    deletedAt\n    profileID\n    state\n  }\n} ";
+export declare const affiliateMutations: {
+    GENERATE_AFFILIATE_TOKEN: string;
+    CREATE_AFFILIATE: string;
+    DECODE_AFFILIATE_TOKEN: string;
+    CREATE_AFFILIATE_LINK: string;
+    UPDATE_AFFILIATE_LINK: string;
+    DELETE_AFFILIATE_LINK: string;
+};
+export declare const MUTATION_UPDATE_USERNAME = "\n  mutation UpdateUsername($input: UpdateUsernameInput!) {\n    updateUsername(input: $input) {\n      success\n      message\n    }\n  }\n";
+export declare const MUTATION_UPDATE_PASSWORD = "\n  mutation UpdatePassword($input: UpdatePasswordInput!, $userID: ID!) {\n    updatePassword(input: $input, userID: $userID) {\n      success\n      message\n    }\n  }\n";
