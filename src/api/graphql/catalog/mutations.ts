@@ -176,7 +176,7 @@ const serviceAssetMutations = {
 
   // MUTATION POUR LIER UN ASSET À UN SERVICE
   LINK_ASSET_TO_SERVICE: `
-      mutation LinkAssetToService($serviceID: String!, $assetID: String!, $authorID: String!) {
+      mutation LinkAssetToService($serviceID: ID!, $assetID: ID!, $authorID: ID!) {
         linkAssetToService(serviceID: $serviceID, assetID: $assetID, authorID: $authorID) {
           serviceAssetID
           uniqRef
@@ -194,7 +194,7 @@ const serviceAssetMutations = {
 
   // MUTATION POUR DÉLIER UN ASSET D'UN SERVICE
   UNLINK_ASSET_FROM_SERVICE: `
-      mutation UnlinkAssetFromService($serviceID: String!, $assetID: String!) {
+      mutation UnlinkAssetFromService($serviceID: ID!, $assetID: ID!) {
         unlinkAssetFromService(serviceID: $serviceID, assetID: $assetID) {
           success
           message
@@ -364,11 +364,7 @@ const serviceMutations = {
     // MUTATION POUR AJOUTER UN SERVICE AUX FAVORIS
   ADD_SERVICE_TO_FAVORITES: `
   mutation AddServiceToFavorites($input: AddServiceToFavoritesInput!) {
-    addServiceToFavorites(input: $input) {
-      serviceID
-      userID
-      addedAt
-    }
+    addServiceToFavorites(input: $input)
   }`,
   
   };

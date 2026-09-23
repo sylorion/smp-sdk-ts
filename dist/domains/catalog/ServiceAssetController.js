@@ -16,7 +16,7 @@ export class ServiceAsset {
         const query = serviceAssetQueries.GET_SERVICE_ASSET;
         const variables = { serviceAssetID };
         const response = await this.client.query(query, variables);
-        return response.data.serviceAsset;
+        return response.serviceAsset;
     }
     /**
      * Récupère la liste de tous les ServiceAssets avec pagination, tri et filtres optionnels.
@@ -25,7 +25,7 @@ export class ServiceAsset {
         const query = serviceAssetQueries.GET_SERVICE_ASSETS;
         const variables = { pagination, sort, filter };
         const response = await this.client.query(query, variables);
-        return response.data.serviceAssets;
+        return response.serviceAssets;
     }
     /**
      * Récupère un ServiceAsset par son slug.
@@ -35,7 +35,7 @@ export class ServiceAsset {
         const query = serviceAssetQueries.GET_SERVICE_ASSET_BY_SLUG;
         const variables = { slug };
         const response = await this.client.query(query, variables);
-        return response.data.serviceAssetBySlug;
+        return response.serviceAssetBySlug;
     }
     /**
      * Récupère plusieurs ServiceAssets par leurs IDs.
@@ -45,7 +45,7 @@ export class ServiceAsset {
         const query = serviceAssetQueries.GET_SERVICE_ASSETS_BY_IDS;
         const variables = { serviceAssetIDs };
         const response = await this.client.query(query, variables);
-        return response.data.serviceAssetsByIDs;
+        return response.serviceAssetsByIDs;
     }
     /**
      * Récupère plusieurs ServiceAssets par leurs slugs.
@@ -55,7 +55,7 @@ export class ServiceAsset {
         const query = serviceAssetQueries.GET_SERVICE_ASSETS_BY_SLUGS;
         const variables = { slugs };
         const response = await this.client.query(query, variables);
-        return response.data.serviceAssetsBySlugs;
+        return response.serviceAssetsBySlugs;
     }
     /**
      * Récupère un ServiceAsset par sa référence unique.
@@ -65,7 +65,7 @@ export class ServiceAsset {
         const query = serviceAssetQueries.GET_SERVICE_ASSET_BY_UNIQ_REF;
         const variables = { uniqRef };
         const response = await this.client.query(query, variables);
-        return response.data.serviceAssetByUniqRef;
+        return response.serviceAssetByUniqRef;
     }
     // ------------------------ MUTATIONS ------------------------
     /**
@@ -76,7 +76,7 @@ export class ServiceAsset {
         const mutation = serviceAssetMutations.CREATE_SERVICE_ASSET;
         const variables = { input };
         const response = await this.client.mutate(mutation, variables);
-        return response.data.createServiceAsset;
+        return response.createServiceAsset;
     }
     /**
      * Met à jour un ServiceAsset existant.
@@ -87,7 +87,7 @@ export class ServiceAsset {
         const mutation = serviceAssetMutations.UPDATE_SERVICE_ASSET;
         const variables = { serviceAssetID, input };
         const response = await this.client.mutate(mutation, variables);
-        return response.data.updateServiceAsset;
+        return response.updateServiceAsset;
     }
     /**
      * Supprime un ServiceAsset.
@@ -97,7 +97,7 @@ export class ServiceAsset {
         const mutation = serviceAssetMutations.DELETE_SERVICE_ASSET;
         const variables = { serviceAssetID };
         const response = await this.client.mutate(mutation, variables);
-        return response.data.deleteServiceAsset;
+        return response.deleteServiceAsset;
     }
     /**
      * Lie un Asset à un Service (Création d'un ServiceAsset).
@@ -109,7 +109,7 @@ export class ServiceAsset {
         const mutation = serviceAssetMutations.LINK_ASSET_TO_SERVICE;
         const variables = { serviceID, assetID, authorID };
         const response = await this.client.mutate(mutation, variables);
-        return response.data.linkAssetToService;
+        return response.linkAssetToService;
     }
     /**
      * Délie un Asset d'un Service (Suppression du ServiceAsset).
@@ -120,6 +120,6 @@ export class ServiceAsset {
         const mutation = serviceAssetMutations.UNLINK_ASSET_FROM_SERVICE;
         const variables = { serviceID, assetID };
         const response = await this.client.mutate(mutation, variables);
-        return response.data.unlinkAssetFromService;
+        return response.unlinkAssetFromService;
     }
 }

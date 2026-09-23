@@ -63,7 +63,7 @@ interface ServiceEntity {
   uptakeForm: string;
   billingPlan: string;
   onlineService?: boolean;
-  advancedAttributes?: string; // JSON stringifié
+  advancedAttributes?: string; // JSON stringifié (le scalaire JSONObject peut arriver en objet à l'exécution)
   poweredByAgent?: boolean; // Indique si le service utilise un agent
   agentConfiguration?: string; // JSON stringifié contenant l'ID de l'agent et son endpoint
   state: string;
@@ -71,6 +71,9 @@ interface ServiceEntity {
   updatedAt: string; // ISO 8601
   deletedAt?: string; // ISO 8601
   likes?: number;
+  /** Agrégats d'avis exposés par mu-catalog (null tant qu'aucun avis). */
+  averageRating?: number | null;
+  reviewCount?: number | null;
   serviceMedias?: ServiceMediaEntity[];
   /** Localisation résolue via Apollo Federation (null si locationID absent) */
   location?: Place | null;
@@ -144,6 +147,8 @@ interface ServiceMediaEntity {
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;
+  /** Média résolu (`media { url }` dans les queries service). */
+  media?: { url: string };
 }
 
 interface CreateServiceMediaInput {
@@ -225,8 +230,8 @@ export class Service {
   async getBySlug(slug: string, admin?: boolean): Promise<ServiceEntity> {
     const query = serviceQueries.GET_SERVICE_BY_SLUG;
     const variables = { slug, admin };
-    const response = await this.client.query(query, variables) as { data: { serviceBySlug: ServiceEntity } };
-    return response.data.serviceBySlug;
+    const response = await this.client.query(query, variables) as { serviceBySlug: ServiceEntity };
+    return response.serviceBySlug;
   }
 
   async getByIds(serviceIDs: string[], admin?: boolean): Promise<ServiceEntity[]> {
@@ -239,8 +244,8 @@ export class Service {
   async getBySlugs(slugs: string[], admin?: boolean): Promise<ServiceEntity[]> {
     const query = serviceQueries.GET_SERVICES_BY_SLUGS;
     const variables = { slugs, admin };
-    const response = await this.client.query(query, variables) as { data: { servicesBySlugs: ServiceEntity[] } };
-    return response.data.servicesBySlugs;
+    const response = await this.client.query(query, variables) as { servicesBySlugs: ServiceEntity[] };
+    return response.servicesBySlugs;
   }
 
   async listByOrganizationId(organizationID: string, admin?: boolean): Promise<ServiceEntity[]> {
@@ -260,8 +265,8 @@ export class Service {
   async getByAgentID(agentID: string, admin?: boolean): Promise<ServiceEntity[]> {
     const query = serviceQueries.GET_SERVICES_BY_AGENT_ID;
     const variables = { agentID, admin };
-    const response = await this.client.query(query, variables) as { data: { servicesByAgentID: ServiceEntity[] } };
-    return response.data.servicesByAgentID;
+    const response = await this.client.query(query, variables) as { servicesByAgentID: ServiceEntity[] };
+    return response.servicesByAgentID;
   }
 
   //========================== SERVICE MEDIA QUERIES ==============================================

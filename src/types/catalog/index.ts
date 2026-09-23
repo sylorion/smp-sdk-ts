@@ -63,6 +63,8 @@ export interface ServiceMediaEntity {
     createdAt?: string;
     updatedAt?: string;
     deletedAt?: string;
+    /** Média résolu (sélectionné par GET_SERVICE(S)_BY_ID(S) : `media { url }`). */
+    media?: { url: string };
 }
 
 export interface CreateServiceMediaInput {
@@ -108,7 +110,7 @@ export interface ServiceEntity {
     uptakeForm?: string;
     billingPlan?: string;
     onlineService?: boolean;
-    advancedAttributes?: string;
+    advancedAttributes?: string; // JSON stringifié (le scalaire JSONObject peut arriver en objet à l'exécution)
     poweredByAgent?: boolean;
     agentConfiguration?: string;
     state: string;
@@ -122,6 +124,17 @@ export interface ServiceEntity {
     /** Performance Score /100 (mu-review). */
     performanceScore?: number | null;
     serviceMedias?: ServiceMediaEntity[];
+    /** Localisation résolue via Apollo Federation (mu-location) — null si locationID absent. */
+    location?: {
+        placeID: string;
+        city?: string | null;
+        country?: string | null;
+        region?: string | null;
+        pstate?: string | null;
+        postalCode?: string | null;
+        addressLine1?: string | null;
+        placeKind?: string | null;
+    } | null;
 }
 
 export interface CreateServiceInput {

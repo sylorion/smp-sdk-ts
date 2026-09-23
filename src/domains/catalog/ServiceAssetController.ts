@@ -65,8 +65,8 @@ export class ServiceAsset {
   async getById(serviceAssetID: string): Promise<ServiceAssetEntity> {
     const query = serviceAssetQueries.GET_SERVICE_ASSET;
     const variables = { serviceAssetID };
-    const response = await this.client.query(query, variables) as { data: { serviceAsset: ServiceAssetEntity } };
-    return response.data.serviceAsset;
+    const response = await this.client.query(query, variables) as { serviceAsset: ServiceAssetEntity };
+    return response.serviceAsset;
   }
 
   /**
@@ -75,8 +75,8 @@ export class ServiceAsset {
   async list(pagination?: any, sort?: any, filter?: any): Promise<ServiceAssetEntity[]> {
     const query = serviceAssetQueries.GET_SERVICE_ASSETS;
     const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as { data: { serviceAssets: ServiceAssetEntity[] } };
-    return response.data.serviceAssets;
+    const response = await this.client.query(query, variables) as { serviceAssets: ServiceAssetEntity[] };
+    return response.serviceAssets;
   }
 
   /**
@@ -86,8 +86,8 @@ export class ServiceAsset {
   async getBySlug(slug: string): Promise<ServiceAssetEntity> {
     const query = serviceAssetQueries.GET_SERVICE_ASSET_BY_SLUG;
     const variables = { slug };
-    const response = await this.client.query(query, variables) as { data: { serviceAssetBySlug: ServiceAssetEntity } };
-    return response.data.serviceAssetBySlug;
+    const response = await this.client.query(query, variables) as { serviceAssetBySlug: ServiceAssetEntity };
+    return response.serviceAssetBySlug;
   }
 
   /**
@@ -97,8 +97,8 @@ export class ServiceAsset {
   async getByIds(serviceAssetIDs: string[]): Promise<ServiceAssetEntity[]> {
     const query = serviceAssetQueries.GET_SERVICE_ASSETS_BY_IDS;
     const variables = { serviceAssetIDs };
-    const response = await this.client.query(query, variables) as { data: { serviceAssetsByIDs: ServiceAssetEntity[] } };
-    return response.data.serviceAssetsByIDs;
+    const response = await this.client.query(query, variables) as { serviceAssetsByIDs: ServiceAssetEntity[] };
+    return response.serviceAssetsByIDs;
   }
 
   /**
@@ -108,8 +108,8 @@ export class ServiceAsset {
   async getBySlugs(slugs: string[]): Promise<ServiceAssetEntity[]> {
     const query = serviceAssetQueries.GET_SERVICE_ASSETS_BY_SLUGS;
     const variables = { slugs };
-    const response = await this.client.query(query, variables) as { data: { serviceAssetsBySlugs: ServiceAssetEntity[] } };
-    return response.data.serviceAssetsBySlugs;
+    const response = await this.client.query(query, variables) as { serviceAssetsBySlugs: ServiceAssetEntity[] };
+    return response.serviceAssetsBySlugs;
   }
 
   /**
@@ -119,8 +119,8 @@ export class ServiceAsset {
   async getByUniqRef(uniqRef: string): Promise<ServiceAssetEntity> {
     const query = serviceAssetQueries.GET_SERVICE_ASSET_BY_UNIQ_REF;
     const variables = { uniqRef };
-    const response = await this.client.query(query, variables) as { data: { serviceAssetByUniqRef: ServiceAssetEntity } };
-    return response.data.serviceAssetByUniqRef;
+    const response = await this.client.query(query, variables) as { serviceAssetByUniqRef: ServiceAssetEntity };
+    return response.serviceAssetByUniqRef;
   }
 
   // ------------------------ MUTATIONS ------------------------
@@ -132,8 +132,8 @@ export class ServiceAsset {
   async create(input: CreateServiceAssetInput): Promise<ServiceAssetEntity> {
     const mutation = serviceAssetMutations.CREATE_SERVICE_ASSET;
     const variables = { input };
-    const response = await this.client.mutate(mutation, variables) as { data: { createServiceAsset: ServiceAssetEntity } };
-    return response.data.createServiceAsset;
+    const response = await this.client.mutate(mutation, variables) as { createServiceAsset: ServiceAssetEntity };
+    return response.createServiceAsset;
   }
 
   /**
@@ -144,8 +144,8 @@ export class ServiceAsset {
   async update(serviceAssetID: string, input: UpdateServiceAssetInput): Promise<ServiceAssetEntity> {
     const mutation = serviceAssetMutations.UPDATE_SERVICE_ASSET;
     const variables = { serviceAssetID, input };
-    const response = await this.client.mutate(mutation, variables) as { data: { updateServiceAsset: ServiceAssetEntity } };
-    return response.data.updateServiceAsset;
+    const response = await this.client.mutate(mutation, variables) as { updateServiceAsset: ServiceAssetEntity };
+    return response.updateServiceAsset;
   }
 
   /**
@@ -155,8 +155,8 @@ export class ServiceAsset {
   async delete(serviceAssetID: string): Promise<MutationResponse> {
     const mutation = serviceAssetMutations.DELETE_SERVICE_ASSET;
     const variables = { serviceAssetID };
-    const response = await this.client.mutate(mutation, variables) as { data: { deleteServiceAsset: MutationResponse } };
-    return response.data.deleteServiceAsset;
+    const response = await this.client.mutate(mutation, variables) as { deleteServiceAsset: MutationResponse };
+    return response.deleteServiceAsset;
   }
 
   /**
@@ -168,8 +168,8 @@ export class ServiceAsset {
   async linkAssetToService(serviceID: string, assetID: string, authorID: string): Promise<ServiceAssetEntity> {
     const mutation = serviceAssetMutations.LINK_ASSET_TO_SERVICE;
     const variables = { serviceID, assetID, authorID };
-    const response = await this.client.mutate(mutation, variables) as { data: { linkAssetToService: ServiceAssetEntity } };
-    return response.data.linkAssetToService;
+    const response = await this.client.mutate(mutation, variables) as { linkAssetToService: ServiceAssetEntity };
+    return response.linkAssetToService;
   }
 
   /**
@@ -180,7 +180,7 @@ export class ServiceAsset {
   async unlinkAssetFromService(serviceID: string, assetID: string): Promise<MutationResponse> {
     const mutation = serviceAssetMutations.UNLINK_ASSET_FROM_SERVICE;
     const variables = { serviceID, assetID };
-    const response = await this.client.mutate(mutation, variables) as { data: { unlinkAssetFromService: MutationResponse } };
-    return response.data.unlinkAssetFromService;
+    const response = await this.client.mutate(mutation, variables) as { unlinkAssetFromService: MutationResponse };
+    return response.unlinkAssetFromService;
   }
 }

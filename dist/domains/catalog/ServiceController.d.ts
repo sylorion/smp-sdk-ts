@@ -63,6 +63,9 @@ interface ServiceEntity {
     updatedAt: string;
     deletedAt?: string;
     likes?: number;
+    /** Agrégats d'avis exposés par mu-catalog (null tant qu'aucun avis). */
+    averageRating?: number | null;
+    reviewCount?: number | null;
     serviceMedias?: ServiceMediaEntity[];
     /** Localisation résolue via Apollo Federation (null si locationID absent) */
     location?: Place | null;
@@ -131,6 +134,10 @@ interface ServiceMediaEntity {
     createdAt: string;
     updatedAt: string;
     deletedAt?: string;
+    /** Média résolu (`media { url }` dans les queries service). */
+    media?: {
+        url: string;
+    };
 }
 interface CreateServiceMediaInput {
     mediaID: string;

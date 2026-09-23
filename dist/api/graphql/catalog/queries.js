@@ -458,7 +458,7 @@ const serviceAssetQueries = {
     // Récupère un ServiceAsset via son slug
     GET_SERVICE_ASSET_BY_SLUG: `
       query GetServiceAssetBySlug($slug: String!) {
-        serviceAssetBySlug(slug: $slug) {
+        serviceAssetBySlug(Slug: $slug) {
           serviceAssetID
           uniqRef
           slug
@@ -565,7 +565,7 @@ const serviceMediaQueries = {
   `,
     GET_SERVICE_MEDIA_BY_SLUG: `
     query GetServiceMediaBySlug($slug: String!) {
-      serviceMediaBySlug(slug: $slug) {
+      serviceMediaBySlug(Slug: $slug) {
         serviceMediaID
         uniqRef
         slug
@@ -853,7 +853,7 @@ const serviceQueries = {
   `,
     GET_SERVICE_BY_SLUG: `
     query GetServiceBySlug($slug: String!, $admin: Boolean) {
-      serviceBySlug(slug: $slug, admin: $admin) {
+      serviceBySlug(Slug: $slug, admin: $admin) {
         serviceID
         uniqRef
         slug
@@ -965,6 +965,9 @@ const serviceQueries = {
         state
         createdAt
         updatedAt
+        likes
+        averageRating
+        reviewCount
         location {
           placeID
           city
@@ -1327,7 +1330,7 @@ const serviceQueries = {
 }
 `,
     GET_SERVICES_BY_AGENT_ID: `
-    query GetServicesByAgentID($agentID: String!, $admin: Boolean) {
+    query GetServicesByAgentID($agentID: ID!, $admin: Boolean) {
   servicesByAgentID(agentID: $agentID, admin: $admin) {
     serviceID
     uniqRef

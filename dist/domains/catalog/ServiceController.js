@@ -38,7 +38,7 @@ export class Service {
         const query = serviceQueries.GET_SERVICE_BY_SLUG;
         const variables = { slug, admin };
         const response = await this.client.query(query, variables);
-        return response.data.serviceBySlug;
+        return response.serviceBySlug;
     }
     async getByIds(serviceIDs, admin) {
         const query = serviceQueries.GET_SERVICES_BY_IDS;
@@ -50,7 +50,7 @@ export class Service {
         const query = serviceQueries.GET_SERVICES_BY_SLUGS;
         const variables = { slugs, admin };
         const response = await this.client.query(query, variables);
-        return response.data.servicesBySlugs;
+        return response.servicesBySlugs;
     }
     async listByOrganizationId(organizationID, admin) {
         const query = serviceQueries.LIST_SERVICES_BY_ORGANIZATION;
@@ -68,7 +68,7 @@ export class Service {
         const query = serviceQueries.GET_SERVICES_BY_AGENT_ID;
         const variables = { agentID, admin };
         const response = await this.client.query(query, variables);
-        return response.data.servicesByAgentID;
+        return response.servicesByAgentID;
     }
     //========================== SERVICE MEDIA QUERIES ==============================================
     async getMediaById(serviceMediaID) {
