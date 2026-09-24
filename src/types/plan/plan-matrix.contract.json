@@ -18,7 +18,9 @@
     "USE_SERVICE_AI_AGENTS",
     "PERFORM_WITHDRAWAL",
     "VIEW_ADVANCED_ANALYTICS",
-    "USE_CUSTOM_BRANDING"
+    "USE_CUSTOM_BRANDING",
+    "CUSTOMIZE_DOCUMENTS",
+    "REMOVE_DOCUMENT_POWERED_BY"
   ],
   "actionToKey": {
     "CREATE_ORGANIZATION": "maxOrganizations",
@@ -34,7 +36,9 @@
     "USE_SERVICE_AI_AGENTS": "hasServiceAiAgents",
     "USE_FORM_AGENT": "hasFormAgent",
     "VIEW_ADVANCED_ANALYTICS": "hasAdvancedAnalytics",
-    "USE_CUSTOM_BRANDING": "hasCustomBranding"
+    "USE_CUSTOM_BRANDING": "hasCustomBranding",
+    "CUSTOMIZE_DOCUMENTS": "hasDocumentCustomization",
+    "REMOVE_DOCUMENT_POWERED_BY": "hasDocumentPoweredByRemoval"
   },
   "scopes": {
     "maxOrganizations": "user",
@@ -48,9 +52,11 @@
     "maxWithdrawalsPerMonth": "organization"
   },
   "notes": {
+    "hasDocumentCustomization": "Personnalisation des factures et devis (modèle, couleurs, logo, mention libre). Ouverte dès Starter. Distincte de hasCustomBranding (marque blanche, Business).",
     "maxMembersPerOrg": "NOMBRE TOTAL D'UTILISATEURS DE L'ORGANISATION, PROPRIÉTAIRE INCLUS, invitations en cours comprises. Le propriétaire possède une ligne UserOrganization (roleID '2'), il est donc compté. standard = 1 signifie donc : le propriétaire seul, aucun membre invitable.",
     "maxOrganizations": "Seul quota de portée UTILISATEUR : l'organisation n'existe pas encore au moment du contrôle.",
-    "others": "Tous les autres quotas sont de portée ORGANISATION, mais leur VALEUR vient du plan du propriétaire de l'organisation."
+    "others": "Tous les autres quotas sont de portée ORGANISATION, mais leur VALEUR vient du plan du propriétaire de l'organisation.",
+    "hasDocumentPoweredByRemoval": "Retrait de la mention « Émis avec Services » sur les factures, avoirs, devis et bons de commande. Pro et Business uniquement (Starter personnalise mais garde la mention)."
   },
   "matrix": {
     "standard": {
@@ -70,7 +76,9 @@
       "hasCustomBranding": false,
       "hasEmailSupport": false,
       "hasServiceSubscriptions": false,
-      "hasServiceAiAgents": false
+      "hasServiceAiAgents": false,
+      "hasDocumentCustomization": false,
+      "hasDocumentPoweredByRemoval": false
     },
     "starter": {
       "maxOrganizations": 1,
@@ -89,7 +97,9 @@
       "hasCustomBranding": false,
       "hasEmailSupport": true,
       "hasServiceSubscriptions": false,
-      "hasServiceAiAgents": false
+      "hasServiceAiAgents": false,
+      "hasDocumentCustomization": true,
+      "hasDocumentPoweredByRemoval": false
     },
     "pro": {
       "maxOrganizations": 3,
@@ -108,7 +118,9 @@
       "hasCustomBranding": false,
       "hasEmailSupport": true,
       "hasServiceSubscriptions": true,
-      "hasServiceAiAgents": true
+      "hasServiceAiAgents": true,
+      "hasDocumentCustomization": true,
+      "hasDocumentPoweredByRemoval": true
     },
     "business": {
       "maxOrganizations": 5,
@@ -127,7 +139,9 @@
       "hasCustomBranding": true,
       "hasEmailSupport": true,
       "hasServiceSubscriptions": true,
-      "hasServiceAiAgents": true
+      "hasServiceAiAgents": true,
+      "hasDocumentCustomization": true,
+      "hasDocumentPoweredByRemoval": true
     }
   }
 }

@@ -38,6 +38,7 @@
     "@types/node": "^20.10.6",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "accounting-tools": "github:servicesmp/accounting-tools",
     "axios": "^1.7.5",
     "eslint": "^8.0.0",
     "graphql": "^16.8.1",
@@ -56,10 +57,12 @@
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
     "graphql-tag": "^2.12.6",
-    "intl-messageformat": "^10.5.14"
+    "intl-messageformat": "^10.5.14",
+    "accounting-tools": "*"
   },
   "peerDependenciesMeta": {
     "@apollo/client": { "optional": true },
+    "accounting-tools": { "optional": true },
     "intl-messageformat": { "optional": true }
   }
 }

@@ -78,6 +78,7 @@ const assetQueries = {
         mediaID
         description
         price
+        currency
         legalVatPercent
         quantity
         stockQuantity
@@ -115,6 +116,7 @@ const assetQueries = {
         mediaID
         description
         price
+        currency
         legalVatPercent
         quantity
         stockQuantity
@@ -152,6 +154,7 @@ const assetQueries = {
         mediaID
         description
         price
+        currency
         legalVatPercent
         quantity
         stockQuantity
@@ -189,6 +192,7 @@ const assetQueries = {
         mediaID
         description
         price
+        currency
         legalVatPercent
         quantity
         stockQuantity
@@ -226,6 +230,7 @@ const assetQueries = {
         mediaID
         description
         price
+        currency
         legalVatPercent
         quantity
         stockQuantity
@@ -263,6 +268,7 @@ const assetQueries = {
         mediaID
         description
         price
+        currency
         legalVatPercent
         quantity
         stockQuantity
@@ -301,6 +307,7 @@ const assetQueries = {
           authorID
           mediaID
           price
+          currency
           legalVatPercent
           quantity
           stockQuantity
@@ -342,6 +349,7 @@ const assetQueries = {
           mediaID
           description
           price
+          currency
           legalVatPercent
           quantity
           stockQuantity
@@ -371,6 +379,7 @@ const assetQueries = {
           service {
             title
             price
+            currency
             state
             description
           }
@@ -402,6 +411,7 @@ const assetQueries = {
           locationID
           paymentConfigID
           price
+          currency
           legalVatPercent
           lowerPrice
           upperPrice
@@ -731,6 +741,7 @@ const serviceQueries = {
         locationID
         paymentConfigID
         price
+        currency
         legalVatPercent
         lowerPrice
         upperPrice
@@ -781,6 +792,7 @@ const serviceQueries = {
             title
             description
             price
+            currency
             legalVatPercent
             quantity
             maxPerReservation
@@ -814,6 +826,7 @@ const serviceQueries = {
         locationID
         paymentConfigID
         price
+        currency
         legalVatPercent
         lowerPrice
         upperPrice
@@ -864,6 +877,7 @@ const serviceQueries = {
             title
             description
             price
+            currency
             legalVatPercent
             quantity
             maxPerReservation
@@ -897,6 +911,7 @@ const serviceQueries = {
         locationID
         paymentConfigID
         price
+        currency
         legalVatPercent
         lowerPrice
         upperPrice
@@ -947,6 +962,7 @@ const serviceQueries = {
             title
             description
             price
+            currency
             legalVatPercent
             quantity
             maxPerReservation
@@ -979,6 +995,7 @@ const serviceQueries = {
         locationID
         paymentConfigID
         price
+        currency
         legalVatPercent
         lowerPrice
         upperPrice
@@ -1026,6 +1043,7 @@ const serviceQueries = {
             title
             description
             price
+            currency
             legalVatPercent
             quantity
             maxPerReservation
@@ -1058,6 +1076,7 @@ const serviceQueries = {
         locationID
         paymentConfigID
         price
+        currency
         legalVatPercent
         lowerPrice
         upperPrice
@@ -1102,6 +1121,7 @@ const serviceQueries = {
             title
             description
             price
+            currency
             legalVatPercent
             quantity
             maxPerReservation
@@ -1134,6 +1154,7 @@ const serviceQueries = {
       locationID
       paymentConfigID
       price
+      currency
       legalVatPercent
       lowerPrice
       upperPrice
@@ -1182,6 +1203,7 @@ const serviceQueries = {
           title
           description
           price
+          currency
           legalVatPercent
           quantity
           maxPerReservation
@@ -1214,6 +1236,7 @@ const serviceQueries = {
     locationID
     paymentConfigID
     price
+    currency
     legalVatPercent
     lowerPrice
     upperPrice
@@ -1262,6 +1285,7 @@ const serviceQueries = {
         title
         description
         price
+        currency
         legalVatPercent
         quantity
         maxPerReservation
@@ -1294,6 +1318,7 @@ const serviceQueries = {
     locationID
     paymentConfigID
     price
+    currency
     legalVatPercent
     lowerPrice
     upperPrice
@@ -1342,6 +1367,7 @@ const serviceQueries = {
         title
         description
         price
+        currency
         legalVatPercent
         quantity
         maxPerReservation
@@ -1374,6 +1400,7 @@ const serviceQueries = {
     locationID
     paymentConfigID
     price
+    currency
     legalVatPercent
     lowerPrice
     upperPrice
@@ -1418,6 +1445,7 @@ const serviceQueries = {
         title
         description
         price
+        currency
         legalVatPercent
         quantity
         maxPerReservation

@@ -88,6 +88,8 @@ export interface ServiceEntity {
     locationID?: string;
     paymentConfigID?: string;
     price: number;
+    /** Devise ISO-4217 des prix (EUR, USD…) — celle de l'organisation vendeuse. */
+    currency?: string | null;
     legalVatPercent?: number;
     lowerPrice?: number;
     upperPrice?: number;
@@ -218,6 +220,8 @@ export interface AssetEntity {
     mediaID?: string;
     description?: string;
     price: number;
+    /** Devise ISO-4217 des prix (EUR, USD…) — celle de l'organisation vendeuse. */
+    currency?: string | null;
     legalVatPercent?: number;
     quantity: number;
     stockQuantity?: number;

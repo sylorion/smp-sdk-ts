@@ -45,6 +45,10 @@ export interface PlanFeatures {
     hasEmailSupport: boolean;
     hasServiceSubscriptions: boolean;
     hasServiceAiAgents: boolean;
+    /** Personnalisation des factures et devis (modèle, couleurs, logo, mention) — dès Starter. */
+    hasDocumentCustomization: boolean;
+    /** Retrait de la mention « Émis avec Services » sur les documents commerciaux — Pro et Business. */
+    hasDocumentPoweredByRemoval: boolean;
 }
 export type PlanConfig = PlanLimits & PlanFeatures;
 /** Sentinel value for "unlimited" */
@@ -91,7 +95,11 @@ export declare enum PlanAction {
      */
     USE_SERVICE_SUBSCRIPTIONS = "USE_SERVICE_SUBSCRIPTIONS",
     /** Agents IA attachés à un service. */
-    USE_SERVICE_AI_AGENTS = "USE_SERVICE_AI_AGENTS"
+    USE_SERVICE_AI_AGENTS = "USE_SERVICE_AI_AGENTS",
+    /** Personnalisation des factures et devis. */
+    CUSTOMIZE_DOCUMENTS = "CUSTOMIZE_DOCUMENTS",
+    /** Retrait de la mention « Émis avec Services » (Pro+). */
+    REMOVE_DOCUMENT_POWERED_BY = "REMOVE_DOCUMENT_POWERED_BY"
 }
 /**
  * Resolves a plan string to a PlanTier enum value.

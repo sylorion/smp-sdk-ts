@@ -259,3 +259,4 @@ export interface SignupAfterInvitationResponse {
     organizationName?: string;
     state: string;
 }
+export * from './documentSettings.js';

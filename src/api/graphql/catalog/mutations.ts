@@ -70,6 +70,7 @@ const assetMutations = {
           mediaID
           description
           price
+          currency
           legalVatPercent
           quantity
           stockQuantity
@@ -97,6 +98,7 @@ const assetMutations = {
           mediaID
           description
           price
+          currency
           legalVatPercent
           quantity
           stockQuantity
@@ -278,6 +280,7 @@ const serviceMutations = {
           locationID
           paymentConfigID
           price
+          currency
           legalVatPercent
           lowerPrice
           upperPrice
@@ -324,6 +327,7 @@ const serviceMutations = {
           locationID
           paymentConfigID
           price
+          currency
           legalVatPercent
           lowerPrice
           upperPrice

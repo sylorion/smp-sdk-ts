@@ -81,3 +81,24 @@ describe('SDK — décisions cohérentes avec le backend', () => {
     expect(canPerformAction('standard', PlanAction.ADD_MEMBER, 1).allowed).toBe(false);
   });
 });
+
+describe('SDK — personnalisation des factures et devis', () => {
+  it('fermée en Standard, ouverte dès Starter', () => {
+    expect(canPerformAction('standard', PlanAction.CUSTOMIZE_DOCUMENTS).allowed).toBe(false);
+    for (const plan of ['starter', 'pro', 'business']) {
+      expect(canPerformAction(plan, PlanAction.CUSTOMIZE_DOCUMENTS).allowed).toBe(true);
+    }
+  });
+});
+
+describe('SDK — retrait de « Émis avec Services »', () => {
+  it('réservé à Pro et Business ; Starter garde la mention', () => {
+    for (const plan of ['standard', 'starter']) {
+      const d = canPerformAction(plan, PlanAction.REMOVE_DOCUMENT_POWERED_BY);
+      expect(d.allowed).toBe(false);
+    }
+    for (const plan of ['pro', 'business']) {
+      expect(canPerformAction(plan, PlanAction.REMOVE_DOCUMENT_POWERED_BY).allowed).toBe(true);
+    }
+  });
+});

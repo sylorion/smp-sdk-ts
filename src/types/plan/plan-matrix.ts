@@ -74,6 +74,10 @@ export interface PlanFeatures {
   hasEmailSupport: boolean;
   hasServiceSubscriptions: boolean;
   hasServiceAiAgents: boolean;
+  /** Personnalisation des factures et devis (modèle, couleurs, logo, mention) — dès Starter. */
+  hasDocumentCustomization: boolean;
+  /** Retrait de la mention « Émis avec Services » sur les documents commerciaux — Pro et Business. */
+  hasDocumentPoweredByRemoval: boolean;
 }
 
 export type PlanConfig = PlanLimits & PlanFeatures;
@@ -109,6 +113,8 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasEmailSupport: false,
     hasServiceSubscriptions: false,
     hasServiceAiAgents: false,
+    hasDocumentCustomization: false,
+    hasDocumentPoweredByRemoval: false,
   },
   [PlanTier.STARTER]: {
     maxOrganizations: 1,
@@ -128,6 +134,8 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasEmailSupport: true,
     hasServiceSubscriptions: false,
     hasServiceAiAgents: false,
+    hasDocumentCustomization: true,
+    hasDocumentPoweredByRemoval: false,
   },
   [PlanTier.PRO]: {
     maxOrganizations: 3,
@@ -147,6 +155,8 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasEmailSupport: true,
     hasServiceSubscriptions: true,
     hasServiceAiAgents: true,
+    hasDocumentCustomization: true,
+    hasDocumentPoweredByRemoval: true,
   },
   [PlanTier.BUSINESS]: {
     maxOrganizations: 5,
@@ -166,6 +176,8 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasEmailSupport: true,
     hasServiceSubscriptions: true,
     hasServiceAiAgents: true,
+    hasDocumentCustomization: true,
+    hasDocumentPoweredByRemoval: true,
   },
 };
 
@@ -301,6 +313,10 @@ export enum PlanAction {
   USE_SERVICE_SUBSCRIPTIONS = 'USE_SERVICE_SUBSCRIPTIONS',
   /** Agents IA attachés à un service. */
   USE_SERVICE_AI_AGENTS = 'USE_SERVICE_AI_AGENTS',
+  /** Personnalisation des factures et devis. */
+  CUSTOMIZE_DOCUMENTS = 'CUSTOMIZE_DOCUMENTS',
+  /** Retrait de la mention « Émis avec Services » (Pro+). */
+  REMOVE_DOCUMENT_POWERED_BY = 'REMOVE_DOCUMENT_POWERED_BY',
 }
 
 /** Maps PlanAction to the relevant limit key in PlanLimits */
@@ -320,6 +336,8 @@ const ACTION_TO_LIMIT_KEY: Record<string, keyof PlanLimits | null> = {
   [PlanAction.USE_CUSTOM_BRANDING]: null,
   [PlanAction.USE_SERVICE_SUBSCRIPTIONS]: null,
   [PlanAction.USE_SERVICE_AI_AGENTS]: null,
+  [PlanAction.CUSTOMIZE_DOCUMENTS]: null,
+  [PlanAction.REMOVE_DOCUMENT_POWERED_BY]: null,
 };
 
 /** Maps PlanAction to the relevant feature key for boolean checks */
@@ -329,6 +347,8 @@ const ACTION_TO_FEATURE_KEY: Partial<Record<string, keyof PlanFeatures>> = {
   [PlanAction.USE_CUSTOM_BRANDING]: 'hasCustomBranding',
   [PlanAction.USE_SERVICE_SUBSCRIPTIONS]: 'hasServiceSubscriptions',
   [PlanAction.USE_SERVICE_AI_AGENTS]: 'hasServiceAiAgents',
+  [PlanAction.CUSTOMIZE_DOCUMENTS]: 'hasDocumentCustomization',
+  [PlanAction.REMOVE_DOCUMENT_POWERED_BY]: 'hasDocumentPoweredByRemoval',
 };
 
 // ============================================================================
@@ -494,6 +514,8 @@ export function getPlanFeaturesForDisplay(plan?: string | null): Array<{
     { label: 'Support prioritaire', value: config.hasPrioritySupport ? 'Inclus' : 'Non inclus', included: config.hasPrioritySupport, category: 'feature' },
     { label: 'Support dédié 24/7', value: config.hasDedicatedSupport ? 'Inclus' : 'Non inclus', included: config.hasDedicatedSupport, category: 'feature' },
     { label: 'Analytics avancés', value: config.hasAdvancedAnalytics ? 'Inclus' : 'Non inclus', included: config.hasAdvancedAnalytics, category: 'feature' },
+    { label: 'Factures et devis personnalisés', value: config.hasDocumentCustomization ? 'Inclus' : 'Non inclus', included: config.hasDocumentCustomization, category: 'feature' },
+    { label: 'Sans mention « Émis avec Services »', value: config.hasDocumentPoweredByRemoval ? 'Inclus' : 'Non inclus', included: config.hasDocumentPoweredByRemoval, category: 'feature' },
     { label: 'Branding personnalisé', value: config.hasCustomBranding ? 'Inclus' : 'Non inclus', included: config.hasCustomBranding, category: 'feature' },
     { label: 'Retraits / mois', value: formatLimit(config.maxWithdrawalsPerMonth), included: true, category: 'limit' },
   ];

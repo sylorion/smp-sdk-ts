@@ -1,4 +1,4 @@
 // ==============================
 // ORGANIZATION
 // ==============================
-export {};
+export * from './documentSettings.js';
