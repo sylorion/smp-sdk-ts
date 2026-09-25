@@ -16,6 +16,10 @@ import type {
   SignContractResponse,
   SendContractResponse,
   GetContractResponse,
+  GetContractByInvitationTokenResponse,
+  OrganizationContractTemplate,
+  SaveContractAsTemplateInput,
+  UpdateOrganizationContractTemplateInput,
   GetContractsResponse,
   GetContractsByOrganizationIdResponse,
   VerifyTokenResponse,
@@ -83,7 +87,17 @@ export class Contract {
   }
 
   /**
-   * Retrieves all contracts.
+   * Contrat d'une invitation de signature (page publique de signature) :
+   * accessible sans compte, avec le jeton exact et non expiré.
+   */
+  async getByInvitationToken(token: string): Promise<ContractResponse> {
+    const query = contractQueries.GET_CONTRACT_BY_INVITATION_TOKEN;
+    const response = await this.client.query<GetContractByInvitationTokenResponse>(query, { token });
+    return response.getContractByInvitationToken;
+  }
+
+  /**
+   * Contrats des organisations de l'appelant (identité requise).
    */
   async list(): Promise<ContractResponse[]> {
     const query = contractQueries.GET_ALL_CONTRACTS;
@@ -115,6 +129,38 @@ export class Contract {
       data: { token }
     });
     return response.verifyToken;
+  }
+
+  // ── Modèles de l'organisation (contrats réutilisables) ──────────────
+
+  async listOrganizationTemplates(organizationId: string): Promise<OrganizationContractTemplate[]> {
+    const r = await this.client.query<{ organizationContractTemplates: OrganizationContractTemplate[] }>(
+      contractQueries.GET_ORGANIZATION_CONTRACT_TEMPLATES, { organizationId });
+    return r.organizationContractTemplates ?? [];
+  }
+
+  async getOrganizationTemplate(templateId: string): Promise<OrganizationContractTemplate> {
+    const r = await this.client.query<{ organizationContractTemplate: OrganizationContractTemplate }>(
+      contractQueries.GET_ORGANIZATION_CONTRACT_TEMPLATE, { templateId });
+    return r.organizationContractTemplate;
+  }
+
+  async saveAsTemplate(data: SaveContractAsTemplateInput): Promise<OrganizationContractTemplate> {
+    const r = await this.client.mutate<{ saveContractAsTemplate: OrganizationContractTemplate }>(
+      contractMutations.SAVE_CONTRACT_AS_TEMPLATE, { data });
+    return r.saveContractAsTemplate;
+  }
+
+  async updateOrganizationTemplate(templateId: string, data: UpdateOrganizationContractTemplateInput): Promise<OrganizationContractTemplate> {
+    const r = await this.client.mutate<{ updateOrganizationContractTemplate: OrganizationContractTemplate }>(
+      contractMutations.UPDATE_ORGANIZATION_CONTRACT_TEMPLATE, { templateId, data });
+    return r.updateOrganizationContractTemplate;
+  }
+
+  async deleteOrganizationTemplate(templateId: string): Promise<boolean> {
+    const r = await this.client.mutate<{ deleteOrganizationContractTemplate: boolean }>(
+      contractMutations.DELETE_ORGANIZATION_CONTRACT_TEMPLATE, { templateId });
+    return !!r.deleteOrganizationContractTemplate;
   }
 
   // ── Template Methods ────────────────────────────────────────────────

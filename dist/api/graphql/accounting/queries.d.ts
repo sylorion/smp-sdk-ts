@@ -73,6 +73,9 @@ export declare const orderQueries: {
 };
 declare const contractQueries: {
     GET_CONTRACT_BY_ID: string;
+    GET_CONTRACT_BY_INVITATION_TOKEN: string;
+    GET_ORGANIZATION_CONTRACT_TEMPLATES: string;
+    GET_ORGANIZATION_CONTRACT_TEMPLATE: string;
     GET_ALL_CONTRACTS: string;
     GET_CONTRACTS_BY_ORGANIZATION_ID: string;
     GET_CONTRACT_TEMPLATES: string;

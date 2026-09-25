@@ -71,5 +71,8 @@ declare const contractMutations: {
     SIGN_CONTRACT: string;
     SEND_CONTRACT: string;
     VERIFY_TOKEN: string;
+    SAVE_CONTRACT_AS_TEMPLATE: string;
+    UPDATE_ORGANIZATION_CONTRACT_TEMPLATE: string;
+    DELETE_ORGANIZATION_CONTRACT_TEMPLATE: string;
 };
 export { contractMutations };

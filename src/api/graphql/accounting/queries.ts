@@ -1447,6 +1447,61 @@ const contractQueries = {
     }
   `,
 
+  GET_CONTRACT_BY_INVITATION_TOKEN: `
+    query GetContractByInvitationToken($token: String!) {
+      getContractByInvitationToken(token: $token) {
+        contractId
+        estimateId
+        serviceId
+        organizationId
+        clientSignHash
+        providerSignHash
+        status
+        content
+        variables
+        details
+        clientSignDate
+        providerSignDate
+        createdAt
+        updatedAt
+      }
+    }
+  `,
+
+  GET_ORGANIZATION_CONTRACT_TEMPLATES: `
+    query OrganizationContractTemplates($organizationId: String!) {
+      organizationContractTemplates(organizationId: $organizationId) {
+        templateId
+        organizationId
+        name
+        description
+        baseTemplateId
+        content
+        defaultValues
+        usageCount
+        createdAt
+        updatedAt
+      }
+    }
+  `,
+
+  GET_ORGANIZATION_CONTRACT_TEMPLATE: `
+    query OrganizationContractTemplate($templateId: String!) {
+      organizationContractTemplate(templateId: $templateId) {
+        templateId
+        organizationId
+        name
+        description
+        baseTemplateId
+        content
+        defaultValues
+        usageCount
+        createdAt
+        updatedAt
+      }
+    }
+  `,
+
   GET_ALL_CONTRACTS: `
     query GetAllContracts {
       getContracts {
@@ -1512,6 +1567,12 @@ const contractQueries = {
         category
         style
         variableKeys
+        language
+        version
+        sections
+        variables
+        legalAlerts
+        partyRoles
       }
     }
   `,

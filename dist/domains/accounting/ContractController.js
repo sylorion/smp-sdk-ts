@@ -50,7 +50,16 @@ export class Contract {
         return response.getContract;
     }
     /**
-     * Retrieves all contracts.
+     * Contrat d'une invitation de signature (page publique de signature) :
+     * accessible sans compte, avec le jeton exact et non expiré.
+     */
+    async getByInvitationToken(token) {
+        const query = contractQueries.GET_CONTRACT_BY_INVITATION_TOKEN;
+        const response = await this.client.query(query, { token });
+        return response.getContractByInvitationToken;
+    }
+    /**
+     * Contrats des organisations de l'appelant (identité requise).
      */
     async list() {
         const query = contractQueries.GET_ALL_CONTRACTS;
@@ -80,6 +89,27 @@ export class Contract {
             data: { token }
         });
         return response.verifyToken;
+    }
+    // ── Modèles de l'organisation (contrats réutilisables) ──────────────
+    async listOrganizationTemplates(organizationId) {
+        const r = await this.client.query(contractQueries.GET_ORGANIZATION_CONTRACT_TEMPLATES, { organizationId });
+        return r.organizationContractTemplates ?? [];
+    }
+    async getOrganizationTemplate(templateId) {
+        const r = await this.client.query(contractQueries.GET_ORGANIZATION_CONTRACT_TEMPLATE, { templateId });
+        return r.organizationContractTemplate;
+    }
+    async saveAsTemplate(data) {
+        const r = await this.client.mutate(contractMutations.SAVE_CONTRACT_AS_TEMPLATE, { data });
+        return r.saveContractAsTemplate;
+    }
+    async updateOrganizationTemplate(templateId, data) {
+        const r = await this.client.mutate(contractMutations.UPDATE_ORGANIZATION_CONTRACT_TEMPLATE, { templateId, data });
+        return r.updateOrganizationContractTemplate;
+    }
+    async deleteOrganizationTemplate(templateId) {
+        const r = await this.client.mutate(contractMutations.DELETE_ORGANIZATION_CONTRACT_TEMPLATE, { templateId });
+        return !!r.deleteOrganizationContractTemplate;
     }
     // ── Template Methods ────────────────────────────────────────────────
     /**

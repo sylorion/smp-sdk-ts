@@ -56,6 +56,8 @@ export interface CreateContractInput {
      * When provided, the backend loads the template and populates content/variables.
      */
     templateId?: string;
+    /** Modèle de l'organisation (contrat réutilisable) : prioritaire sur templateId. */
+    organizationTemplateId?: string;
     /** Visual style theme for the contract preview */
     style?: ContractStyleTheme;
     /**
@@ -77,6 +79,12 @@ export interface SignContractInput {
     contractId: string;
     role: SignerRole;
     signatureText?: string;
+    /**
+     * Jeton d'invitation reçu par e-mail : obligatoire pour signer côté client
+     * (le rôle est alors celui de l'invitation). Sans jeton, la signature est
+     * celle du prestataire et exige un membre de l'organisation.
+     */
+    invitationToken?: string;
     /** Signature data for tactile/upload signatures */
     signatureData?: {
         /** Base64 PNG image from canvas or uploaded file */
@@ -117,6 +125,36 @@ export interface SendContractResponse {
         invitationToken?: string;
         expiresAt?: string;
     };
+}
+/** Modèle de contrat d'une organisation (contrat réutilisable). */
+export interface OrganizationContractTemplate {
+    templateId: string;
+    organizationId: string;
+    name: string;
+    description?: string | null;
+    baseTemplateId?: string | null;
+    /** { title, style, sections, variableDefs, partyRoles } */
+    content: any;
+    /** Valeurs reprises à chaque nouveau contrat. */
+    defaultValues: Record<string, any>;
+    usageCount: number;
+    createdAt: string;
+    updatedAt?: string | null;
+}
+export interface SaveContractAsTemplateInput {
+    contractId: string;
+    name: string;
+    description?: string;
+    /** Absent : toutes les valeurs renseignées sauf celles du client et propres au contrat. */
+    keepValueKeys?: string[];
+}
+export interface UpdateOrganizationContractTemplateInput {
+    name?: string;
+    description?: string;
+    defaultValues?: Record<string, any>;
+}
+export interface GetContractByInvitationTokenResponse {
+    getContractByInvitationToken: ContractResponse;
 }
 export interface GetContractResponse {
     getContract: ContractResponse;
@@ -163,7 +201,16 @@ export interface ContractTemplateDetail {
     version: string;
     sections: ContractTemplateSection[];
     variables: Record<string, ContractTemplateVariable>;
-    details: Record<string, any>;
+    details?: Record<string, any>;
+    variableKeys?: string[];
+    language?: string;
+    /** Points de contrôle juridiques du modèle (vérification par l'agent). */
+    legalAlerts?: string[];
+    /** Préfixes des variables des parties : { self: 'lessor', counterparty: 'renter' }. */
+    partyRoles?: {
+        self: string;
+        counterparty: string;
+    } | null;
 }
 export interface ContractTemplateSection {
     id: string;

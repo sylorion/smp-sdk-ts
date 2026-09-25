@@ -1149,6 +1149,46 @@ const contractMutations = {
       }
     }
   `,
+
+  SAVE_CONTRACT_AS_TEMPLATE: `
+    mutation SaveContractAsTemplate($data: SaveContractAsTemplateInput!) {
+      saveContractAsTemplate(data: $data) {
+        templateId
+        organizationId
+        name
+        description
+        baseTemplateId
+        content
+        defaultValues
+        usageCount
+        createdAt
+        updatedAt
+      }
+    }
+  `,
+
+  UPDATE_ORGANIZATION_CONTRACT_TEMPLATE: `
+    mutation UpdateOrganizationContractTemplate($templateId: String!, $data: UpdateOrganizationContractTemplateInput!) {
+      updateOrganizationContractTemplate(templateId: $templateId, data: $data) {
+        templateId
+        organizationId
+        name
+        description
+        baseTemplateId
+        content
+        defaultValues
+        usageCount
+        createdAt
+        updatedAt
+      }
+    }
+  `,
+
+  DELETE_ORGANIZATION_CONTRACT_TEMPLATE: `
+    mutation DeleteOrganizationContractTemplate($templateId: String!) {
+      deleteOrganizationContractTemplate(templateId: $templateId)
+    }
+  `,
 };
 
 export { contractMutations }; 
