@@ -46,6 +46,11 @@ interface InvoiceResponse {
     pdfHash?: string;
     /** JSON string — { pdfDownloadUrl, pdfFilePath, ... } */
     additionalInfo?: string;
+    /**
+     * Présentation à utiliser pour afficher la facture EXACTEMENT comme son PDF
+     * (renseignée par les requêtes d'UNE facture : invoice, invoiceBySlug).
+     */
+    documentPresentation?: import('../../types/accounting/documentPresentation.js').InvoiceDocumentPresentation | null;
 }
 interface UpdateInvoiceDownloadStatusInput {
     downloaded: boolean;

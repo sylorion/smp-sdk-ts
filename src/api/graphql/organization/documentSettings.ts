@@ -10,6 +10,12 @@ const FIELDS = `
 `;
 
 export const documentSettingsQueries = {
+  /** Public : ce qui est imprimé sur les documents de l'organisation. */
+  GET_ORGANIZATION_DOCUMENT_PRESENTATION: `
+    query OrganizationDocumentPresentation($organizationID: ID!) {
+      organizationDocumentPresentation(organizationID: $organizationID) { organizationID settings logoUrl }
+    }
+  `,
   GET_ORGANIZATION_DOCUMENT_SETTINGS: `
     query OrganizationDocumentSettings($organizationID: ID!) {
       organizationDocumentSettings(organizationID: $organizationID) {${FIELDS}}

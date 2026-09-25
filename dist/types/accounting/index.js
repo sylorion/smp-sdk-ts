@@ -56,3 +56,4 @@ export var EstimateStatus;
 })(EstimateStatus || (EstimateStatus = {}));
 export * from './Wallet.js';
 export * from './subscription.js';
+export * from './documentPresentation.js';

@@ -561,6 +561,7 @@ const invoiceQueries = {
           pdfHash
           downloadStatus
           additionalInfo
+          documentPresentation
         }
       }
     `,
@@ -744,6 +745,7 @@ const invoiceQueries = {
           docAllowanceCharges
           currency
           taxTotals
+          documentPresentation
         }
       }
     `,

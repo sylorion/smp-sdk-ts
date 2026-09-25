@@ -388,6 +388,11 @@ export interface InvoiceResponse {
     pdfHash?: string;
     /** JSON string — { pdfDownloadUrl, pdfFilePath, ... } */
     additionalInfo?: string;
+    /**
+     * Présentation à utiliser pour afficher la facture EXACTEMENT comme son PDF
+     * (renseignée par les requêtes d'UNE facture : invoice, invoiceBySlug).
+     */
+    documentPresentation?: import('./documentPresentation.js').InvoiceDocumentPresentation | null;
 }
 export interface UpdateInvoiceDownloadStatusInput {
     downloaded: boolean;
@@ -518,3 +523,4 @@ export interface CardPaymentResponse {
 }
 export * from './Wallet.js';
 export * from './subscription.js';
+export * from './documentPresentation.js';

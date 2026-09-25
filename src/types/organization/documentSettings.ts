@@ -34,3 +34,10 @@ export interface OrganizationDocumentSettings {
   warnings: string[];
   updatedAt: string | null;
 }
+
+/** Présentation PUBLIQUE des documents d'une organisation (pages publiques, devis partagé). */
+export interface OrganizationDocumentPresentation {
+  organizationID: string;
+  settings: DocumentTemplateSettings;
+  logoUrl: string | null;
+}

@@ -37,6 +37,14 @@ describe('DocumentSettingsController', () => {
     expect(r.isDefault).toBe(false);
   });
 
+  it('présentation publique d’une organisation', async () => {
+    const c = { query: jest.fn().mockResolvedValue({ organizationDocumentPresentation: { organizationID: 'org1', settings: BASIC_DOCUMENT_SETTINGS, logoUrl: null } }), mutate: jest.fn() };
+    const r = await new DocumentSettingsController(c as any).presentation('org1');
+    expect(c.query).toHaveBeenCalledWith(documentSettingsQueries.GET_ORGANIZATION_DOCUMENT_PRESENTATION, { organizationID: 'org1' });
+    expect(r.logoUrl).toBeNull();
+    await expect(new DocumentSettingsController(c as any).presentation('')).rejects.toThrow(/organizationID/);
+  });
+
   it('reset et validations d’entrée', async () => {
     const c = client();
     const ctrl = new DocumentSettingsController(c as any);

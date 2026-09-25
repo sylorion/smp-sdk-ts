@@ -1,6 +1,6 @@
 import { APIClient } from '../../api/APIClient.js';
 import { documentSettingsMutations, documentSettingsQueries } from '../../api/graphql/organization/documentSettings.js';
-import type { DocumentTemplateSettings, OrganizationDocumentSettings } from '../../types/organization/documentSettings.js';
+import type { DocumentTemplateSettings, OrganizationDocumentPresentation, OrganizationDocumentSettings } from '../../types/organization/documentSettings.js';
 
 /**
  * Personnalisation des factures, avoirs, devis et bons de commande d'une organisation.
@@ -18,6 +18,15 @@ export class DocumentSettingsController {
       organizationDocumentSettings: OrganizationDocumentSettings;
     };
     return res.organizationDocumentSettings;
+  }
+
+  /** Public (sans authentification) : modèle, couleurs et logo imprimés sur les documents de l'organisation. */
+  async presentation(organizationID: string): Promise<OrganizationDocumentPresentation> {
+    if (!organizationID) throw new Error('organizationID is required');
+    const res = await this.client.query(documentSettingsQueries.GET_ORGANIZATION_DOCUMENT_PRESENTATION, { organizationID }) as {
+      organizationDocumentPresentation: OrganizationDocumentPresentation;
+    };
+    return res.organizationDocumentPresentation;
   }
 
   /** Enregistre le réglage ; le serveur le normalise et renvoie le réglage appliqué. */
