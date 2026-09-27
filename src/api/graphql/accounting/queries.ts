@@ -1246,6 +1246,51 @@ const walletQueries = {
     }
   `,
 
+  // ── Usage des jetons plateforme (STK) — mu-wallet TokenUsageModule ──
+  TOKEN_USAGE_SUMMARY: `
+    query TokenUsageSummary($walletId: ID, $userId: ID, $organizationId: ID) {
+      tokenUsageSummary(walletId: $walletId, userId: $userId, organizationId: $organizationId) {
+        walletId
+        userId
+        organizationId
+        dailyAllowance
+        dailyRemaining
+        dailyUsedToday
+        tokensDaily
+        tokensFree
+        tokensPaid
+        tokensRevenue
+        totalAvailable
+        consumedToday
+        consumedLast30Days
+        nextDailyRefreshAt
+        byAgentToday { agentKey calls tokens llmInputTokens llmOutputTokens }
+        byAgentLast30Days { agentKey calls tokens llmInputTokens llmOutputTokens }
+        recent { tokenUsageId walletId kind agentKey action amount baseCost llmCost llmInputTokens llmOutputTokens llmModel referenceType referenceId createdAt metadata }
+      }
+    }
+  `,
+
+  TOKEN_USAGE_HISTORY: `
+    query TokenUsageHistory($walletId: ID, $userId: ID, $organizationId: ID, $limit: Int, $kinds: [String!]) {
+      tokenUsageHistory(walletId: $walletId, userId: $userId, organizationId: $organizationId, limit: $limit, kinds: $kinds) {
+        tokenUsageId walletId kind agentKey action amount baseCost llmCost llmInputTokens llmOutputTokens llmModel referenceType referenceId createdAt metadata
+      }
+    }
+  `,
+
+  TOKEN_COST_ESTIMATE: `
+    query TokenCostEstimate($agentKey: String!, $llmInputTokens: Int, $llmOutputTokens: Int) {
+      tokenCostEstimate(agentKey: $agentKey, llmInputTokens: $llmInputTokens, llmOutputTokens: $llmOutputTokens) {
+        agentKey
+        baseCost
+        llmCost
+        total
+        llmTokensPerPlatformToken
+      }
+    }
+  `,
+
   GET_STRIPE_CONNECT_STATUS: `
     query GetStripeConnectStatus($organizationID: String!, $forceRefresh: Boolean) {
       stripeConnectStatus(organizationID: $organizationID, forceRefresh: $forceRefresh) {

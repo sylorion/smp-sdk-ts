@@ -420,6 +420,8 @@ const assetQueries = {
           supplyType
           uptakeForm
           billingPlan
+          pricingMode
+          tokenPrice
           onlineService
           advancedAttributes
           poweredByAgent
@@ -750,6 +752,8 @@ const serviceQueries = {
         supplyType
         uptakeForm
         billingPlan
+        pricingMode
+        tokenPrice
         onlineService
         advancedAttributes
         poweredByAgent
@@ -835,6 +839,8 @@ const serviceQueries = {
         supplyType
         uptakeForm
         billingPlan
+        pricingMode
+        tokenPrice
         onlineService
         advancedAttributes 
         poweredByAgent
@@ -920,6 +926,8 @@ const serviceQueries = {
         supplyType
         uptakeForm
         billingPlan
+        pricingMode
+        tokenPrice
         onlineService
         advancedAttributes
         poweredByAgent
@@ -1004,6 +1012,8 @@ const serviceQueries = {
         supplyType
         uptakeForm
         billingPlan
+        pricingMode
+        tokenPrice
         onlineService
         advancedAttributes
         poweredByAgent
@@ -1085,6 +1095,8 @@ const serviceQueries = {
         supplyType
         uptakeForm
         billingPlan
+        pricingMode
+        tokenPrice
         onlineService
         advancedAttributes
         poweredByAgent
@@ -1163,6 +1175,8 @@ const serviceQueries = {
       supplyType
       uptakeForm
       billingPlan
+      pricingMode
+      tokenPrice
       onlineService
       advancedAttributes
       poweredByAgent
@@ -1245,6 +1259,8 @@ const serviceQueries = {
     supplyType
     uptakeForm
     billingPlan
+    pricingMode
+    tokenPrice
     onlineService
     advancedAttributes
     poweredByAgent
@@ -1327,6 +1343,8 @@ const serviceQueries = {
     supplyType
     uptakeForm
     billingPlan
+    pricingMode
+    tokenPrice
     onlineService
     advancedAttributes
     poweredByAgent
@@ -1409,6 +1427,8 @@ const serviceQueries = {
     supplyType
     uptakeForm
     billingPlan
+    pricingMode
+    tokenPrice
     onlineService
     advancedAttributes
     poweredByAgent

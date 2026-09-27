@@ -61,6 +61,9 @@ declare const walletQueries: {
     GET_ORGANIZATION_WALLETS: string;
     GET_ALL_WALLETS: string;
     GET_CONVERSION_DETAILS: string;
+    TOKEN_USAGE_SUMMARY: string;
+    TOKEN_USAGE_HISTORY: string;
+    TOKEN_COST_ESTIMATE: string;
     GET_STRIPE_CONNECT_STATUS: string;
     WALLET_LEDGER_HISTORY: string;
 };

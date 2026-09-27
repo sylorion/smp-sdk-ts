@@ -32,7 +32,20 @@ import type {
   GetWalletResponse,
   GetWalletsResponse,
   StripeConnectStatusEntity,
-  GetStripeConnectStatusResponse
+  GetStripeConnectStatusResponse,
+  TokenWalletRef,
+  TokenUsageSummary,
+  TokenUsageEntry,
+  TokenCostEstimate,
+  ConsumeTokensInput,
+  ConsumeTokensResult,
+  PayServiceWithTokensInput,
+  PayServiceWithTokensResult,
+  TokenUsageSummaryResponse,
+  TokenUsageHistoryResponse,
+  TokenCostEstimateResponse,
+  ConsumeTokensResponse,
+  PayServiceWithTokensResponse
 } from '../../types/accounting/index.js';
 
 
@@ -381,5 +394,69 @@ export class Wallet {
     const mutation = walletMutations.CREATE_STRIPE_ACCOUNT_SESSION;
     const response = await this.client.mutate<any>(mutation, { organizationID });
     return response.createStripeAccountSession;
+  }
+
+  // ══════════════════════════════════════════════════════════════════
+  // Usage des jetons plateforme (STK) — mu-wallet TokenUsageModule
+  // ══════════════════════════════════════════════════════════════════
+
+  private assertTokenPayer(ref: TokenWalletRef, operation: string) {
+    if (!ref.walletId && !ref.userId && !ref.organizationId) {
+      throw new Error(`[Wallet.${operation}] walletId, userId ou organizationId requis`);
+    }
+  }
+
+  /** Allocation du jour, soldes par type de jeton, consommation par agent, dernières consommations. */
+  async getTokenUsageSummary(ref: TokenWalletRef): Promise<TokenUsageSummary> {
+    this.assertTokenPayer(ref, 'getTokenUsageSummary');
+    const response = await this.client.query<TokenUsageSummaryResponse>(walletQueries.TOKEN_USAGE_SUMMARY, ref);
+    return response.tokenUsageSummary;
+  }
+
+  /** Historique des consommations / crédits de jetons (défaut 50, max 200). */
+  async getTokenUsageHistory(ref: TokenWalletRef, options?: { limit?: number; kinds?: string[] }): Promise<TokenUsageEntry[]> {
+    this.assertTokenPayer(ref, 'getTokenUsageHistory');
+    const response = await this.client.query<TokenUsageHistoryResponse>(walletQueries.TOKEN_USAGE_HISTORY, {
+      ...ref,
+      limit: options?.limit,
+      kinds: options?.kinds,
+    });
+    return response.tokenUsageHistory;
+  }
+
+  /** Coût estimé d'un appel d'agent (forfait + part LLM), sans débit. */
+  async estimateTokenCost(agentKey: string, llm?: { inputTokens?: number; outputTokens?: number }): Promise<TokenCostEstimate> {
+    const response = await this.client.query<TokenCostEstimateResponse>(walletQueries.TOKEN_COST_ESTIMATE, {
+      agentKey,
+      llmInputTokens: llm?.inputTokens,
+      llmOutputTokens: llm?.outputTokens,
+    });
+    return response.tokenCostEstimate;
+  }
+
+  /**
+   * Débite le coût d'un appel d'agent. Idempotent sur `idempotencyKey`.
+   * Solde insuffisant → erreur GraphQL `TOKENS_INSUFFICIENT` (extensions.originalError : required, available).
+   */
+  async consumeTokens(data: ConsumeTokensInput): Promise<ConsumeTokensResult> {
+    this.assertTokenPayer(data, 'consumeTokens');
+    if (!data.idempotencyKey) throw new Error('[Wallet.consumeTokens] idempotencyKey requis');
+    if (!data.agentKey) throw new Error('[Wallet.consumeTokens] agentKey requis');
+    const response = await this.client.mutate<ConsumeTokensResponse>(walletMutations.CONSUME_TOKENS, { data });
+    return response.consumeTokens;
+  }
+
+  /**
+   * Paie un service dont le prix est en jetons : débit acheteur (prix + commission), crédit vendeur (revenus).
+   * Idempotent sur `idempotencyKey` (ex. `order:<orderId>`) ; mu-wallet émet `payment.succeeded` (TOKENS).
+   */
+  async payServiceWithTokens(data: PayServiceWithTokensInput): Promise<PayServiceWithTokensResult> {
+    this.assertTokenPayer(data, 'payServiceWithTokens');
+    if (!data.idempotencyKey) throw new Error('[Wallet.payServiceWithTokens] idempotencyKey requis');
+    if (!Number.isInteger(data.tokenPrice) || data.tokenPrice <= 0) {
+      throw new Error(`[Wallet.payServiceWithTokens] tokenPrice doit être un entier > 0 (reçu ${data.tokenPrice})`);
+    }
+    const response = await this.client.mutate<PayServiceWithTokensResponse>(walletMutations.PAY_SERVICE_WITH_TOKENS, { data });
+    return response.payServiceWithTokens;
   }
 }

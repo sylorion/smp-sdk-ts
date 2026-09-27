@@ -43,6 +43,8 @@ declare const walletMutations: {
     WITHDRAW: string;
     CONVERT_TO_TOKENS: string;
     CONVERT_TOKENS_TO_MONEY: string;
+    CONSUME_TOKENS: string;
+    PAY_SERVICE_WITH_TOKENS: string;
     PAY_WITH_WALLET: string;
     ADD_REVENUE: string;
     BANK_WITHDRAW: string;

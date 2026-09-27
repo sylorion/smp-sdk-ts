@@ -1,5 +1,5 @@
 import { APIClient } from '../../api/APIClient.js';
-import type { Wallet as WalletEntity, CreateWalletInput, DepositInput, WithdrawInput, ConvertToTokensInput, ConvertTokensToMoneyInput, PayWithWalletInput, AddRevenueInput, BankWithdrawInput, TransferInput, SetPrimaryCurrencyInput, AdjustmentInput, ConversionDetailsInput, ConversionDetails, TransferResponse, StripeConnectStatusEntity } from '../../types/accounting/index.js';
+import type { Wallet as WalletEntity, CreateWalletInput, DepositInput, WithdrawInput, ConvertToTokensInput, ConvertTokensToMoneyInput, PayWithWalletInput, AddRevenueInput, BankWithdrawInput, TransferInput, SetPrimaryCurrencyInput, AdjustmentInput, ConversionDetailsInput, ConversionDetails, TransferResponse, StripeConnectStatusEntity, TokenWalletRef, TokenUsageSummary, TokenUsageEntry, TokenCostEstimate, ConsumeTokensInput, ConsumeTokensResult, PayServiceWithTokensInput, PayServiceWithTokensResult } from '../../types/accounting/index.js';
 /**
  * The `Wallet` class manages wallet-related operations within the application.
  * Provides methods to create, retrieve, and manage wallet operations like deposits, withdrawals, transfers, etc.
@@ -142,4 +142,27 @@ export declare class Wallet {
     createStripeAccountSession(organizationID: string): Promise<{
         clientSecret: string;
     }>;
+    private assertTokenPayer;
+    /** Allocation du jour, soldes par type de jeton, consommation par agent, dernières consommations. */
+    getTokenUsageSummary(ref: TokenWalletRef): Promise<TokenUsageSummary>;
+    /** Historique des consommations / crédits de jetons (défaut 50, max 200). */
+    getTokenUsageHistory(ref: TokenWalletRef, options?: {
+        limit?: number;
+        kinds?: string[];
+    }): Promise<TokenUsageEntry[]>;
+    /** Coût estimé d'un appel d'agent (forfait + part LLM), sans débit. */
+    estimateTokenCost(agentKey: string, llm?: {
+        inputTokens?: number;
+        outputTokens?: number;
+    }): Promise<TokenCostEstimate>;
+    /**
+     * Débite le coût d'un appel d'agent. Idempotent sur `idempotencyKey`.
+     * Solde insuffisant → erreur GraphQL `TOKENS_INSUFFICIENT` (extensions.originalError : required, available).
+     */
+    consumeTokens(data: ConsumeTokensInput): Promise<ConsumeTokensResult>;
+    /**
+     * Paie un service dont le prix est en jetons : débit acheteur (prix + commission), crédit vendeur (revenus).
+     * Idempotent sur `idempotencyKey` (ex. `order:<orderId>`) ; mu-wallet émet `payment.succeeded` (TOKENS).
+     */
+    payServiceWithTokens(data: PayServiceWithTokensInput): Promise<PayServiceWithTokensResult>;
 }

@@ -755,6 +755,34 @@ const walletMutations = {
       }
     }
   `,
+    // ── Usage des jetons plateforme (STK) ──
+    CONSUME_TOKENS: `
+    mutation ConsumeTokens($data: ConsumeTokensInput!) {
+      consumeTokens(data: $data) {
+        tokenUsageId
+        walletId
+        cost
+        baseCost
+        llmCost
+        alreadyRecorded
+        totalAvailable
+        dailyRemaining
+      }
+    }
+  `,
+    PAY_SERVICE_WITH_TOKENS: `
+    mutation PayServiceWithTokens($data: PayServiceWithTokensInput!) {
+      payServiceWithTokens(data: $data) {
+        tokenUsageId
+        buyerWalletId
+        sellerWalletId
+        tokenPrice
+        commission
+        total
+        alreadyPaid
+      }
+    }
+  `,
     PAY_WITH_WALLET: `
     mutation PayWithWallet($data: PayWithWalletInput!) {
       payWithWallet(data: $data) {

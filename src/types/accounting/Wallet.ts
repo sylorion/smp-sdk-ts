@@ -182,3 +182,139 @@ export interface StripeConnectStatusEntity {
 export interface GetStripeConnectStatusResponse {
   stripeConnectStatus: StripeConnectStatusEntity;
 }
+
+// ============================================================
+// Usage des jetons plateforme (STK) — mu-wallet TokenUsageModule
+// ============================================================
+
+export type TokenUsageKind =
+  | 'agent_call'
+  | 'service_payment'
+  | 'service_revenue'
+  | 'daily_allowance'
+  | 'purchase'
+  | 'refund'
+  | 'adjustment';
+
+export interface TokenUsageEntry {
+  tokenUsageId: string;
+  walletId: string;
+  kind: TokenUsageKind | string;
+  agentKey?: string | null;
+  action?: string | null;
+  /** Signé : négatif = débit, positif = crédit. */
+  amount: number;
+  baseCost: number;
+  llmCost: number;
+  llmInputTokens: number;
+  llmOutputTokens: number;
+  llmModel?: string | null;
+  referenceType?: string | null;
+  referenceId?: string | null;
+  createdAt: string;
+  /** JSON stringifié. */
+  metadata?: string | null;
+}
+
+export interface TokenUsageByAgent {
+  agentKey: string;
+  calls: number;
+  tokens: number;
+  llmInputTokens: number;
+  llmOutputTokens: number;
+}
+
+export interface TokenUsageSummary {
+  walletId?: string | null;
+  userId?: string | null;
+  organizationId?: string | null;
+  dailyAllowance: number;
+  dailyRemaining: number;
+  dailyUsedToday: number;
+  tokensDaily: number;
+  tokensFree: number;
+  tokensPaid: number;
+  tokensRevenue: number;
+  totalAvailable: number;
+  consumedToday: number;
+  consumedLast30Days: number;
+  nextDailyRefreshAt: string;
+  byAgentToday: TokenUsageByAgent[];
+  byAgentLast30Days: TokenUsageByAgent[];
+  recent: TokenUsageEntry[];
+}
+
+/** Payeur : wallet explicite, sinon wallet d'organisation, sinon wallet personnel. */
+export interface TokenWalletRef {
+  walletId?: string;
+  userId?: string;
+  organizationId?: string;
+}
+
+export interface ConsumeTokensInput extends TokenWalletRef {
+  /** Utilisateur à l'origine de l'appel (journalisé même si l'organisation paie). */
+  actorUserId?: string;
+  /** form | form_assistant | pm | pm_message | contract | generative | service_agent … */
+  agentKey: string;
+  action?: string;
+  /** Forfait explicite (sinon barème mu-wallet par agent). */
+  baseCost?: number;
+  llmInputTokens?: number;
+  llmOutputTokens?: number;
+  llmModel?: string;
+  /** Unique par appel : un rejeu ne débite pas deux fois. */
+  idempotencyKey: string;
+  referenceType?: string;
+  referenceId?: string;
+  /** JSON stringifié. */
+  metadata?: string;
+}
+
+export interface ConsumeTokensResult {
+  tokenUsageId: string;
+  walletId: string;
+  cost: number;
+  baseCost: number;
+  llmCost: number;
+  alreadyRecorded: boolean;
+  totalAvailable: number;
+  dailyRemaining: number;
+}
+
+export interface PayServiceWithTokensInput extends TokenWalletRef {
+  actorUserId?: string;
+  sellerOrganizationId: string;
+  /** Prix du service en jetons, hors commission (8 % arrondis au supérieur, ajoutés à l'acheteur). */
+  tokenPrice: number;
+  serviceId: string;
+  serviceName?: string;
+  orderId?: string;
+  transactionId?: string;
+  /** Ex. `order:<orderId>` — un rejeu renvoie `alreadyPaid: true`. */
+  idempotencyKey: string;
+  metadata?: string;
+}
+
+export interface PayServiceWithTokensResult {
+  tokenUsageId: string;
+  buyerWalletId: string;
+  sellerWalletId: string;
+  tokenPrice: number;
+  commission: number;
+  total: number;
+  alreadyPaid: boolean;
+}
+
+export interface TokenCostEstimate {
+  agentKey: string;
+  baseCost: number;
+  llmCost: number;
+  total: number;
+  llmTokensPerPlatformToken: number;
+}
+
+export interface TokenUsageSummaryResponse { tokenUsageSummary: TokenUsageSummary; }
+export interface TokenUsageHistoryResponse { tokenUsageHistory: TokenUsageEntry[]; }
+export interface TokenCostEstimateResponse { tokenCostEstimate: TokenCostEstimate; }
+export interface ConsumeTokensResponse { consumeTokens: ConsumeTokensResult; }
+export interface PayServiceWithTokensResponse { payServiceWithTokens: PayServiceWithTokensResult; }

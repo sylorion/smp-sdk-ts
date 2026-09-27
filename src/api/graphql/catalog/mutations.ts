@@ -289,6 +289,8 @@ const serviceMutations = {
           supplyType
           uptakeForm
           billingPlan
+          pricingMode
+          tokenPrice
           onlineService
           advancedAttributes
           poweredByAgent
@@ -336,6 +338,8 @@ const serviceMutations = {
           supplyType
           uptakeForm
           billingPlan
+          pricingMode
+          tokenPrice
           onlineService
           advancedAttributes
           poweredByAgent

@@ -1,3 +1,4 @@
+export type ServicePricingMode = 'money' | 'tokens' | 'both';
 export interface MediaEntity {
     mediaID: string;
     uniqRef?: string;
@@ -98,6 +99,10 @@ export interface ServiceEntity {
     supplyType?: string;
     uptakeForm?: string;
     billingPlan?: string;
+    /** Mode de tarification : money (défaut) | tokens (jetons STK uniquement) | both. */
+    pricingMode?: ServicePricingMode;
+    /** Prix en jetons plateforme (STK, 1 jeton = 0,10 €), requis si pricingMode ∈ {tokens, both}. */
+    tokenPrice?: number | null;
     onlineService?: boolean;
     advancedAttributes?: string;
     poweredByAgent?: boolean;
@@ -145,6 +150,10 @@ export interface CreateServiceInput {
     supplyType?: string;
     uptakeForm?: string;
     billingPlan?: string;
+    /** Mode de tarification : money (défaut) | tokens (jetons STK uniquement) | both. */
+    pricingMode?: ServicePricingMode;
+    /** Prix en jetons plateforme (STK, 1 jeton = 0,10 €), requis si pricingMode ∈ {tokens, both}. */
+    tokenPrice?: number | null;
     onlineService?: boolean;
     advancedAttributes?: string;
     poweredByAgent?: boolean;
@@ -169,6 +178,10 @@ export interface UpdateServiceInput {
     supplyType?: string;
     uptakeForm?: string;
     billingPlan?: string;
+    /** Mode de tarification : money (défaut) | tokens (jetons STK uniquement) | both. */
+    pricingMode?: ServicePricingMode;
+    /** Prix en jetons plateforme (STK, 1 jeton = 0,10 €), requis si pricingMode ∈ {tokens, both}. */
+    tokenPrice?: number | null;
     onlineService?: boolean;
     advancedAttributes?: string;
     poweredByAgent?: boolean;

@@ -274,4 +274,64 @@ export class Wallet {
         const response = await this.client.mutate(mutation, { organizationID });
         return response.createStripeAccountSession;
     }
+    // ══════════════════════════════════════════════════════════════════
+    // Usage des jetons plateforme (STK) — mu-wallet TokenUsageModule
+    // ══════════════════════════════════════════════════════════════════
+    assertTokenPayer(ref, operation) {
+        if (!ref.walletId && !ref.userId && !ref.organizationId) {
+            throw new Error(`[Wallet.${operation}] walletId, userId ou organizationId requis`);
+        }
+    }
+    /** Allocation du jour, soldes par type de jeton, consommation par agent, dernières consommations. */
+    async getTokenUsageSummary(ref) {
+        this.assertTokenPayer(ref, 'getTokenUsageSummary');
+        const response = await this.client.query(walletQueries.TOKEN_USAGE_SUMMARY, ref);
+        return response.tokenUsageSummary;
+    }
+    /** Historique des consommations / crédits de jetons (défaut 50, max 200). */
+    async getTokenUsageHistory(ref, options) {
+        this.assertTokenPayer(ref, 'getTokenUsageHistory');
+        const response = await this.client.query(walletQueries.TOKEN_USAGE_HISTORY, {
+            ...ref,
+            limit: options?.limit,
+            kinds: options?.kinds,
+        });
+        return response.tokenUsageHistory;
+    }
+    /** Coût estimé d'un appel d'agent (forfait + part LLM), sans débit. */
+    async estimateTokenCost(agentKey, llm) {
+        const response = await this.client.query(walletQueries.TOKEN_COST_ESTIMATE, {
+            agentKey,
+            llmInputTokens: llm?.inputTokens,
+            llmOutputTokens: llm?.outputTokens,
+        });
+        return response.tokenCostEstimate;
+    }
+    /**
+     * Débite le coût d'un appel d'agent. Idempotent sur `idempotencyKey`.
+     * Solde insuffisant → erreur GraphQL `TOKENS_INSUFFICIENT` (extensions.originalError : required, available).
+     */
+    async consumeTokens(data) {
+        this.assertTokenPayer(data, 'consumeTokens');
+        if (!data.idempotencyKey)
+            throw new Error('[Wallet.consumeTokens] idempotencyKey requis');
+        if (!data.agentKey)
+            throw new Error('[Wallet.consumeTokens] agentKey requis');
+        const response = await this.client.mutate(walletMutations.CONSUME_TOKENS, { data });
+        return response.consumeTokens;
+    }
+    /**
+     * Paie un service dont le prix est en jetons : débit acheteur (prix + commission), crédit vendeur (revenus).
+     * Idempotent sur `idempotencyKey` (ex. `order:<orderId>`) ; mu-wallet émet `payment.succeeded` (TOKENS).
+     */
+    async payServiceWithTokens(data) {
+        this.assertTokenPayer(data, 'payServiceWithTokens');
+        if (!data.idempotencyKey)
+            throw new Error('[Wallet.payServiceWithTokens] idempotencyKey requis');
+        if (!Number.isInteger(data.tokenPrice) || data.tokenPrice <= 0) {
+            throw new Error(`[Wallet.payServiceWithTokens] tokenPrice doit être un entier > 0 (reçu ${data.tokenPrice})`);
+        }
+        const response = await this.client.mutate(walletMutations.PAY_SERVICE_WITH_TOKENS, { data });
+        return response.payServiceWithTokens;
+    }
 }
