@@ -7,17 +7,8 @@ export interface CreatePaymentDto {
     amount: number;
     currency: string;
 }
-export interface CreateOrderInput {
-    userId?: string;
-    serviceId: string;
-    estimateId: string;
-    totalPrice: number;
-    transactionId?: string;
-    sellerOrganizationId: string;
-    buyerOrganizationId: string;
-    currency: string;
-    billingInformation?: BillingInformation;
-}
+import type { CreateOrderInput } from '../../types/accounting/index.js';
+export type { CreateOrderInput };
 export interface AddLineInput {
     orderAssetId: string;
     assetId: string;
@@ -27,13 +18,6 @@ export interface AddLineInput {
     description: string;
     legalVatPercent: number;
     details: any;
-}
-export interface UpdateLineDataInput {
-    quantity: number;
-    unitPrice?: number;
-    title?: string;
-    description?: string;
-    legalVatPercent?: number;
 }
 export interface DeleteLineInput {
     orderId: string;
@@ -159,7 +143,11 @@ export declare class SMPPayment {
     createOrder(input: CreateOrderInput): Promise<Order>;
     confirmOrder(orderId: string): Promise<Order>;
     addLine(orderId: string, input: AddLineInput): Promise<Order>;
-    updateLine(orderId: string, assetId: string, updateData: UpdateLineDataInput): Promise<Order>;
+    /**
+     * ⚠️ Aucune mutation `deleteLine` n'existe dans mu-command (seul `addLine` est exposé) :
+     * cet appel échoue à l'exécution (« Cannot query field deleteLine »). Conservé tant que
+     * `apps/front/web/smp-webapp/src/app/api/payment/order/route.ts` l'utilise.
+     */
     deleteLine(orderId: string, assetId: string): Promise<Order>;
     markOrderPaid(orderId: string): Promise<Order>;
     markOrderDelivered(orderId: string): Promise<Order>;
@@ -168,7 +156,6 @@ export declare class SMPPayment {
     getOrderById(orderId: string): Promise<Order>;
     listOrders(): Promise<Order[]>;
     getTransactionById(transactionId: string): Promise<Transaction>;
-    listTransactions(): Promise<Transaction[]>;
     listTransactionsByBuyerUserId(buyerUserId: string): Promise<Transaction[]>;
     listTransactionsByBuyerOrganizationId(buyerOrganizationId: string): Promise<Transaction[]>;
     listTransactionsBySellerOrganizationId(sellerOrganizationId: string): Promise<Transaction[]>;

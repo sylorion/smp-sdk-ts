@@ -19,13 +19,19 @@ export class ServiceAsset {
         return response.serviceAsset;
     }
     /**
-     * Récupère la liste de tous les ServiceAssets avec pagination, tri et filtres optionnels.
+     * Liste les ServiceAssets.
+     *
+     * `serviceAssets` (mu-catalog) n'accepte ni pagination, ni tri, ni filtre : le filtre
+     * optionnel par `serviceID` / `assetID` est appliqué côté SDK. Pour les assets d'un
+     * service avec leurs détails, préférer `catalog.asset.listByServiceId`.
      */
-    async list(pagination, sort, filter) {
+    async list(options) {
         const query = serviceAssetQueries.GET_SERVICE_ASSETS;
-        const variables = { pagination, sort, filter };
-        const response = await this.client.query(query, variables);
-        return response.serviceAssets;
+        const response = await this.client.query(query, {});
+        const rows = response?.serviceAssets ?? [];
+        const { serviceID, assetID } = options?.filter ?? {};
+        return rows.filter((row) => (serviceID === undefined || row.serviceID === serviceID)
+            && (assetID === undefined || row.assetID === assetID));
     }
     /**
      * Récupère un ServiceAsset par son slug.

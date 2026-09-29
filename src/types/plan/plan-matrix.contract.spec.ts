@@ -102,3 +102,16 @@ describe('SDK — retrait de « Émis avec Services »', () => {
     }
   });
 });
+
+describe('SDK — contre-signature automatique', () => {
+  it('réservée à Pro et Business, comme côté backend', () => {
+    for (const plan of ['standard', 'starter']) {
+      const d = canPerformAction(plan, PlanAction.AUTO_COUNTERSIGN);
+      expect(d.allowed).toBe(false);
+      expect(d.upgradeToTier).toBe(PlanTier.PRO);
+    }
+    for (const plan of ['pro', 'business']) {
+      expect(canPerformAction(plan, PlanAction.AUTO_COUNTERSIGN).allowed).toBe(true);
+    }
+  });
+});

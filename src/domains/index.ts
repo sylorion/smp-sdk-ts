@@ -6,3 +6,6 @@ export { UserDomain } from './user/index.js';
 export { BookingDomain } from './booking/index.js';
 export { CommunicationDomain } from './communication/index.js';
 export { ReviewDomain } from './review/index.js';
+export { FlowDomain } from './flow/index.js';
+export { ReferralDomain } from './referral/index.js';
+export { CapacityDomain } from './capacity/index.js';

@@ -241,11 +241,25 @@ export interface UpdateUserRoleInOrganizationInput {
     organizationID: string;
     userID: string;
     newRoleID: string;
+    /** UserID du membre qui effectue l'action — injecté côté serveur, optionnel ici */
+    callerUserID?: string;
+}
+
+/** Rattachement membre ↔ organisation (type `UserOrganization` de mu-organization). */
+export interface UserOrganizationMembership {
+    userOrganizationID: string;
+    userID?: string | null;
+    organizationID?: string | null;
+    roleID?: string | null;
+    state?: string | null;
+    createdAt?: string | null;
+    updatedAt?: string | null;
 }
 
 export interface UpdateUserRoleInOrganizationResponse {
     success: boolean;
     message: string;
+    userOrganization?: UserOrganizationMembership | null;
 }
 
 // ==============================
@@ -264,6 +278,7 @@ export interface InviteUserToOrganizationInput {
 export interface AddUserToOrganizationResponse {
     success: boolean;
     message: string;
+    userOrganization?: UserOrganizationMembership | null;
     token?: string;
     email?: string;
     organizationID?: string;

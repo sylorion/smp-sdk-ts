@@ -13,18 +13,12 @@ export class Notification {
     this.client = client;
   }
 
-  async list(pagination?: any, sort?: any, filter?: any): Promise<any[]> {
-    const query = notificationQueries.GET_NOTIFICATIONS;
-    const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as { notifications: any[] };
-    return response.notifications;
-  }
-
-  async getById(notificationID: string): Promise<any> {
+  /** Notification par identifiant, ou `null` si elle n'existe pas. */
+  async getById(notificationID: string): Promise<any | null> {
     const query = notificationQueries.GET_NOTIFICATION_BY_ID;
     const variables = { notificationID };
-    const response = await this.client.query(query, variables) as { notificationByID: any };
-    return response.notificationByID;
+    const response = await this.client.query(query, variables) as { notification: any | null };
+    return response?.notification ?? null;
   }
 
   async getByIds(notificationIDs: string[]): Promise<any[]> {

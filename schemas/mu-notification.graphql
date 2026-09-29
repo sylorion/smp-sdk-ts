@@ -1,0 +1,263 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type CampaignEntity {
+  campaignID: ID!
+  emailCampaignTemplateID: String
+  subject: String!
+  contentHTML: String
+  contentText: String
+  scheduledAt: DateTime
+  sentAt: DateTime
+  state: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type NewsletterEntity {
+  newsletterID: ID!
+  emailNewsletterTemplateID: String
+  subject: String!
+  contentHTML: String
+  contentText: String
+  scheduledAt: DateTime
+  sentAt: DateTime
+  state: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type NewsletterContactEntity {
+  newsletterContactID: ID!
+  userID: String
+  email: String!
+  firstName: String
+  lastName: String
+  isNewsletterSubscriber: Boolean!
+  source: String
+  country: String
+  gender: String
+  birthDate: DateTime
+  state: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ContactGroupEntity {
+  groupID: ID!
+  name: String!
+  description: String
+  state: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ContactGroupMembershipEntity {
+  contactGroupMembershipID: ID!
+  contactID: String!
+  groupID: String!
+  state: String!
+  joinedAt: DateTime!
+}
+
+type Notification {
+  notificationID: ID!
+  userID: ID
+  organizationID: ID
+  title: String!
+  message: String!
+  readAt: DateTime
+  link: String
+  entityType: String
+  entityID: String
+  state: ObjectStatus
+  slug: String
+  uniqRef: String
+  type: NotificationType
+  notificationTemplateID: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+enum ObjectStatus {
+  offline
+  staging
+  awaiting
+  reviewed
+  rejected
+  signaled
+  online
+  archived
+}
+
+enum NotificationType {
+  sms
+  push
+  mail
+  front
+}
+
+type Query {
+  campaigns: [CampaignEntity!]!
+  campaign(campaignID: ID!): CampaignEntity
+  contactGroups: [ContactGroupEntity!]!
+  contactGroup(groupID: ID!): ContactGroupEntity
+  newsletterContacts: [NewsletterContactEntity!]!
+  newsletterContact(newsletterContactID: ID!): NewsletterContactEntity
+  newsletterContactsByUserID(userID: ID!): [NewsletterContactEntity!]!
+  newsletters: [NewsletterEntity!]!
+  newsletter(newsletterID: ID!): NewsletterEntity
+  notification(notificationID: ID!): Notification
+  notifications: [Notification!]!
+  notificationBySlug(Slug: String!): Notification
+  notificationsByIDs(notificationIDs: [ID!]!): [Notification!]!
+  notificationsBySlugs(slugs: [String!]!): [Notification!]!
+  notificationByUniqRef(uniqRef: String!): Notification
+  notificationsByUserID(userID: ID!): [Notification!]!
+  notificationsByOrganizationID(organizationID: ID!): [Notification!]!
+}
+
+type Mutation {
+  createCampaign(input: CreateCampaignInput!): CampaignEntity!
+  updateCampaign(campaignID: ID!, input: UpdateCampaignInput!): CampaignEntity!
+  deleteCampaign(campaignID: ID!): Boolean!
+  sendCampaign(campaignID: ID!): Boolean!
+  createContactGroup(input: CreateContactGroupInput!): ContactGroupEntity!
+  updateContactGroup(groupID: ID!, input: UpdateContactGroupInput!): ContactGroupEntity!
+  deleteContactGroup(groupID: ID!): Boolean!
+  addContactToGroup(input: CreateContactGroupMembershipInput!): ContactGroupMembershipEntity!
+  removeContactFromGroup(contactGroupMembershipID: ID!): Boolean!
+  createNewsletterContact(input: CreateNewsletterContactInput!): NewsletterContactEntity!
+  updateNewsletterContact(newsletterContactID: ID!, input: UpdateNewsletterContactInput!): NewsletterContactEntity!
+  deleteNewsletterContact(newsletterContactID: ID!): Boolean!
+  unsubscribeNewsletter(token: String!): Boolean!
+  resubscribeNewsletter(newsletterContactID: ID!): Boolean!
+  createNewsletter(input: CreateNewsletterInput!): NewsletterEntity!
+  updateNewsletter(newsletterID: ID!, input: UpdateNewsletterInput!): NewsletterEntity!
+  deleteNewsletter(newsletterID: ID!): Boolean!
+  sendNewsletter(newsletterID: ID!): Boolean!
+  createNotification(input: CreateNotificationInput!): Notification!
+  updateNotification(notificationID: ID!, input: UpdateNotificationInput!): Notification!
+  deleteNotification(notificationID: ID!): Boolean!
+
+  """
+  Marque comme lues toutes les notifications d’un fil (utilisateur OU organisation).
+  """
+  markAllNotificationsAsRead(userID: ID, organizationID: ID): Int!
+  markNotificationAsRead(notificationID: ID!): Notification!
+}
+
+input CreateCampaignInput {
+  subject: String!
+  emailCampaignTemplateID: String
+  contentHTML: String
+  contentText: String
+  groupIDs: [ID!]
+  scheduledAt: DateTime
+}
+
+input UpdateCampaignInput {
+  subject: String
+  contentHTML: String
+  contentText: String
+  groupIDs: [ID!]
+  scheduledAt: DateTime
+  sentAt: DateTime
+}
+
+input CreateContactGroupInput {
+  name: String!
+  description: String
+}
+
+input UpdateContactGroupInput {
+  name: String
+  description: String
+}
+
+input CreateContactGroupMembershipInput {
+  contactID: ID!
+  groupID: ID!
+}
+
+input CreateNewsletterContactInput {
+  userID: String
+  email: String!
+  firstName: String
+  lastName: String
+  isNewsletterSubscriber: Boolean = true
+  source: ContactSource
+  country: String
+  gender: ProfileGender
+  birthDate: DateTime
+}
+
+enum ContactSource {
+  platform
+  footer
+  batch
+}
+
+enum ProfileGender {
+  male
+  female
+  other
+  unspecified
+}
+
+input UpdateNewsletterContactInput {
+  email: String
+  firstName: String
+  lastName: String
+  isNewsletterSubscriber: Boolean
+  source: ContactSource
+  country: String
+  gender: ProfileGender
+  birthDate: DateTime
+}
+
+input CreateNewsletterInput {
+  subject: String!
+  emailNewsletterTemplateID: String
+  contentHTML: String
+  contentText: String
+  scheduledAt: DateTime
+}
+
+input UpdateNewsletterInput {
+  subject: String
+  contentHTML: String
+  contentText: String
+  scheduledAt: DateTime
+  sentAt: DateTime
+}
+
+input CreateNotificationInput {
+  userID: ID
+  organizationID: ID
+  title: String!
+  state: ObjectStatus
+  message: String!
+  notificationTemplateID: ID
+  link: String
+  entityType: String
+  entityID: String
+}
+
+input UpdateNotificationInput {
+  title: String
+  organizationID: String
+  message: String
+  link: String
+  entityType: String
+  entityID: String
+  state: ObjectStatus
+  type: NotificationType
+}

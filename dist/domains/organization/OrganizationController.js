@@ -1,6 +1,5 @@
 import { organizationQueries } from '../../api/graphql/organization/queries.js';
 import { organizationMutations } from '../../api/graphql/organization/mutations.js';
-import { organizationMediaQueries } from '../../api/graphql/organization/queries.js';
 import { organizationMediaMutations } from '../../api/graphql/organization/mutations.js';
 /**
  * The `Organization` class manages organization-related requests within the application.
@@ -84,32 +83,13 @@ export class Organization {
         return response.updateOrganization;
     }
     /**
-     * Deletes an organization by its ID.
+     * Supprime une organisation — mu-organization renvoie l'organisation supprimée.
      */
     async delete(organizationID) {
         const mutation = organizationMutations.DELETE_ORGANIZATION;
         const variables = { organizationID };
         const response = await this.client.mutate(mutation, variables);
         return response.deleteOrganization;
-    }
-    //========================== MEDIA QUERIES =============================================================
-    /**
-     * Fetches a single organization media by its ID.
-     */
-    async getMediaById(organizationMediaID) {
-        const query = organizationMediaQueries.GET_ORGANIZATION_MEDIA;
-        const variables = { organizationMediaID };
-        const response = await this.client.query(query, variables);
-        return response.organizationMedia;
-    }
-    /**
-     * Fetches all media for an organization.
-     */
-    async listMedias(organizationID) {
-        const query = organizationMediaQueries.GET_ORGANIZATION_MEDIAS;
-        const variables = { organizationID };
-        const response = await this.client.query(query, variables);
-        return response.organizationMedias;
     }
     //========================== MEDIA MUTATIONS =============================================================
     /**

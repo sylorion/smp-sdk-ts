@@ -1,7 +1,6 @@
 import { APIClient } from '../../api/APIClient.js';
 import { organizationQueries } from '../../api/graphql/organization/queries.js';
 import { organizationMutations } from '../../api/graphql/organization/mutations.js';
-import { organizationMediaQueries } from '../../api/graphql/organization/queries.js';
 import { organizationMediaMutations } from '../../api/graphql/organization/mutations.js';
 import type { Place } from '../catalog/LocationController.js';
 
@@ -248,35 +247,13 @@ export class Organization {
   }
 
   /**
-   * Deletes an organization by its ID.
+   * Supprime une organisation — mu-organization renvoie l'organisation supprimée.
    */
-  async delete(organizationID: string): Promise<boolean> {
+  async delete(organizationID: string): Promise<Organization> {
     const mutation = organizationMutations.DELETE_ORGANIZATION;
     const variables = { organizationID };
-    const response = await this.client.mutate(mutation, variables) as { deleteOrganization: boolean };
+    const response = await this.client.mutate(mutation, variables) as { deleteOrganization: Organization };
     return response.deleteOrganization;
-  }
-
-  //========================== MEDIA QUERIES =============================================================
-
-  /**
-   * Fetches a single organization media by its ID.
-   */
-  async getMediaById(organizationMediaID: string): Promise<OrganizationMedia> {
-    const query = organizationMediaQueries.GET_ORGANIZATION_MEDIA;
-    const variables = { organizationMediaID };
-    const response = await this.client.query(query, variables) as { organizationMedia: OrganizationMedia };
-    return response.organizationMedia;
-  }
-
-  /**
-   * Fetches all media for an organization.
-   */
-  async listMedias(organizationID: string): Promise<OrganizationMedia[]> {
-    const query = organizationMediaQueries.GET_ORGANIZATION_MEDIAS;
-    const variables = { organizationID };
-    const response = await this.client.query(query, variables) as { organizationMedias: OrganizationMedia[] };
-    return response.organizationMedias;
   }
 
   //========================== MEDIA MUTATIONS =============================================================

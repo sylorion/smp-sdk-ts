@@ -1,0 +1,433 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type SendContractResponse {
+  success: Boolean!
+  message: String!
+
+  """Invitation token for signature link"""
+  invitationToken: String
+
+  """Expiration date of the signature link"""
+  expiresAt: String
+}
+
+type VerifyTokenResponse {
+  isValid: Boolean!
+  message: String
+  contractId: String
+  email: String
+  role: String
+  expiresAt: String
+  isExpired: Boolean
+}
+
+type Contract {
+  contractId: ID!
+  estimateId: String
+  serviceId: String!
+  organizationId: String
+  clientSignHash: String
+  providerSignHash: String
+  status: String!
+  content: JSON!
+  variables: JSON!
+  details: JSON!
+  clientSignDate: DateTime
+  providerSignDate: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type ContractTemplateSummary {
+  id: String!
+  title: String!
+  description: String!
+  category: String!
+  style: String!
+  variableKeys: [String!]!
+  language: String
+}
+
+type ContractTemplateDetail {
+  id: String!
+  title: String!
+  description: String!
+  category: String!
+  style: String!
+  variableKeys: [String!]!
+  language: String
+  version: String
+  sections: JSON!
+  variables: JSON!
+  legalAlerts: [String!]
+  partyRoles: JSON
+}
+
+type OrganizationContractTemplate {
+  templateId: ID!
+  organizationId: String!
+  name: String!
+  description: String
+  baseTemplateId: String
+  content: JSON!
+  defaultValues: JSON!
+  usageCount: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+"""Signataire habilité à contre-signer pour l'organisation"""
+type OrganizationSigner {
+  userId: ID!
+  name: String!
+  title: String
+
+  """Une image de signature est enregistrée"""
+  hasSignature: Boolean!
+
+  """
+  Image : rendue au signataire lui-même et pour le signataire par défaut uniquement
+  """
+  signatureImage: String
+  updatedAt: DateTime
+}
+
+"""Réglages de signature de l'organisation (contre-signature)"""
+type OrganizationSignatureSettings {
+  organizationId: ID!
+  defaultSignerUserId: ID
+  signers: [OrganizationSigner!]!
+  stampUrl: String
+  countersignDelayHours: Int!
+  autoCountersign: Boolean!
+  autoCountersignEnabledBy: ID
+  autoCountersignEnabledAt: DateTime
+  updatedAt: DateTime
+}
+
+type Estimate {
+  estimateId: ID!
+  serviceId: String!
+  proposalPrice: Float
+  details: JSON
+  status: String!
+  buyerUserId: String
+  buyerOrganizationId: String
+  sellerOrganizationId: String!
+  negotiationCount: Float!
+  clientSignDate: DateTime
+  providerSignDate: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+type Negotiation {
+  id: ID!
+  estimateId: ID!
+  proposedPrice: Float!
+  details: JSON
+  iterationCount: Int!
+  status: NegotiationStatus!
+  proposedBy: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+enum NegotiationStatus {
+  NONE
+  IN_PROGRESS
+  ACCEPTED
+  REJECTED
+}
+
+type NegotiationResponse {
+  estimate: Estimate!
+  negotiation: Negotiation!
+}
+
+type Query {
+  getContracts: [Contract!]!
+  getContract(id: String!): Contract!
+  getContractByInvitationToken(token: String!): Contract!
+  getContractsByOrganizationId(organizationId: String!): [Contract!]!
+  getContractTemplates: [ContractTemplateSummary!]!
+  getContractTemplate(templateId: String!): ContractTemplateDetail
+  organizationContractTemplates(organizationId: String!): [OrganizationContractTemplate!]!
+  organizationContractTemplate(templateId: String!): OrganizationContractTemplate!
+  organizationSignatureSettings(organizationId: ID!): OrganizationSignatureSettings!
+  estimate(id: String!): Estimate
+  estimatesByBuyerUserId(buyerUserId: String!): [Estimate!]!
+  estimatesByBuyerOrganizationId(buyerOrganizationId: String!): [Estimate!]!
+  estimatesBySellerOrganizationId(sellerOrganizationId: String!): [Estimate!]!
+  estimates: [Estimate!]!
+  getNegotiationHistory(estimateId: String!): [Negotiation!]!
+  getCurrentNegotiation(estimateId: String!): Negotiation
+}
+
+type Mutation {
+  createContract(data: CreateContractInput!): Contract!
+  updateContract(id: String!, data: UpdateContractInput!): Contract!
+  signContract(data: SignContractInput!): Contract!
+  sendContract(data: SendContractInput!): SendContractResponse!
+  rejectContract(data: RejectContractInput!): Contract!
+  resendContractInvitation(contractId: ID!): SendContractResponse!
+  markContractInvitationOpened(invitationToken: String!): Boolean!
+  duplicateContract(contractId: ID!): Contract!
+  verifyToken(data: VerifyTokenInput!): VerifyTokenResponse!
+  saveContractAsTemplate(data: SaveContractAsTemplateInput!): OrganizationContractTemplate!
+  updateOrganizationContractTemplate(templateId: String!, data: UpdateOrganizationContractTemplateInput!): OrganizationContractTemplate!
+  deleteOrganizationContractTemplate(templateId: String!): Boolean!
+  updateOrganizationSignatureSettings(organizationId: ID!, data: UpdateOrganizationSignatureSettingsInput!): OrganizationSignatureSettings!
+  saveOrganizationSigner(organizationId: ID!, data: SaveOrganizationSignerInput!): OrganizationSignatureSettings!
+  removeOrganizationSigner(organizationId: ID!, userId: ID!): OrganizationSignatureSettings!
+  createEstimate(data: CreateEstimateInput!): Estimate!
+  updateEstimate(id: String!, data: UpdateEstimateInput!): Estimate!
+  validateEstimate(data: ValidateEstimateInput!): Estimate!
+  sendEstimate(id: String!): Estimate!
+  emitNegotiationProposal(estimateId: String!, proposedBy: String!, proposedPrice: Float, comment: String): Estimate!
+  emitEstimateAccepted(estimateId: String!): Estimate!
+  emitEstimateSubmitted(estimateId: String!): Estimate!
+  createNegotiation(input: CreateNegotiationInput!): NegotiationResponse!
+  acceptNegotiation(estimateId: String!): Estimate!
+  rejectNegotiation(estimateId: String!): Estimate!
+}
+
+input CreateContractInput {
+  serviceId: ID
+  estimateId: ID
+  content: JSONObject
+  variables: JSONObject
+  details: JSONObject
+  organizationId: ID
+
+  """Template ID to create contract from"""
+  templateId: String
+
+  """Modèle de contrat de l'organisation"""
+  organizationTemplateId: String
+
+  """Visual style theme"""
+  style: String
+
+  """Creation source: manual (default) or pipeline"""
+  source: String
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
+input UpdateContractInput {
+  """ID of the contract to update"""
+  contractId: ID!
+
+  """Contract status update"""
+  status: String
+
+  """Template JSON content update"""
+  content: JSON
+
+  """Variables values update"""
+  variables: JSON
+
+  """Additional details update (signatures, metadata)"""
+  details: JSON
+
+  """ID of the organization that owns this contract"""
+  organizationId: String
+}
+
+input SignContractInput {
+  """ID of the contract to sign"""
+  contractId: ID!
+
+  """Role of the signer (client or provider)"""
+  role: SignerRole!
+
+  """Optional signature text for hash generation"""
+  signatureText: String
+
+  """Jeton d'invitation (signature client)"""
+  invitationToken: String
+
+  """Signature data (image, text, type)"""
+  signatureData: SignatureDataInput
+}
+
+enum SignerRole {
+  CLIENT
+  PROVIDER
+}
+
+input SignatureDataInput {
+  """Base64 PNG signature image"""
+  image: String
+
+  """Typed signature name"""
+  text: String
+
+  """Signature capture method: draw | type | upload"""
+  type: String
+}
+
+input SendContractInput {
+  """ID of the contract to send"""
+  contractId: ID!
+
+  """Email address to send the contract to"""
+  email: String!
+
+  """Custom message to include in the email"""
+  message: String
+
+  """First name of the recipient"""
+  firstName: String
+
+  """Last name of the recipient"""
+  lastName: String
+
+  """Duration in days for the signature link (1-90 days, default: 7)"""
+  expirationDays: Float
+
+  """Name of the organization sending the contract"""
+  organizationName: String
+
+  """Name of the sender"""
+  senderName: String
+
+  """
+  Langue de l'interface de l'expéditeur (fr, en, es) : langue de l'e-mail si le contrat n'en a pas
+  """
+  language: String
+
+  """
+  Prévenir l'expéditeur à la première ouverture du lien (contract.opened)
+  """
+  notifyOnOpen: Boolean
+
+  """
+  Relance automatique du client 48 h avant l'expiration du lien (contract.reminder)
+  """
+  autoReminder: Boolean
+}
+
+input RejectContractInput {
+  """Jeton d'invitation reçu par le client"""
+  invitationToken: String!
+
+  """amount_or_date | clause | wrong_person | other"""
+  category: String!
+
+  """Motif (2000 caractères max ; obligatoire pour « other »)"""
+  reason: String!
+}
+
+input VerifyTokenInput {
+  """Token d'invitation à vérifier"""
+  token: String!
+}
+
+input SaveContractAsTemplateInput {
+  contractId: String!
+  name: String!
+  description: String
+  keepValueKeys: [String!]
+}
+
+input UpdateOrganizationContractTemplateInput {
+  name: String
+  description: String
+  defaultValues: JSONObject
+}
+
+input UpdateOrganizationSignatureSettingsInput {
+  """
+  Signataire par défaut (doit avoir une signature enregistrée) ; null pour retirer
+  """
+  defaultSignerUserId: ID
+
+  """Cachet (image base64 ou https) ; null ou vide pour retirer"""
+  stampUrl: String
+
+  """Délai de contre-signature, en heures (1 à 720)"""
+  countersignDelayHours: Int
+
+  """Contre-signature automatique (plan Pro)"""
+  autoCountersign: Boolean
+}
+
+input SaveOrganizationSignerInput {
+  name: String!
+  title: String
+
+  """Image de signature : PNG/JPEG/WebP en base64 ou fichier https"""
+  signatureImage: String!
+}
+
+input CreateEstimateInput {
+  """ID of the attached service"""
+  serviceId: ID!
+
+  """Prosed initial price in cents"""
+  proposalPrice: Float
+
+  """ID of the buyer organization"""
+  buyerOrganizationId: ID
+
+  """ID of the buyer user"""
+  buyerUserId: ID
+
+  """ID of the seller organization"""
+  sellerOrganizationId: ID!
+
+  """If a price negociation was engaged, put this to 1"""
+  negotiationCount: ID
+
+  """Details contain the validated configuration (price, options, etc.)"""
+  details: JSONObject
+
+  """Creation source: manual (default) or pipeline"""
+  source: String
+}
+
+input UpdateEstimateInput {
+  proposalPrice: Float
+  details: JSONObject
+  status: String
+}
+
+input ValidateEstimateInput {
+  """ID of the estimate to validate"""
+  estimateId: ID!
+
+  """Role of the user validating the estimate"""
+  role: SignerRole!
+  details: JSONObject
+}
+
+input CreateNegotiationInput {
+  """ID of the estimate being negotiated"""
+  estimateId: ID!
+
+  """Proposed price for this negotiation round"""
+  proposedPrice: Float!
+
+  """ID of the organization proposing the price"""
+  proposedBy: ID!
+
+  """Additional negotiation details or terms"""
+  details: JSONObject
+}

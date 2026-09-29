@@ -22,12 +22,6 @@ export class Service {
         const response = await this.client.query(query, variables);
         return response.service;
     }
-    async listByAuthorId(authorID, admin) {
-        const query = serviceQueries.GET_SERVICE_BY_AUTHOR_ID;
-        const variables = { authorID, admin };
-        const response = await this.client.query(query, variables);
-        return response.servicesByUserId;
-    }
     async getByUniqRef(uniqRef, admin) {
         const query = serviceQueries.GET_SERVICE_BY_UNIQ_REF;
         const variables = { uniqRef, admin };
@@ -77,10 +71,10 @@ export class Service {
         const response = await this.client.query(query, variables);
         return response.serviceMedia;
     }
-    async listMedias(pagination, sort, filter) {
+    /** Liste les médias de services — `serviceMedias` n'accepte ni pagination, ni tri, ni filtre (mu-catalog). */
+    async listMedias() {
         const query = serviceMediaQueries.GET_SERVICE_MEDIAS;
-        const variables = { pagination, sort, filter };
-        const response = await this.client.query(query, variables);
+        const response = await this.client.query(query, {});
         return response.serviceMedias;
     }
     async getMediaBySlug(slug) {

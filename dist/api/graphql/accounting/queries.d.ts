@@ -1,21 +1,6 @@
-declare const estimateAssetQueries: {
-    GET_ESTIMATE_ASSETS: string;
-    GET_ESTIMATE_ASSET_BY_ID: string;
-    GET_ESTIMATE_ASSETS_BY_IDS: string;
-    GET_ESTIMATE_ASSET_BY_UNIQ_REF: string;
-    GET_ESTIMATE_ASSET_BY_SLUG: string;
-    GET_ESTIMATE_ASSETS_BY_SLUGS: string;
-};
-export { estimateAssetQueries };
 declare const estimateQueries: {
-    GET_ESTIMATES: string;
     GET_ESTIMATE_BY_ID: string;
-    GET_ESTIMATE_BY_UNIQ_REF: string;
-    GET_ESTIMATE_BY_SLUG: string;
-    GET_ESTIMATES_BY_IDS: string;
-    GET_ESTIMATES_BY_SLUGS: string;
     CREATE_ESTIMATE: string;
-    UPDATE_ESTIMATE: string;
     VALIDATE_ESTIMATE: string;
     GET_ESTIMATES_BY_BUYER_USER_ID: string;
     GET_ESTIMATES_BY_BUYER_ORGANIZATION_ID: string;
@@ -23,9 +8,6 @@ declare const estimateQueries: {
     GET_ALL_MU_CONTRACT_ESTIMATES: string;
     GET_NEGOTIATION_HISTORY: string;
     GET_CURRENT_NEGOTIATION: string;
-    CREATE_NEGOTIATION: string;
-    ACCEPT_NEGOTIATION: string;
-    REJECT_NEGOTIATION: string;
 };
 export { estimateQueries };
 declare const invoiceQueries: {
@@ -34,19 +16,10 @@ declare const invoiceQueries: {
     GET_INVOICES_BY_SELLER: string;
     GET_INVOICES_BY_BUYER: string;
     GET_INVOICES_BY_BUYER_USER: string;
-    GET_INVOICE_BY_SLUG: string;
-    GET_INVOICES_BY_SLUGS: string;
-    GET_INVOICES_BY_IDS: string;
-    GET_INVOICE_PDF_URL: string;
 };
 export { invoiceQueries };
 declare const transactionQueries: {
-    GET_TRANSACTIONS: string;
     GET_TRANSACTION_BY_ID: string;
-    GET_TRANSACTIONS_BY_IDS: string;
-    GET_TRANSACTION_BY_UNIQ_REF: string;
-    GET_TRANSACTION_BY_SLUG: string;
-    GET_TRANSACTIONS_BY_SLUGS: string;
     GET_TRANSACTIONS_BY_BUYER_USER_ID: string;
     GET_TRANSACTIONS_BY_BUYER_ORGANIZATION_ID: string;
     GET_TRANSACTIONS_BY_SELLER_ORGANIZATION_ID: string;
@@ -69,6 +42,7 @@ declare const walletQueries: {
 };
 export { walletQueries };
 export declare const orderQueries: {
+    GET_AGENT_EXECUTION_STATUS: string;
     GET_ORDER_BY_ID: string;
     GET_ORDERS_BY_USER_ID: string;
     GET_ORDERS_BY_SELLER_ORGANIZATION_ID: string;
@@ -83,6 +57,7 @@ declare const contractQueries: {
     GET_CONTRACTS_BY_ORGANIZATION_ID: string;
     GET_CONTRACT_TEMPLATES: string;
     GET_CONTRACT_TEMPLATE: string;
+    GET_ORGANIZATION_SIGNATURE_SETTINGS: string;
 };
 export { contractQueries };
 declare const withdrawalQueries: {

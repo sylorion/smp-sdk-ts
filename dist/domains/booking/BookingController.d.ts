@@ -1,14 +1,20 @@
 import { APIClient } from '../../api/APIClient.js';
-import { EstimateRequest, Booking, Availability, WeeklyAvailability, AvailabilityException, AvailableSlot, DailySlot, CreateEstimateRequestInput, CreateBookingInput, CreateAvailabilityInput, UpdateAvailabilityInput, UpdateBookingInput, CreateWeeklyAvailabilityInput, CreateWeeklyAvailabilityBatchInput, CreateDailySlotsInput, CreateAvailabilityExceptionInput, SearchAvailabilityInput, AvailableSlotsInput, SearchDailySlotsInput } from '../../types/booking/index.js';
+import { EstimateRequest, Booking, Availability, WeeklyAvailability, AvailabilityException, AvailableSlot, CreateEstimateRequestInput, CreateBookingInput, CreateAvailabilityInput, UpdateBookingInput, CreateWeeklyAvailabilityBatchInput, CreateAvailabilityExceptionInput, AvailableSlotsInput } from '../../types/booking/index.js';
 export declare class BookingController {
     private apiClient;
     constructor(apiClient: APIClient);
     /**
-     * Créer une demande de devis
+     * ⚠️ `createEstimateRequest` n'existe dans aucun service (mu-command n'expose pas les demandes de devis
+     * ni les disponibilités ponctuelles) : l'appel échoue à l'exécution. Conservé tant que
+     * smp-webapp (`app/api/booking/estimate-requests/route.ts`) et smp-mobile (`features/booking/booking.service.ts`) l'utilise ; le parcours devis passe par `accounting.estimate.create`.
      */
     createEstimateRequest(input: CreateEstimateRequestInput): Promise<EstimateRequest>;
+    /**
+     * ⚠️ `estimateRequests` n'existe dans aucun service (mu-command n'expose pas les demandes de devis
+     * ni les disponibilités ponctuelles) : l'appel échoue à l'exécution. Conservé tant que
+     * smp-webapp (`app/api/booking/estimate-requests/route.ts`) et smp-mobile (`features/booking/booking.service.ts`) l'utilise.
+     */
     listEstimateRequests(serviceId: string, userId?: string): Promise<EstimateRequest[]>;
-    getEstimateRequestById(estimateRequestId: string): Promise<EstimateRequest | null>;
     create(input: CreateBookingInput): Promise<Booking>;
     listByServiceId(serviceId: string): Promise<Booking[]>;
     listByUserId(userId: string): Promise<Booking[]>;
@@ -22,33 +28,15 @@ export declare class BookingController {
         bookings: Booking[];
         calendarSlots: AvailableSlot[];
     }>;
-    /**
-     * Récupérer les réservations d'une disponibilité
-     */
-    listByAvailabilityId(availabilityId: string): Promise<Booking[]>;
     cancel(bookingId: string, message?: string): Promise<Booking>;
     update(input: UpdateBookingInput): Promise<Booking>;
     getById(bookingId: string): Promise<Booking | null>;
     /**
-     * Créer une disponibilité
+     * ⚠️ `createAvailability` n'existe dans aucun service (mu-command n'expose pas les demandes de devis
+     * ni les disponibilités ponctuelles) : l'appel échoue à l'exécution. Conservé tant que
+     * smp-webapp (`app/api/booking/bookings/route.ts`) l'utilise ; les disponibilités réelles sont hebdomadaires (`createWeeklyAvailabilityBatch`) ou des exceptions (`createAvailabilityException`).
      */
     createAvailability(input: CreateAvailabilityInput): Promise<Availability>;
-    /**
-     * Mettre à jour une disponibilité
-     */
-    updateAvailability(id: string, input: UpdateAvailabilityInput): Promise<Availability>;
-    /**
-     * Annuler une disponibilité
-     */
-    cancelAvailability(id: string): Promise<Availability>;
-    /**
-     * Rechercher des disponibilités
-     */
-    searchAvailabilities(input: SearchAvailabilityInput): Promise<Availability[]>;
-    /**
-     * Créer une disponibilité hebdomadaire
-     */
-    createWeeklyAvailability(input: CreateWeeklyAvailabilityInput): Promise<WeeklyAvailability>;
     /**
      * Créer des disponibilités hebdomadaires en lot
      */
@@ -57,14 +45,6 @@ export declare class BookingController {
      * Récupérer les disponibilités hebdomadaires d'un service
      */
     listWeeklyAvailabilities(serviceId: string, userId: string): Promise<WeeklyAvailability[]>;
-    /**
-     * Créer des créneaux quotidiens
-     */
-    createDailySlots(input: CreateDailySlotsInput): Promise<DailySlot[]>;
-    /**
-     * Récupérer les créneaux quotidiens
-     */
-    listDailySlots(input: SearchDailySlotsInput): Promise<DailySlot[]>;
     /**
      * Récupérer les créneaux disponibles
      */

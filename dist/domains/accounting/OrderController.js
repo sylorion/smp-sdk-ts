@@ -35,4 +35,9 @@ export class Order {
         const response = await this.client.query(query, { buyerOrganizationId });
         return response.ordersByBuyerOrganization;
     }
+    /** Suivi de l'exécution par un agent pour la commande donnée. */
+    async getAgentExecutionStatus(orderId) {
+        const response = await this.client.query(orderQueries.GET_AGENT_EXECUTION_STATUS, { orderId });
+        return response.agentExecutionStatus;
+    }
 }

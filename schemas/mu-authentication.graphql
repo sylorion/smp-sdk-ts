@@ -1,0 +1,472 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Heartbeat {
+  status: String
+  timestamp: String
+  uptime: Float
+  lastPing: Date
+  interval: Int
+  timeOut: Int
+  timeOutCount: Int
+  heartbeat: Int
+  maxTimeOut: Int
+}
+
+type UserDetails {
+  userID: ID!
+  uniqRef: String
+  slug: String
+  username: String
+  email: String
+  plan: String
+  planSubscriptionId: String
+  planExpiresAt: DateTime
+  planTrialEndsAt: DateTime
+  stripeCustomerId: String
+  planBillingInterval: String
+  profileID: ID
+  userKind: UserType
+  lastLogin: DateTime
+  twoFactorEnabled: Boolean
+  loginDuration: Int
+  rsaPublicKey: String
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum UserType {
+  robot
+  client
+  developer
+  analyzer
+  moderator
+  administrator
+}
+
+enum ObjectStatus {
+  offline
+  staging
+  awaiting
+  reviewed
+  rejected
+  signaled
+  online
+  archived
+}
+
+type MutationError {
+  code: String
+  field: String
+  message: String!
+}
+
+type LoginResponse {
+  accessToken: String!
+  refreshToken: String!
+  accessValidityDuration: Int!
+  refreshValidityDuration: Int!
+  user: UserDetails
+  message: String
+  errors: [MutationError!]
+}
+
+type TokenRefreshResponse {
+  accessToken: String
+  expiresIn: Int
+  message: String
+  errors: [MutationError!]
+}
+
+type MutationResponse {
+  success: Boolean!
+  message: String
+  code: Int
+  field: String
+}
+
+type ForgotPasswordResponse {
+  success: Boolean!
+  message: String!
+  token: String
+}
+
+type UsernameAvailabilityResponse {
+  available: Boolean!
+  message: String
+}
+
+type PlanStat {
+  plan: String!
+  count: Int!
+}
+
+type Affiliate {
+  affiliateId: ID!
+  uniqRef: String
+  slug: String
+  referrerUserId: ID
+  referredUserId: ID
+  affiliateToken: String!
+  email: String!
+  isValidated: Boolean!
+  validatedAt: DateTime
+  expiresAt: DateTime
+  commissionRate: Float
+  metadata: JSONObject
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  referredUser: UserDetails
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
+type AffiliateTokenResponse {
+  affiliateToken: String
+  expiresAt: DateTime
+  message: String
+  errors: [MutationError!]
+}
+
+type AffiliateValidationResponse {
+  success: Boolean!
+  affiliate: Affiliate
+  message: String
+  errors: [MutationError!]
+}
+
+type AffiliateTokenInfo {
+  referrerUserId: ID
+  referrerUsername: String
+  type: String
+  createdAt: DateTime
+  isValid: Boolean!
+  message: String
+}
+
+type AffiliateLink {
+  id: ID!
+  token: String!
+  label: String
+  isActive: Boolean!
+  referrerUserId: ID!
+  usageCount: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ApplicationDetails {
+  applicationID: ID!
+  uniqRef: String
+  slug: String
+  authKey: String!
+  appID: ID!
+  description: String
+  name: String
+  title: String
+  email: String
+  logo: String
+  url: String
+  plan: String
+  isOfficialApp: Boolean
+  appConfiguration: JSONObject
+  developerID: ID
+  authorID: ID
+  state: ObjectStatus
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+type AppLoginResponse {
+  accessToken: String!
+  refreshToken: String!
+  accessValidityDuration: Int!
+  refreshValidityDuration: Int!
+  application: ApplicationDetails
+  message: String
+  errors: [MutationError!]
+}
+
+type WaitingList {
+  waitingListID: ID!
+  uniqRef: String!
+  firstName: String
+  lastName: String!
+  email: String!
+  city: String!
+  details: String!
+  age: Int!
+  jwt: String
+  mailSent: Boolean!
+  lastMailSentAt: DateTime
+  state: ObjectStatus!
+  slug: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type WaitingListResponse {
+  success: Boolean!
+  message: String!
+  waitingList: WaitingList
+}
+
+type WaitingListTokenData {
+  waitingListID: ID!
+  firstName: String
+  lastName: String!
+  email: String!
+  age: Int!
+  isUserExists: Boolean!
+  userState: String
+}
+
+type WaitingListTokenResponse {
+  success: Boolean!
+  message: String!
+  data: WaitingListTokenData
+}
+
+"""Custom scalar type for Date"""
+scalar Date
+
+type Query {
+  authenticationHello: String
+  authenticationVersion: String
+  authenticationHeartbeat: Heartbeat
+  authenticationRequestCounter: Int
+  checkUsernameAvailability(input: CheckUsernameInput!): UsernameAvailabilityResponse!
+  getMyPlan(userID: ID!): UserDetails
+  adminSearchUsers(query: String!, limit: Float): [UserDetails]!
+  adminGetUserByID(userID: ID!): UserDetails
+  adminGetUserByEmail(email: String!): UserDetails
+  adminGetPlanStats: [PlanStat!]!
+  adminGetUserCount: Int!
+  affiliate(affiliateId: ID!): Affiliate
+  affiliates(pagination: PaginationInput, sort: SortInput, filter: [FilterInput!]): [Affiliate!]!
+  affiliateByToken(affiliateToken: String!): Affiliate
+  affiliateByEmail(email: String!): Affiliate
+  affiliatesByReferrer(referrerUserId: ID!): [Affiliate!]!
+  affiliatesByReferred(referredUserId: ID!): [Affiliate!]!
+  affiliateLinksByReferrer(referrerUserId: ID!): [AffiliateLink!]!
+  affiliateLinkByToken(token: String!): AffiliateLink
+  applications(pagination: PaginationInput, sort: SortInput, filter: [FilterInput!]): [ApplicationDetails!]!
+  application(applicationID: ID!): ApplicationDetails
+  applicationByIDs(ids: [ID!]!): [ApplicationDetails!]!
+  waitingList(waitingListID: ID!): WaitingList
+  waitingLists(page: Int, limit: Int, state: ObjectStatus): [WaitingList!]!
+}
+
+input CheckUsernameInput {
+  username: String!
+}
+
+input PaginationInput {
+  limit: Int
+  offset: Int
+  page: Int
+  pageSize: Int
+}
+
+input SortInput {
+  field: String
+  direction: String
+}
+
+input FilterInput {
+  field: String
+  operator: String
+  value: String
+}
+
+type Mutation {
+  login(input: LoginInput!): LoginResponse
+  logout(input: LogoutInput): MutationResponse
+  refreshUserToken(token: String!): TokenRefreshResponse
+  signup(input: CreateUserInput!, affiliateToken: String): UserDetails!
+  signupAfterInvitation(input: CreateUserInput!, organizationId: ID!, firstName: String, lastName: String): UserDetails!
+  forgotPassword(email: String!): ForgotPasswordResponse!
+  updatePassword(input: UpdatePasswordInput!, userID: ID!): MutationResponse!
+  updateEmail(input: UpdateEmailInput!): MutationResponse!
+  updateUsername(input: UpdateUsernameInput!): MutationResponse!
+  resetPassword(input: ResetPasswordInput!): MutationResponse!
+  verifyEmail(token: String!): MutationResponse!
+  resendVerificationEmail(email: String!): MutationResponse!
+  requestEmailChange(input: RequestEmailChangeInput!, userID: ID!): MutationResponse!
+  confirmEmailChange(input: ConfirmEmailChangeInput!, userID: ID!): MutationResponse!
+  createAffiliate(input: CreateAffiliateInput!): Affiliate!
+  updateAffiliate(affiliateId: ID!, input: UpdateAffiliateInput!): Affiliate!
+  deleteAffiliate(affiliateId: ID!): MutationResponse!
+  generateAffiliateToken(input: GenerateAffiliateTokenInput!): AffiliateTokenResponse!
+  validateAffiliate(input: ValidateAffiliateInput!): AffiliateValidationResponse!
+  decodeAffiliateToken(token: String!): AffiliateTokenInfo!
+  createAffiliateLink(input: CreateAffiliateLinkInput!): AffiliateLink!
+  updateAffiliateLink(id: ID!, input: UpdateAffiliateLinkInput!): AffiliateLink!
+  deleteAffiliateLink(id: ID!): MutationResponse!
+  sendAffiliationInvitation(recipientEmail: String!, referrerUserId: ID!, referrerName: String, invitationToken: String, message: String): MutationResponse!
+  createApplication(input: CreateApplicationInput!): ApplicationDetails!
+  updateApplication(applicationID: ID!, input: UpdateApplicationInput!): ApplicationDetails!
+  deleteApplication(applicationID: ID!): MutationResponse!
+  authenticateApp(input: AppLoginInput!): AppLoginResponse!
+  logoutApp(appID: ID!): MutationResponse!
+  refreshAppToken(token: String!): TokenRefreshResponse!
+  createWaitingList(input: CreateWaitingListInput!): WaitingListResponse!
+  updateWaitingList(waitingListID: ID!, input: UpdateWaitingListInput!): WaitingListResponse!
+  deleteWaitingList(waitingListID: ID!): MutationResponse!
+  confirmWaitingList(waitingListID: ID!): WaitingListResponse!
+  resendWaitingListEmail(waitingListID: ID!): WaitingListResponse!
+  verifyWaitingListToken(token: String!): WaitingListTokenResponse!
+}
+
+input LoginInput {
+  email: String
+  username: String
+  password: String!
+}
+
+input LogoutInput {
+  refreshToken: String
+  userID: ID
+}
+
+input CreateUserInput {
+  username: String!
+  email: String!
+  password: String!
+  confirmPassword: String
+  firstName: String
+  lastName: String
+  profileID: ID
+  userKind: UserType
+  state: ObjectStatus
+  twoFactorEnabled: Boolean
+  rsaPublicKey: String
+  acceptNewsletter: Boolean
+}
+
+input UpdatePasswordInput {
+  currentPassword: String!
+  newPassword: String!
+  confirmPassword: String!
+}
+
+input UpdateEmailInput {
+  newEmail: String!
+  password: String!
+}
+
+input UpdateUsernameInput {
+  newUsername: String!
+}
+
+input ResetPasswordInput {
+  token: String!
+  newPassword: String!
+}
+
+input RequestEmailChangeInput {
+  newEmail: String!
+  password: String!
+}
+
+input ConfirmEmailChangeInput {
+  code: String!
+}
+
+input CreateAffiliateInput {
+  referrerUserId: ID
+  email: String!
+  expiresAt: DateTime
+  commissionRate: Float
+  metadata: JSONObject
+  state: ObjectStatus
+}
+
+input UpdateAffiliateInput {
+  referrerUserId: ID
+  referredUserId: ID
+  email: String
+  isValidated: Boolean
+  validatedAt: DateTime
+  expiresAt: DateTime
+  commissionRate: Float
+  metadata: JSONObject
+  state: ObjectStatus
+}
+
+input GenerateAffiliateTokenInput {
+  referrerUserId: ID
+  email: String
+  expiresAt: DateTime
+  commissionRate: Float
+  metadata: JSONObject
+}
+
+input ValidateAffiliateInput {
+  affiliateToken: String!
+  referredUserId: ID!
+}
+
+input CreateAffiliateLinkInput {
+  referrerUserId: String!
+  label: String
+}
+
+input UpdateAffiliateLinkInput {
+  label: String
+  isActive: Boolean
+}
+
+input CreateApplicationInput {
+  userID: ID!
+  title: String!
+  name: String!
+  type: String
+  userTarget: String
+}
+
+input UpdateApplicationInput {
+  officialName: String
+  description: String
+  email: String
+  logo: String
+  url: String
+  plan: String
+}
+
+input AppLoginInput {
+  appID: String
+  applicationID: String
+  appKey: String!
+}
+
+input CreateWaitingListInput {
+  firstName: String
+  lastName: String!
+  email: String!
+  city: String!
+  details: String!
+  age: Int!
+}
+
+input UpdateWaitingListInput {
+  firstName: String
+  lastName: String
+  email: String
+  city: String
+  details: String
+  age: Int
+}

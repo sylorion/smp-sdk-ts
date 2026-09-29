@@ -22,8 +22,8 @@ export const CREATE_ORGANIZATION_MEDIA = `
 `;
 
 export const UPDATE_ORGANIZATION_MEDIA = `
-  mutation UpdateOrganizationMedia($input: UpdateOrganizationMediaInput!) {
-    updateOrganizationMedia(input: $input) {
+  mutation UpdateOrganizationMedia($organizationMediaID: ID!, $input: UpdateOrganizationMediaInput!) {
+    updateOrganizationMedia(organizationMediaID: $organizationMediaID, input: $input) {
       organizationMediaID
       mediaID
       legend
@@ -187,7 +187,6 @@ export const organizationMutations = {
         state
         createdAt
         updatedAt
-        deletedAt
       }
     }
   `,
@@ -240,6 +239,15 @@ export const organizationMutations = {
       updateUserRoleInOrganization(input: $input) {
         success
         message
+        userOrganization {
+          userOrganizationID
+          userID
+          organizationID
+          roleID
+          state
+          createdAt
+          updatedAt
+        }
       }
     }
   `,
@@ -270,6 +278,15 @@ export const organizationMutations = {
       addUserToOrganization(input: $input) {
         success
         message
+        userOrganization {
+          userOrganizationID
+          userID
+          organizationID
+          roleID
+          state
+          createdAt
+          updatedAt
+        }
       }
     }
   `,
@@ -323,56 +340,13 @@ export const organizationMutations = {
 // Source: organization/userOrganization.ts
 // =========================================
 // Mutations for user-organization relationships
+// Alias historiques : mêmes documents que `organizationMutations` (une seule source,
+// alignée sur mu-organization — UserOrganization expose userOrganizationID, userID,
+// organizationID, roleID, state…).
 const userOrganizationMutations = {
-  // MUTATION TO ADD USER TO ORGANIZATION
-  ADD_USER_TO_ORGANIZATION: `
-    mutation AddUserToOrganization($input: AddUserToOrganizationInput!) {
-      addUserToOrganization(input: $input) {
-        success
-        message
-        userOrganization {
-          userOrganizationId
-          userId
-          organizationId
-          role
-          status
-          joinedAt
-          createdAt
-          updatedAt
-        }
-      }
-    }
-  `,
-
-  // MUTATION TO REMOVE USER FROM ORGANIZATION
-  REMOVE_USER_FROM_ORGANIZATION: `
-    mutation RemoveUserFromOrganization($input: RemoveUserFromOrganizationInput!) {
-      removeUserFromOrganization(input: $input) {
-        success
-        message
-      }
-    }
-  `,
-
-  // MUTATION TO UPDATE USER ROLE IN ORGANIZATION
-  UPDATE_USER_ROLE_IN_ORGANIZATION: `
-    mutation UpdateUserRoleInOrganization($input: UpdateUserRoleInOrganizationInput!) {
-      updateUserRoleInOrganization(input: $input) {
-        success
-        message
-        userOrganization {
-          userOrganizationId
-          userId
-          organizationId
-          role
-          status
-          joinedAt
-          createdAt
-          updatedAt
-        }
-      }
-    }
-  `
+  ADD_USER_TO_ORGANIZATION: organizationMutations.ADD_USER_TO_ORGANIZATION,
+  REMOVE_USER_FROM_ORGANIZATION: organizationMutations.REMOVE_USER_FROM_ORGANIZATION,
+  UPDATE_USER_ROLE_IN_ORGANIZATION: organizationMutations.UPDATE_USER_ROLE_IN_ORGANIZATION,
 };
 
 export { userOrganizationMutations };

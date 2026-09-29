@@ -18,6 +18,11 @@ export interface ServiceAssetEntity {
   deletedAt?: string; // ISO8601
 }
 
+/** Filtre appliqué côté SDK par `ServiceAsset.list` (le service ne filtre pas). */
+export interface ServiceAssetListOptions {
+  filter?: { serviceID?: string; assetID?: string };
+}
+
 /**
  * Input pour la création d'un ServiceAsset.
  */
@@ -70,13 +75,20 @@ export class ServiceAsset {
   }
 
   /**
-   * Récupère la liste de tous les ServiceAssets avec pagination, tri et filtres optionnels.
+   * Liste les ServiceAssets.
+   *
+   * `serviceAssets` (mu-catalog) n'accepte ni pagination, ni tri, ni filtre : le filtre
+   * optionnel par `serviceID` / `assetID` est appliqué côté SDK. Pour les assets d'un
+   * service avec leurs détails, préférer `catalog.asset.listByServiceId`.
    */
-  async list(pagination?: any, sort?: any, filter?: any): Promise<ServiceAssetEntity[]> {
+  async list(options?: ServiceAssetListOptions): Promise<ServiceAssetEntity[]> {
     const query = serviceAssetQueries.GET_SERVICE_ASSETS;
-    const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as { serviceAssets: ServiceAssetEntity[] };
-    return response.serviceAssets;
+    const response = await this.client.query(query, {}) as { serviceAssets: ServiceAssetEntity[] | null };
+    const rows = response?.serviceAssets ?? [];
+    const { serviceID, assetID } = options?.filter ?? {};
+    return rows.filter((row) =>
+      (serviceID === undefined || row.serviceID === serviceID)
+      && (assetID === undefined || row.assetID === assetID));
   }
 
   /**

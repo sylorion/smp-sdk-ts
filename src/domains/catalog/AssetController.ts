@@ -315,14 +315,10 @@ export class Asset {
     return response.assetMedia;
   }
 
-  async listMedias(
-    pagination?: any,
-    sort?: any,
-    filter?: any
-  ): Promise<AssetMediaEntity[]> {
+  /** Liste les médias d'assets — `assetMedias` n'accepte ni pagination, ni tri, ni filtre (mu-catalog). */
+  async listMedias(): Promise<AssetMediaEntity[]> {
     const query = assetMediaQueries.GET_ASSET_MEDIAS;
-    const variables = { pagination, sort, filter };
-    const response = await this.client.query<{ assetMedias: AssetMediaEntity[] }>(query, variables);
+    const response = await this.client.query<{ assetMedias: AssetMediaEntity[] }>(query, {});
     return response.assetMedias;
   }
 

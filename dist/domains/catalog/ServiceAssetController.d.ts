@@ -14,6 +14,13 @@ export interface ServiceAssetEntity {
     updatedAt: string;
     deletedAt?: string;
 }
+/** Filtre appliqué côté SDK par `ServiceAsset.list` (le service ne filtre pas). */
+export interface ServiceAssetListOptions {
+    filter?: {
+        serviceID?: string;
+        assetID?: string;
+    };
+}
 /**
  * Input pour la création d'un ServiceAsset.
  */
@@ -51,9 +58,13 @@ export declare class ServiceAsset {
      */
     getById(serviceAssetID: string): Promise<ServiceAssetEntity>;
     /**
-     * Récupère la liste de tous les ServiceAssets avec pagination, tri et filtres optionnels.
+     * Liste les ServiceAssets.
+     *
+     * `serviceAssets` (mu-catalog) n'accepte ni pagination, ni tri, ni filtre : le filtre
+     * optionnel par `serviceID` / `assetID` est appliqué côté SDK. Pour les assets d'un
+     * service avec leurs détails, préférer `catalog.asset.listByServiceId`.
      */
-    list(pagination?: any, sort?: any, filter?: any): Promise<ServiceAssetEntity[]>;
+    list(options?: ServiceAssetListOptions): Promise<ServiceAssetEntity[]>;
     /**
      * Récupère un ServiceAsset par son slug.
      * @param slug - Le slug du ServiceAsset.

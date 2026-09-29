@@ -1,0 +1,401 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserFavoriteService {
+  userFavoriteServiceID: ID!
+  userID: String!
+  serviceID: String!
+  createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type InteractionStatus {
+  isLiked: Boolean!
+  isFavorited: Boolean!
+  likesCount: Float
+}
+
+type Media {
+  mediaID: ID!
+  authorID: ID
+  mediaType: String
+  originalName: String
+  finalName: String
+  url: String
+  entityID: ID
+  entityName: String
+  size: String
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+"""Shared object status for all unified entities."""
+enum ObjectStatus {
+  offline
+  staging
+  awaiting
+  reviewed
+  rejected
+  signaled
+  online
+  archived
+}
+
+type PaymentConfig {
+  paymentConfigID: ID!
+  authorID: String!
+  paymentMethodID: String!
+  partnerTokenAuthDetails: String
+  paymentConfigDetails: JSON
+  state: ObjectStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type PaymentMethod {
+  paymentMethodID: ID!
+  authorID: String!
+  organizationID: String
+  userID: String
+  paymentMethodKind: String
+  isActive: Boolean
+  accountHolderName: String
+  expirationDate: DateTime
+  bankName: String
+  cardNumber: String
+  cardType: PaymentMethodType!
+  methodDetails: String
+  isDefault: Boolean
+  state: ObjectStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+enum PaymentMethodType {
+  credit_card
+  debit_card
+  paypal
+  bank_transfer
+  crypto
+  other
+}
+
+type Profile {
+  profileID: ID!
+  uniqRef: String!
+  slug: String!
+  firstName: String
+  lastName: String
+  dateOfBirth: DateTime
+  gender: ProfileGender
+  nationality: String
+  phoneNumber: String
+  locationID: String
+  userID: String
+  authorID: String
+  idCardNumber: String
+  passportNumber: String
+  socialSecurityNumber: String
+  profilePictureID: String
+  state: ObjectStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+  profilePicture: Media
+}
+
+enum ProfileGender {
+  male
+  female
+  other
+  unspecified
+}
+
+type ProfileMutationResponse {
+  success: Boolean!
+  message: String!
+}
+
+type Role {
+  roleID: ID!
+  roleName: String!
+  description: String
+  permissions: JSON
+  state: ObjectStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type UserPreferences {
+  userPreferencesID: ID!
+  userID: String!
+  lang: String
+  timeZone: String
+  notificationPreferences: JSON
+  privacySettings: JSON
+  theme: Int
+  marketplaceConfig: JSON
+  defaultCurrency: ServicesAcceptedDevise
+  defaultPaymentMethodID: String
+  notificationFrequency: String
+  showRecommendations: Boolean
+  otherSettings: JSON
+  onboardingData: JSON
+  uniqRef: String
+  slug: String!
+  state: ObjectStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+enum ServicesAcceptedDevise {
+  unknw
+  credit
+  eur
+  usd
+  gbp
+  chf
+  xaf
+  xof
+}
+
+type UserRole {
+  userRoleID: ID!
+  legend: String
+  authorID: String!
+  userID: String
+  roleID: String
+  state: ObjectStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type Query {
+  interactionStatus(userID: String!, serviceID: String!): InteractionStatus!
+  userFavorites(userID: String!): [UserFavoriteService!]!
+  paymentConfig(paymentConfigID: ID!): PaymentConfig!
+  paymentConfigs: [PaymentConfig!]!
+  paymentMethod(paymentMethodID: ID!): PaymentMethod!
+  paymentMethods: [PaymentMethod!]!
+  profile(profileID: ID!): Profile!
+  profiles: [Profile!]!
+  profileBySlug(Slug: String!): Profile!
+  profileByUniqRef(uniqRef: String!): Profile!
+  profilesByIDs(profileIDs: [ID!]!): [Profile!]!
+  profilesBySlugs(slugs: [String!]!): [Profile!]!
+  profilesByUserID(userID: ID!): [Profile!]!
+  role(roleID: ID!): Role!
+  roles: [Role!]!
+  userPreferencesByUserId(userID: String!): UserPreferences
+  userPreferences(userPreferencesID: ID!): UserPreferences!
+  userRole(userRoleID: ID!): UserRole!
+  userRoles: [UserRole!]!
+  walkthroughState(userID: String!): JSON!
+}
+
+type Mutation {
+  toggleLike(userID: String!, serviceID: String!): Boolean!
+  toggleFavorite(userID: String!, serviceID: String!): Boolean!
+  createPaymentConfig(input: CreatePaymentConfigInput!): PaymentConfig!
+  updatePaymentConfig(paymentConfigID: ID!, input: UpdatePaymentConfigInput!): PaymentConfig!
+  deletePaymentConfig(paymentConfigID: ID!): Boolean!
+  createPaymentMethod(input: CreatePaymentMethodInput!): PaymentMethod!
+  updatePaymentMethod(paymentMethodID: ID!, input: UpdatePaymentMethodInput!): PaymentMethod!
+  deletePaymentMethod(paymentMethodID: ID!): Boolean!
+  createProfile(input: CreateProfileInput!): Profile!
+  updateProfile(profileID: ID!, input: UpdateProfileInput!): Profile!
+  deleteProfile(profileID: ID!): ProfileMutationResponse!
+  createRole(input: CreateRoleInput!): Role!
+  updateRole(roleID: ID!, input: UpdateRoleInput!): Role!
+  deleteRole(roleID: ID!): Boolean!
+  createUserPreferences(input: CreateUserPreferencesInput!): UserPreferences!
+  updateUserPreferences(userPreferencesID: ID!, input: UpdateUserPreferencesInput!): UserPreferences!
+  deleteUserPreferences(userPreferencesID: ID!): Boolean!
+  createUserRole(input: CreateUserRoleInput!): UserRole!
+  updateUserRole(userRoleID: ID!, input: UpdateUserRoleInput!): UserRole!
+  deleteUserRole(userRoleID: ID!): Boolean!
+  updateWalkthroughState(userID: String!, input: UpdateWalkthroughInput!): JSON!
+}
+
+input CreatePaymentConfigInput {
+  authorID: String!
+  paymentMethodID: String!
+  partnerTokenAuthDetails: String
+  paymentConfigDetails: JSON
+}
+
+input UpdatePaymentConfigInput {
+  partnerTokenAuthDetails: String
+  paymentConfigDetails: JSON
+}
+
+input CreatePaymentMethodInput {
+  authorID: String!
+  organizationID: String
+  userID: String
+  paymentMethodKind: String
+  isActive: Boolean
+  accountHolderName: String
+  expirationDate: DateTime
+  bankName: String
+  cardNumber: String
+  cardType: PaymentMethodType!
+  methodDetails: String
+  isDefault: Boolean
+}
+
+input UpdatePaymentMethodInput {
+  paymentMethodKind: String
+  isActive: Boolean
+  accountHolderName: String
+  expirationDate: DateTime
+  bankName: String
+  cardNumber: String
+  cardType: PaymentMethodType
+  methodDetails: String
+  isDefault: Boolean
+}
+
+input CreateProfileInput {
+  firstName: String
+  lastName: String
+  dateOfBirth: DateTime
+  gender: ProfileGender
+  nationality: String
+  phoneNumber: String
+  locationID: String
+  idCardNumber: String
+  passportNumber: String
+  socialSecurityNumber: String
+  userID: String
+  authorID: String
+  profilePictureID: ID
+  state: ObjectStatus
+}
+
+input UpdateProfileInput {
+  firstName: String
+  lastName: String
+  dateOfBirth: DateTime
+  gender: ProfileGender
+  nationality: String
+  phoneNumber: String
+  locationID: String
+  idCardNumber: String
+  passportNumber: String
+  socialSecurityNumber: String
+  userID: String
+  authorID: String
+  profilePictureID: ID
+  state: ObjectStatus
+}
+
+input CreateRoleInput {
+  roleName: String!
+  description: String
+  permissions: JSON
+}
+
+input UpdateRoleInput {
+  roleName: String
+  description: String
+  permissions: JSON
+}
+
+input CreateUserPreferencesInput {
+  userID: String!
+  lang: String
+  timeZone: String
+  notificationPreferences: JSON
+  privacySettings: JSON
+  theme: Int
+  marketplaceConfig: JSON
+  defaultCurrency: ServicesAcceptedDevise
+  defaultPaymentMethodID: String
+  notificationFrequency: String
+  showRecommendations: Boolean
+  otherSettings: JSON
+  onboardingData: JSON
+  slug: String
+  uniqRef: String
+}
+
+input UpdateUserPreferencesInput {
+  lang: String
+  timeZone: String
+  notificationPreferences: JSON
+  privacySettings: JSON
+  theme: Int
+  marketplaceConfig: JSON
+  defaultCurrency: ServicesAcceptedDevise
+  defaultPaymentMethodID: String
+  notificationFrequency: String
+  showRecommendations: Boolean
+  otherSettings: JSON
+  onboardingData: JSON
+  slug: String
+  uniqRef: String
+}
+
+input CreateUserRoleInput {
+  legend: String
+  authorID: String!
+  userID: String
+  roleID: String
+}
+
+input UpdateUserRoleInput {
+  legend: String
+  userID: String
+  roleID: String
+}
+
+input UpdateWalkthroughInput {
+  """Identifiant du tour (ex. org.create, wallet.tour)"""
+  tourID: String
+
+  """seen | completed | dismissed"""
+  status: String
+  step: Int
+
+  """Efface l’état du tour (le guide pourra se relancer)"""
+  resetTour: Boolean
+
+  """Efface l’état de tous les tours"""
+  resetAllTours: Boolean
+
+  """Désactive tous les démarrages automatiques"""
+  guidesDisabled: Boolean
+
+  """Désinscription des relances e-mail du guide"""
+  remindersOptOut: Boolean
+
+  """
+  Jalons constatés dans les données par la webapp (filet de sécurité si un événement a été perdu)
+  """
+  observed: WalkthroughObservedInput
+}
+
+input WalkthroughObservedInput {
+  organizationIDs: [String!]
+  organizationJoined: Boolean
+  serviceCreated: Boolean
+  servicePublished: Boolean
+}

@@ -59,49 +59,6 @@ const bookingMutations = {
       }
     }
   `,
-    // MUTATION POUR METTRE À JOUR UNE DISPONIBILITÉ
-    UPDATE_AVAILABILITY: `
-    mutation UpdateAvailability($id: String!, $input: UpdateAvailabilityInput!) {
-      updateAvailability(id: $id, input: $input) {
-        availabilityId
-        serviceId
-        startDate
-        endDate
-        startTime
-        endTime
-        capacity
-        status
-        createdAt
-        updatedAt
-      }
-    }
-  `,
-    // MUTATION POUR ANNULER UNE DISPONIBILITÉ
-    CANCEL_AVAILABILITY: `
-    mutation CancelAvailability($id: String!) {
-      cancelAvailability(id: $id) {
-        availabilityId
-        status
-        updatedAt
-      }
-    }
-  `,
-    // MUTATION POUR CRÉER UNE DISPONIBILITÉ HEBDOMADAIRE
-    CREATE_WEEKLY_AVAILABILITY: `
-    mutation CreateWeeklyAvailability($input: CreateWeeklyAvailabilityInput!) {
-      createWeeklyAvailability(input: $input) {
-        weeklyAvailabilityId
-        userId
-        serviceId
-        dayOfWeek
-        startTime
-        endTime
-        createdAt
-        updatedAt
-        deletedAt
-      }
-    }
-  `,
     // NOUVELLE MUTATION POUR CRÉER UNE RÉSERVATION AVEC CRÉNEAU AUTO-DÉTERMINÉ
     CREATE_BOOKING_WITH_SLOT: `
     mutation CreateBookingWithSlot($input: CreateBookingInput!) {
@@ -138,26 +95,6 @@ const bookingMutations = {
         createdAt
         updatedAt
         deletedAt
-      }
-    }
-  `,
-    // MUTATION POUR CRÉER DES CRÉNEAUX QUOTIDIENS
-    CREATE_DAILY_SLOTS: `
-    mutation CreateDailySlots($input: CreateDailySlotsInput!) {
-      createDailySlots(input: $input) {
-        slotId
-        date
-        startTime
-        endTime
-        duration
-        capacity
-        availableCapacity
-        bookedCapacity
-        status
-        serviceId
-        weeklyAvailabilityId
-        isRecurring
-        bookingIds
       }
     }
   `,
@@ -215,32 +152,6 @@ const bookingConfigurationMutations = {
     CREATE_BOOKING_CONFIGURATION: `
     mutation CreateBookingConfiguration($input: CreateBookingConfigurationInput!) {
       createBookingConfiguration(input: $input) {
-        bookingConfigurationId
-        userId
-        serviceId
-        bookingMode
-        defaultSlotDuration
-        allowGroupBooking
-        minBookingDuration
-        maxBookingDuration
-        dateRangeBookingAllowed
-        cancellationWindow
-        cancellationPolicy
-        advanceBookingLimit
-        maxCapacity
-        customRequirements
-        postBookingMessageTemplate
-        autoSendPostBookingMessage
-        createdAt
-        updatedAt
-        deletedAt
-      }
-    }
-  `,
-    // MUTATION POUR CRÉER UNE CONFIGURATION DE BOOKING BASÉE SUR LE TYPE DE SERVICE
-    CREATE_SERVICE_TYPE_BOOKING: `
-    mutation CreateServiceTypeBooking($input: CreateServiceTypeBookingInput!) {
-      createServiceTypeBooking(input: $input) {
         bookingConfigurationId
         userId
         serviceId
@@ -378,129 +289,6 @@ const timeSlotMutations = {
     DELETE_TIME_SLOT: `
     mutation DeleteTimeSlot($timeSlotId: String!) {
       deleteTimeSlot(timeSlotId: $timeSlotId) {
-        timeSlotId
-        slotType
-        engagementId
-        engagementMilestoneId
-        serviceId
-        startDateTime
-        endDateTime
-        duration
-        title
-        description
-        status
-        priority
-        capacity
-        maxParticipants
-        currentParticipants
-        isPublic
-        requiresApproval
-        parentSlotId
-        dependentSlotIds
-        estimatedHours
-        actualHours
-        hourlyRate
-        qualityScore
-        clientFeedback
-        internalNotes
-        deliverables
-        codeCommits
-        documentation
-        participants
-        metadata
-        tags
-        createdAt
-        updatedAt
-        deletedAt
-      }
-    }
-  `,
-    // MUTATION POUR CRÉER DES TIMESLOTS EN LOT
-    CREATE_TIME_SLOTS_BATCH: `
-    mutation CreateTimeSlotsBatch($data: [CreateTimeSlotInput!]!) {
-      createTimeSlotsBatch(data: $data) {
-        timeSlotId
-        slotType
-        engagementId
-        engagementMilestoneId
-        serviceId
-        startDateTime
-        endDateTime
-        duration
-        title
-        description
-        status
-        priority
-        capacity
-        maxParticipants
-        currentParticipants
-        isPublic
-        requiresApproval
-        parentSlotId
-        dependentSlotIds
-        estimatedHours
-        actualHours
-        hourlyRate
-        qualityScore
-        clientFeedback
-        internalNotes
-        deliverables
-        codeCommits
-        documentation
-        participants
-        metadata
-        tags
-        createdAt
-        updatedAt
-        deletedAt
-      }
-    }
-  `,
-    // MUTATION POUR ASSIGNER UN TIMESLOT À UN ENGAGEMENT
-    ASSIGN_TIME_SLOT_TO_ENGAGEMENT: `
-    mutation AssignTimeSlotToEngagement($timeSlotId: String!, $engagementId: String!) {
-      assignTimeSlotToEngagement(timeSlotId: $timeSlotId, engagementId: $engagementId) {
-        timeSlotId
-        slotType
-        engagementId
-        engagementMilestoneId
-        serviceId
-        startDateTime
-        endDateTime
-        duration
-        title
-        description
-        status
-        priority
-        capacity
-        maxParticipants
-        currentParticipants
-        isPublic
-        requiresApproval
-        parentSlotId
-        dependentSlotIds
-        estimatedHours
-        actualHours
-        hourlyRate
-        qualityScore
-        clientFeedback
-        internalNotes
-        deliverables
-        codeCommits
-        documentation
-        participants
-        metadata
-        tags
-        createdAt
-        updatedAt
-        deletedAt
-      }
-    }
-  `,
-    // MUTATION POUR ASSIGNER UN TIMESLOT À UN MILESTONE
-    ASSIGN_TIME_SLOT_TO_MILESTONE: `
-    mutation AssignTimeSlotToMilestone($timeSlotId: String!, $engagementMilestoneId: String!) {
-      assignTimeSlotToMilestone(timeSlotId: $timeSlotId, engagementMilestoneId: $engagementMilestoneId) {
         timeSlotId
         slotType
         engagementId

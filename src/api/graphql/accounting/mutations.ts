@@ -85,17 +85,6 @@ const invoiceMutations = {
     }
   `,
 
-  // MUTATION TO DELETE AN INVOICE
-  DELETE_INVOICE: `
-    mutation DeleteInvoice($invoiceId: String!) {
-      deleteInvoice(invoiceId: $invoiceId) {
-        invoiceId
-        state
-        deletedAt
-      }
-    }
-  `,
-
   // MUTATION TO UPDATE INVOICE DOWNLOAD STATUS
   UPDATE_INVOICE_DOWNLOAD_STATUS: `
     mutation UpdateInvoiceDownloadStatus($invoiceId: String!, $input: UpdateInvoiceDownloadStatusInput!) {
@@ -236,17 +225,6 @@ const invoiceMutations = {
       }
     }
   `,
-
-  // MUTATION TO MARK INVOICE AS DOWNLOADED
-  MARK_INVOICE_DOWNLOADED: `
-    mutation MarkInvoiceDownloaded($invoiceId: String!, $input: MarkInvoiceDownloadedInput!) {
-      markInvoiceDownloaded(invoiceId: $invoiceId, input: $input) {
-        success
-        downloadCount
-        downloadedAt
-      }
-    }
-  `
 };
 
 export { invoiceMutations };
@@ -290,31 +268,6 @@ const paymentMutations = {
         totalPrice
         status
         billingInformation
-        createdAt
-        updatedAt
-      }
-    }
-  `,
-  // MUTATION POUR METTRE À JOUR UNE LIGNE (order)
-  UPDATE_LINE: `
-    mutation UpdateLine($orderId: String!, $assetId: String!, $updateData: UpdateLineDataInput!) {
-      updateLine(orderId: $orderId, assetId: $assetId, updateData: $updateData) {
-        orderId
-        estimateId
-        userId
-        totalPrice
-        status
-        billingInformation
-        lines {
-          orderAssetId
-          assetId
-          quantity
-          unitPrice
-          title
-          description
-          legalVatPercent
-          
-        }
         createdAt
         updatedAt
       }
@@ -454,32 +407,6 @@ const paymentMutations = {
         }
         createdAt
         
-      }
-    }
-  `,
-  // MUTATION POUR METTRE À JOUR UN ORDER
-  UPDATE_ORDER: `
-    mutation UpdateOrder($orderId: String!, $data: UpdateOrderInput!) {
-      updateOrder(orderId: $orderId, data: $data) {
-        orderId
-        estimateId
-        userId
-        totalPrice
-        status
-        billingInformation
-        lines {
-          orderAssetId
-          assetId
-          quantity
-          unitPrice
-          title
-          description
-          legalVatPercent
-          
-        }
-        createdAt
-        updatedAt
-        deletedAt
       }
     }
   `,
@@ -1219,6 +1146,110 @@ const contractMutations = {
       deleteOrganizationContractTemplate(templateId: $templateId)
     }
   `,
-};
+  REJECT_CONTRACT: `
+    mutation RejectContract($data: RejectContractInput!) {
+      rejectContract(data: $data) {
+        contractId
+        estimateId
+        serviceId
+        organizationId
+        clientSignHash
+        providerSignHash
+        status
+        content
+        variables
+        details
+        clientSignDate
+        providerSignDate
+        createdAt
+        updatedAt
+      }
+    }
+  `,
 
+  RESEND_CONTRACT_INVITATION: `
+    mutation ResendContractInvitation($contractId: ID!) {
+      resendContractInvitation(contractId: $contractId) {
+        success
+        message
+        expiresAt
+      }
+    }
+  `,
+
+  MARK_CONTRACT_INVITATION_OPENED: `
+    mutation MarkContractInvitationOpened($invitationToken: String!) {
+      markContractInvitationOpened(invitationToken: $invitationToken)
+    }
+  `,
+
+  DUPLICATE_CONTRACT: `
+    mutation DuplicateContract($contractId: ID!) {
+      duplicateContract(contractId: $contractId) {
+        contractId
+        estimateId
+        serviceId
+        organizationId
+        clientSignHash
+        providerSignHash
+        status
+        content
+        variables
+        details
+        clientSignDate
+        providerSignDate
+        createdAt
+        updatedAt
+      }
+    }
+  `,
+
+  UPDATE_ORGANIZATION_SIGNATURE_SETTINGS: `
+    mutation UpdateOrganizationSignatureSettings($organizationId: ID!, $data: UpdateOrganizationSignatureSettingsInput!) {
+      updateOrganizationSignatureSettings(organizationId: $organizationId, data: $data) {
+        organizationId
+        defaultSignerUserId
+        signers { userId name title hasSignature signatureImage updatedAt }
+        stampUrl
+        countersignDelayHours
+        autoCountersign
+        autoCountersignEnabledBy
+        autoCountersignEnabledAt
+        updatedAt
+      }
+    }
+  `,
+
+  SAVE_ORGANIZATION_SIGNER: `
+    mutation SaveOrganizationSigner($organizationId: ID!, $data: SaveOrganizationSignerInput!) {
+      saveOrganizationSigner(organizationId: $organizationId, data: $data) {
+        organizationId
+        defaultSignerUserId
+        signers { userId name title hasSignature signatureImage updatedAt }
+        stampUrl
+        countersignDelayHours
+        autoCountersign
+        autoCountersignEnabledBy
+        autoCountersignEnabledAt
+        updatedAt
+      }
+    }
+  `,
+
+  REMOVE_ORGANIZATION_SIGNER: `
+    mutation RemoveOrganizationSigner($organizationId: ID!, $userId: ID!) {
+      removeOrganizationSigner(organizationId: $organizationId, userId: $userId) {
+        organizationId
+        defaultSignerUserId
+        signers { userId name title hasSignature signatureImage updatedAt }
+        stampUrl
+        countersignDelayHours
+        autoCountersign
+        autoCountersignEnabledBy
+        autoCountersignEnabledAt
+        updatedAt
+      }
+    }
+  `,
+};
 export { contractMutations }; 

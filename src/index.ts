@@ -19,6 +19,9 @@ export * from './types/booking/index.js';
 export * from './types/plan/index.js';
 export * from './types/review/index.js';
 export * from './types/review/format.js';
+export * from './types/flow/index.js';
+export * from './types/referral/index.js';
+export * from './types/capacity/index.js';
 
 // ==========================================
 // CORE CLASSES & CONFIG
@@ -38,3 +41,4 @@ export * from './types/auth/index.js';
 // que de réimplémenter la formule : c'est ce qui garantit que le montant affiché
 // et le montant débité coïncident avec ce que facture le backend.
 export * from './pricing/pricing.generated.js';
+export type { AgentExecutionStatus } from './domains/accounting/OrderController.js';

@@ -1,175 +1,11 @@
 import { gql } from 'graphql-request';
 
 // =========================================
-// Source: accounting/estimateAssetQueries.ts
-// =========================================
-// smp-sdk-ts/src/api/graphql/queries/estimateAssetQueries.js
-
-const estimateAssetQueries = {
-  // QUERY TO GET A LIST OF ESTIMATE ASSETS WITH OPTIONAL PAGINATION, SORTING, AND FILTERING
-  GET_ESTIMATE_ASSETS: `
-      query GetEstimateAssets($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-        estimateAssets(pagination: $pagination, sort: $sort, filter: $filter) {
-          estimateAssetID
-          uniqRef
-          slug
-          legend
-          assetID
-          estimateID
-          mandadtry
-          initialPrice
-          quantity
-          state
-          createdAt
-          updatedAt
-          deletedAt
-        }
-      }
-    `,
-
-  // QUERY TO GET A SINGLE ESTIMATE ASSET BY ITS UNIQUE ID
-  GET_ESTIMATE_ASSET_BY_ID: `
-      query GetEstimateAssetByID($estimateAssetID: ID!) {
-        estimateAssetByID(estimateAssetID: $estimateAssetID) {
-          estimateAssetID
-          uniqRef
-          slug
-          legend
-          assetID
-          estimateID
-          mandadtry
-          initialPrice
-          quantity
-          state
-          createdAt
-          updatedAt
-          deletedAt
-        }
-      }
-    `,
-
-  // QUERY TO GET MULTIPLE ESTIMATE ASSETS BY AN ARRAY OF ESTIMATE ASSET IDS
-  GET_ESTIMATE_ASSETS_BY_IDS: `
-      query GetEstimateAssetsByIDs($estimateAssetIDs: [ID!]!) {
-        estimateAssetsByIDs(estimateAssetIDs: $estimateAssetIDs) {
-          estimateAssetID
-          uniqRef
-          slug
-          legend
-          assetID
-          estimateID
-          mandadtry
-          initialPrice
-          quantity
-          state
-          createdAt
-          updatedAt
-          deletedAt
-        }
-      }
-    `,
-
-  // QUERY TO GET AN ESTIMATE ASSET BY ITS UNIQUE REFERENCE
-  GET_ESTIMATE_ASSET_BY_UNIQ_REF: `
-      query GetEstimateAssetByUniqRef($uniqRef: String!) {
-        estimateAssetByUniqRef(uniqRef: $uniqRef) {
-          estimateAssetID
-          uniqRef
-          slug
-          legend
-          assetID
-          estimateID
-          mandadtry
-          initialPrice
-          quantity
-          state
-          createdAt
-          updatedAt
-          deletedAt
-        }
-      }
-    `,
-
-  // QUERY TO GET AN ESTIMATE ASSET BY ITS SLUG
-  GET_ESTIMATE_ASSET_BY_SLUG: `
-      query GetEstimateAssetBySlug($slug: String!) {
-        estimateAssetBySlug(slug: $slug) {
-          estimateAssetID
-          uniqRef
-          slug
-          legend
-          assetID
-          estimateID
-          mandadtry
-          initialPrice
-          quantity
-          state
-          createdAt
-          updatedAt
-          deletedAt
-        }
-      }
-    `,
-
-  // QUERY TO GET MULTIPLE ESTIMATE ASSETS BY SLUGS
-  GET_ESTIMATE_ASSETS_BY_SLUGS: `
-      query GetEstimateAssetsBySlugs($slugs: [String!]!) {
-        estimateAssetsBySlugs(slugs: $slugs) {
-          estimateAssetID
-          uniqRef
-          slug
-          legend
-          assetID
-          estimateID
-          mandadtry
-          initialPrice
-          quantity
-          state
-          createdAt
-          updatedAt
-          deletedAt
-        }
-      }
-    `
-};
-
-export { estimateAssetQueries };
-
-// =========================================
 // Source: accounting/estimateQueries.ts
 // =========================================
 // smp-sdk-ts/src/api/graphql/queries/estimateQueries.js
 
 const estimateQueries = {
-  GET_ESTIMATES: `
-      query GetEstimates($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-        estimates(pagination: $pagination, sort: $sort, filter: $filter) {
-          estimateID
-          uniqRef
-          slug
-          authorID
-          operatorUserID
-          buyerOrganizationID
-          sellerOrganizationID
-          serviceID
-          expirationDueDate
-          expirationTimeLeft
-          referencePrice
-          previewPrice
-          proposedPrice
-          comment
-          negociatedPrice
-          discountID
-          propositionCount
-          lastProposition
-          stage
-          state
-          createdAt
-          updatedAt
-        }
-      }
-    `,
-
   GET_ESTIMATE_BY_ID: `
       query GetEstimate($estimateId: String!) {
         estimate(id: $estimateId) {
@@ -190,145 +26,9 @@ const estimateQueries = {
       }
     `,
 
-  GET_ESTIMATE_BY_UNIQ_REF: `
-    query GetEstimateByUniqRef($uniqRef: String!) {
-      estimateByUniqRef(uniqRef: $uniqRef) {
-        estimateID
-        uniqRef
-        slug
-        authorID
-        operatorUserID
-        buyerOrganizationID
-        sellerOrganizationID
-        serviceID
-        expirationDueDate
-        expirationTimeLeft
-        referencePrice
-        previewPrice
-        proposedPrice
-        comment
-        negociatedPrice
-        discountID
-        propositionCount
-        lastProposition
-        stage
-        state
-        createdAt
-        updatedAt
-      }
-    }
-  `,
-
-  GET_ESTIMATE_BY_SLUG: `
-    query GetEstimateBySlug($slug: String!) {
-      estimateBySlug(slug: $slug) {
-        estimateID
-        uniqRef
-        slug
-        authorID
-        operatorUserID
-        buyerOrganizationID
-        sellerOrganizationID
-        serviceID
-        expirationDueDate
-        expirationTimeLeft
-        referencePrice
-        previewPrice
-        proposedPrice
-        comment
-        negociatedPrice
-        discountID
-        propositionCount
-        lastProposition
-        stage
-        state
-        createdAt
-        updatedAt
-      }
-    }
-  `,
-
-  GET_ESTIMATES_BY_IDS: `
-      query GetEstimatesByIDs($estimateIDs: [String!]!) {
-        estimatesByIDs(estimateIDs: $estimateIDs) {
-          estimateID
-          uniqRef
-          slug
-          authorID
-          operatorUserID
-          buyerOrganizationID
-          sellerOrganizationID
-          serviceID
-          expirationDueDate
-          expirationTimeLeft
-          referencePrice
-          previewPrice
-          proposedPrice
-          comment
-          negociatedPrice
-          discountID
-          propositionCount
-          lastProposition
-          stage
-          state
-          createdAt
-          updatedAt
-        }
-      }
-    `,
-
-  GET_ESTIMATES_BY_SLUGS: `
-      query GetEstimatesBySlugs($slugs: [String!]!) {
-        estimatesBySlugs(slugs: $slugs) {
-          estimateID
-          uniqRef
-          slug
-          authorID
-          operatorUserID
-          buyerOrganizationID
-          sellerOrganizationID
-          serviceID
-          expirationDueDate
-          expirationTimeLeft
-          referencePrice
-          previewPrice
-          proposedPrice
-          comment
-          negociatedPrice
-          discountID
-          propositionCount
-          lastProposition
-          stage
-          state
-          createdAt
-          updatedAt
-        }
-      }
-    `,
-
   CREATE_ESTIMATE: `
       mutation CreateEstimate($data: CreateEstimateInput!) {
         createEstimate(data: $data) {
-          estimateId
-          serviceId
-          proposalPrice
-          details
-          status
-          negotiationCount
-          clientSignDate
-          providerSignDate
-          createdAt
-          updatedAt
-          buyerUserId
-          buyerOrganizationId
-          sellerOrganizationId
-        }
-      }
-    `,
-
-  UPDATE_ESTIMATE: `
-      mutation UpdateEstimate($estimateId: EstimateIdInput!, $updateEstimateInput: UpdateEstimateInput!) {
-        updateEstimate(estimateId: $estimateId, updateEstimateInput: $updateEstimateInput) {
           estimateId
           serviceId
           proposalPrice
@@ -469,77 +169,6 @@ const estimateQueries = {
         }
       }
     `,
-
-  // Negotiation Mutations
-  CREATE_NEGOTIATION: `
-      mutation CreateNegotiation($input: CreateNegotiationInput!) {
-        createNegotiation(input: $input) {
-          estimate {
-            estimateId
-            serviceId
-            proposalPrice
-            details
-            status
-            negotiationStatus
-            currentNegotiationId
-            buyerUserId
-            buyerOrganizationId
-            sellerOrganizationId
-            createdAt
-            updatedAt
-          }
-          negotiation {
-            id
-            estimateId
-            proposedPrice
-            details
-            iterationCount
-            status
-            proposedBy
-            createdAt
-            updatedAt
-          }
-        }
-      }
-    `,
-
-  ACCEPT_NEGOTIATION: `
-      mutation AcceptNegotiation($estimateId: String!) {
-        acceptNegotiation(estimateId: $estimateId) {
-          estimateId
-          serviceId
-          proposalPrice
-          details
-          status
-          negotiationStatus
-          currentNegotiationId
-          buyerUserId
-          buyerOrganizationId
-          sellerOrganizationId
-          createdAt
-          updatedAt
-        }
-      }
-    `,
-
-  REJECT_NEGOTIATION: `
-      mutation RejectNegotiation($estimateId: String!) {
-        rejectNegotiation(estimateId: $estimateId) {
-          estimateId
-          serviceId
-          proposalPrice
-          details
-          status
-          negotiationStatus
-          currentNegotiationId
-          buyerUserId
-          buyerOrganizationId
-          sellerOrganizationId
-          createdAt
-          updatedAt
-        }
-      }
-    `
 };
 
 export { estimateQueries };
@@ -749,125 +378,6 @@ const invoiceQueries = {
         }
       }
     `,
-
-  // QUERY TO GET INVOICE BY SLUG
-  GET_INVOICE_BY_SLUG: `
-      query GetInvoiceBySlug($slug: String!) {
-        invoiceBySlug(slug: $slug) {
-          invoiceId
-          transactionId
-          slug
-          orderId
-          totalAmount
-          sellerOrganizationId
-          buyerOrganizationId
-          paymentStatus
-          emittedDate
-          dueDate
-          state
-          createdAt
-          transactionData
-          notes
-          paymentTerms
-          profile
-          header
-          seller
-          buyer
-          payment
-          lines
-          deliveryParty
-          payeeParty
-          additionalDocuments
-          docAllowanceCharges
-          currency
-          taxTotals
-          documentPresentation
-        }
-      }
-    `,
-
-  // QUERY TO GET INVOICES BY SLUGS
-  GET_INVOICES_BY_SLUGS: `
-      query GetInvoicesBySlugs($slugs: [String!]!) {
-        invoicesBySlugs(slugs: $slugs) {
-          invoiceId
-          transactionId
-          slug
-          orderId
-          totalAmount
-          sellerOrganizationId
-          buyerOrganizationId
-          paymentStatus
-          emittedDate
-          dueDate
-          state
-          createdAt
-          transactionData
-          notes
-          paymentTerms
-          profile
-          header
-          seller
-          buyer
-          payment
-          lines
-          deliveryParty
-          payeeParty
-          additionalDocuments
-          docAllowanceCharges
-          currency
-          taxTotals
-        }
-      }
-    `,
-
-  // QUERY TO GET INVOICES BY IDs
-  GET_INVOICES_BY_IDS: `
-      query GetInvoicesByIds($invoiceIds: [String!]!) {
-        invoicesByIds(invoiceIds: $invoiceIds) {
-          invoiceId
-          transactionId
-          slug
-          orderId
-          totalAmount
-          sellerOrganizationId
-          buyerOrganizationId
-          paymentStatus
-          emittedDate
-          dueDate
-          state
-          createdAt
-          transactionData
-          notes
-          paymentTerms
-          profile
-          header
-          seller
-          buyer
-          payment
-          lines
-          deliveryParty
-          payeeParty
-          additionalDocuments
-          docAllowanceCharges
-          currency
-          taxTotals
-        }
-      }
-    `,
-
-  // QUERY TO GET INVOICE PDF SECURE URL
-  GET_INVOICE_PDF_URL: `
-    query GetInvoicePDFUrl($invoiceId: String!, $input: GetInvoicePDFUrlInput!) {
-      getInvoicePDFUrl(invoiceId: $invoiceId, input: $input) {
-        success
-        downloadUrl
-        isAlreadyDownloaded
-        downloadCount
-        expiresAt
-      }
-    }
-  `
 };
 
 export { invoiceQueries };
@@ -878,125 +388,22 @@ export { invoiceQueries };
 // smp-sdk-ts/src/api/graphql/queries/transactionQueries.js
 
 const transactionQueries = {
-  // QUERY TO GET A LIST OF TRANSACTIONS WITH OPTIONAL PAGINATION, SORTING, AND FILTERING
-  GET_TRANSACTIONS: `
-      query transactions($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-        transactions(pagination: $pagination, sort: $sort, filter: $filter) {
-          transactionID
-          uniqRef
-          slug
-          buyerUserID
-          sellerOrganizationID
-          invoiceID
-          totalAmount
-          dealMediaProofID
-          transactionDateTime
-          state
-          createdAt
-          updatedAt
-          deletedAt
-        }
-      }
-    `,
-
-  // QUERY TO GET A SINGLE TRANSACTION BY ITS UNIQUE ID
+  // Transaction par identifiant — mu-billing : transaction(input: TransactionIdInput!)
   GET_TRANSACTION_BY_ID: `
-      query transaction($transactionId: ID!) {
-        transactionByID(transactionID: $transactionID) {
-          transactionID
-          uniqRef
+      query GetTransaction($input: TransactionIdInput!) {
+        transaction(input: $input) {
+          transactionId
+          serviceId
           slug
-          buyerUserID
-          sellerOrganizationID
-          invoiceID
+          buyerUserId
+          buyerOrganizationId
+          sellerUserContactId
+          sellerOrganizationId
+          currency
           totalAmount
-          dealMediaProofID
-          transactionDateTime
           state
-          createdAt
-          updatedAt
-          deletedAt
-        }
-      }
-    `,
-
-  // QUERY TO GET MULTIPLE TRANSACTIONS BY AN ARRAY OF TRANSACTION IDS
-  GET_TRANSACTIONS_BY_IDS: `
-      query transactionsByIDs($transactionIDs: [ID!]!) {
-        transactionsByIDs(transactionIDs: $transactionIDs) {
-          transactionID
-          uniqRef
-          slug
-          buyerUserID
-          sellerOrganizationID
-          invoiceID
-          totalAmount
-          dealMediaProofID
-          transactionDateTime
-          state
-          createdAt
-          updatedAt
-          deletedAt
-        }
-      }
-    `,
-
-  // QUERY TO GET A TRANSACTION BY ITS UNIQUE REFERENCE
-  GET_TRANSACTION_BY_UNIQ_REF: `
-      query transactionByUniqRef($uniqRef: String!) {
-        transactionByUniqRef(uniqRef: $uniqRef) {
-          transactionID
-          uniqRef
-          slug
-          buyerUserID
-          sellerOrganizationID
-          invoiceID
-          totalAmount
-          dealMediaProofID
-          transactionDateTime
-          state
-          createdAt
-          updatedAt
-          deletedAt
-        }
-      }
-    `,
-
-  // QUERY TO GET A TRANSACTION BY ITS SLUG
-  GET_TRANSACTION_BY_SLUG: `
-      query transactionBySlug($slug: String!) {
-        transactionBySlug(slug: $slug) {
-          transactionID
-          uniqRef
-          slug
-          buyerUserID
-          sellerOrganizationID
-          invoiceID
-          totalAmount
-          dealMediaProofID
-          transactionDateTime
-          state
-          createdAt
-          updatedAt
-          deletedAt
-        }
-      }
-    `,
-
-  // QUERY TO GET MULTIPLE TRANSACTIONS BY SLUGS
-  GET_TRANSACTIONS_BY_SLUGS: `
-      query transactionsBySlugs($slugs: [String!]!) {
-        transactionsBySlugs(slugs: $slugs) {
-          transactionID
-          uniqRef
-          slug
-          buyerUserID
-          sellerOrganizationID
-          invoiceID
-          totalAmount
-          dealMediaProofID
-          transactionDateTime
-          state
+          status
+          metadata
           createdAt
           updatedAt
           deletedAt
@@ -1338,6 +745,24 @@ export { walletQueries };
 // Source: order/orderQueries.ts
 // =========================================
 export const orderQueries = {
+  // Réalisation d'un service par un agent (mu-command), suivie depuis la page de commande.
+  GET_AGENT_EXECUTION_STATUS: `
+    query AgentExecutionStatus($orderId: ID!) {
+      agentExecutionStatus(orderId: $orderId) {
+        orderId
+        engagementId
+        executionId
+        agentId
+        status
+        error
+        attempts
+        startedAt
+        completedAt
+        result
+      }
+    }
+  `,
+
   GET_ORDER_BY_ID: `
     query GetOrder($orderId: String!) {
       order(orderId: $orderId) {
@@ -1618,6 +1043,21 @@ const contractQueries = {
         variables
         legalAlerts
         partyRoles
+      }
+    }
+  `,
+  GET_ORGANIZATION_SIGNATURE_SETTINGS: `
+    query OrganizationSignatureSettings($organizationId: ID!) {
+      organizationSignatureSettings(organizationId: $organizationId) {
+        organizationId
+        defaultSignerUserId
+        signers { userId name title hasSignature signatureImage updatedAt }
+        stampUrl
+        countersignDelayHours
+        autoCountersign
+        autoCountersignEnabledBy
+        autoCountersignEnabledAt
+        updatedAt
       }
     }
   `,

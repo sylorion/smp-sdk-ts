@@ -70,6 +70,7 @@ export const PLAN_MATRIX = {
         hasServiceAiAgents: false,
         hasDocumentCustomization: false,
         hasDocumentPoweredByRemoval: false,
+        hasAutoCountersign: false,
     },
     [PlanTier.STARTER]: {
         maxOrganizations: 1,
@@ -91,6 +92,7 @@ export const PLAN_MATRIX = {
         hasServiceAiAgents: false,
         hasDocumentCustomization: true,
         hasDocumentPoweredByRemoval: false,
+        hasAutoCountersign: false,
     },
     [PlanTier.PRO]: {
         maxOrganizations: 3,
@@ -112,6 +114,7 @@ export const PLAN_MATRIX = {
         hasServiceAiAgents: true,
         hasDocumentCustomization: true,
         hasDocumentPoweredByRemoval: true,
+        hasAutoCountersign: true,
     },
     [PlanTier.BUSINESS]: {
         maxOrganizations: 5,
@@ -133,6 +136,7 @@ export const PLAN_MATRIX = {
         hasServiceAiAgents: true,
         hasDocumentCustomization: true,
         hasDocumentPoweredByRemoval: true,
+        hasAutoCountersign: true,
     },
 };
 export const PLAN_DISPLAY_CONFIG = {
@@ -241,6 +245,8 @@ export var PlanAction;
     PlanAction["CUSTOMIZE_DOCUMENTS"] = "CUSTOMIZE_DOCUMENTS";
     /** Retrait de la mention « Émis avec Services » (Pro+). */
     PlanAction["REMOVE_DOCUMENT_POWERED_BY"] = "REMOVE_DOCUMENT_POWERED_BY";
+    /** Contre-signature automatique des contrats des flows de service (Pro+). */
+    PlanAction["AUTO_COUNTERSIGN"] = "AUTO_COUNTERSIGN";
 })(PlanAction || (PlanAction = {}));
 /** Maps PlanAction to the relevant limit key in PlanLimits */
 const ACTION_TO_LIMIT_KEY = {
@@ -261,6 +267,7 @@ const ACTION_TO_LIMIT_KEY = {
     [PlanAction.USE_SERVICE_AI_AGENTS]: null,
     [PlanAction.CUSTOMIZE_DOCUMENTS]: null,
     [PlanAction.REMOVE_DOCUMENT_POWERED_BY]: null,
+    [PlanAction.AUTO_COUNTERSIGN]: null,
 };
 /** Maps PlanAction to the relevant feature key for boolean checks */
 const ACTION_TO_FEATURE_KEY = {
@@ -271,6 +278,7 @@ const ACTION_TO_FEATURE_KEY = {
     [PlanAction.USE_SERVICE_AI_AGENTS]: 'hasServiceAiAgents',
     [PlanAction.CUSTOMIZE_DOCUMENTS]: 'hasDocumentCustomization',
     [PlanAction.REMOVE_DOCUMENT_POWERED_BY]: 'hasDocumentPoweredByRemoval',
+    [PlanAction.AUTO_COUNTERSIGN]: 'hasAutoCountersign',
 };
 // ============================================================================
 // HELPER FUNCTIONS
@@ -413,6 +421,7 @@ export function getPlanFeaturesForDisplay(plan) {
         { label: 'Analytics avancés', value: config.hasAdvancedAnalytics ? 'Inclus' : 'Non inclus', included: config.hasAdvancedAnalytics, category: 'feature' },
         { label: 'Factures et devis personnalisés', value: config.hasDocumentCustomization ? 'Inclus' : 'Non inclus', included: config.hasDocumentCustomization, category: 'feature' },
         { label: 'Sans mention « Émis avec Services »', value: config.hasDocumentPoweredByRemoval ? 'Inclus' : 'Non inclus', included: config.hasDocumentPoweredByRemoval, category: 'feature' },
+        { label: 'Contre-signature automatique', value: config.hasAutoCountersign ? 'Inclus' : 'Non inclus', included: config.hasAutoCountersign, category: 'feature' },
         { label: 'Branding personnalisé', value: config.hasCustomBranding ? 'Inclus' : 'Non inclus', included: config.hasCustomBranding, category: 'feature' },
         { label: 'Retraits / mois', value: formatLimit(config.maxWithdrawalsPerMonth), included: true, category: 'limit' },
     ];

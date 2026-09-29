@@ -39,6 +39,20 @@ interface GetOrdersResponse {
   ordersByBuyerOrganization: OrderResponse[];
 }
 
+/** Réalisation d'un service par un agent : `none` si aucun agent n'est rattaché à la commande. */
+export interface AgentExecutionStatus {
+  orderId: string;
+  engagementId?: string | null;
+  executionId?: string | null;
+  agentId?: string | null;
+  status: 'none' | 'pending' | 'running' | 'completed' | 'failed' | string;
+  error?: string | null;
+  attempts?: number | null;
+  startedAt?: string | null;
+  completedAt?: string | null;
+  result?: unknown;
+}
+
 export class Order {
   private client: APIClient;
 
@@ -81,4 +95,11 @@ export class Order {
     const response = await this.client.query<{ ordersByBuyerOrganization: OrderResponse[] }>(query, { buyerOrganizationId });
     return response.ordersByBuyerOrganization;
   }
-} 
+
+  /** Suivi de l'exécution par un agent pour la commande donnée. */
+  async getAgentExecutionStatus(orderId: string): Promise<AgentExecutionStatus> {
+    const response = await this.client.query<{ agentExecutionStatus: AgentExecutionStatus }>(
+      orderQueries.GET_AGENT_EXECUTION_STATUS, { orderId });
+    return response.agentExecutionStatus;
+  }
+}

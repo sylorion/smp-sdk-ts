@@ -100,10 +100,10 @@ export class Asset {
         const response = await this.client.query(query, variables);
         return response.assetMedia;
     }
-    async listMedias(pagination, sort, filter) {
+    /** Liste les médias d'assets — `assetMedias` n'accepte ni pagination, ni tri, ni filtre (mu-catalog). */
+    async listMedias() {
         const query = assetMediaQueries.GET_ASSET_MEDIAS;
-        const variables = { pagination, sort, filter };
-        const response = await this.client.query(query, variables);
+        const response = await this.client.query(query, {});
         return response.assetMedias;
     }
     async getMediasByIds(assetMediaIDs) {

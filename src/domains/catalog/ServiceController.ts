@@ -213,13 +213,6 @@ export class Service {
     return response.service;
   }
 
-  async listByAuthorId(authorID: string, admin?: boolean): Promise<ServiceEntity[]> {
-    const query = serviceQueries.GET_SERVICE_BY_AUTHOR_ID;
-    const variables = { authorID, admin };
-    const response = await this.client.query(query, variables) as { servicesByUserId: ServiceEntity[] };
-    return response.servicesByUserId;
-  }
-
   async getByUniqRef(uniqRef: string, admin?: boolean): Promise<ServiceEntity> {
     const query = serviceQueries.GET_SERVICE_BY_UNIQ_REF;
     const variables = { uniqRef, admin };
@@ -278,10 +271,10 @@ export class Service {
     return response.serviceMedia;
   }
 
-  async listMedias(pagination?: any, sort?: any, filter?: any): Promise<ServiceMediaEntity[]> {
+  /** Liste les médias de services — `serviceMedias` n'accepte ni pagination, ni tri, ni filtre (mu-catalog). */
+  async listMedias(): Promise<ServiceMediaEntity[]> {
     const query = serviceMediaQueries.GET_SERVICE_MEDIAS;
-    const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as { serviceMedias: ServiceMediaEntity[] };
+    const response = await this.client.query(query, {}) as { serviceMedias: ServiceMediaEntity[] };
     return response.serviceMedias;
   }
 

@@ -25,7 +25,11 @@ export declare class EngagementController {
      */
     getById(engagementId: string): Promise<Engagement>;
     /**
-     * Récupérer les engagements par estimate
+     * Récupérer les engagements par estimate.
+     *
+     * ⚠️ mu-command n'expose pas `engagementsByEstimate` (seulement par service, consultant,
+     * acheteur ou organisation) : l'appel échoue à l'exécution. Conservé tant que
+     * smp-webapp (`app/api/engagements/route.ts`, filtre `estimateId`) l'utilise.
      */
     listByEstimateId(estimateId: string): Promise<Engagement[]>;
     /**

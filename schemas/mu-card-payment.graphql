@@ -1,0 +1,107 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type PaymentIntent {
+  paymentIntent: String!
+  clientSecret: String!
+  amount: Float!
+  currency: String!
+  orderId: String
+  organizationId: String
+  userId: String
+  transfertId: String
+  status: String!
+  metadata: String
+  createdAt: DateTime
+  sessionId: String
+  transactionId: String
+  type: String
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type CardPaymentResponse {
+  success: Boolean!
+  data: PaymentIntent
+  error: String
+  code: String
+  message: String
+}
+
+type CardPaymentSession {
+  cardPaymentSessionId: String!
+  authorId: String
+  organizationId: String
+  transactionId: String
+  type: String!
+  orderId: String
+  paymentIntentId: String!
+  amount: Float!
+  currency: String!
+  status: String!
+  version: Float!
+  metadata: String
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type CardPayment {
+  cardPaymentId: String!
+  label: String
+  buyerOrganizationId: String
+  sellerOrganizationId: String
+  sourceWalletId: String
+  destinationWalletId: String!
+  state: String!
+  authorId: String
+  organizationId: String
+  transactionId: String
+  type: String!
+  orderId: String
+  paymentIntentId: String!
+  amount: Float!
+  currency: String!
+  cardPaymentSessionId: String!
+  cardPaymentSession: CardPaymentSession!
+  metadata: String
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type Query {
+  cardPaymentSession(id: String!): CardPaymentSession!
+  cardPayment(id: String!): CardPayment!
+}
+
+type Mutation {
+  initiatePayment(input: CreatePaymentDto!): CardPaymentResponse!
+  initiateServiceSubscriptionPayment(input: CreatePaymentDto!): CardPaymentResponse!
+}
+
+input CreatePaymentDto {
+  transactionId: String
+  orderId: String
+  walletId: String
+  type: PaymentType
+  amount: Float!
+  currency: String!
+  customerEmail: String
+  serviceId: String
+  stripePriceId: String
+}
+
+"""Payment Type Enum"""
+enum PaymentType {
+  purchase
+  refund
+  deposit
+  PURCHASE
+  REFUND
+  DEPOSIT
+}

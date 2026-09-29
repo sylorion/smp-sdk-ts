@@ -1,21 +1,12 @@
 import { APIClient } from '../../api/APIClient.js';
-import { CreateBookingConfigurationInput, UpdateBookingConfigurationInput, BookingConfiguration, CreateServiceTypeBookingInput, ServiceType } from '../../types/booking/index.js';
+import { CreateBookingConfigurationInput, UpdateBookingConfigurationInput, BookingConfiguration, ServiceType } from '../../types/booking/index.js';
 export declare class BookingConfigurationController {
     private apiClient;
     constructor(apiClient: APIClient);
     create(input: CreateBookingConfigurationInput): Promise<BookingConfiguration>;
-    /**
-     * Créer une configuration de booking basée sur le type de service
-     */
-    createServiceTypeBooking(input: CreateServiceTypeBookingInput): Promise<BookingConfiguration>;
     update(id: string, input: UpdateBookingConfigurationInput): Promise<BookingConfiguration>;
     getById(id: string): Promise<BookingConfiguration | null>;
     getByServiceId(serviceId: string): Promise<BookingConfiguration | null>;
-    listByUserId(userId: string): Promise<BookingConfiguration[]>;
-    /**
-     * Créer une configuration automatique basée sur le type de service
-     */
-    createAutomaticConfiguration(userId: string, serviceId: string, serviceType: ServiceType): Promise<BookingConfiguration>;
     /**
      * Vérifier si une configuration existe pour un service
      */

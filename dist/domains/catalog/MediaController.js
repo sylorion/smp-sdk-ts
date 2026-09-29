@@ -21,6 +21,7 @@ export class Media {
         const response = await this.client.mutate(mutation, variables);
         return response.updateMedia;
     }
+    /** Supprime un média — mu-document renvoie un booléen (`deleteMedia: Boolean!`). */
     async delete(mediaID) {
         const mutation = mediaMutations.DELETE_MEDIA;
         const variables = { mediaID };
@@ -34,10 +35,10 @@ export class Media {
         const response = await this.client.query(query, variables);
         return response.media;
     }
-    async list(pagination, sort, filter) {
+    /** Liste les médias — `medias` n'accepte ni pagination, ni tri, ni filtre côté mu-document. */
+    async list() {
         const query = mediaQueries.GET_MEDIAS;
-        const variables = { pagination, sort, filter };
-        const response = await this.client.query(query, variables);
+        const response = await this.client.query(query, {});
         return response.medias;
     }
     async getBySlug(slug) {

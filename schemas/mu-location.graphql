@@ -1,0 +1,100 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Place {
+  placeID: ID!
+  uniqRef: String
+  slug: String
+  authorID: ID!
+  country: String
+  region: String
+  pstate: String
+  city: String
+  postalCode: String
+  placeKind: PlaceKind!
+  addressLine1: String
+  addressLine2: String
+  coordinates: String
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+enum PlaceKind {
+  unknown
+  house
+  alley
+  villa
+  domaine
+  place
+  street
+  avenue
+  boulevard
+  road
+  monument
+  forest
+  nbhood
+  town
+  city
+  country
+  state
+  continent
+  ocean
+}
+
+enum ObjectStatus {
+  offline
+  staging
+  awaiting
+  reviewed
+  rejected
+  signaled
+  online
+  archived
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Query {
+  place(placeID: ID!): Place
+  places: [Place!]!
+  placesByIDs(placeIDs: [ID!]!): [Place!]!
+}
+
+type Mutation {
+  createPlace(input: CreatePlaceInput!): Place!
+  updatePlace(placeID: ID!, input: UpdatePlaceInput!): Place!
+  deletePlace(placeID: ID!): Boolean!
+}
+
+input CreatePlaceInput {
+  authorID: ID!
+  country: String
+  region: String
+  pstate: String
+  city: String
+  postalCode: String
+  placeKind: PlaceKind!
+  addressLine1: String
+  addressLine2: String
+  coordinates: String
+  state: ObjectStatus
+}
+
+input UpdatePlaceInput {
+  country: String
+  region: String
+  pstate: String
+  city: String
+  postalCode: String
+  placeKind: PlaceKind
+  addressLine1: String
+  addressLine2: String
+  coordinates: String
+  state: ObjectStatus
+}

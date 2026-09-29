@@ -1,0 +1,800 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Media {
+  mediaID: ID!
+  authorID: ID
+  mediaType: String
+  originalName: String
+  finalName: String
+  url: String
+  entityID: ID
+  entityName: String
+  size: String
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+enum ObjectStatus {
+  offline
+  staging
+  awaiting
+  reviewed
+  rejected
+  signaled
+  online
+  archived
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type AssetMedia {
+  assetMediaID: ID!
+  uniqRef: String
+  slug: String
+  mediaID: ID
+  assetID: ID
+  legend: String
+  listingPosition: Int
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  media: Media
+}
+
+type Asset {
+  assetID: ID!
+  uniqRef: String
+  slug: String
+  authorID: ID
+  organizationID: ID
+  title: String
+  mediaID: ID
+  description: String
+  price: Int
+  currency: String
+  legalVatPercent: Int
+  quantity: Int
+  stockQuantity: Int
+  maxPerReservation: Int
+  conflictingAssets: JSONObject
+  applyableAssets: JSONObject
+  details: JSONObject
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  medias: [AssetMedia!]
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
+type ServiceMedia {
+  serviceMediaID: ID!
+  uniqRef: String
+  slug: String
+  authorID: ID
+  mediaID: ID
+  serviceID: ID
+  legend: String
+  listingPosition: Int
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  media: Media
+}
+
+type ServiceAsset {
+  serviceAssetID: ID!
+  uniqRef: String
+  slug: String
+  authorID: ID
+  assetID: ID
+  serviceID: ID
+  legend: String
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  asset: Asset
+}
+
+type Place {
+  placeID: ID!
+}
+
+type Service {
+  serviceID: ID!
+  uniqRef: String
+  slug: String
+  authorID: ID
+  title: String
+  description: String
+  mediaBannerID: ID
+  termsAndConditionsID: ID
+  parentServiceID: ID
+  topicID: ID
+  categoryID: ID
+  organizationID: ID
+  locationID: ID
+  paymentConfigID: ID
+  price: Int!
+  currency: String
+  legalVatPercent: Int
+  lowerPrice: Int
+  upperPrice: Int
+  negotiable: Boolean
+  perimeter: Int
+  supplyType: ServiceSupplyForm
+  uptakeForm: ServiceUptakeType
+  billingPlan: ServiceBillingPlan
+  pricingMode: ServicePricingMode
+  tokenPrice: Int
+  onlineService: Boolean
+  advancedAttributes: JSONObject
+  poweredByAgent: Boolean
+  agentConfiguration: JSONObject
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  likes: Int
+  averageRating: Float
+  reviewCount: Int
+  performanceScore: Float
+  serviceMedias: [ServiceMedia!]
+  serviceAssets: [ServiceAsset!]
+  location: Place
+}
+
+enum ServiceSupplyForm {
+  irl
+  online
+  mixed
+}
+
+enum ServiceUptakeType {
+  instant
+  periodic
+  prestation
+  booking_required
+}
+
+enum ServiceBillingPlan {
+  usage
+  mixed
+  direct
+  minute
+  unit
+  hourly
+  dayly
+  mensual
+  trimestrial
+  semestrial
+  annual
+}
+
+enum ServicePricingMode {
+  money
+  tokens
+  both
+}
+
+type MutationResponse {
+  success: Boolean!
+  message: String
+  code: Int
+  field: String
+}
+
+type AssetWithServiceAssetResponse {
+  asset: Asset!
+  serviceAsset: ServiceAsset!
+}
+
+type ServiceLink {
+  service: Service!
+  serviceAsset: ServiceAsset!
+}
+
+type AssetWithServiceLinksResponse {
+  asset: Asset!
+  serviceLinks: [ServiceLink!]!
+}
+
+type ServiceWithServiceAssetResponse {
+  service: Service!
+  serviceAsset: ServiceAsset!
+}
+
+type Criteria {
+  criteriaID: ID!
+  authorID: ID
+  title: String
+  description: String
+  criteriaTargetedEntity: String
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type Documentation {
+  documentationID: ID!
+  authorID: ID
+  serviceID: ID
+  title: String
+  organizationID: ID
+  level: Int
+  order: Int
+  description: String
+  parentDocumentationID: ID
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type FaqAnswer {
+  faqAnswerID: ID!
+  authorID: ID
+  answer: String
+  topicID: ID
+  parentFaqAnswerID: ID
+  lang: String
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type FaqQuestion {
+  faqQuestionID: ID!
+  authorID: ID
+  topicID: ID
+  parentFaqQuestionID: ID
+  lang: String
+  question: String
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type FaqService {
+  faqServiceID: ID!
+  authorID: ID
+  order: Int
+  faqAnswerID: ID
+  faqQuestionID: ID
+  serviceID: ID
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type ServiceAttribute {
+  serviceAttributeID: ID!
+  authorID: ID
+  attributeName: String
+  attributeValue: String
+  serviceID: ID
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type Tag {
+  tagID: ID!
+  authorID: ID
+  topicID: ID
+  value: String
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type Topic {
+  topicID: ID!
+  authorID: ID
+  slug: String
+  title: String
+  description: String
+  parentTopicID: ID
+  level: Int
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type Query {
+  assets(pagination: PaginationInput, sort: SortInput, filter: [FilterInput!], admin: Boolean): [Asset!]!
+  asset(assetID: ID!, admin: Boolean): Asset!
+  assetsByIDs(assetIDs: [ID!]!, admin: Boolean): [Asset!]!
+  assetsBySlugs(slugs: [String!]!, admin: Boolean): [Asset!]!
+  assetByUniqRef(uniqRef: String!, admin: Boolean): Asset!
+  assetBySlug(slug: String!, admin: Boolean): Asset!
+  listAssetsByService(input: ListAssetsByServiceInput!): [AssetWithServiceAssetResponse!]!
+  listAssetsByOrganization(input: ListAssetsByOrganizationInput!): [AssetWithServiceLinksResponse!]!
+  listServicesByAsset(input: ListServicesByAssetInput!): [ServiceWithServiceAssetResponse!]!
+  assetMedias: [AssetMedia!]!
+  assetMedia(assetMediaID: ID!): AssetMedia!
+  assetMediasByIDs(assetMediaIDs: [ID!]!): [AssetMedia!]!
+  criterias: [Criteria!]!
+  criteria(criteriaID: ID!): Criteria!
+  criteriasByIDs(criteriaIDs: [ID!]!): [Criteria!]!
+  criteriasBySlugs(slugs: [String!]!): [Criteria!]!
+  criteriaByUniqRef(uniqRef: String!): Criteria!
+  criteriaBySlug(Slug: String!): Criteria!
+  documentations: [Documentation!]!
+  documentation(documentationID: ID!): Documentation!
+  documentationsByIDs(documentationIDs: [ID!]!): [Documentation!]!
+  documentationsBySlugs(slugs: [String!]!): [Documentation!]!
+  documentationByUniqRef(uniqRef: String!): Documentation!
+  documentationBySlug(Slug: String!): Documentation!
+  faqAnswers: [FaqAnswer!]!
+  faqAnswer(faqAnswerID: ID!): FaqAnswer!
+  faqAnswersByIDs(faqAnswerIDs: [ID!]!): [FaqAnswer!]!
+  faqAnswersBySlugs(slugs: [String!]!): [FaqAnswer!]!
+  faqAnswerByUniqRef(uniqRef: String!): FaqAnswer!
+  faqAnswerBySlug(Slug: String!): FaqAnswer!
+  faqQuestions: [FaqQuestion!]!
+  faqQuestion(faqQuestionID: ID!): FaqQuestion!
+  faqQuestionsByIDs(faqQuestionIDs: [ID!]!): [FaqQuestion!]!
+  faqQuestionsBySlugs(slugs: [String!]!): [FaqQuestion!]!
+  faqQuestionByUniqRef(uniqRef: String!): FaqQuestion!
+  faqQuestionBySlug(Slug: String!): FaqQuestion!
+  faqServices: [FaqService!]!
+  faqService(faqServiceID: ID!): FaqService!
+  faqServicesByIDs(faqServiceIDs: [ID!]!): [FaqService!]!
+  faqServicesBySlugs(slugs: [String!]!): [FaqService!]!
+  faqServiceByUniqRef(uniqRef: String!): FaqService!
+  faqServiceBySlug(Slug: String!): FaqService!
+  services(pagination: PaginationInput, sort: SortInput, filter: [FilterInput!], admin: Boolean): [Service!]!
+  service(serviceID: ID!, admin: Boolean): Service!
+  servicesByIDs(serviceIDs: [ID!]!, admin: Boolean): [Service!]!
+  servicesBySlugs(slugs: [String!]!, admin: Boolean): [Service!]!
+  serviceByUniqRef(uniqRef: String!, admin: Boolean): Service!
+  serviceBySlug(Slug: String!, admin: Boolean): Service!
+  listServicesByOrganization(input: ListServicesByOrganizationInput!): [Service!]!
+  searchServices(input: SearchServiceInput!): [Service!]!
+  filteredServices(input: SearchServiceInput!): JSONObject!
+  servicesByAgentID(agentID: ID!, admin: Boolean): [Service!]!
+  serviceAssets: [ServiceAsset!]!
+  serviceAsset(serviceAssetID: ID!): ServiceAsset!
+  serviceAssetsByIDs(serviceAssetIDs: [ID!]!): [ServiceAsset!]!
+  serviceAssetsBySlugs(slugs: [String!]!): [ServiceAsset!]!
+  serviceAssetByUniqRef(uniqRef: String!): ServiceAsset!
+  serviceAssetBySlug(Slug: String!): ServiceAsset!
+  serviceAttributes: [ServiceAttribute!]!
+  serviceAttribute(serviceAttributeID: ID!): ServiceAttribute!
+  serviceAttributesByIDs(serviceAttributeIDs: [ID!]!): [ServiceAttribute!]!
+  serviceAttributesBySlugs(slugs: [String!]!): [ServiceAttribute!]!
+  serviceAttributeByUniqRef(uniqRef: String!): ServiceAttribute!
+  serviceAttributeBySlug(Slug: String!): ServiceAttribute!
+  serviceMedias: [ServiceMedia!]!
+  serviceMedia(serviceMediaID: ID!): ServiceMedia!
+  serviceMediasByIDs(serviceMediaIDs: [ID!]!): [ServiceMedia!]!
+  serviceMediasBySlugs(slugs: [String!]!): [ServiceMedia!]!
+  serviceMediaByUniqRef(uniqRef: String!): ServiceMedia!
+  serviceMediaBySlug(Slug: String!): ServiceMedia!
+  tags: [Tag!]!
+  tag(tagID: ID!): Tag!
+  tagsByIDs(tagIDs: [ID!]!): [Tag!]!
+  tagsBySlugs(slugs: [String!]!): [Tag!]!
+  tagByUniqRef(uniqRef: String!): Tag!
+  tagBySlug(Slug: String!): Tag!
+  topics: [Topic!]!
+  topic(topicID: ID!): Topic!
+  topicsByIDs(topicIDs: [ID!]!): [Topic!]!
+  topicsBySlugs(slugs: [String!]!): [Topic!]!
+  topicByUniqRef(uniqRef: String!): Topic!
+  topicBySlug(Slug: String!): Topic!
+}
+
+input PaginationInput {
+  limit: Int
+  offset: Int
+  page: Int
+  pageSize: Int
+}
+
+input SortInput {
+  field: String
+  direction: String
+}
+
+input FilterInput {
+  field: String
+  operator: String
+  value: String
+}
+
+input ListAssetsByServiceInput {
+  serviceID: String!
+  admin: Boolean
+}
+
+input ListAssetsByOrganizationInput {
+  organizationID: String!
+  admin: Boolean
+}
+
+input ListServicesByAssetInput {
+  assetID: String!
+  admin: Boolean
+}
+
+input ListServicesByOrganizationInput {
+  organizationID: String!
+  admin: Boolean
+}
+
+input SearchServiceInput {
+  searchTerm: String
+  priceMin: Int
+  priceMax: Int
+  performance: Int
+  topicID: String
+
+  """Pagination: { limit, offset }"""
+  pagination: JSONObject
+
+  """
+  Filters: { topicID, organizationID, state, supplyType, minPrice, maxPrice }
+  """
+  filters: JSONObject
+
+  """Sort: { field, direction }"""
+  sort: JSONObject
+}
+
+type Mutation {
+  createAsset(input: CreateAssetInput!): Asset!
+  updateAsset(assetID: ID!, input: UpdateAssetInput!): Asset!
+  deleteAsset(assetID: ID!): MutationResponse!
+  createAssetMedia(input: CreateAssetMediaInput!): AssetMedia!
+  updateAssetMedia(assetMediaID: ID!, input: UpdateAssetMediaInput!): AssetMedia!
+  deleteAssetMedia(assetMediaID: ID!): MutationResponse!
+  createCriteria(input: CreateCriteriaInput!): Criteria!
+  updateCriteria(criteriaID: ID!, input: UpdateCriteriaInput!): Criteria!
+  deleteCriteria(criteriaID: ID!): MutationResponse!
+  createDocumentation(input: CreateDocumentationInput!): Documentation!
+  updateDocumentation(documentationID: ID!, input: UpdateDocumentationInput!): Documentation!
+  deleteDocumentation(documentationID: ID!): MutationResponse!
+  createFaqAnswer(input: CreateFaqAnswerInput!): FaqAnswer!
+  updateFaqAnswer(faqAnswerID: ID!, input: UpdateFaqAnswerInput!): FaqAnswer!
+  deleteFaqAnswer(faqAnswerID: ID!): MutationResponse!
+  createFaqQuestion(input: CreateFaqQuestionInput!): FaqQuestion!
+  updateFaqQuestion(faqQuestionID: ID!, input: UpdateFaqQuestionInput!): FaqQuestion!
+  deleteFaqQuestion(faqQuestionID: ID!): MutationResponse!
+  createFaqService(input: CreateFaqServiceInput!): FaqService!
+  updateFaqService(faqServiceID: ID!, input: UpdateFaqServiceInput!): FaqService!
+  deleteFaqService(faqServiceID: ID!): MutationResponse!
+  createService(input: CreateServiceInput!): Service!
+  updateService(serviceID: ID!, input: UpdateServiceInput!): Service!
+  deleteService(serviceID: ID!): MutationResponse!
+  addServiceToFavorites(input: AddServiceToFavoritesInput!): JSONObject!
+  createServiceAsset(input: CreateServiceAssetInput!): ServiceAsset!
+  updateServiceAsset(serviceAssetID: ID!, input: UpdateServiceAssetInput!): ServiceAsset!
+  deleteServiceAsset(serviceAssetID: ID!): MutationResponse!
+  linkAssetToService(serviceID: ID!, assetID: ID!, authorID: ID!): ServiceAsset!
+  unlinkAssetFromService(serviceID: ID!, assetID: ID!): MutationResponse!
+  createServiceAttribute(input: CreateServiceAttributeInput!): ServiceAttribute!
+  updateServiceAttribute(serviceAttributeID: ID!, input: UpdateServiceAttributeInput!): ServiceAttribute!
+  deleteServiceAttribute(serviceAttributeID: ID!): MutationResponse!
+  createServiceMedia(input: CreateServiceMediaInput!): ServiceMedia!
+  updateServiceMedia(serviceMediaID: ID!, input: UpdateServiceMediaInput!): ServiceMedia!
+  deleteServiceMedia(serviceMediaID: ID!): MutationResponse!
+  createTag(input: CreateTagInput!): Tag!
+  updateTag(tagID: ID!, input: UpdateTagInput!): Tag!
+  deleteTag(tagID: ID!): MutationResponse!
+  createTopic(input: CreateTopicInput!): Topic!
+  updateTopic(topicID: ID!, input: UpdateTopicInput!): Topic!
+  deleteTopic(topicID: ID!): MutationResponse!
+}
+
+input CreateAssetInput {
+  authorID: ID
+  organizationID: ID
+  title: String!
+  mediaID: ID
+  description: String
+  price: Float
+  legalVatPercent: Int
+  quantity: Int
+  stockQuantity: Int
+  maxPerReservation: Int
+  conflictingAssets: JSONObject
+  applyableAssets: JSONObject
+  details: JSONObject
+  state: ObjectStatus!
+}
+
+input UpdateAssetInput {
+  organizationID: ID
+  title: String
+  mediaID: ID
+  description: String
+  price: Float
+  legalVatPercent: Int
+  quantity: Int
+  stockQuantity: Int
+  maxPerReservation: Int
+  conflictingAssets: JSONObject
+  applyableAssets: JSONObject
+  details: JSONObject
+  state: ObjectStatus
+}
+
+input CreateAssetMediaInput {
+  mediaID: ID!
+  assetID: ID!
+  legend: String
+  listingPosition: Int
+  state: ObjectStatus!
+}
+
+input UpdateAssetMediaInput {
+  mediaID: ID
+  assetID: ID
+  legend: String
+  listingPosition: Int
+  state: ObjectStatus
+}
+
+input CreateCriteriaInput {
+  authorID: ID!
+  title: String!
+  description: String!
+  criteriaTargetedEntity: String
+  state: ObjectStatus!
+}
+
+input UpdateCriteriaInput {
+  title: String
+  description: String
+  criteriaTargetedEntity: String
+  state: ObjectStatus
+}
+
+input CreateDocumentationInput {
+  authorID: ID!
+  serviceID: ID
+  title: String!
+  organizationID: ID
+  level: Int!
+  order: Int!
+  description: String
+  parentDocumentationID: ID
+  state: ObjectStatus!
+}
+
+input UpdateDocumentationInput {
+  serviceID: ID
+  title: String
+  organizationID: ID
+  level: Int
+  order: Int
+  description: String
+  parentDocumentationID: ID
+  state: ObjectStatus
+}
+
+input CreateFaqAnswerInput {
+  authorID: ID!
+  answer: String!
+  topicID: ID
+  parentFaqAnswerID: ID
+  lang: String
+  state: ObjectStatus!
+}
+
+input UpdateFaqAnswerInput {
+  answer: String
+  topicID: ID
+  parentFaqAnswerID: ID
+  lang: String
+  state: ObjectStatus
+}
+
+input CreateFaqQuestionInput {
+  authorID: ID!
+  topicID: ID
+  parentFaqQuestionID: ID
+  lang: String
+  question: String!
+  state: ObjectStatus!
+}
+
+input UpdateFaqQuestionInput {
+  topicID: ID
+  parentFaqQuestionID: ID
+  lang: String
+  question: String
+  state: ObjectStatus
+}
+
+input CreateFaqServiceInput {
+  authorID: ID!
+  order: Int
+  faqAnswerID: ID!
+  faqQuestionID: ID!
+  serviceID: ID!
+  state: ObjectStatus!
+}
+
+input UpdateFaqServiceInput {
+  order: Int
+  faqAnswerID: ID
+  faqQuestionID: ID
+  serviceID: ID
+  state: ObjectStatus
+}
+
+input CreateServiceInput {
+  authorID: ID!
+  title: String!
+  description: String!
+  mediaBannerID: ID
+  termsAndConditionsID: ID
+  parentServiceID: ID
+  topicID: ID
+  categoryID: ID
+  organizationID: ID!
+  locationID: ID
+  paymentConfigID: ID
+  price: Float!
+  legalVatPercent: Int!
+  lowerPrice: Float!
+  upperPrice: Float!
+  negotiable: Boolean
+  perimeter: Int
+  supplyType: ServiceSupplyForm
+  uptakeForm: ServiceUptakeType
+  billingPlan: ServiceBillingPlan
+
+  """money | tokens | both"""
+  pricingMode: ServicePricingMode
+
+  """
+  Prix en jetons plateforme (STK), requis si pricingMode ∈ {tokens, both}
+  """
+  tokenPrice: Int
+  onlineService: Boolean
+  advancedAttributes: JSONObject
+  poweredByAgent: Boolean
+  agentConfiguration: JSONObject
+  state: ObjectStatus!
+}
+
+input UpdateServiceInput {
+  title: String
+  description: String
+  mediaBannerID: ID
+  termsAndConditionsID: ID
+  parentServiceID: ID
+  topicID: ID
+  categoryID: ID
+  locationID: ID
+  paymentConfigID: ID
+  price: Float
+  legalVatPercent: Int
+  lowerPrice: Float
+  upperPrice: Float
+  negotiable: Boolean
+  perimeter: Int
+  supplyType: ServiceSupplyForm
+  uptakeForm: ServiceUptakeType
+  billingPlan: ServiceBillingPlan
+
+  """money | tokens | both"""
+  pricingMode: ServicePricingMode
+
+  """
+  Prix en jetons plateforme (STK), requis si pricingMode ∈ {tokens, both}
+  """
+  tokenPrice: Int
+  onlineService: Boolean
+  advancedAttributes: JSONObject
+  poweredByAgent: Boolean
+  agentConfiguration: JSONObject
+  state: ObjectStatus
+}
+
+input AddServiceToFavoritesInput {
+  serviceID: String!
+  userID: String
+}
+
+input CreateServiceAssetInput {
+  authorID: ID
+  assetID: ID!
+  serviceID: ID!
+  legend: String
+  state: ObjectStatus!
+}
+
+input UpdateServiceAssetInput {
+  assetID: ID
+  serviceID: ID
+  legend: String
+  state: ObjectStatus
+}
+
+input CreateServiceAttributeInput {
+  authorID: ID!
+  attributeName: String
+  attributeValue: String
+  serviceID: ID!
+  state: ObjectStatus!
+}
+
+input UpdateServiceAttributeInput {
+  attributeName: String
+  attributeValue: String
+  serviceID: ID
+  state: ObjectStatus
+}
+
+input CreateServiceMediaInput {
+  authorID: ID
+  mediaID: ID!
+  serviceID: ID!
+  legend: String
+  listingPosition: Int
+  state: ObjectStatus!
+}
+
+input UpdateServiceMediaInput {
+  mediaID: ID
+  serviceID: ID
+  legend: String
+  listingPosition: Int
+  state: ObjectStatus
+}
+
+input CreateTagInput {
+  authorID: ID!
+  topicID: ID!
+  value: String
+  state: ObjectStatus!
+}
+
+input UpdateTagInput {
+  topicID: ID
+  value: String
+  state: ObjectStatus
+}
+
+input CreateTopicInput {
+  authorID: ID!
+  title: String!
+  description: String
+  parentTopicID: ID
+  level: Int
+  state: ObjectStatus!
+}
+
+input UpdateTopicInput {
+  title: String
+  description: String
+  parentTopicID: ID
+  level: Int
+  state: ObjectStatus
+}

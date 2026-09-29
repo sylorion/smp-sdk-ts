@@ -176,7 +176,8 @@ export declare class Asset {
     update(assetID: string, input: UpdateAssetInput): Promise<AssetEntity>;
     delete(assetID: string): Promise<MutationResponse>;
     getMediaById(assetMediaID: string): Promise<AssetMediaEntity>;
-    listMedias(pagination?: any, sort?: any, filter?: any): Promise<AssetMediaEntity[]>;
+    /** Liste les médias d'assets — `assetMedias` n'accepte ni pagination, ni tri, ni filtre (mu-catalog). */
+    listMedias(): Promise<AssetMediaEntity[]>;
     getMediasByIds(assetMediaIDs: string[]): Promise<AssetMediaEntity[]>;
     createMedia(input: CreateAssetMediaInput): Promise<AssetMediaEntity>;
     updateMedia(assetMediaID: string, input: UpdateAssetMediaInput): Promise<AssetMediaEntity>;

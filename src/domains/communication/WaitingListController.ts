@@ -2,14 +2,23 @@ import { APIClient } from '../../api/APIClient.js';
 import { waitingListMutations } from '../../api/graphql/user/mutations.js';
 import { waitingListQueries } from '../../api/graphql/user/queries.js';
 
-// Types d'entrée pour les mutations de la liste d'attente
-interface WaitingListInput {
+// Types d'entrée — alignés sur mu-authentication (CreateWaitingListInput / UpdateWaitingListInput)
+export interface CreateWaitingListInput {
   firstName?: string;
   lastName: string;
   email: string;
   city: string;
   details: string;
   age: number;
+}
+
+export type UpdateWaitingListInput = Partial<CreateWaitingListInput>;
+
+/** Filtres de `waitingLists(page, limit, state)` ; `state` est un ObjectStatus (online, offline…). */
+export interface WaitingListListOptions {
+  page?: number;
+  limit?: number;
+  state?: string;
 }
 
 // Types de réponse pour les mutations et les requêtes
@@ -37,7 +46,17 @@ interface MutationResponse {
 }
 
 interface WaitingListResponse {
-  waitingList: WaitingListEntity;
+  success: boolean;
+  message: string;
+  waitingList: WaitingListEntity | null;
+}
+
+/** mu-authentication renvoie `waitingList: null` avec `success: false` en cas de refus métier. */
+function unwrapWaitingList(response: WaitingListResponse | null | undefined, action: string): WaitingListEntity {
+  if (!response?.waitingList) {
+    throw new Error(response?.message || `Échec de ${action} de l'inscription en liste d'attente`);
+  }
+  return response.waitingList;
 }
 
 // Types pour la vérification du token
@@ -67,18 +86,18 @@ export class WaitingList {
 
   // ======================= MUTATIONS =======================
 
-  async create(input: WaitingListInput): Promise<WaitingListEntity> {
+  async create(input: CreateWaitingListInput): Promise<WaitingListEntity> {
     const mutation = waitingListMutations.CREATE_WAITING_LIST;
     const variables = { input };
     const response = await this.client.mutate(mutation, variables) as { createWaitingList: WaitingListResponse };
-    return response.createWaitingList.waitingList;
+    return unwrapWaitingList(response?.createWaitingList, 'la création');
   }
 
-  async update(waitingListID: string, input: WaitingListInput): Promise<WaitingListEntity> {
+  async update(waitingListID: string, input: UpdateWaitingListInput): Promise<WaitingListEntity> {
     const mutation = waitingListMutations.UPDATE_WAITING_LIST;
     const variables = { waitingListID, input };
     const response = await this.client.mutate(mutation, variables) as { updateWaitingList: WaitingListResponse };
-    return response.updateWaitingList.waitingList;
+    return unwrapWaitingList(response?.updateWaitingList, 'la mise à jour');
   }
 
   async delete(waitingListID: string): Promise<MutationResponse> {
@@ -92,14 +111,14 @@ export class WaitingList {
     const mutation = waitingListMutations.CONFIRM_WAITING_LIST;
     const variables = { waitingListID };
     const response = await this.client.mutate(mutation, variables) as { confirmWaitingList: WaitingListResponse };
-    return response.confirmWaitingList.waitingList;
+    return unwrapWaitingList(response?.confirmWaitingList, 'la confirmation');
   }
 
   async resendEmail(waitingListID: string): Promise<WaitingListEntity> {
     const mutation = waitingListMutations.RESEND_WAITING_LIST_EMAIL;
     const variables = { waitingListID };
     const response = await this.client.mutate(mutation, variables) as { resendWaitingListEmail: WaitingListResponse };
-    return response.resendWaitingListEmail.waitingList;
+    return unwrapWaitingList(response?.resendWaitingListEmail, "le renvoi de l'e-mail");
   }
 
   async verifyToken(token: string): Promise<WaitingListTokenData> {
@@ -118,9 +137,10 @@ export class WaitingList {
     return response.waitingList;
   }
 
-  async list(): Promise<WaitingListEntity[]> {
+  async list(options: WaitingListListOptions = {}): Promise<WaitingListEntity[]> {
     const query = waitingListQueries.GET_WAITING_LISTS;
-    const response = await this.client.query(query) as { waitingLists: WaitingListEntity[] };
-    return response.waitingLists;
+    const { page, limit, state } = options;
+    const response = await this.client.query(query, { page, limit, state }) as { waitingLists: WaitingListEntity[] };
+    return response?.waitingLists ?? [];
   }
 } 

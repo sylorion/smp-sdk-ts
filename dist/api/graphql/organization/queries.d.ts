@@ -1,13 +1,3 @@
-declare const organizationMediaQueries: {
-    GET_ORGANIZATION_MEDIA: string;
-    GET_ORGANIZATION_MEDIA_BY_ID: string;
-    GET_ORGANIZATION_MEDIAS: string;
-    GET_ORGANIZATION_MEDIAS_BY_IDS: string;
-    GET_ORGANIZATION_MEDIA_BY_UNIQ_REF: string;
-    GET_ORGANIZATION_MEDIA_BY_SLUG: string;
-    GET_ORGANIZATION_MEDIAS_BY_SLUGS: string;
-};
-export { organizationMediaQueries };
 declare const organizationQueries: {
     GET_ORGANIZATION_BY_ID: string;
     GET_ORGANIZATIONS: string;

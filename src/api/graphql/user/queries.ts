@@ -192,7 +192,7 @@ export const profileQueries = {
           gender
           nationality
           phoneNumber
-          bio
+          profilePictureID
           state
           createdAt
           updatedAt
@@ -296,7 +296,7 @@ export const waitingListQueries = {
   `,
 
   GET_WAITING_LISTS: `
-    query GetWaitingLists($page: Int, $limit: Int, $state: WaitingListState) {
+    query GetWaitingLists($page: Int, $limit: Int, $state: ObjectStatus) {
       waitingLists(page: $page, limit: $limit, state: $state) {
         waitingListID
         uniqRef

@@ -1,18 +1,14 @@
 export interface Campaign {
     campaignID: string;
-    uniqRef: string;
-    slug: string;
     emailCampaignTemplateID: string;
     subject: string;
     contentHTML?: string;
     contentText?: string;
-    groupIDs?: string[];
     scheduledAt?: string;
     sentAt?: string;
     state: string;
     createdAt: string;
     updatedAt: string;
-    deletedAt?: string;
 }
 export interface CreateCampaignInput {
     emailCampaignTemplateID: string;
@@ -34,8 +30,6 @@ export interface UpdateCampaignInput {
 }
 export interface Newsletter {
     newsletterID: string;
-    uniqRef: string;
-    slug: string;
     emailNewsletterTemplateID: string;
     subject: string;
     contentHTML?: string;
@@ -45,7 +39,6 @@ export interface Newsletter {
     state: string;
     createdAt: string;
     updatedAt: string;
-    deletedAt?: string;
 }
 export interface CreateNewsletterInput {
     emailNewsletterTemplateID: string;

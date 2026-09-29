@@ -122,24 +122,6 @@ export declare class Invoice {
     listByBuyerOrganizationId(buyerOrganizationId: string): Promise<InvoiceResponse[]>;
     listByBuyerUserId(buyerUserId: string): Promise<InvoiceResponse[]>;
     /**
-     * Fetches multiple invoices by an array of invoice IDs.
-     * @param invoiceIDs - An array of invoice IDs.
-     * @returns A list of invoices.
-     */
-    getByIds(invoiceIDs: string[]): Promise<any[]>;
-    /**
-     * Fetches an invoice by its slug.
-     * @param slug - The slug of the invoice.
-     * @returns The details of the invoice.
-     */
-    getBySlug(slug: string): Promise<any>;
-    /**
-     * Fetches multiple invoices by their slugs.
-     * @param slugs - An array of invoice slugs.
-     * @returns A list of invoices.
-     */
-    getBySlugs(slugs: string[]): Promise<any[]>;
-    /**
      * Envoie une invitation de paiement pour une facture
      */
     sendPayment(data: {

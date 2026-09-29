@@ -7,17 +7,12 @@ export class Notification {
     constructor(client) {
         this.client = client;
     }
-    async list(pagination, sort, filter) {
-        const query = notificationQueries.GET_NOTIFICATIONS;
-        const variables = { pagination, sort, filter };
-        const response = await this.client.query(query, variables);
-        return response.notifications;
-    }
+    /** Notification par identifiant, ou `null` si elle n'existe pas. */
     async getById(notificationID) {
         const query = notificationQueries.GET_NOTIFICATION_BY_ID;
         const variables = { notificationID };
         const response = await this.client.query(query, variables);
-        return response.notificationByID;
+        return response?.notification ?? null;
     }
     async getByIds(notificationIDs) {
         const query = notificationQueries.GET_NOTIFICATIONS_BY_IDS;

@@ -7,7 +7,6 @@ interface CreateMediaInput {
     originalName?: string;
     finalName?: string;
     entityID?: string;
-    metadata?: any;
     entityName?: string;
     url?: string;
     size?: string;
@@ -18,7 +17,6 @@ interface UpdateMediaInput {
     summary?: string;
     originalName?: string;
     finalName?: string;
-    metadata?: any;
     url?: string;
     size?: string;
     state?: string;
@@ -36,16 +34,11 @@ interface MediaEntity {
     url: string;
     size: string;
     entityID: string;
-    metadata: any;
     entityName: string;
     state: string;
     createdAt: string;
     updatedAt: string;
     deletedAt?: string;
-}
-interface MutationResponse {
-    success: boolean;
-    message: string;
 }
 /**
  * The `Media` class manages media-related requests within the application.
@@ -56,9 +49,11 @@ export declare class Media {
     constructor(client: APIClient);
     create(input: CreateMediaInput): Promise<MediaEntity>;
     update(mediaID: string, input: UpdateMediaInput): Promise<MediaEntity>;
-    delete(mediaID: string): Promise<MutationResponse>;
+    /** Supprime un média — mu-document renvoie un booléen (`deleteMedia: Boolean!`). */
+    delete(mediaID: string): Promise<boolean>;
     getById(mediaID: string): Promise<MediaEntity>;
-    list(pagination?: any, sort?: any, filter?: any[]): Promise<MediaEntity[]>;
+    /** Liste les médias — `medias` n'accepte ni pagination, ni tri, ni filtre côté mu-document. */
+    list(): Promise<MediaEntity[]>;
     getBySlug(slug: string): Promise<MediaEntity>;
     getByIds(mediaIDs: string[]): Promise<MediaEntity[]>;
     getBySlugs(slugs: string[]): Promise<MediaEntity[]>;

@@ -18,6 +18,9 @@ export * from './types/booking/index.js';
 export * from './types/plan/index.js';
 export * from './types/review/index.js';
 export * from './types/review/format.js';
+export * from './types/flow/index.js';
+export * from './types/referral/index.js';
+export * from './types/capacity/index.js';
 // ==========================================
 // CORE CLASSES & CONFIG
 // ==========================================

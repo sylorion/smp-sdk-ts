@@ -5,8 +5,8 @@ import { APIClient } from '../../api/APIClient.js';
 export declare class Notification {
     private client;
     constructor(client: APIClient);
-    list(pagination?: any, sort?: any, filter?: any): Promise<any[]>;
-    getById(notificationID: string): Promise<any>;
+    /** Notification par identifiant, ou `null` si elle n'existe pas. */
+    getById(notificationID: string): Promise<any | null>;
     getByIds(notificationIDs: string[]): Promise<any[]>;
     getByUniqRef(uniqRef: string): Promise<any>;
     getBySlug(slug: string): Promise<any>;

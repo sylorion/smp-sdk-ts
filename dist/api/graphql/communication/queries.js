@@ -8,41 +8,15 @@ const mailingQueries = {
       query GetCampaignById($campaignID: ID!) {
         campaign(campaignID: $campaignID) {
           campaignID
-          uniqRef
-          slug
           emailCampaignTemplateID
           subject
           contentHTML
           contentText
-          groupIDs
           scheduledAt
           sentAt
           state
           createdAt
           updatedAt
-          deletedAt
-        }
-      }
-    `,
-    GET_CAMPAIGNS: `
-      query GetCampaigns($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-        campaigns(pagination: $pagination, sort: $sort, filter: $filter) {
-          campaignID
-          uniqRef
-          slug
-          emailCampaignTemplateID
-          subject
-        }
-      }
-    `,
-    GET_CAMPAIGN_BY_SLUG: `
-      query GetCampaignBySlug($slug: String!) {
-        campaignBySlug(slug: $slug) {
-          campaignID
-          uniqRef
-          slug
-          emailCampaignTemplateID
-          subject
         }
       }
     `,
@@ -51,8 +25,6 @@ const mailingQueries = {
       query GetNewsletter($newsletterID: ID!) {
         newsletter(newsletterID: $newsletterID) {
           newsletterID
-          uniqRef
-          slug
           emailNewsletterTemplateID
           subject
           contentHTML
@@ -62,74 +34,6 @@ const mailingQueries = {
           state
           createdAt
           updatedAt
-          deletedAt
-        }
-      }
-    `,
-    GET_NEWSLETTERS: `
-      query GetNewsletters($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-        newsletters(pagination: $pagination, sort: $sort, filter: $filter) {
-          newsletterID
-          uniqRef
-          slug
-          emailNewsletterTemplateID
-          subject
-        }
-      }
-    `,
-    GET_NEWSLETTER_BY_SLUG: `
-      query GetNewsletterBySlug($slug: String!) {
-        newsletterBySlug(slug: $slug) {
-          newsletterID
-          uniqRef
-          slug
-          emailNewsletterTemplateID
-          subject
-        }
-      }
-    `,
-    // ------------------ NewsletterContact ------------------
-    GET_NEWSLETTER_CONTACT: `
-      query GetNewsletterContact($newsletterContactID: ID!) {
-        newsletterContact(newsletterContactID: $newsletterContactID) {
-          newsletterContactID
-          userID
-          email
-          firstName
-          lastName
-          isNewsletterSubscriber
-          source
-          country
-          gender
-          birthDate
-          state
-          slug
-          uniqRef
-          createdAt
-          updatedAt
-          deletedAt
-        }
-      }
-    `,
-    GET_NEWSLETTER_CONTACTS: `
-      query GetNewsletterContacts($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-        newsletterContacts(pagination: $pagination, sort: $sort, filter: $filter) {
-          newsletterContactID
-          userID
-          email
-          firstName
-          lastName
-        }
-      }
-    `,
-    GET_NEWSLETTER_CONTACT_BY_SLUG: `
-      query GetNewsletterContactBySlug($slug: String!) {
-        newsletterContactBySlug(slug: $slug) {
-          newsletterContactID
-          userID
-          email
-          firstName
-          lastName
         }
       }
     `,
@@ -150,34 +54,10 @@ export { mailingQueries };
 // =========================================
 // smp-sdk-ts/src/api/graphql/queries/notification/notificationQueries.js
 const notificationQueries = {
-    // QUERY TO GET A LIST OF NOTIFICATIONS WITH OPTIONAL PAGINATION, SORTING, AND FILTERING
-    GET_NOTIFICATIONS: `
-      query GetNotifications($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-        notifications(pagination: $pagination, sort: $sort, filter: $filter) {
-          notificationID
-          userID
-          organizationID
-          title
-          message
-          readAt
-          link
-          state
-          slug
-          uniqRef
-          type
-          notificationTemplateID
-          entityType
-          entityID
-          createdAt
-          updatedAt
-          deletedAt
-        }
-      }
-    `,
-    // QUERY TO GET A SINGLE NOTIFICATION BY ITS UNIQUE ID
+    // Notification par identifiant — mu-notification : notification(notificationID: ID!)
     GET_NOTIFICATION_BY_ID: `
       query GetNotificationByID($notificationID: ID!) {
-        notificationByID(notificationID: $notificationID) {
+        notification(notificationID: $notificationID) {
           notificationID
           userID
           organizationID
@@ -249,7 +129,7 @@ const notificationQueries = {
     // QUERY TO GET A NOTIFICATION BY ITS SLUG
     GET_NOTIFICATION_BY_SLUG: `
       query GetNotificationBySlug($slug: String!) {
-        notificationBySlug(slug: $slug) {
+        notificationBySlug(Slug: $slug) {
           notificationID
           userID
           organizationID
@@ -664,7 +544,7 @@ const engagementQueries = {
   `,
     // QUERY POUR RÉCUPÉRER LES RAPPORTS D'ENGAGEMENT PAR PÉRIODE
     GET_ENGAGEMENT_REPORTS_BY_PERIOD: `
-    query GetEngagementReportsByPeriod($year: Int!, $periodType: String!, $periodValue: Int!) {
+    query GetEngagementReportsByPeriod($year: Float!, $periodType: String!, $periodValue: Float!) {
       engagementReportsByPeriod(year: $year, periodType: $periodType, periodValue: $periodValue) {
         ${ENGAGEMENT_REPORT_FIELDS}
       }

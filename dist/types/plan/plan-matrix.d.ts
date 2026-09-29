@@ -49,6 +49,8 @@ export interface PlanFeatures {
     hasDocumentCustomization: boolean;
     /** Retrait de la mention « Émis avec Services » sur les documents commerciaux — Pro et Business. */
     hasDocumentPoweredByRemoval: boolean;
+    /** Contre-signature automatique des contrats des flows de service — Pro et Business. */
+    hasAutoCountersign: boolean;
 }
 export type PlanConfig = PlanLimits & PlanFeatures;
 /** Sentinel value for "unlimited" */
@@ -99,7 +101,9 @@ export declare enum PlanAction {
     /** Personnalisation des factures et devis. */
     CUSTOMIZE_DOCUMENTS = "CUSTOMIZE_DOCUMENTS",
     /** Retrait de la mention « Émis avec Services » (Pro+). */
-    REMOVE_DOCUMENT_POWERED_BY = "REMOVE_DOCUMENT_POWERED_BY"
+    REMOVE_DOCUMENT_POWERED_BY = "REMOVE_DOCUMENT_POWERED_BY",
+    /** Contre-signature automatique des contrats des flows de service (Pro+). */
+    AUTO_COUNTERSIGN = "AUTO_COUNTERSIGN"
 }
 /**
  * Resolves a plan string to a PlanTier enum value.

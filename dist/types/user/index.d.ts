@@ -76,6 +76,7 @@ export interface UpdateProfileInput {
 }
 export interface ProfileEntity {
     profileID: string;
+    userID?: string;
     uniqRef: string;
     slug: string;
     firstName: string;

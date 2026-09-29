@@ -1,0 +1,715 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type RiskConfigurationModel {
+  id: ID!
+  operation: String!
+  currency: String
+  isActive: Boolean!
+  threshold: Float!
+  alertEnabled: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type CurrencyConfigurationModel {
+  id: ID!
+  name: String!
+  currency: String!
+  details: String!
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type AuditConfigurationModel {
+  id: ID!
+  retentionPeriod: Int!
+  logLevel: String!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type BatchConfigurationModel {
+  id: ID!
+  batchInterval: Int!
+  batchEnabled: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type WalletLifecycleConfigurationModel {
+  id: ID!
+  allowNewWallet: Boolean!
+  maintenanceWindow: String
+  freezePolicy: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+}
+
+type LimitConfigurationModel {
+  id: ID!
+  operation: String!
+  currency: String
+  initiator: String!
+  isActive: Boolean!
+  maxAmount: Int
+  dailyLimit: Int
+  weeklyLimit: Int
+  monthlyLimit: Int
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type TokenUsageEntry {
+  tokenUsageId: ID!
+  walletId: ID!
+  kind: String!
+  agentKey: String
+  action: String
+
+  """Signé : négatif = débit"""
+  amount: Int!
+  baseCost: Int!
+  llmCost: Int!
+  llmInputTokens: Int!
+  llmOutputTokens: Int!
+  llmModel: String
+  referenceType: String
+  referenceId: String
+  createdAt: DateTime!
+
+  """JSON"""
+  metadata: String
+}
+
+type TokenUsageByAgent {
+  agentKey: String!
+  calls: Int!
+  tokens: Int!
+  llmInputTokens: Int!
+  llmOutputTokens: Int!
+}
+
+type TokenUsageSummary {
+  walletId: ID
+  userId: ID
+  organizationId: ID
+  dailyAllowance: Int!
+  dailyRemaining: Int!
+  dailyUsedToday: Int!
+  tokensDaily: Int!
+  tokensFree: Int!
+  tokensPaid: Int!
+  tokensRevenue: Int!
+  totalAvailable: Int!
+  consumedToday: Int!
+  consumedLast30Days: Int!
+  nextDailyRefreshAt: DateTime!
+  byAgentToday: [TokenUsageByAgent!]!
+  byAgentLast30Days: [TokenUsageByAgent!]!
+  recent: [TokenUsageEntry!]!
+}
+
+type ConsumeTokensResult {
+  tokenUsageId: ID!
+  walletId: ID!
+  cost: Int!
+  baseCost: Int!
+  llmCost: Int!
+  alreadyRecorded: Boolean!
+  totalAvailable: Int!
+  dailyRemaining: Int!
+}
+
+type TokenCostEstimate {
+  agentKey: String!
+  baseCost: Int!
+  llmCost: Int!
+  total: Int!
+  llmTokensPerPlatformToken: Int!
+}
+
+type TokenServicePaymentResult {
+  tokenUsageId: ID!
+  buyerWalletId: ID!
+  sellerWalletId: ID!
+  tokenPrice: Int!
+  commission: Int!
+  total: Int!
+  alreadyPaid: Boolean!
+}
+
+type Wallet {
+  """Wallet unique identifier"""
+  walletId: ID!
+
+  """user owner wallet """
+  userId: ID
+
+  """organization owned this wallet if applicable"""
+  organizationId: ID
+
+  """Soldes multi-devises au format JSON"""
+  balances: String!
+
+  """Tokens par type (gratuits, payants) au format JSON"""
+  tokens: String!
+
+  """Devise principale du wallet"""
+  mainCurrency: String!
+
+  """Version pour contrôle optimiste"""
+  version: Int!
+
+  """Indique un compte bien actif mouvement sur les 3 derniers mois"""
+  isActive: Int!
+
+  """Indique un compte verrouille (par utilisateur ou administratif)"""
+  isLocked: Int!
+
+  """Indique un compte qui est suspecté de comportement anormal"""
+  isSuspicious: Int!
+
+  """Date de création du wallet"""
+  createdAt: DateTime
+
+  """Date de la dernière update du wallet"""
+  updatedAt: DateTime
+
+  """Date de suppression par l'utilisateur du wallet"""
+  deletedAt: DateTime
+
+  """Données du fournisseur externe (ex: Stripe)"""
+  externalProviderData: String
+
+  """Adresse publique du wallet (SVC-XXXX-XXXX-XXXX)"""
+  publicAddress: String
+}
+
+type InitiateTransferResponse {
+  transferId: String!
+  status: String!
+  otpSentTo: String!
+  expiresAt: String!
+  feeAmount: Int!
+  netAmount: Int!
+}
+
+type ConfirmTransferResponse {
+  transferId: String!
+  status: String!
+  sourceWallet: Wallet!
+  destinationWallet: Wallet!
+  amount: Int!
+  feeAmount: Int!
+  currency: String!
+  ledgerTransactionId: String!
+}
+
+type ConversionDetails {
+  tokenAmount: Float!
+  moneyAmount: Float!
+  fee: Float!
+  netAmount: Float!
+  feePercentage: Float!
+  currency: String!
+  success: Boolean!
+  errorMessage: String
+}
+
+type TransferResponse {
+  sourceWallet: Wallet!
+  destinationWallet: Wallet!
+}
+
+type StripeConnectStatus {
+  organizationID: String
+  stripeAccountId: String
+  accountType: String
+  onboardingCompleted: Boolean!
+  chargesEnabled: Boolean!
+  payoutsEnabled: Boolean!
+  detailsSubmitted: Boolean!
+  requirements: String
+  connectedAt: DateTime
+  lastStatusCheck: DateTime
+  blockingRequirements: [String!]
+  eventuallyRequirements: [String!]
+  disabledReason: String
+}
+
+type StripeOnboardingLink {
+  url: String!
+  expiresAt: String
+}
+
+type StripeAccountSession {
+  clientSecret: String!
+}
+
+type LedgerEntryTransaction {
+  ledgerTransactionId: ID!
+  referenceType: String!
+  referenceId: String!
+  description: String
+  createdAt: DateTime!
+}
+
+type LedgerEntryItem {
+  ledgerEntryId: ID!
+  accountType: String!
+  accountId: String!
+  entryType: String!
+  amount: Int!
+  currency: String!
+  balanceAfter: Int
+  createdAt: DateTime!
+  transaction: LedgerEntryTransaction
+}
+
+type WithdrawalEventModel {
+  withdrawalEventId: String!
+  eventType: String!
+  actorId: String!
+  actorRole: String
+  previousStatus: String
+  newStatus: String!
+  note: String
+  metadataJson: String
+  createdAt: DateTime!
+}
+
+type WithdrawalRequestModel {
+  withdrawalRequestId: String!
+  walletId: String!
+  userId: String
+  organizationId: String
+  amount: Int!
+  feeAmount: Int!
+  netAmount: Int!
+  currency: String!
+  status: String!
+  paymentMethodId: String
+  destinationIbanHash: String
+  submittedBy: String!
+  approvedBy: String
+  approvedAt: DateTime
+  rejectionReason: String
+  externalPayoutId: String
+  externalPayoutStatus: String
+  completedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime
+  events: [WithdrawalEventModel!]
+}
+
+type Query {
+  limitConfigurations: [LimitConfigurationModel!]!
+  riskConfigurations: [RiskConfigurationModel!]!
+  currencyConfigurations: [CurrencyConfigurationModel!]!
+  auditConfigurations: [AuditConfigurationModel!]!
+  batchConfigurations: [BatchConfigurationModel!]!
+  walletLifecycleConfigurations: [WalletLifecycleConfigurationModel!]!
+
+  """Usage des jetons (allocation du jour, solde, consommation par agent)"""
+  tokenUsageSummary(walletId: ID, userId: ID, organizationId: ID): TokenUsageSummary!
+  tokenUsageHistory(walletId: ID, userId: ID, organizationId: ID, limit: Int = 50, kinds: [String!]): [TokenUsageEntry!]!
+
+  """Coût estimé d'un appel d'agent"""
+  tokenCostEstimate(agentKey: String!, llmInputTokens: Int, llmOutputTokens: Int): TokenCostEstimate!
+  wallet(id: String!): Wallet!
+  wallets(userId: String!, organizationId: String!): [Wallet!]!
+  walletsByUser(userId: String!): [Wallet!]!
+  walletsByOrganization(organizationId: String!): [Wallet!]!
+  userWallets(userId: String!): [Wallet!]!
+  organizationWallets(organizationId: String!): [Wallet!]!
+  allWallets: [Wallet!]!
+  walletLedgerHistory(walletId: String!, accountType: String, limit: Float = 20): [LedgerEntryItem!]!
+  getConversionDetails(data: ConversionDetailsInput!): ConversionDetails!
+  stripeConnectStatus(organizationID: String!, forceRefresh: Boolean): StripeConnectStatus!
+  withdrawalRequest(withdrawalRequestId: String!): WithdrawalRequestModel!
+  withdrawalRequests(walletId: String, organizationId: String, status: String, limit: Int, offset: Int): [WithdrawalRequestModel!]!
+}
+
+input ConversionDetailsInput {
+  tokenAmount: Float!
+  currency: String!
+}
+
+type Mutation {
+  createLimitConfiguration(data: CreateLimitConfigurationInput!): LimitConfigurationModel!
+  updateLimitConfiguration(data: UpdateLimitConfigurationInput!): LimitConfigurationModel!
+  createRiskConfiguration(data: CreateRiskConfigurationInput!): RiskConfigurationModel!
+  updateRiskConfiguration(data: UpdateRiskConfigurationInput!): RiskConfigurationModel!
+  createCurrencyConfiguration(data: CreateCurrencyConfigurationInput!): CurrencyConfigurationModel!
+  updateCurrencyConfiguration(data: UpdateCurrencyConfigurationInput!): CurrencyConfigurationModel!
+  createAuditConfiguration(data: CreateAuditConfigurationInput!): AuditConfigurationModel!
+  updateAuditConfiguration(data: UpdateAuditConfigurationInput!): AuditConfigurationModel!
+  createBatchConfiguration(data: CreateBatchConfigurationInput!): BatchConfigurationModel!
+  updateBatchConfiguration(data: UpdateBatchConfigurationInput!): BatchConfigurationModel!
+  createWalletLifecycleConfiguration(data: CreateWalletLifecycleConfigurationInput!): WalletLifecycleConfigurationModel!
+  updateWalletLifecycleConfiguration(data: UpdateWalletLifecycleConfigurationInput!): WalletLifecycleConfigurationModel!
+
+  """Débite le coût d'un appel d'agent (idempotent)"""
+  consumeTokens(data: ConsumeTokensInput!): ConsumeTokensResult!
+
+  """Paie un service dont le prix est en jetons (idempotent)"""
+  payServiceWithTokens(data: PayServiceWithTokensInput!): TokenServicePaymentResult!
+  initiateSecureTransfer(data: InitiateSecureTransferInput!): InitiateTransferResponse!
+  confirmSecureTransfer(data: ConfirmSecureTransferInput!): ConfirmTransferResponse!
+  createWallet(data: CreateWalletInput!): Wallet!
+  deposit(data: DepositInput!): Wallet!
+  withdraw(data: WithdrawInput!): Wallet!
+  convertToTokens(data: ConvertToTokensInput!): Wallet!
+  convertTokensToMoney(data: ConvertTokensToMoneyInput!): Wallet!
+  payWithWallet(data: PayWithWalletInput!): Wallet!
+  addRevenue(data: AddRevenueInput!): Wallet!
+  bankWithdraw(data: BankWithdrawInput!): Wallet!
+  transfer(data: TransferInput!): TransferResponse!
+  setPrimaryCurrency(data: SetPrimaryCurrencyInput!): Wallet!
+  adjustment(data: AdjustmentInput!): Wallet!
+  createStripeConnectAccount(organizationID: String!): StripeConnectStatus!
+  generateStripeOnboardingLink(organizationID: String!, returnUrl: String!, refreshUrl: String!): StripeOnboardingLink!
+  createStripeAccountSession(organizationID: String!): StripeAccountSession!
+  createWithdrawal(data: CreateWithdrawalInput!): WithdrawalRequestModel!
+  submitWithdrawalForApproval(withdrawalRequestId: String!, actorId: String!): WithdrawalRequestModel!
+  reviewWithdrawal(data: ReviewWithdrawalInput!): WithdrawalRequestModel!
+
+  """
+  Marque un retrait approuvé comme en cours de virement (approved → processing).
+  """
+  markWithdrawalProcessing(withdrawalRequestId: String!, actorId: String!, externalPayoutId: String): WithdrawalRequestModel!
+
+  """
+  Clôt un retrait dont le virement a abouti (processing → completed). Libère le HOLD et encaisse les frais.
+  """
+  completeWithdrawal(withdrawalRequestId: String!, externalPayoutId: String): WithdrawalRequestModel!
+
+  """
+  Déclare l'échec d'un virement (processing → failed). Restitue au wallet le montant ET les frais.
+  """
+  failWithdrawal(withdrawalRequestId: String!, actorId: String!, reason: String!): WithdrawalRequestModel!
+}
+
+input CreateLimitConfigurationInput {
+  operation: String!
+  label: String!
+  initiator: String!
+  currency: String!
+  isActive: Boolean!
+  maxAmount: Int
+  dailyLimit: Int
+  weeklyLimit: Int
+  monthlyLimit: Int
+}
+
+input UpdateLimitConfigurationInput {
+  limitConfigurationId: ID!
+  operation: String
+  label: String
+  currency: String!
+  isActive: Boolean
+  maxAmount: Int
+  dailyLimit: Int
+  weeklyLimit: Int
+  monthlyLimit: Int
+  deletedAt: DateTime
+}
+
+input CreateRiskConfigurationInput {
+  operation: String!
+  isActive: Boolean!
+  threshold: Float!
+  alertEnabled: Boolean!
+}
+
+input UpdateRiskConfigurationInput {
+  riskConfigurationId: ID!
+  operation: String
+  isActive: Boolean
+  threshold: Float
+  alertEnabled: Boolean
+  deletedAt: DateTime
+}
+
+input CreateCurrencyConfigurationInput {
+  currency: String!
+  name: String!
+  isActive: Boolean!
+}
+
+input UpdateCurrencyConfigurationInput {
+  currencyConfigurationId: ID!
+  currency: String
+  name: String
+  details: String
+  isActive: Boolean
+  deletedAt: DateTime
+}
+
+input CreateAuditConfigurationInput {
+  retentionPeriod: Int!
+  logLevel: String!
+}
+
+input UpdateAuditConfigurationInput {
+  auditConfigurationId: ID!
+  retentionPeriod: Int
+  logLevel: String
+}
+
+input CreateBatchConfigurationInput {
+  batchInterval: Int!
+  batchEnabled: Boolean!
+}
+
+input UpdateBatchConfigurationInput {
+  batchConfigurationId: ID!
+  batchInterval: Int
+  batchEnabled: Boolean
+  deletedAt: DateTime
+}
+
+input CreateWalletLifecycleConfigurationInput {
+  allowNewWallet: Boolean!
+  maintenanceWindow: String
+  freezePolicy: String
+}
+
+input UpdateWalletLifecycleConfigurationInput {
+  walletLifecycleConfigurationId: ID!
+  allowNewWallet: Boolean
+  maintenanceWindow: String
+  freezePolicy: String
+  deletedAt: DateTime
+}
+
+input ConsumeTokensInput {
+  walletId: ID
+  userId: ID
+  organizationId: ID
+
+  """Utilisateur à l'origine de l'appel"""
+  actorUserId: ID
+
+  """
+  Clé d’agent : form | form_assistant | pm | pm_message | contract | generative | …
+  """
+  agentKey: String!
+  action: String
+
+  """Forfait explicite (sinon barème par agent)"""
+  baseCost: Int
+  llmInputTokens: Int
+  llmOutputTokens: Int
+  llmModel: String
+
+  """Clé d’idempotence unique par appel (ex. form:<sessionId>:<messageId>)"""
+  idempotencyKey: String!
+  referenceType: String
+  referenceId: String
+
+  """JSON"""
+  metadata: String
+}
+
+input PayServiceWithTokensInput {
+  walletId: ID
+  userId: ID
+  organizationId: ID
+  actorUserId: ID
+  sellerOrganizationId: ID!
+
+  """Prix du service en jetons (hors commission)"""
+  tokenPrice: Int!
+  serviceId: ID!
+  serviceName: String
+  orderId: ID
+  transactionId: ID
+
+  """Clé d’idempotence (ex. order:<orderId>)"""
+  idempotencyKey: String!
+
+  """JSON"""
+  metadata: String
+}
+
+input InitiateSecureTransferInput {
+  sourceWalletId: String!
+  destinationAddress: String!
+  amount: Int!
+  currency: String!
+  initiatedBy: String!
+  note: String
+}
+
+input ConfirmSecureTransferInput {
+  transferId: String!
+  otpCode: String!
+  actorId: String!
+}
+
+input CreateWalletInput {
+  userId: ID
+  organizationId: String
+  mainCurrency: String!
+  description: String
+  balance: Int
+  initialBalances: String
+  initialTokens: String
+  metadata: String
+}
+
+input DepositInput {
+  walletId: ID!
+  amount: Int!
+  currency: String!
+
+  """Convertir automatiquement en tokens"""
+  convertToTokens: Boolean! = false
+
+  """ID de la session de paiement Stripe"""
+  paymentSessionId: String
+  idempotencyKey: String
+  metadata: String
+}
+
+input WithdrawInput {
+  walletId: ID!
+  amount: Int!
+  currency: String!
+  metadata: String
+}
+
+input ConvertToTokensInput {
+  walletId: ID!
+  amount: Int!
+  currency: String!
+
+  """Raison de la conversion"""
+  reason: String
+}
+
+input ConvertTokensToMoneyInput {
+  walletId: ID!
+  tokenAmount: Int!
+  currency: String!
+
+  """Raison de la conversion"""
+  reason: String
+
+  """Type de tokens à convertir (gratuits, payants, revenus)"""
+  tokenType: String
+}
+
+input PayWithWalletInput {
+  walletId: ID!
+  amount: Int!
+  currency: String!
+  serviceId: String!
+  serviceName: String!
+
+  """Payer avec des tokens au lieu d'argent"""
+  useTokens: Boolean! = false
+
+  """Référence du paiement"""
+  reference: String
+
+  """Métadonnées du paiement"""
+  metadata: String
+}
+
+input AddRevenueInput {
+  walletId: ID!
+  amount: Int!
+  currency: String!
+  serviceId: String!
+  serviceName: String!
+  clientId: String!
+
+  """Référence de la transaction"""
+  reference: String
+
+  """Commission de la plateforme"""
+  platformFee: String
+
+  """Métadonnées de la transaction"""
+  metadata: String
+}
+
+input BankWithdrawInput {
+  walletId: ID!
+  amount: Int!
+  currency: String!
+
+  """Référence du virement"""
+  reference: String
+}
+
+input TransferInput {
+  sourceWalletId: ID!
+  destinationWalletId: ID!
+  amount: Int!
+  currency: String!
+  idempotencyKey: String
+  metadata: String
+}
+
+input SetPrimaryCurrencyInput {
+  walletId: ID!
+  mainCurrency: String
+  deletedAt: String
+  metadata: String
+}
+
+input AdjustmentInput {
+  walletId: ID!
+  adjustmentAmount: Int!
+  currency: String!
+  metadata: String
+}
+
+input CreateWithdrawalInput {
+  walletId: String!
+  userId: String
+  organizationId: String
+  amount: Int!
+  currency: String!
+  paymentMethodId: String
+  destinationIbanHash: String
+  submittedBy: String!
+  beneficiaryInfo: BeneficiaryInfoInput
+  organizationContactEmail: String
+  organizationName: String
+}
+
+input BeneficiaryInfoInput {
+  accountHolder: String!
+  iban: String!
+  bic: String
+  bankName: String
+  reference: String
+}
+
+input ReviewWithdrawalInput {
+  withdrawalRequestId: String!
+  actorId: String!
+  action: String!
+  rejectionReason: String
+  note: String
+  organizationContactEmail: String
+  organizationName: String
+}

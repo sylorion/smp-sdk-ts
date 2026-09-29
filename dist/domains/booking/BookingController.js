@@ -6,19 +6,22 @@ export class BookingController {
     }
     // ===== DEMANDES DE DEVIS =====
     /**
-     * Créer une demande de devis
+     * ⚠️ `createEstimateRequest` n'existe dans aucun service (mu-command n'expose pas les demandes de devis
+     * ni les disponibilités ponctuelles) : l'appel échoue à l'exécution. Conservé tant que
+     * smp-webapp (`app/api/booking/estimate-requests/route.ts`) et smp-mobile (`features/booking/booking.service.ts`) l'utilise ; le parcours devis passe par `accounting.estimate.create`.
      */
     async createEstimateRequest(input) {
         const response = await this.apiClient.mutate(bookingMutations.CREATE_ESTIMATE_REQUEST, { input });
         return response.createEstimateRequest;
     }
+    /**
+     * ⚠️ `estimateRequests` n'existe dans aucun service (mu-command n'expose pas les demandes de devis
+     * ni les disponibilités ponctuelles) : l'appel échoue à l'exécution. Conservé tant que
+     * smp-webapp (`app/api/booking/estimate-requests/route.ts`) et smp-mobile (`features/booking/booking.service.ts`) l'utilise.
+     */
     async listEstimateRequests(serviceId, userId) {
         const response = await this.apiClient.query(bookingQueries.GET_ESTIMATE_REQUESTS, { serviceId, userId });
         return response.estimateRequests;
-    }
-    async getEstimateRequestById(estimateRequestId) {
-        const response = await this.apiClient.query(bookingQueries.GET_ESTIMATE_REQUEST, { estimateRequestId });
-        return response.estimateRequest;
     }
     // ===== RÉSERVATIONS =====
     async create(input) {
@@ -44,13 +47,6 @@ export class BookingController {
         const response = await this.apiClient.query(bookingQueries.GET_CALENDAR_DATA, { serviceId, startDate, endDate });
         return response;
     }
-    /**
-     * Récupérer les réservations d'une disponibilité
-     */
-    async listByAvailabilityId(availabilityId) {
-        const response = await this.apiClient.query(bookingQueries.GET_BOOKINGS_BY_AVAILABILITY, { availabilityId });
-        return response.bookingsByAvailability;
-    }
     async cancel(bookingId, message) {
         const response = await this.apiClient.mutate(bookingMutations.CANCEL_BOOKING, { bookingId, message });
         return response.cancelBooking;
@@ -65,41 +61,15 @@ export class BookingController {
     }
     // ===== DISPONIBILITÉS =====
     /**
-     * Créer une disponibilité
+     * ⚠️ `createAvailability` n'existe dans aucun service (mu-command n'expose pas les demandes de devis
+     * ni les disponibilités ponctuelles) : l'appel échoue à l'exécution. Conservé tant que
+     * smp-webapp (`app/api/booking/bookings/route.ts`) l'utilise ; les disponibilités réelles sont hebdomadaires (`createWeeklyAvailabilityBatch`) ou des exceptions (`createAvailabilityException`).
      */
     async createAvailability(input) {
         const response = await this.apiClient.mutate(bookingMutations.CREATE_AVAILABILITY, { input });
         return response.createAvailability;
     }
-    /**
-     * Mettre à jour une disponibilité
-     */
-    async updateAvailability(id, input) {
-        const response = await this.apiClient.mutate(bookingMutations.UPDATE_AVAILABILITY, { id, input });
-        return response.updateAvailability;
-    }
-    /**
-     * Annuler une disponibilité
-     */
-    async cancelAvailability(id) {
-        const response = await this.apiClient.mutate(bookingMutations.CANCEL_AVAILABILITY, { id });
-        return response.cancelAvailability;
-    }
-    /**
-     * Rechercher des disponibilités
-     */
-    async searchAvailabilities(input) {
-        const response = await this.apiClient.query(bookingQueries.SEARCH_AVAILABILITIES, { input });
-        return response.searchAvailabilities;
-    }
     // ===== DISPONIBILITÉS HEBDOMADAIRES =====
-    /**
-     * Créer une disponibilité hebdomadaire
-     */
-    async createWeeklyAvailability(input) {
-        const response = await this.apiClient.mutate(bookingMutations.CREATE_WEEKLY_AVAILABILITY, { input });
-        return response.createWeeklyAvailability;
-    }
     /**
      * Créer des disponibilités hebdomadaires en lot
      */
@@ -115,20 +85,6 @@ export class BookingController {
         return response.weeklyAvailabilities;
     }
     // ===== CRÉNEAUX QUOTIDIENS =====
-    /**
-     * Créer des créneaux quotidiens
-     */
-    async createDailySlots(input) {
-        const response = await this.apiClient.mutate(bookingMutations.CREATE_DAILY_SLOTS, { input });
-        return response.createDailySlots;
-    }
-    /**
-     * Récupérer les créneaux quotidiens
-     */
-    async listDailySlots(input) {
-        const response = await this.apiClient.query(bookingQueries.GET_DAILY_SLOTS, { input });
-        return response.dailySlots;
-    }
     // ===== CRÉNEAUX DISPONIBLES =====
     /**
      * Récupérer les créneaux disponibles

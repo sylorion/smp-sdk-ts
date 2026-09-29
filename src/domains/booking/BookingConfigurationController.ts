@@ -3,7 +3,6 @@ import {
   CreateBookingConfigurationInput,
   UpdateBookingConfigurationInput,
   BookingConfiguration,
-  CreateServiceTypeBookingInput,
   ServiceType
 } from '../../types/booking/index.js';
 import { bookingMutations, bookingConfigurationMutations } from '../../api/graphql/booking/mutations.js';
@@ -20,19 +19,6 @@ export class BookingConfigurationController {
       { input }
     ) as { createBookingConfiguration: BookingConfiguration };
     return response.createBookingConfiguration;
-  }
-
-  /**
-   * Créer une configuration de booking basée sur le type de service
-   */
-  async createServiceTypeBooking(
-    input: CreateServiceTypeBookingInput
-  ): Promise<BookingConfiguration> {
-    const response = await this.apiClient.mutate(
-      bookingConfigurationMutations.CREATE_SERVICE_TYPE_BOOKING,
-      { input }
-    ) as { createServiceTypeBooking: BookingConfiguration };
-    return response.createServiceTypeBooking;
   }
 
   async update(
@@ -62,34 +48,7 @@ export class BookingConfigurationController {
     return response.bookingConfigurationByService;
   }
 
-  async listByUserId(userId: string): Promise<BookingConfiguration[]> {
-    const response = await this.apiClient.query(
-      bookingQueries.GET_BOOKING_CONFIGURATIONS_BY_USER,
-      { userId }
-    ) as { bookingConfigurationsByUser: BookingConfiguration[] };
-    return response.bookingConfigurationsByUser;
-  }
 
-
-
-  /**
-   * Créer une configuration automatique basée sur le type de service
-   */
-  async createAutomaticConfiguration(
-    userId: string,
-    serviceId: string,
-    serviceType: ServiceType
-  ): Promise<BookingConfiguration> {
-    const input: CreateServiceTypeBookingInput = {
-      userId,
-      serviceId,
-      serviceType,
-      allowGroupBooking: false,
-      allowUnloggedUsers: false
-    };
-
-    return this.createServiceTypeBooking(input);
-  }
 
   /**
    * Vérifier si une configuration existe pour un service

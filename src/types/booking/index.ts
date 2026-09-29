@@ -226,27 +226,9 @@ export interface CreateAvailabilityInput {
   capacity: number;
 }
 
-export interface UpdateAvailabilityInput {
-  availabilityId: string;
-  startDate?: Date;
-  endDate?: Date;
-  startTime?: number;
-  endTime?: number;
-  capacity?: number;
-  status?: AvailabilityStatus;
-}
-
 export enum AvailabilityStatus {
   ACTIVE = 'ACTIVE',
   CANCELLED = 'CANCELLED'
-}
-
-export interface CreateWeeklyAvailabilityInput {
-  userId: string;
-  serviceId: string;
-  dayOfWeek: number;
-  startTime: string;
-  endTime: string;
 }
 
 export interface CreateWeeklyAvailabilityBatchInput {
@@ -260,14 +242,6 @@ export interface WeeklyAvailabilitySlot {
   dayOfWeek: number;
   startTime: string;
   endTime: string;
-}
-
-export interface CreateDailySlotsInput {
-  userId: string;
-  serviceId: string;
-  dayOfWeek: number;
-  slots: DailyTimeSlot[];
-  replaceExisting: boolean;
 }
 
 export interface DailyTimeSlot {
@@ -303,15 +277,6 @@ export interface CreateBookingConfigurationInput {
   autoSendPostBookingMessage?: boolean;
 }
 
-export interface CreateServiceTypeBookingInput {
-  userId: string;
-  serviceId: string;
-  serviceType: ServiceType;
-  allowGroupBooking?: boolean;
-  allowUnloggedUsers?: boolean;
-  customNotes?: string;
-}
-
 export interface UpdateBookingConfigurationInput {
   userId?: string;
   serviceId?: string;
@@ -344,29 +309,10 @@ export interface CalendarData {
   };
 }
 
-// Types pour les inputs de recherche
-export interface SearchAvailabilityInput {
-  serviceId: string;
-  startDate: Date;
-  endDate: Date;
-  userId?: string;
-  minDuration?: number;
-  maxDuration?: number;
-}
-
 export interface AvailableSlotsInput {
   serviceId: string;
   date: Date;
   userId?: string;
   slotDuration?: number;
   maxSlots?: number;
-}
-
-export interface SearchDailySlotsInput {
-  serviceId: string;
-  date: Date;
-  userId?: string;
-  slotDuration?: number;
-  maxSlots?: number;
-  includeBookedSlots: boolean;
 }

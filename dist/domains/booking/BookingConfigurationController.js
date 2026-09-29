@@ -8,13 +8,6 @@ export class BookingConfigurationController {
         const response = await this.apiClient.mutate(bookingConfigurationMutations.CREATE_BOOKING_CONFIGURATION, { input });
         return response.createBookingConfiguration;
     }
-    /**
-     * Créer une configuration de booking basée sur le type de service
-     */
-    async createServiceTypeBooking(input) {
-        const response = await this.apiClient.mutate(bookingConfigurationMutations.CREATE_SERVICE_TYPE_BOOKING, { input });
-        return response.createServiceTypeBooking;
-    }
     async update(id, input) {
         const response = await this.apiClient.mutate(bookingConfigurationMutations.UPDATE_BOOKING_CONFIGURATION, { id, input });
         return response.updateBookingConfiguration;
@@ -26,23 +19,6 @@ export class BookingConfigurationController {
     async getByServiceId(serviceId) {
         const response = await this.apiClient.query(bookingQueries.GET_BOOKING_CONFIGURATION_BY_SERVICE, { serviceId });
         return response.bookingConfigurationByService;
-    }
-    async listByUserId(userId) {
-        const response = await this.apiClient.query(bookingQueries.GET_BOOKING_CONFIGURATIONS_BY_USER, { userId });
-        return response.bookingConfigurationsByUser;
-    }
-    /**
-     * Créer une configuration automatique basée sur le type de service
-     */
-    async createAutomaticConfiguration(userId, serviceId, serviceType) {
-        const input = {
-            userId,
-            serviceId,
-            serviceType,
-            allowGroupBooking: false,
-            allowUnloggedUsers: false
-        };
-        return this.createServiceTypeBooking(input);
     }
     /**
      * Vérifier si une configuration existe pour un service

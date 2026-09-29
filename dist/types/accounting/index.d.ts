@@ -46,11 +46,9 @@ export interface CreateContractInput {
     serviceId?: string;
     estimateId?: string;
     organizationId?: string;
-    status?: string;
     content?: any;
     variables?: any;
     details?: any;
-    authorId?: string;
     /**
      * Template ID to create the contract from.
      * When provided, the backend loads the template and populates content/variables.
@@ -63,17 +61,18 @@ export interface CreateContractInput {
     /**
      * 'manual'   : created by org owner from dashboard → counts toward plan limits.
      * 'pipeline' : auto-created after order.paid → does NOT count.
+     * Seul 'manual' est accepté depuis GraphQL ; 'service_flow' est réservé au gRPC.
      */
     source?: 'manual' | 'pipeline';
 }
 export interface UpdateContractInput {
+    /** Renseigné par `Contract.update(id, data)` s'il est absent. */
     contractId?: string;
     status?: string;
     content?: any;
     variables?: any;
     details?: any;
     organizationId?: string;
-    additionalData?: any;
 }
 export interface SignContractInput {
     contractId: string;
@@ -106,8 +105,85 @@ export interface SendContractInput {
     organizationName?: string;
     /** Sender name for email */
     senderName?: string;
-    /** Role of the signer being invited */
+    /** Langue de l'e-mail si le contrat n'en a pas (fr, en, es). */
+    language?: string;
+    /** Prévenir l'expéditeur à la première ouverture du lien. */
+    notifyOnOpen?: boolean;
+    /** Relance automatique du client 48 h avant l'expiration du lien. */
+    autoReminder?: boolean;
+}
+/** Motif de refus d'un contrat par le client. */
+export type ContractRejectionCategory = 'amount_or_date' | 'clause' | 'wrong_person' | 'other';
+export interface RejectContractInput {
+    /** Jeton d'invitation reçu par le client. */
+    invitationToken: string;
+    category: ContractRejectionCategory;
+    /** 2000 caractères au plus ; obligatoire pour « other ». */
+    reason: string;
+}
+/** Refus stocké dans `details.rejection`. */
+export interface ContractRejection {
+    category: ContractRejectionCategory;
+    reason: string;
+    rejectedAt: string;
+    rejectedBy?: string;
+}
+export type ContractInvitationStatus = 'pending' | 'signed' | 'revoked' | 'rejected' | 'expired';
+/** Invitation de signature stockée dans `details.signatureInvitations[]` (le jeton n'est jamais renvoyé au front). */
+export interface ContractSignatureInvitation {
+    email?: string;
+    name?: string;
     role?: SignerRole;
+    status: ContractInvitationStatus;
+    channel?: 'email' | 'checkout';
+    sentAt?: string;
+    openedAt?: string | null;
+    expiresAt?: string;
+    reminderSentAt?: string | null;
+    notifyOnOpen?: boolean;
+    autoReminder?: boolean;
+    revokedAt?: string;
+}
+export interface ResendContractInvitationResponse {
+    success: boolean;
+    message: string;
+    expiresAt?: string;
+}
+export interface OrganizationSigner {
+    userId: string;
+    name: string;
+    title?: string | null;
+    hasSignature: boolean;
+    /** Rendue au signataire lui-même et pour le signataire par défaut uniquement. */
+    signatureImage?: string | null;
+    updatedAt?: string | null;
+}
+export interface OrganizationSignatureSettings {
+    organizationId: string;
+    defaultSignerUserId?: string | null;
+    signers: OrganizationSigner[];
+    stampUrl?: string | null;
+    countersignDelayHours: number;
+    autoCountersign: boolean;
+    autoCountersignEnabledBy?: string | null;
+    autoCountersignEnabledAt?: string | null;
+    updatedAt?: string | null;
+}
+export interface UpdateOrganizationSignatureSettingsInput {
+    /** Doit avoir une signature enregistrée ; null pour retirer. */
+    defaultSignerUserId?: string | null;
+    /** Image base64 ou https ; null ou vide pour retirer. */
+    stampUrl?: string | null;
+    /** 1 à 720 heures. */
+    countersignDelayHours?: number;
+    /** Plan Pro requis (`AUTO_COUNTERSIGN`). */
+    autoCountersign?: boolean;
+}
+export interface SaveOrganizationSignerInput {
+    name: string;
+    title?: string;
+    /** PNG/JPEG/WebP en base64 ou fichier https. */
+    signatureImage: string;
 }
 export interface CreateContractResponse {
     createContract: ContractResponse;
@@ -160,7 +236,7 @@ export interface GetContractResponse {
     getContract: ContractResponse;
 }
 export interface GetContractsResponse {
-    contracts: ContractResponse[];
+    getContracts: ContractResponse[];
 }
 export interface GetContractsByOrganizationIdResponse {
     getContractsByOrganizationId: ContractResponse[];
@@ -487,11 +563,23 @@ export interface CreateOrderInput {
     serviceId: string;
     estimateId: string;
     totalPrice: number;
-    transactionId?: string;
+    /** Obligatoire côté mu-command (`transactionId: ID!`). */
+    transactionId: string;
     sellerOrganizationId: string;
-    buyerOrganizationId: string;
-    currency: string;
+    buyerOrganizationId?: string;
+    currency?: string;
     billingInformation?: BillingInformation;
+    /**
+     * Exécution du flow « Avant de payer » : obligatoire pour un service à flow publié.
+     * mu-command exige une exécution `validated` du même acheteur et du même service
+     * (sinon erreur `FLOW_NOT_VALIDATED`).
+     */
+    flowRunId?: string;
+    /**
+     * Jeton d'apport d'affaires (`?ref=`) mémorisé pour ce service. Revalidé par
+     * mu-command : un jeton invalide ne bloque jamais la commande (pas d'attribution).
+     */
+    referralToken?: string;
 }
 export interface AddLineInput {
     orderAssetId: string;
@@ -502,13 +590,6 @@ export interface AddLineInput {
     description: string;
     legalVatPercent: number;
     details: any;
-}
-export interface UpdateLineDataInput {
-    quantity: number;
-    unitPrice?: number;
-    title?: string;
-    description?: string;
-    legalVatPercent?: number;
 }
 export interface DeleteLineInput {
     orderId: string;

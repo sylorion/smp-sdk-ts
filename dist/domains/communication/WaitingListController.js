@@ -1,5 +1,12 @@
 import { waitingListMutations } from '../../api/graphql/user/mutations.js';
 import { waitingListQueries } from '../../api/graphql/user/queries.js';
+/** mu-authentication renvoie `waitingList: null` avec `success: false` en cas de refus métier. */
+function unwrapWaitingList(response, action) {
+    if (!response?.waitingList) {
+        throw new Error(response?.message || `Échec de ${action} de l'inscription en liste d'attente`);
+    }
+    return response.waitingList;
+}
 // Contrôleur des mutations et des requêtes pour la liste d'attente
 export class WaitingList {
     constructor(client) {
@@ -10,13 +17,13 @@ export class WaitingList {
         const mutation = waitingListMutations.CREATE_WAITING_LIST;
         const variables = { input };
         const response = await this.client.mutate(mutation, variables);
-        return response.createWaitingList.waitingList;
+        return unwrapWaitingList(response?.createWaitingList, 'la création');
     }
     async update(waitingListID, input) {
         const mutation = waitingListMutations.UPDATE_WAITING_LIST;
         const variables = { waitingListID, input };
         const response = await this.client.mutate(mutation, variables);
-        return response.updateWaitingList.waitingList;
+        return unwrapWaitingList(response?.updateWaitingList, 'la mise à jour');
     }
     async delete(waitingListID) {
         const mutation = waitingListMutations.DELETE_WAITING_LIST;
@@ -28,13 +35,13 @@ export class WaitingList {
         const mutation = waitingListMutations.CONFIRM_WAITING_LIST;
         const variables = { waitingListID };
         const response = await this.client.mutate(mutation, variables);
-        return response.confirmWaitingList.waitingList;
+        return unwrapWaitingList(response?.confirmWaitingList, 'la confirmation');
     }
     async resendEmail(waitingListID) {
         const mutation = waitingListMutations.RESEND_WAITING_LIST_EMAIL;
         const variables = { waitingListID };
         const response = await this.client.mutate(mutation, variables);
-        return response.resendWaitingListEmail.waitingList;
+        return unwrapWaitingList(response?.resendWaitingListEmail, "le renvoi de l'e-mail");
     }
     async verifyToken(token) {
         const mutation = waitingListMutations.VERIFY_WAITING_LIST_TOKEN;
@@ -49,9 +56,10 @@ export class WaitingList {
         const response = await this.client.query(query, variables);
         return response.waitingList;
     }
-    async list() {
+    async list(options = {}) {
         const query = waitingListQueries.GET_WAITING_LISTS;
-        const response = await this.client.query(query);
-        return response.waitingLists;
+        const { page, limit, state } = options;
+        const response = await this.client.query(query, { page, limit, state });
+        return response?.waitingLists ?? [];
     }
 }

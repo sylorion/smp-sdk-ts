@@ -3,7 +3,7 @@ import { AuthTokenManager } from './auth/AuthTokenManager.js';
 import { SMPClientOptions } from './config/SMPConfig.js';
 import { AxiosRequestConfig } from "axios";
 import { GraphQLClient } from 'graphql-request';
-import { AuthDomain, CatalogDomain, AccountingDomain, OrganizationDomain, UserDomain, BookingDomain, CommunicationDomain, ReviewDomain } from './domains/index.js';
+import { AuthDomain, CatalogDomain, AccountingDomain, OrganizationDomain, UserDomain, BookingDomain, CommunicationDomain, ReviewDomain, FlowDomain, ReferralDomain, CapacityDomain } from './domains/index.js';
 import { LogIn } from './types/auth/index.js';
 export declare class SMPClient {
     httpApiClient: APIClient;
@@ -16,6 +16,12 @@ export declare class SMPClient {
     booking: BookingDomain;
     communication: CommunicationDomain;
     review: ReviewDomain;
+    /** Flows de service (mu-command). */
+    flow: FlowDomain;
+    /** Apport d'affaires (mu-command). */
+    referral: ReferralDomain;
+    /** Capacité des prestations (mu-command). */
+    capacity: CapacityDomain;
     private loggedUser?;
     private loggedApp?;
     private wsClient?;

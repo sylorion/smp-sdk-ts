@@ -84,12 +84,11 @@ export class SMPPayment {
         const response = await this.client.mutate(mutation, variables);
         return response.addLine;
     }
-    async updateLine(orderId, assetId, updateData) {
-        const mutation = paymentMutations.UPDATE_LINE;
-        const variables = { orderId, assetId, updateData };
-        const response = await this.client.mutate(mutation, variables);
-        return response.updateLine;
-    }
+    /**
+     * ⚠️ Aucune mutation `deleteLine` n'existe dans mu-command (seul `addLine` est exposé) :
+     * cet appel échoue à l'exécution (« Cannot query field deleteLine »). Conservé tant que
+     * `apps/front/web/smp-webapp/src/app/api/payment/order/route.ts` l'utilise.
+     */
     async deleteLine(orderId, assetId) {
         const mutation = paymentMutations.DELETE_LINE;
         const variables = { input: { orderId, assetId } };
@@ -138,11 +137,6 @@ export class SMPPayment {
         const variables = { input: { transactionId } };
         const response = await this.client.query(query, variables);
         return response.transaction;
-    }
-    async listTransactions() {
-        const query = transactionQueries.GET_TRANSACTIONS;
-        const response = await this.client.query(query, {});
-        return response.transactions;
     }
     async listTransactionsByBuyerUserId(buyerUserId) {
         const query = transactionQueries.GET_TRANSACTIONS_BY_BUYER_USER_ID;

@@ -1,11 +1,18 @@
 import { APIClient } from '../../api/APIClient.js';
-interface WaitingListInput {
+export interface CreateWaitingListInput {
     firstName?: string;
     lastName: string;
     email: string;
     city: string;
     details: string;
     age: number;
+}
+export type UpdateWaitingListInput = Partial<CreateWaitingListInput>;
+/** Filtres de `waitingLists(page, limit, state)` ; `state` est un ObjectStatus (online, offline…). */
+export interface WaitingListListOptions {
+    page?: number;
+    limit?: number;
+    state?: string;
 }
 interface WaitingListEntity {
     waitingListID: string;
@@ -40,13 +47,13 @@ interface WaitingListTokenData {
 export declare class WaitingList {
     private client;
     constructor(client: APIClient);
-    create(input: WaitingListInput): Promise<WaitingListEntity>;
-    update(waitingListID: string, input: WaitingListInput): Promise<WaitingListEntity>;
+    create(input: CreateWaitingListInput): Promise<WaitingListEntity>;
+    update(waitingListID: string, input: UpdateWaitingListInput): Promise<WaitingListEntity>;
     delete(waitingListID: string): Promise<MutationResponse>;
     confirm(waitingListID: string): Promise<WaitingListEntity>;
     resendEmail(waitingListID: string): Promise<WaitingListEntity>;
     verifyToken(token: string): Promise<WaitingListTokenData>;
     getById(waitingListID: string): Promise<WaitingListEntity>;
-    list(): Promise<WaitingListEntity[]>;
+    list(options?: WaitingListListOptions): Promise<WaitingListEntity[]>;
 }
 export {};

@@ -4,7 +4,7 @@ import { ErrorHandler } from './utils/ErrorHandler.js';
 import { logger } from './utils/Logger.js';
 import { i18n } from './i18n/index.js';
 import { ConfigManager } from './config/ConfigManager.js';
-import { AuthDomain, CatalogDomain, AccountingDomain, OrganizationDomain, UserDomain, BookingDomain, CommunicationDomain, ReviewDomain } from './domains/index.js';
+import { AuthDomain, CatalogDomain, AccountingDomain, OrganizationDomain, UserDomain, BookingDomain, CommunicationDomain, ReviewDomain, FlowDomain, ReferralDomain, CapacityDomain } from './domains/index.js';
 export class SMPClient {
     constructor(options) {
         this.configManager = new ConfigManager(options);
@@ -18,6 +18,9 @@ export class SMPClient {
         this.booking = new BookingDomain(this.httpApiClient);
         this.communication = new CommunicationDomain(this.httpApiClient);
         this.review = new ReviewDomain(this.httpApiClient);
+        this.flow = new FlowDomain(this.httpApiClient);
+        this.referral = new ReferralDomain(this.httpApiClient);
+        this.capacity = new CapacityDomain(this.httpApiClient);
         this.authTokenManager = new AuthTokenManager(this.configManager, this.httpApiClient);
         this.httpApiClient.updateHeaderAppID(this.configManager.appId);
         this.httpApiClient.updateHeaderAppSecret(this.configManager.appSecret);

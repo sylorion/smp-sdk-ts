@@ -1,0 +1,1047 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AgentExecutionStatus {
+  orderId: ID!
+  engagementId: ID
+  executionId: String
+  agentId: String
+  status: String!
+  error: String
+  attempts: Float
+  startedAt: String
+  completedAt: String
+  result: JSON
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type Booking {
+  bookingId: ID!
+  serviceId: ID
+  timeSlotId: ID
+  userId: ID
+  status: BookingStatus!
+  weeklyAvailabilityId: ID
+  slotDate: DateTime
+  slotStartTime: Int
+  slotEndTime: Int
+  slotDuration: Int
+  customerDetails: JSONObject
+  bookingStartDate: DateTime
+  bookingEndDate: DateTime
+  engagementId: ID
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+"""BookingStatus status"""
+enum BookingStatus {
+  pending
+  confirmed
+  canceled
+  completed
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
+type BookingManagementInfo {
+  activeBooking: Booking
+  booking: Booking
+  cancellationWindow: Int!
+  cancellationPolicy: String
+  canCancel: Boolean!
+  cancelDeadline: DateTime
+  cancelBlockedReason: String
+  refundEligible: Boolean!
+}
+
+type ServiceCapacity {
+  serviceId: ID!
+  organizationId: ID!
+  enabled: Boolean!
+  maxActive: Int
+  maxPerPeriod: Int
+  period: String!
+  pausedUntil: DateTime
+  activeCount: Int!
+  periodCount: Int!
+  available: Boolean!
+  reason: String
+  nextAvailableAt: DateTime
+  updatedAt: DateTime
+}
+
+type OrganizationCapacity {
+  organizationId: ID!
+  enabled: Boolean!
+  maxActive: Int
+  activeCount: Int!
+  available: Boolean!
+  updatedAt: DateTime
+}
+
+type ServiceAvailability {
+  serviceId: ID!
+  available: Boolean!
+  reason: String
+  nextAvailableAt: DateTime
+}
+
+type BookingConfiguration {
+  bookingConfigurationId: ID!
+  userId: ID!
+  serviceId: ID!
+  bookingMode: BookingMode!
+  defaultSlotDuration: Int!
+  allowGroupBooking: Boolean!
+  minBookingDuration: Int!
+  maxBookingDuration: Int!
+  dateRangeBookingAllowed: Boolean!
+  advanceBookingLimit: Int!
+  cancellationWindow: Int!
+  cancellationPolicy: String
+  maxCapacity: Int!
+
+  """
+  Exigences personnalisées du prestataire pour les clients (checklist dynamique)
+  """
+  customRequirements: JSON
+
+  """Template personnalisé pour le message post-réservation"""
+  postBookingMessageTemplate: String
+
+  """
+  Détermine si le message doit être envoyé automatiquement après paiement
+  """
+  autoSendPostBookingMessage: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+"""Modes de réservation disponibles"""
+enum BookingMode {
+  TIME_SLOT
+  DATE_RANGE
+}
+
+type TimeSlot {
+  timeSlotId: ID!
+  slotType: TimeSlotType!
+  engagementId: ID
+  engagementReportId: ID
+  engagementMilestoneId: ID
+  serviceId: ID
+  startDateTime: DateTime!
+  endDateTime: DateTime
+  duration: Int
+  title: String
+  description: String
+  status: TimeSlotStatus!
+  priority: TimeSlotPriority!
+  capacity: Int!
+  maxParticipants: Int!
+  currentParticipants: Int!
+  isPublic: Boolean!
+  requiresApproval: Boolean!
+  parentSlotId: ID
+  dependentSlotIds: JSONObject
+  estimatedHours: Float
+  actualHours: Float
+  hourlyRate: Int
+  qualityScore: Int
+  clientFeedback: String
+  internalNotes: String
+  deliverables: JSONObject
+  codeCommits: JSONObject
+  documentation: JSONObject
+  participants: JSONObject
+  metadata: JSONObject
+  tags: JSONObject
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+"""Types de créneaux temporels"""
+enum TimeSlotType {
+  timesheet_entry
+  availability_slot
+}
+
+"""Statuts des créneaux temporels"""
+enum TimeSlotStatus {
+  active
+  cancelled
+  completed
+  on_hold
+}
+
+"""Priorités des créneaux temporels"""
+enum TimeSlotPriority {
+  low
+  medium
+  high
+  urgent
+  critical
+}
+
+type EngagementReport {
+  engagementReportId: ID!
+  engagementId: ID!
+  consultantUserId: ID!
+  organizationId: ID!
+  serviceId: ID!
+  periodType: String
+  periodValue: Int
+  month: Int!
+  year: Int!
+  hourlyRate: Int!
+  totalHours: Float!
+  totalAmount: Int!
+  status: EngagementReportStatus!
+  submittedAt: DateTime
+  approvedAt: DateTime
+  paidAt: DateTime
+  notes: String
+  invoiceId: ID
+  token: String!
+  metadata: JSONObject
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+  timeSlots: [TimeSlot!]
+}
+
+"""Statuts des rapports d'engagement"""
+enum EngagementReportStatus {
+  draft
+  submitted
+  approved
+  paid
+  rejected
+  cancelled
+}
+
+type Engagement {
+  timeSlots: [TimeSlot!]
+  reports: [EngagementReport!]
+  engagementId: ID!
+  consultantUserId: ID!
+  organizationId: ID!
+  buyerUserId: ID
+  estimateId: ID
+  serviceId: ID!
+  projectName: String!
+  projectDescription: String
+  startDate: DateTime!
+  endDate: DateTime
+  hourlyRate: Int!
+  estimatedHours: Float
+  actualHours: Float!
+  status: EngagementStatus!
+  priority: EngagementPriority!
+  notes: String
+  attachments: JSONObject
+  deliverables: JSONObject
+  metadata: JSONObject
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+  timeSlotEngagement: Engagement
+  reportEngagement: Engagement
+}
+
+"""Statuts des engagements"""
+enum EngagementStatus {
+  active
+  on_hold
+  completed
+  cancelled
+}
+
+"""Priorités des engagements"""
+enum EngagementPriority {
+  low
+  medium
+  high
+  urgent
+}
+
+type OrderAsset {
+  orderAssetId: ID!
+  assetId: ID!
+  quantity: Int!
+  unitPrice: Int!
+  title: String!
+  description: String!
+  legalVatPercent: Int!
+  details: String
+}
+
+type Order {
+  orderId: ID!
+  userId: ID
+  sellerOrganizationId: ID
+  buyerOrganizationId: ID
+  transactionId: String!
+  destinationWalletId: String!
+  sourceWalletId: String
+  currency: String!
+  estimateId: ID
+  serviceId: ID
+  totalPrice: Int!
+  status: OrderStatus!
+  billingInformation: JSON
+  lines: [OrderAsset!]!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+"""OrderStatus status"""
+enum OrderStatus {
+  draft
+  pending
+  confirmed
+  paid
+  shipped
+  delivered
+  canceled
+}
+
+type ReferralOffer {
+  serviceId: ID!
+  organizationId: ID!
+  enabled: Boolean!
+  commissionRate: Float!
+  approvalMode: String!
+  terms: String
+  attributionDays: Int!
+  acceptedAt: DateTime
+  updatedAt: DateTime
+}
+
+type ReferralPartnership {
+  partnershipId: ID!
+  serviceId: ID!
+  sellerOrganizationId: ID!
+  apporteurOrganizationId: ID!
+  status: String!
+  commissionRate: Float!
+  attributionDays: Int!
+  token: String
+  message: String
+  decisionReason: String
+  mandateAcceptedAt: DateTime
+  requestedAt: DateTime!
+  decidedAt: DateTime
+  ordersCount: Int!
+  commissionTotal: Int!
+  currency: String
+}
+
+type ReferralCommission {
+  commissionId: ID!
+  orderId: ID!
+  partnershipId: ID!
+  serviceId: ID!
+  sellerOrganizationId: ID!
+  apporteurOrganizationId: ID!
+  baseAmount: Int!
+  commissionRate: Float!
+  amount: Int!
+  currency: String!
+  status: String!
+  invoiceId: ID
+  invoiceNumber: String
+  creditNoteId: ID
+  failureReason: String
+  earnedAt: DateTime!
+  invoicedAt: DateTime
+  paidAt: DateTime
+  reversedAt: DateTime
+}
+
+type ReferralMarketplaceService {
+  serviceId: ID!
+  organizationId: ID!
+  title: String
+  price: Float
+  currency: String
+  commissionRate: Float!
+  approvalMode: String!
+  attributionDays: Int!
+  terms: String
+  partnershipStatus: String
+}
+
+type ReferralStats {
+  orders30d: Int!
+  commissionEarned30d: Int!
+  commissionPaid: Int!
+  commissionPending: Int!
+  pendingRequests: Int!
+  activePartnerships: Int!
+  currency: String
+}
+
+type ReferralTokenInfo {
+  valid: Boolean!
+  serviceId: ID
+  attributionDays: Int
+}
+
+type AvailableSlot {
+  slotId: String!
+  startTime: DateTime!
+  endTime: DateTime!
+  duration: Int!
+  availableCapacity: Int!
+  totalCapacity: Int!
+  isAvailable: Boolean!
+  remainingSlots: Int!
+  serviceId: String!
+}
+
+type WeeklyAvailability {
+  weeklyAvailabilityId: String!
+  dayOfWeek: Int!
+  startTime: String!
+  endTime: String!
+  serviceId: String!
+  userId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type AvailabilityException {
+  availabilityExceptionId: String!
+  exceptionStartDate: DateTime!
+  exceptionEndDate: DateTime
+  startTime: String!
+  endTime: String!
+  serviceId: String!
+  userId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type ServiceFlowServiceLink {
+  serviceId: ID!
+  linkedAt: DateTime!
+  runs30d: Int!
+}
+
+type ServiceFlow {
+  flowId: ID!
+  organizationId: ID!
+  name: String!
+  description: String
+  status: ServiceFlowStatus!
+  publishedVersion: Int
+  draftVersion: Int!
+  hasUnpublishedChanges: Boolean!
+  definition: JSON!
+  publishedDefinition: JSON
+  createdByAgent: Boolean!
+  services: [ServiceFlowServiceLink!]!
+  completionRate30d: Float
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum ServiceFlowStatus {
+  draft
+  active
+  archived
+}
+
+type ServiceFlowVersion {
+  versionId: ID!
+  flowId: ID!
+  version: Int!
+  definition: JSON!
+  publishedAt: DateTime!
+  publishedBy: ID
+  runs: Int!
+}
+
+type ServiceFlowPublicStep {
+  key: ID!
+  type: String!
+  title: String!
+  summary: String
+  count: Int
+  estimatedMinutes: Int!
+  items: [String!]!
+}
+
+type ServiceFlowPublic {
+  flowId: ID!
+  serviceId: ID!
+  version: Int!
+  steps: [ServiceFlowPublicStep!]!
+  estimatedMinutes: Int!
+  requiresReview: Boolean!
+  reviewTiming: String
+  medianValidationMinutes: Int
+  priceHoldDays: Int!
+}
+
+type ServiceFlowStats {
+  pendingRuns: Int!
+  pendingOverSla: Int!
+  started30d: Int!
+  completed30d: Int!
+  completionRate30d: Float
+  medianValidationMinutes: Int
+  flowsCount: Int!
+  activeCount: Int!
+  draftCount: Int!
+  servicesCovered: Int!
+}
+
+type ServiceFlowFunnelStep {
+  stepKey: ID!
+  type: String!
+  title: String!
+  reached: Int!
+}
+
+type ServiceFlowLoss {
+  stepKey: ID!
+  title: String!
+  lost: Int!
+  itemKey: String
+  itemLabel: String
+  itemAbandons: Int
+}
+
+type ServiceFlowStepRun {
+  stepKey: ID!
+  type: String!
+  title: String!
+  status: String!
+  data: JSON
+  startedAt: DateTime
+  completedAt: DateTime
+}
+
+type ServiceFlowEvent {
+  eventId: ID!
+  type: String!
+  actorUserId: ID
+  message: String
+  meta: JSON
+  createdAt: DateTime!
+}
+
+type ServiceFlowRun {
+  runId: ID!
+  number: Int!
+  flowId: ID!
+  flowName: String!
+  version: Int!
+  organizationId: ID!
+  serviceId: ID!
+  buyerUserId: ID!
+  buyerOrganizationId: ID
+  buyerName: String
+  buyerEmail: String
+  buyerCompany: String
+  status: ServiceFlowRunStatus!
+  currentStepKey: String
+  steps: [ServiceFlowStepRun!]!
+  definition: JSON!
+  contractId: ID
+  orderId: ID
+  amount: Int
+  currency: String!
+  options: JSON
+  reviewDueAt: DateTime
+  priceHoldUntil: DateTime
+  expiresAt: DateTime
+  submittedAt: DateTime
+  validatedAt: DateTime
+  validatedBy: ID
+  refusalReason: String
+  changeRequest: JSON
+  events: [ServiceFlowEvent!]!
+  startedAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum ServiceFlowRunStatus {
+  in_progress
+  pending_review
+  changes_requested
+  validated
+  refused
+  expired
+  ordered
+  paid
+  awaiting_countersign
+  completed
+  canceled
+}
+
+type ServiceFlowUsage {
+  flowId: ID!
+  days: Int!
+  started: Int!
+  funnel: [ServiceFlowFunnelStep!]!
+  biggestLoss: ServiceFlowLoss
+  services: [ServiceFlowServiceLink!]!
+  pending: [ServiceFlowRun!]!
+}
+
+type ServiceFlowContractPreparation {
+  contractId: ID!
+  invitationToken: String!
+}
+
+type Query {
+  agentExecutionStatus(orderId: ID!): AgentExecutionStatus!
+  bookingsByService(serviceId: String!): [Booking!]!
+  bookingsByUser(userId: String!): [Booking!]!
+  booking(bookingId: String!): Booking!
+  bookingManagementByEngagement(engagementId: String!, role: String = "client"): BookingManagementInfo!
+  serviceCapacity(serviceId: ID!): ServiceCapacity!
+  organizationCapacity(organizationId: ID!): OrganizationCapacity!
+  serviceAvailability(serviceId: ID!): ServiceAvailability!
+  servicesAvailability(serviceIds: [ID!]!): [ServiceAvailability!]!
+  bookingConfiguration(id: String!): BookingConfiguration
+  bookingConfigurationByService(serviceId: String!): BookingConfiguration
+  engagementsByService(serviceId: String!, organizationId: String): [Engagement!]!
+  engagementsByConsultant(consultantUserId: String!): [Engagement!]!
+  engagementsByBuyer(buyerUserId: String!): [Engagement!]!
+  engagementsByOrganization(organizationId: String!): [Engagement!]!
+  engagement(engagementId: String!): Engagement
+  engagementReportByToken(token: String!): EngagementReport!
+  engagementReportsByEngagement(engagementId: String!): [EngagementReport!]!
+  engagementReportsByConsultant(consultantUserId: String!): [EngagementReport!]!
+  engagementReportsByOrganization(organizationId: String!): [EngagementReport!]!
+  engagementReportsByPeriod(year: Float!, periodType: String!, periodValue: Float!): [EngagementReport!]!
+  orders: [Order!]!
+  order(orderId: String!): Order!
+  ordersByUser(userId: String!): [Order!]!
+  ordersBySellerOrganization(sellerOrganizationId: String!): [Order!]!
+  ordersByBuyerOrganization(buyerOrganizationId: String!): [Order!]!
+  referralOffer(serviceId: ID!): ReferralOffer
+  referralMarketplace(apporteurOrganizationId: ID!, search: String, limit: Int = 50, offset: Int = 0): [ReferralMarketplaceService!]!
+  referralPartnerships(organizationId: ID!, role: String!, status: [String!]): [ReferralPartnership!]!
+  referralCommissions(organizationId: ID!, role: String!, status: [String!], limit: Int = 50, offset: Int = 0): [ReferralCommission!]!
+  referralStats(organizationId: ID!, role: String!): ReferralStats!
+  resolveReferralToken(token: String!): ReferralTokenInfo!
+  calendarSlots(serviceId: String!, startDate: DateTime!, endDate: DateTime!, userId: String): [AvailableSlot!]!
+  dailySlots(input: AvailableSlotsInput!): [AvailableSlot!]!
+  weeklyAvailabilities(serviceId: String!, userId: String): [WeeklyAvailability!]!
+  availabilityExceptions(serviceId: String!, startDate: DateTime!, endDate: DateTime!, userId: String): [AvailabilityException!]!
+  availableSlots(input: AvailableSlotsInput!): [AvailableSlot!]!
+  serviceFlows(organizationId: ID!, status: ServiceFlowStatus): [ServiceFlow!]!
+  serviceFlow(flowId: ID!): ServiceFlow!
+  serviceFlowVersions(flowId: ID!): [ServiceFlowVersion!]!
+  serviceFlowForService(serviceId: ID!): ServiceFlowPublic
+  serviceFlowStats(organizationId: ID!): ServiceFlowStats!
+  serviceFlowUsage(flowId: ID!, days: Int = 30): ServiceFlowUsage!
+  serviceFlowRuns(organizationId: ID!, flowId: ID, status: [ServiceFlowRunStatus!], limit: Int = 50, offset: Int = 0): [ServiceFlowRun!]!
+  serviceFlowRun(runId: ID!): ServiceFlowRun!
+  myServiceFlowRuns(status: [ServiceFlowRunStatus!]): [ServiceFlowRun!]!
+  activeServiceFlowRun(serviceId: ID!): ServiceFlowRun
+}
+
+input AvailableSlotsInput {
+  serviceId: String!
+  date: DateTime!
+  slotDuration: Int! = 60
+  maxSlots: Int! = 10
+}
+
+type Mutation {
+  createBooking(data: CreateBookingInput!): Booking!
+  cancelBooking(bookingId: String!, message: String, initiatedBy: String = "client"): Booking!
+  confirmBooking(bookingId: String!): Booking!
+  completeBooking(bookingId: String!): Booking!
+  updateBooking(data: UpdateBookingInput!): Booking!
+  upsertServiceCapacity(serviceId: ID!, data: ServiceCapacityInput!): ServiceCapacity!
+  upsertOrganizationCapacity(organizationId: ID!, data: OrganizationCapacityInput!): OrganizationCapacity!
+  createBookingConfiguration(input: CreateBookingConfigurationInput!): BookingConfiguration!
+  updateBookingConfiguration(id: String!, input: UpdateBookingConfigurationInput!): BookingConfiguration!
+  createEngagement(data: CreateEngagementInput!): Engagement!
+  updateEngagement(engagementId: String!, data: UpdateEngagementInput!): Engagement!
+  acceptPmCascadeMission(engagementId: String!): Engagement!
+  acceptPmCascadeMissionByEstimateId(estimateId: String!): Engagement!
+  createTimeSlot(data: CreateTimeSlotInput!): TimeSlot!
+  updateTimeSlot(timeSlotId: String!, data: UpdateTimeSlotInput!): TimeSlot!
+  createEngagementReport(data: CreateEngagementReportInput!): EngagementReport!
+  updateEngagementReport(engagementReportId: String!, data: UpdateEngagementReportInput!): EngagementReport!
+  deleteTimeSlot(timeSlotId: String!): TimeSlot!
+  deleteEngagementReport(engagementReportId: String!): EngagementReport!
+  deleteEngagement(engagementId: String!): Engagement!
+  createReportForNewPeriod(engagementId: String!, periodType: String!, periodValue: Float!, year: Float!): EngagementReport!
+  sendWorkReportNotification(data: SendWorkReportNotificationInput!): Boolean!
+  createOrder(input: CreateOrderInput!): Order!
+  confirmOrder(orderId: String!): Order!
+  addLine(orderId: String!, input: AddLineInput!): Order!
+  markOrderPaid(orderId: String!): Order!
+  markOrderDelivered(orderId: String!): Order!
+  cancelOrder(orderId: String!): Order!
+  upsertReferralOffer(serviceId: ID!, data: ReferralOfferInput!): ReferralOffer!
+  requestReferralPartnership(data: RequestReferralPartnershipInput!): ReferralPartnership!
+  decideReferralPartnership(partnershipId: ID!, decision: String!, reason: String): ReferralPartnership!
+  revokeReferralPartnership(partnershipId: ID!, reason: String): ReferralPartnership!
+  regenerateReferralToken(partnershipId: ID!): ReferralPartnership!
+  createWeeklyAvailabilityBatch(input: CreateWeeklyAvailabilityBatchInput!): [WeeklyAvailability!]!
+  deleteWeeklyAvailability(weeklyAvailabilityId: String!): WeeklyAvailability!
+  createAvailabilityException(input: CreateAvailabilityExceptionInput!): AvailabilityException!
+  deleteAvailabilityException(availabilityExceptionId: String!): AvailabilityException!
+  createServiceFlow(data: CreateServiceFlowInput!): ServiceFlow!
+  updateServiceFlowDraft(flowId: ID!, data: UpdateServiceFlowInput!): ServiceFlow!
+  publishServiceFlow(flowId: ID!): ServiceFlow!
+  duplicateServiceFlow(flowId: ID!): ServiceFlow!
+  archiveServiceFlow(flowId: ID!): ServiceFlow!
+  deleteServiceFlow(flowId: ID!): Boolean!
+  linkServiceFlow(flowId: ID!, serviceId: ID!): ServiceFlow!
+  unlinkServiceFlow(serviceId: ID!): Boolean!
+  startServiceFlowRun(data: StartServiceFlowRunInput!): ServiceFlowRun!
+  saveServiceFlowStep(runId: ID!, stepKey: ID!, data: JSON!): ServiceFlowRun!
+  completeServiceFlowStep(runId: ID!, stepKey: ID!, data: JSON): ServiceFlowRun!
+  prepareServiceFlowContract(runId: ID!, stepKey: ID!): ServiceFlowContractPreparation!
+  editServiceFlowRunAnswers(runId: ID!): ServiceFlowRun!
+  restartServiceFlowRun(runId: ID!): ServiceFlowRun!
+  postServiceFlowRunMessage(runId: ID!, message: String!): ServiceFlowRun!
+  validateServiceFlowRun(runId: ID!, data: ValidateServiceFlowRunInput): ServiceFlowRun!
+  requestServiceFlowChanges(runId: ID!, data: RequestServiceFlowChangesInput!): ServiceFlowRun!
+  refuseServiceFlowRun(runId: ID!, reason: String!): ServiceFlowRun!
+  relaunchServiceFlowRun(runId: ID!): ServiceFlowRun!
+  closeServiceFlowRun(runId: ID!): ServiceFlowRun!
+}
+
+input CreateBookingInput {
+  timeSlotId: ID
+  userId: ID
+  serviceId: ID!
+  weeklyAvailabilityId: ID
+  slotDate: DateTime
+  slotStartTime: Int
+  slotEndTime: Int
+  slotDuration: Int
+  bookingStartDate: DateTime
+  bookingEndDate: DateTime
+  customerDetails: String
+  engagementId: ID
+  status: String
+  hold: Boolean
+}
+
+input UpdateBookingInput {
+  bookingId: ID!
+  customerDetails: String
+}
+
+input ServiceCapacityInput {
+  enabled: Boolean!
+  maxActive: Int
+  maxPerPeriod: Int
+  period: String
+  pausedUntil: DateTime
+}
+
+input OrganizationCapacityInput {
+  enabled: Boolean!
+  maxActive: Int
+}
+
+input CreateBookingConfigurationInput {
+  userId: ID!
+  serviceId: ID!
+  bookingMode: String!
+  defaultSlotDuration: Int!
+  allowGroupBooking: Boolean!
+  minBookingDuration: Int!
+  maxBookingDuration: Int!
+  dateRangeBookingAllowed: Boolean!
+  advanceBookingLimit: Int = 720
+  cancellationWindow: Int = 1440
+  cancellationPolicy: String
+  maxCapacity: Int = 1
+
+  """Exigences personnalisées du prestataire"""
+  customRequirements: JSON
+  postBookingMessageTemplate: String
+  autoSendPostBookingMessage: Boolean = true
+}
+
+input UpdateBookingConfigurationInput {
+  userId: String
+  serviceId: String
+  bookingMode: String
+  defaultSlotDuration: Int
+  allowGroupBooking: Boolean
+  minBookingDuration: Int
+  maxBookingDuration: Int
+  dateRangeBookingAllowed: Boolean
+  advanceBookingLimit: Int
+  cancellationWindow: Int
+  cancellationPolicy: String
+  maxCapacity: Int
+
+  """Exigences personnalisées du prestataire"""
+  customRequirements: JSON
+  postBookingMessageTemplate: String
+  autoSendPostBookingMessage: Boolean
+}
+
+input CreateEngagementInput {
+  consultantUserId: ID!
+  organizationId: ID!
+  buyerUserId: ID
+  estimateId: ID
+  serviceId: ID!
+  projectName: String!
+  projectDescription: String
+  startDate: DateTime!
+  endDate: DateTime
+  hourlyRate: Int!
+  estimatedHours: Float
+  status: EngagementStatus
+  priority: EngagementPriority
+  notes: String
+  metadata: JSONObject
+}
+
+input UpdateEngagementInput {
+  projectName: String
+  projectDescription: String
+  startDate: DateTime
+  endDate: DateTime
+  hourlyRate: Int
+  estimatedHours: Float
+  status: EngagementStatus
+  priority: EngagementPriority
+  notes: String
+  deliverables: JSON
+  metadata: JSON
+}
+
+input CreateTimeSlotInput {
+  slotType: TimeSlotType!
+  engagementId: ID
+  engagementReportId: ID
+  engagementMilestoneId: ID
+  serviceId: ID
+  startDateTime: DateTime!
+  endDateTime: DateTime
+  duration: Int
+  title: String
+  description: String
+  status: TimeSlotStatus
+  priority: TimeSlotPriority
+  capacity: Int
+  maxParticipants: Int
+  isPublic: Boolean
+  requiresApproval: Boolean
+  parentSlotId: ID
+  dependentSlotIds: JSONObject
+  estimatedHours: Float
+  actualHours: Float
+  hourlyRate: Int
+  qualityScore: Int
+  clientFeedback: String
+  internalNotes: String
+  deliverables: JSONObject
+  codeCommits: JSONObject
+  documentation: JSONObject
+  participants: JSONObject
+  metadata: JSONObject
+  tags: JSONObject
+}
+
+input UpdateTimeSlotInput {
+  slotType: TimeSlotType
+  engagementId: ID
+  engagementReportId: ID
+  engagementMilestoneId: ID
+  serviceId: ID
+  startDateTime: DateTime
+  endDateTime: DateTime
+  duration: Int
+  title: String
+  description: String
+  status: TimeSlotStatus
+  priority: TimeSlotPriority
+  capacity: Int
+  maxParticipants: Int
+  isPublic: Boolean
+  requiresApproval: Boolean
+  parentSlotId: ID
+  dependentSlotIds: JSONObject
+  estimatedHours: Float
+  actualHours: Float
+  hourlyRate: Int
+  qualityScore: Int
+  clientFeedback: String
+  internalNotes: String
+  deliverables: JSONObject
+  codeCommits: JSONObject
+  documentation: JSONObject
+  participants: JSONObject
+  metadata: JSONObject
+  tags: JSONObject
+}
+
+input CreateEngagementReportInput {
+  engagementId: ID!
+  consultantUserId: ID!
+  organizationId: ID!
+  serviceId: ID!
+  month: Int!
+  year: Int!
+  hourlyRate: Int!
+  totalHours: Float!
+  totalAmount: Int!
+  status: EngagementReportStatus
+  notes: String
+}
+
+input UpdateEngagementReportInput {
+  month: Int
+  year: Int
+  hourlyRate: Int
+  totalHours: Float
+  totalAmount: Int
+  status: EngagementReportStatus
+  notes: String
+}
+
+input SendWorkReportNotificationInput {
+  engagementReportId: ID!
+  recipientEmail: String!
+  recipientName: String
+  consultantName: String
+  organizationName: String
+  projectName: String
+  month: Int!
+  year: Int!
+  totalHours: Float
+  totalAmount: Float
+  hourlyRate: Int
+  billingPlan: String
+  senderName: String
+  senderEmail: String
+}
+
+input CreateOrderInput {
+  userId: ID
+  serviceId: ID!
+  estimateId: ID!
+  transactionId: ID!
+  sellerOrganizationId: ID!
+  buyerOrganizationId: ID
+  currency: ID
+  totalPrice: Float!
+  billingInformation: JSON
+  flowRunId: ID
+  referralToken: String
+}
+
+input AddLineInput {
+  orderAssetId: ID!
+  assetId: ID!
+  quantity: Int!
+  unitPrice: Int!
+  title: String!
+  description: String!
+  legalVatPercent: Int!
+  details: String!
+}
+
+input ReferralOfferInput {
+  enabled: Boolean!
+  commissionRate: Float!
+  approvalMode: String!
+  terms: String
+  attributionDays: Int
+}
+
+input RequestReferralPartnershipInput {
+  serviceId: ID!
+  apporteurOrganizationId: ID!
+  message: String
+  acceptMandate: Boolean!
+}
+
+input CreateWeeklyAvailabilityBatchInput {
+  serviceId: String!
+  userId: String!
+  slots: [WeeklyAvailabilityInput!]!
+  replaceExisting: Boolean! = false
+}
+
+input WeeklyAvailabilityInput {
+  dayOfWeek: Int!
+  startTime: String!
+  endTime: String!
+}
+
+input CreateAvailabilityExceptionInput {
+  serviceId: String!
+  userId: String!
+  exceptionStartDate: DateTime!
+  exceptionEndDate: DateTime
+  startTime: String!
+  endTime: String!
+}
+
+input CreateServiceFlowInput {
+  organizationId: ID!
+  name: String!
+  description: String
+  definition: JSON
+  createdByAgent: Boolean
+}
+
+input UpdateServiceFlowInput {
+  name: String
+  description: String
+  definition: JSON
+}
+
+input StartServiceFlowRunInput {
+  serviceId: ID!
+  amount: Int
+  currency: String
+  options: JSON
+  buyerName: String
+  buyerEmail: String
+  buyerCompany: String
+  buyerOrganizationId: ID
+}
+
+input ValidateServiceFlowRunInput {
+  signerUserId: ID
+  applyStamp: Boolean
+}
+
+input RequestServiceFlowChangesInput {
+  stepKey: ID!
+  itemKey: String
+  message: String!
+}

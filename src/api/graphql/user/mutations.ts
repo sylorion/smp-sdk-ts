@@ -147,7 +147,7 @@ export const affiliateMutations = {
 // =========================================
 export const waitingListMutations = {
   CREATE_WAITING_LIST: `
-    mutation CreateWaitingList($input: WaitingListInput!) {
+    mutation CreateWaitingList($input: CreateWaitingListInput!) {
       createWaitingList(input: $input) {
         success
         message
@@ -173,7 +173,7 @@ export const waitingListMutations = {
   `,
 
   UPDATE_WAITING_LIST: `
-    mutation UpdateWaitingList($waitingListID: ID!, $input: WaitingListInput!) {
+    mutation UpdateWaitingList($waitingListID: ID!, $input: UpdateWaitingListInput!) {
       updateWaitingList(waitingListID: $waitingListID, input: $input) {
         success
         message

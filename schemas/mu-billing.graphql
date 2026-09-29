@@ -1,0 +1,347 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type PostalAddress {
+  line1: String!
+  city: String!
+  postalCode: String!
+  countryCode: String!
+  line2: String
+}
+
+type TradeContact {
+  contactName: String!
+  contactEmail: String
+  contactPhoneNumber: String
+  divisionName: String
+}
+
+type AllowanceCharge {
+  chargeIndicator: Boolean!
+  actualAmount: Float!
+  reason: String
+  reasonCode: String
+  taxRate: Float
+  taxCategoryCode: TaxCategoryCode
+  startDate: DateTime
+  endDate: DateTime
+  percentage: Float
+}
+
+"""Tax category code"""
+enum TaxCategoryCode {
+  STANDARD
+  REDUCED
+  ZERO
+  EXEMPT
+  REVERSE_CHARGE
+  OUT_OF_SCOPE
+  EXPORT
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Invoice {
+  invoiceId: String!
+  transactionId: String!
+  slug: String!
+  orderId: String
+  thirdPartyFees: Float
+  servicesFees: Float
+  servicesVatPercent: Float
+  prestationsVatPercent: Float
+  totalAmount: Float
+  sellerOrganizationId: String
+  paymentStatus: String
+  emittedDate: String
+  dueDate: String
+  digitalSignature: String
+  state: String!
+  createdAt: String!
+  updatedAt: String
+  deletedAt: String
+  transactionData: JSON
+  notes: String
+  disclaimers: String
+  paymentTerms: String
+  profile: FacturxProfile
+  header: JSON
+  seller: JSON
+  buyer: JSON
+  payment: JSON
+  lines: JSON
+  deliveryParty: JSON
+  payeeParty: JSON
+  buyerOrganizationId: String
+  additionalDocuments: JSON
+  docAllowanceCharges: JSON
+  currency: String
+  taxTotals: JSON
+  downloadStatus: JSON
+  pdfGeneratedAt: DateTime
+  pdfHash: String
+  additionalInfo: String
+  documentPresentation: JSON
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""Factur-X profile type"""
+enum FacturxProfile {
+  BASIC
+  EN16931
+  EXTENDED
+}
+
+type Transaction {
+  transactionId: String!
+  serviceId: String!
+  slug: String
+  buyerUserId: String
+  buyerOrganizationId: String
+  sellerUserContactId: String
+  sellerOrganizationId: String!
+  currency: String!
+  totalAmount: Float
+  state: String!
+  status: String!
+  metadata: String!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type VerifyInvoiceTokenResponse {
+  isValid: Boolean!
+  message: String
+  invoiceId: String
+  email: String
+  expiresAt: String
+  isExpired: Boolean
+  clientName: String
+  amount: Float
+  currency: String
+  status: String
+  canDownload: Boolean
+  downloadToken: String
+}
+
+type SendInvoicePaymentResponse {
+  success: Boolean!
+  message: String!
+
+  """Token d'invitation pour le lien de paiement"""
+  invitationToken: String
+
+  """Date d'expiration du lien de paiement"""
+  expiresAt: String
+}
+
+type VerifyInvoicePaymentTokenResponse {
+  isValid: Boolean!
+  message: String
+  invoiceId: String
+  email: String
+  role: String
+  expiresAt: String
+  isExpired: Boolean
+  firstName: String
+  lastName: String
+  sentAt: String
+  paidAt: String
+  status: String
+}
+
+type GenerateInvoicePDFResponse {
+  success: Boolean!
+  message: String!
+  filePath: String
+  downloadUrl: String
+  digitalSignature: String
+  downloadCount: Float
+  pdfBase64: String
+}
+
+type Query {
+  transaction(input: TransactionIdInput!): Transaction
+  transactions: [Transaction!]!
+  transactionsByBuyerUserId(buyerUserId: String!): [Transaction!]!
+  transactionsByBuyerOrganizationId(buyerOrganizationId: String!): [Transaction!]!
+  transactionsBySellerOrganizationId(sellerOrganizationId: String!): [Transaction!]!
+  invoice(invoiceId: String!): Invoice
+  invoices: [Invoice!]!
+  invoicesBySeller(sellerOrganizationId: String!): [Invoice!]!
+  invoicesByBuyer(buyerOrganizationId: String!): [Invoice!]!
+  invoicesByBuyerUser(buyerUserId: String!): [Invoice!]!
+  invoicesByTransactionId(transactionId: String!): [Invoice!]!
+  invoicesByOrderId(orderId: String!): [Invoice!]!
+  invoiceByTransactionId(transactionId: String!): Invoice
+  invoiceByOrderId(orderId: String!): Invoice
+  verifyInvoiceToken(input: VerifyInvoiceTokenInput!): VerifyInvoiceTokenResponse!
+}
+
+input TransactionIdInput {
+  transactionId: String!
+}
+
+input VerifyInvoiceTokenInput {
+  """Token de facture à vérifier"""
+  token: String!
+}
+
+type Mutation {
+  initiateTransaction(input: CreateTransactionInput!): Transaction!
+  updateTransaction(transactionId: String!, input: UpdateTransactionInput!): Transaction!
+  createInvoice(input: CreateInvoiceInput!): Invoice!
+  updateInvoice(invoiceId: String!, input: UpdateInvoiceInput!): Invoice!
+  updateInvoiceDownloadStatus(invoiceId: String!, input: UpdateInvoiceDownloadStatusInput!): Invoice!
+  sendInvoiceEmail(invoiceId: String!, input: SendInvoiceEmailInput!): Invoice!
+  sendInvoicePayment(input: SendInvoicePaymentInput!): SendInvoicePaymentResponse!
+  verifyInvoicePaymentToken(input: VerifyInvoicePaymentTokenInput!): VerifyInvoicePaymentTokenResponse!
+  processInvoicePayment(token: String!, input: ProcessInvoicePaymentInput!): SendInvoicePaymentResponse!
+  generateInvoicePDF(invoiceId: String!, input: GenerateInvoicePDFInput!): GenerateInvoicePDFResponse!
+}
+
+input CreateTransactionInput {
+  buyerUserId: String
+  buyerOrganizationId: String
+  sellerOrganizationId: String
+  totalAmount: Float
+  currency: String
+  serviceId: String!
+  sellerUserContactId: String
+  metadata: String
+}
+
+input UpdateTransactionInput {
+  status: String!
+  metadata: String
+  totalAmount: Float
+}
+
+input CreateInvoiceInput {
+  orderId: String!
+  currency: String!
+  totalAmount: Float!
+  thirdPartyFees: Float
+  servicesFees: Float
+  sellerOrganizationId: String!
+  buyerOrganizationId: String
+  buyerUserId: String
+  emittedDate: String!
+  dueDate: String!
+  transactionId: String!
+  transactionData: String
+  notes: String
+  state: String
+  paymentStatus: String
+  paymentTerms: String
+  profile: String
+  header: String
+  seller: String
+  buyer: String
+  payment: String
+  lines: String
+  deliveryParty: String
+  payeeParty: String
+  additionalDocuments: String
+  docAllowanceCharges: String
+  taxTotals: String
+}
+
+input UpdateInvoiceInput {
+  orderId: String
+  currency: String
+  totalAmount: Float
+  thirdPartyFees: Float
+  servicesFees: Float
+  sellerOrganizationId: String
+  buyerOrganizationId: String
+  buyerUserId: String
+  emittedDate: String
+  dueDate: String
+  transactionId: String
+  transactionData: String
+  notes: String
+  state: String
+  paymentStatus: String
+  paymentTerms: String
+  profile: String
+  header: String
+  seller: String
+  buyer: String
+  payment: String
+  lines: String
+  deliveryParty: String
+  payeeParty: String
+  additionalDocuments: String
+  docAllowanceCharges: String
+  taxTotals: String
+  invoiceId: String
+}
+
+input UpdateInvoiceDownloadStatusInput {
+  downloaded: Boolean!
+  downloadedAt: String!
+  downloadCount: Float!
+  ipAddress: String!
+}
+
+input SendInvoiceEmailInput {
+  recipientEmail: String!
+  recipientName: String!
+  subject: String
+  message: String
+  language: String
+  template: String
+}
+
+input SendInvoicePaymentInput {
+  """ID de la facture à envoyer"""
+  invoiceId: String!
+
+  """Email du destinataire"""
+  email: String!
+
+  """Message personnalisé"""
+  message: String
+
+  """Prénom du destinataire"""
+  firstName: String
+
+  """Nom du destinataire"""
+  lastName: String
+
+  """Durée d'expiration en jours (1-90, défaut: 7)"""
+  expirationDays: Float
+}
+
+input VerifyInvoicePaymentTokenInput {
+  """Token de paiement de facture à vérifier"""
+  token: String!
+}
+
+input ProcessInvoicePaymentInput {
+  paymentMethod: String!
+  paymentReference: String!
+  amount: Float!
+  currency: String!
+  transactionId: String
+}
+
+input GenerateInvoicePDFInput {
+  userId: String!
+  sellerOrganizationId: String!
+  buyerOrganizationId: String
+  ipAddress: String
+  forceDraft: Boolean
+  sellerLogoUrl: String
+  language: String
+}

@@ -1,0 +1,704 @@
+type MutationResponse {
+  success: Boolean!
+  message: String
+  code: Int
+  field: String
+}
+
+type Media {
+  mediaID: ID!
+  authorID: ID
+  mediaType: String
+  originalName: String
+  finalName: String
+  url: String
+  entityID: ID
+  entityName: String
+  size: String
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+enum ObjectStatus {
+  offline
+  staging
+  awaiting
+  reviewed
+  rejected
+  signaled
+  online
+  archived
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Place {
+  placeID: ID!
+}
+
+type Organization {
+  organizationID: ID!
+  uniqRef: String!
+  slug: String!
+  state: ObjectStatus
+  authorID: ID
+  ownerID: ID
+  orgRef: String
+  sectorID: ID
+  legalName: String
+  brand: String
+  sigle: String
+  oSize: OrganizationEconomicSizeKind
+  juridicForm: String
+  juridicCatLabel: String
+  juridicCatCode: String
+  currency: ServicesAcceptedDevise
+  legalUniqIdentifier: String
+  vatNumber: String
+  communityVATNumber: String
+  capital: Float
+  insuranceRef: String
+  insuranceName: String
+  activityStartedAt: DateTime
+  activityEndedAt: DateTime
+  description: String
+  summary: String
+  locationID: ID
+  parentOrganizationID: ID
+  advancedAttributes: JSON
+  createdAt: DateTime
+  updatedAt: DateTime
+  smallLogo: ID
+  bigLogo: ID
+  banner: ID
+  smallLogoUrl: String
+  bigLogoUrl: String
+  bannerUrl: String
+  location: Place
+}
+
+enum OrganizationEconomicSizeKind {
+  division
+  freelancer
+  sb
+  gb
+  inc
+  holding
+}
+
+enum ServicesAcceptedDevise {
+  unknw
+  credit
+  eur
+  usd
+  gbp
+  chf
+  xaf
+  xof
+}
+
+"""Arbitrary JSON value"""
+scalar JSON
+
+type OrganizationMedia {
+  organizationMediaID: ID!
+  uniqRef: String!
+  slug: String!
+  authorID: ID!
+  mediaID: ID!
+  organizationID: ID!
+  legend: String
+  listingPosition: Int
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  media: Media
+}
+
+type ContactPlaceRef {
+  placeID: ID!
+}
+
+type OrganizationContact {
+  contactID: ID!
+  uniqRef: String!
+  slug: String!
+  authorID: ID!
+  organizationID: ID!
+  userID: ID
+  assignedToUserOrgID: ID
+  isPrivate: Boolean!
+  ownerUserOrgID: ID
+  contactType: OrgContactType!
+  firstName: String
+  lastName: String
+  displayName: String
+  companyName: String
+  siret: String
+  vatNumber: String
+  legalForm: String
+  rcs: String
+  capital: String
+  logoUrl: String
+  email: String
+  phoneCountryCode: String
+  phone: String
+  mobilePhone: String
+  fax: String
+  website: String
+  locationID: ID
+  location: ContactPlaceRef
+  socialProfiles: JSON
+  contactStatus: OrgContactStatus!
+  source: OrgContactSource!
+  tags: JSON
+  notes: String
+  preferredLanguage: String
+  preferredCurrency: String
+  isVatExempt: Boolean
+  defaultPaymentTerms: Int
+  creditLimit: Float
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+enum OrgContactType {
+  individual
+  company
+}
+
+enum OrgContactStatus {
+  active
+  inactive
+  prospect
+  lead
+  churned
+  blocked
+}
+
+enum OrgContactSource {
+  manual
+  import
+  invoice
+  estimate
+  engagement
+  form
+}
+
+type BulkCreateContactsResponse {
+  success: Boolean!
+  created: Int!
+  skipped: Int
+  duplicates: Int
+  message: String
+}
+
+type DocumentEntitlements {
+  canCustomize: Boolean!
+  canRemovePoweredBy: Boolean!
+  plan: String!
+}
+
+type OrganizationDocumentSettings {
+  organizationID: ID!
+  settings: JSON!
+  savedSettings: JSON
+  isDefault: Boolean!
+  customizationSuspended: Boolean!
+  entitlements: DocumentEntitlements!
+  warnings: [String!]!
+  updatedAt: DateTime
+}
+
+type OrganizationDocumentPresentation {
+  organizationID: ID!
+  settings: JSON!
+  logoUrl: String
+}
+
+type OrgPaymentMethod {
+  paymentMethodID: ID!
+  authorID: String!
+  organizationID: String
+  paymentMethodKind: String
+  isActive: Boolean
+  accountHolderName: String
+  expirationDate: DateTime
+  bankName: String
+  cardNumber: String
+  cardType: OrgPaymentMethodType!
+  isDefault: Boolean
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+enum OrgPaymentMethodType {
+  credit_card
+  debit_card
+  paypal
+  bank_transfer
+  crypto
+  other
+}
+
+type UserOrganization {
+  userOrganizationID: ID!
+  uniqRef: String
+  slug: String
+  authorID: ID
+  legend: String
+  userID: ID
+  roleID: ID
+  organizationID: ID
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type InviteUserToOrganizationResponse {
+  success: Boolean!
+  message: String!
+  token: String
+  email: String
+  organizationID: ID
+  organizationName: String
+  firstName: String
+  lastName: String
+}
+
+type AddUserToOrganizationResponse {
+  success: Boolean!
+  message: String!
+  userOrganization: UserOrganization
+}
+
+type RemoveUserFromOrganizationResponse {
+  success: Boolean!
+  message: String!
+}
+
+type UpdateUserRoleInOrganizationResponse {
+  success: Boolean!
+  message: String!
+  userOrganization: UserOrganization
+}
+
+type InvitationVerificationResponse {
+  success: Boolean!
+  message: String!
+  email: String
+  organizationID: ID
+  userExists: Boolean!
+  userID: ID
+  firstName: String
+  lastName: String
+}
+
+type RemoveInvitationResponse {
+  success: Boolean!
+  message: String
+}
+
+type OrganizationMemberItem {
+  userID: ID!
+  role: String!
+  username: String
+  email: String
+  name: String
+  lastname: String
+  joinedAt: String
+  profilePicture: String
+  userOrganization: UserOrganization
+  invitedAt: String
+  expiresAt: String
+  isInvitation: Boolean
+  jobTitle: String
+  missionDescription: String
+}
+
+type OrganizationMembersResponse {
+  members: [OrganizationMemberItem!]!
+  totalMembers: Int!
+}
+
+type OrgUserRole {
+  roleID: ID
+  roleName: String
+}
+
+type OrganizationsByUserResponse {
+  organizationID: ID!
+  organizationName: String
+  sectorID: ID
+  smallLogoUrl: String
+  userRole: OrgUserRole
+}
+
+type VerifyUserRoleResponse {
+  success: Boolean!
+  role: String
+  roleID: ID
+  message: String
+}
+
+type SearchUsersResult {
+  userID: ID!
+  username: String!
+  email: String
+  firstName: String
+  lastName: String
+  profilePictureUrl: String
+}
+
+type MemberProfileResponse {
+  success: Boolean!
+  message: String
+  userID: ID
+  jobTitle: String
+  missionDescription: String
+}
+
+type ResendInvitationResponse {
+  success: Boolean!
+  message: String
+  token: String
+}
+
+type OwnerTransferResponse {
+  success: Boolean!
+  message: String
+}
+
+type Query {
+  organizationContact(contactID: ID!, callerUserID: ID!): OrganizationContact
+  organizationContacts(organizationID: ID!, callerUserID: ID!, search: String, status: OrgContactStatus, source: OrgContactSource, page: Int, pageSize: Int): [OrganizationContact!]!
+  searchOrganizationContacts(organizationID: ID!, callerUserID: ID!, query: String!, limit: Int): [OrganizationContact!]!
+  organizationDocumentSettings(organizationID: ID!): OrganizationDocumentSettings!
+  organizationDocumentPresentation(organizationID: ID!): OrganizationDocumentPresentation!
+  organization(organizationID: ID!, admin: Boolean): Organization
+  organizations(pagination: PaginationInput, sort: SortInput, filter: [FilterInput!], admin: Boolean): [Organization!]!
+  organizationsByIDs(organizationIDs: [ID!]!, admin: Boolean): [Organization!]!
+  organizationsBySlugs(slugs: [String!]!, admin: Boolean): [Organization!]!
+  organizationByUniqRef(uniqRef: String!, admin: Boolean): Organization
+  organizationBySlug(slug: String!, admin: Boolean): Organization
+  orgPaymentMethod(paymentMethodID: ID!): OrgPaymentMethod!
+  orgPaymentMethods(organizationID: ID!, kind: String): [OrgPaymentMethod!]!
+  userOrganization(userOrganizationID: ID!): UserOrganization
+  userOrganizations(pagination: PaginationInput, sort: SortInput, filter: [FilterInput!]): [UserOrganization!]!
+  userOrganizationBySlug(slug: String!): UserOrganization
+  userOrganizationsByIDs(userOrganizationIDs: [ID!]!, pagination: PaginationInput, sort: SortInput, filter: [FilterInput!]): [UserOrganization!]!
+  userOrganizationsBySlugs(slugs: [String!]!, pagination: PaginationInput, sort: SortInput, filter: [FilterInput!]): [UserOrganization!]!
+  userOrganizationByUniqRefs(uniqRefs: [String!]!, pagination: PaginationInput, sort: SortInput, filter: [FilterInput!]): UserOrganization
+  userOrganizationByUniqRef(uniqRef: String!): UserOrganization
+  listOrganizationMembers(organizationID: ID!): OrganizationMembersResponse!
+  getUserOrganizations(userID: ID!): [OrganizationsByUserResponse!]!
+  isUserInOrganization(userID: ID!, organizationID: ID!): Boolean!
+  verifyUserRole(input: VerifyUserRoleInput!): VerifyUserRoleResponse!
+  searchUsers(query: String!, limit: Float = 10): [SearchUsersResult!]!
+  getMemberProfile(organizationID: ID!, userID: ID!): MemberProfileResponse!
+}
+
+input PaginationInput {
+  page: Int
+  pageSize: Int
+  offset: Int
+  limit: Int
+}
+
+input SortInput {
+  field: String
+  order: String
+}
+
+input FilterInput {
+  field: String!
+  operator: String!
+  value: String!
+}
+
+input VerifyUserRoleInput {
+  userID: ID!
+  organizationID: ID!
+}
+
+type Mutation {
+  createOrganizationContact(input: CreateContactInput!): OrganizationContact!
+  updateOrganizationContact(contactID: ID!, input: UpdateContactInput!, callerUserID: ID!): OrganizationContact!
+  deleteOrganizationContact(contactID: ID!, callerUserID: ID!): MutationResponse!
+  bulkCreateOrganizationContacts(organizationID: ID!, callerUserID: ID!, contacts: [BulkContactInput!]!): BulkCreateContactsResponse!
+  setOrganizationContactPrivacy(contactID: ID!, isPrivate: Boolean!, callerUserID: ID!): OrganizationContact!
+  updateOrganizationDocumentSettings(organizationID: ID!, settings: JSON!): OrganizationDocumentSettings!
+  resetOrganizationDocumentSettings(organizationID: ID!): OrganizationDocumentSettings!
+  createOrganization(input: OrganizationInput!): Organization!
+  updateOrganization(organizationID: ID!, input: OrganizationInput!): Organization!
+  deleteOrganization(organizationID: ID!): Organization!
+  createOrganizationMedia(input: CreateOrganizationMediaInput!): OrganizationMedia!
+  updateOrganizationMedia(organizationMediaID: ID!, input: UpdateOrganizationMediaInput!): OrganizationMedia!
+  deleteOrganizationMedia(organizationMediaID: ID!): MutationResponse!
+  createOrgPaymentMethod(input: CreateOrgPaymentMethodInput!): OrgPaymentMethod!
+  updateOrgPaymentMethod(paymentMethodID: ID!, input: UpdateOrgPaymentMethodInput!): OrgPaymentMethod!
+  deleteOrgPaymentMethod(paymentMethodID: ID!): Boolean!
+  createUserOrganization(input: CreateUserOrganizationInput!): UserOrganization!
+  updateUserOrganization(userOrganizationID: ID!, input: UpdateUserOrganizationInput!): UserOrganization!
+  deleteUserOrganization(userOrganizationID: ID!): MutationResponse!
+  inviteUserToOrganization(input: InviteUserToOrganizationInput!): InviteUserToOrganizationResponse!
+  addUserToOrganization(input: AddUserToOrganizationInput!): AddUserToOrganizationResponse!
+  removeUserFromOrganization(input: RemoveUserFromOrganizationInput!): RemoveUserFromOrganizationResponse!
+  updateUserRoleInOrganization(input: UpdateUserRoleInOrganizationInput!): UpdateUserRoleInOrganizationResponse!
+  verifyInvitationToken(input: VerifyInvitationTokenInput!): InvitationVerificationResponse!
+  removeInvitation(input: RemoveInvitationInput!): RemoveInvitationResponse!
+  updateMemberProfile(input: UpdateMemberProfileInput!): MemberProfileResponse!
+  resendInvitation(input: ResendInvitationInput!): ResendInvitationResponse!
+  initiateOwnerTransfer(input: InitiateOwnerTransferInput!): OwnerTransferResponse!
+  validateOwnerTransfer(input: ValidateOwnerTransferInput!): OwnerTransferResponse!
+}
+
+input CreateContactInput {
+  organizationID: ID!
+  contactType: OrgContactType
+  firstName: String
+  lastName: String
+  displayName: String
+  companyName: String
+  siret: String
+  vatNumber: String
+  legalForm: String
+  rcs: String
+  capital: String
+  logoUrl: String
+  email: String
+  phoneCountryCode: String
+  phone: String
+  mobilePhone: String
+  fax: String
+  website: String
+  locationID: ID
+  socialProfiles: JSON
+  contactStatus: OrgContactStatus
+  source: OrgContactSource
+  tags: JSON
+  notes: String
+  preferredLanguage: String
+  preferredCurrency: String
+  isVatExempt: Boolean
+  defaultPaymentTerms: Int
+  creditLimit: Float
+  isPrivate: Boolean
+  assignedToUserOrgID: ID
+  userID: ID
+  callerUserID: ID
+}
+
+input UpdateContactInput {
+  contactType: OrgContactType
+  firstName: String
+  lastName: String
+  displayName: String
+  companyName: String
+  siret: String
+  vatNumber: String
+  legalForm: String
+  rcs: String
+  capital: String
+  logoUrl: String
+  email: String
+  phoneCountryCode: String
+  phone: String
+  mobilePhone: String
+  fax: String
+  website: String
+  locationID: ID
+  socialProfiles: JSON
+  contactStatus: OrgContactStatus
+  source: OrgContactSource
+  tags: JSON
+  notes: String
+  preferredLanguage: String
+  preferredCurrency: String
+  isVatExempt: Boolean
+  defaultPaymentTerms: Int
+  creditLimit: Float
+  isPrivate: Boolean
+  assignedToUserOrgID: ID
+  userID: ID
+  state: ObjectStatus
+}
+
+input BulkContactInput {
+  contactType: OrgContactType
+  firstName: String
+  lastName: String
+  displayName: String
+  companyName: String
+  siret: String
+  vatNumber: String
+  email: String
+  phoneCountryCode: String
+  phone: String
+  mobilePhone: String
+  website: String
+  socialProfiles: JSON
+  contactStatus: OrgContactStatus
+  notes: String
+}
+
+input OrganizationInput {
+  state: ObjectStatus
+  authorID: ID
+  ownerID: ID
+  orgRef: String
+  sectorID: ID
+  legalName: String
+  brand: String
+  sigle: String
+  oSize: OrganizationEconomicSizeKind
+  juridicForm: String
+  juridicCatLabel: String
+  juridicCatCode: String
+  currency: ServicesAcceptedDevise
+  legalUniqIdentifier: String
+  vatNumber: String
+  communityVATNumber: String
+  capital: Float
+  insuranceRef: String
+  insuranceName: String
+  activityStartedAt: DateTime
+  activityEndedAt: DateTime
+  description: String
+  summary: String
+  locationID: ID
+  parentOrganizationID: ID
+  advancedAttributes: JSON
+  smallLogo: ID
+  bigLogo: ID
+  banner: ID
+}
+
+input CreateOrganizationMediaInput {
+  mediaID: ID!
+  organizationID: ID!
+  legend: String
+  listingPosition: Int
+  state: ObjectStatus
+}
+
+input UpdateOrganizationMediaInput {
+  legend: String
+  listingPosition: Int
+  state: ObjectStatus
+}
+
+input CreateOrgPaymentMethodInput {
+  authorID: String!
+  organizationID: String!
+  paymentMethodKind: String
+  isActive: Boolean
+  accountHolderName: String
+  expirationDate: DateTime
+  bankName: String
+  cardNumber: String
+  cardType: OrgPaymentMethodType!
+  methodDetails: String
+  isDefault: Boolean
+}
+
+input UpdateOrgPaymentMethodInput {
+  paymentMethodKind: String
+  isActive: Boolean
+  accountHolderName: String
+  expirationDate: DateTime
+  bankName: String
+  cardNumber: String
+  cardType: OrgPaymentMethodType
+  methodDetails: String
+  isDefault: Boolean
+}
+
+input CreateUserOrganizationInput {
+  legend: String
+  userID: ID!
+  roleID: ID!
+  organizationID: ID!
+  authorID: ID
+  state: ObjectStatus
+}
+
+input UpdateUserOrganizationInput {
+  legend: String
+  userID: ID
+  roleID: ID
+  organizationID: ID
+  state: ObjectStatus
+}
+
+input InviteUserToOrganizationInput {
+  email: String
+  userID: ID
+  callerUserID: ID
+  organizationID: ID!
+  message: String
+  firstName: String
+  lastName: String
+}
+
+input AddUserToOrganizationInput {
+  userID: ID!
+  organizationID: ID!
+  roleID: ID
+}
+
+input RemoveUserFromOrganizationInput {
+  userID: ID!
+  organizationID: ID!
+  callerUserID: ID
+}
+
+input UpdateUserRoleInOrganizationInput {
+  organizationID: ID!
+  userID: ID!
+  newRoleID: ID!
+  callerUserID: ID
+}
+
+input VerifyInvitationTokenInput {
+  token: String!
+}
+
+input RemoveInvitationInput {
+  email: String!
+  organizationID: ID!
+}
+
+input UpdateMemberProfileInput {
+  organizationID: ID!
+  targetUserID: ID!
+  callerUserID: ID!
+  jobTitle: String
+  missionDescription: String
+}
+
+input ResendInvitationInput {
+  email: String!
+  organizationID: ID!
+}
+
+input InitiateOwnerTransferInput {
+  organizationID: ID!
+  callerUserID: ID!
+  targetUserID: ID!
+}
+
+input ValidateOwnerTransferInput {
+  organizationID: ID!
+  callerUserID: ID!
+  targetUserID: ID!
+  otpCode: String!
+}

@@ -8,7 +8,7 @@ import { ConfigManager } from './config/ConfigManager.js';
 import { Persistence, PersistenceKind } from './config/Persistence.js';
 import { AxiosRequestConfig } from "axios";
 import { GraphQLClient, ClientError } from 'graphql-request';
-import { AuthDomain, CatalogDomain, AccountingDomain, OrganizationDomain, UserDomain, BookingDomain, CommunicationDomain, ReviewDomain } from './domains/index.js';
+import { AuthDomain, CatalogDomain, AccountingDomain, OrganizationDomain, UserDomain, BookingDomain, CommunicationDomain, ReviewDomain, FlowDomain, ReferralDomain, CapacityDomain } from './domains/index.js';
 import { LogIn, AppLogIn } from './types/auth/index.js';
 
 export class SMPClient {
@@ -24,6 +24,12 @@ export class SMPClient {
   public booking: BookingDomain;
   public communication: CommunicationDomain;
   public review: ReviewDomain;
+  /** Flows de service (mu-command). */
+  public flow: FlowDomain;
+  /** Apport d'affaires (mu-command). */
+  public referral: ReferralDomain;
+  /** Capacité des prestations (mu-command). */
+  public capacity: CapacityDomain;
 
   private loggedUser?: LogIn;
   private loggedApp?: AppLogIn;
@@ -43,6 +49,9 @@ export class SMPClient {
     this.booking = new BookingDomain(this.httpApiClient);
     this.communication = new CommunicationDomain(this.httpApiClient);
     this.review = new ReviewDomain(this.httpApiClient);
+    this.flow = new FlowDomain(this.httpApiClient);
+    this.referral = new ReferralDomain(this.httpApiClient);
+    this.capacity = new CapacityDomain(this.httpApiClient);
 
 
     this.authTokenManager = new AuthTokenManager(this.configManager, this.httpApiClient);

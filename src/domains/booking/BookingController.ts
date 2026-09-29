@@ -6,19 +6,13 @@ import {
   WeeklyAvailability,
   AvailabilityException,
   AvailableSlot,
-  DailySlot,
   CreateEstimateRequestInput,
   CreateBookingInput,
   CreateAvailabilityInput,
-  UpdateAvailabilityInput,
   UpdateBookingInput,
-  CreateWeeklyAvailabilityInput,
   CreateWeeklyAvailabilityBatchInput,
-  CreateDailySlotsInput,
   CreateAvailabilityExceptionInput,
-  SearchAvailabilityInput,
-  AvailableSlotsInput,
-  SearchDailySlotsInput
+  AvailableSlotsInput
 } from '../../types/booking/index.js';
 import { bookingMutations } from '../../api/graphql/booking/mutations.js';
 import { bookingQueries } from '../../api/graphql/booking/queries.js';
@@ -29,7 +23,9 @@ export class BookingController {
   // ===== DEMANDES DE DEVIS =====
 
   /**
-   * Créer une demande de devis
+   * ⚠️ `createEstimateRequest` n'existe dans aucun service (mu-command n'expose pas les demandes de devis
+   * ni les disponibilités ponctuelles) : l'appel échoue à l'exécution. Conservé tant que
+   * smp-webapp (`app/api/booking/estimate-requests/route.ts`) et smp-mobile (`features/booking/booking.service.ts`) l'utilise ; le parcours devis passe par `accounting.estimate.create`.
    */
   async createEstimateRequest(input: CreateEstimateRequestInput): Promise<EstimateRequest> {
     const response = await this.apiClient.mutate(
@@ -39,20 +35,17 @@ export class BookingController {
     return response.createEstimateRequest;
   }
 
+  /**
+   * ⚠️ `estimateRequests` n'existe dans aucun service (mu-command n'expose pas les demandes de devis
+   * ni les disponibilités ponctuelles) : l'appel échoue à l'exécution. Conservé tant que
+   * smp-webapp (`app/api/booking/estimate-requests/route.ts`) et smp-mobile (`features/booking/booking.service.ts`) l'utilise.
+   */
   async listEstimateRequests(serviceId: string, userId?: string): Promise<EstimateRequest[]> {
     const response = await this.apiClient.query(
       bookingQueries.GET_ESTIMATE_REQUESTS,
       { serviceId, userId }
     ) as { estimateRequests: EstimateRequest[] };
     return response.estimateRequests;
-  }
-
-  async getEstimateRequestById(estimateRequestId: string): Promise<EstimateRequest | null> {
-    const response = await this.apiClient.query(
-      bookingQueries.GET_ESTIMATE_REQUEST,
-      { estimateRequestId }
-    ) as { estimateRequest: EstimateRequest | null };
-    return response.estimateRequest;
   }
 
   // ===== RÉSERVATIONS =====
@@ -110,17 +103,6 @@ export class BookingController {
     return response;
   }
 
-  /**
-   * Récupérer les réservations d'une disponibilité
-   */
-  async listByAvailabilityId(availabilityId: string): Promise<Booking[]> {
-    const response = await this.apiClient.query(
-      bookingQueries.GET_BOOKINGS_BY_AVAILABILITY,
-      { availabilityId }
-    ) as { bookingsByAvailability: Booking[] };
-    return response.bookingsByAvailability;
-  }
-
   async cancel(bookingId: string, message?: string): Promise<Booking> {
     const response = await this.apiClient.mutate(
       bookingMutations.CANCEL_BOOKING,
@@ -148,7 +130,9 @@ export class BookingController {
   // ===== DISPONIBILITÉS =====
 
   /**
-   * Créer une disponibilité
+   * ⚠️ `createAvailability` n'existe dans aucun service (mu-command n'expose pas les demandes de devis
+   * ni les disponibilités ponctuelles) : l'appel échoue à l'exécution. Conservé tant que
+   * smp-webapp (`app/api/booking/bookings/route.ts`) l'utilise ; les disponibilités réelles sont hebdomadaires (`createWeeklyAvailabilityBatch`) ou des exceptions (`createAvailabilityException`).
    */
   async createAvailability(input: CreateAvailabilityInput): Promise<Availability> {
     const response = await this.apiClient.mutate(
@@ -158,51 +142,7 @@ export class BookingController {
     return response.createAvailability;
   }
 
-  /**
-   * Mettre à jour une disponibilité
-   */
-  async updateAvailability(id: string, input: UpdateAvailabilityInput): Promise<Availability> {
-    const response = await this.apiClient.mutate(
-      bookingMutations.UPDATE_AVAILABILITY,
-      { id, input }
-    ) as { updateAvailability: Availability };
-    return response.updateAvailability;
-  }
-
-  /**
-   * Annuler une disponibilité
-   */
-  async cancelAvailability(id: string): Promise<Availability> {
-    const response = await this.apiClient.mutate(
-      bookingMutations.CANCEL_AVAILABILITY,
-      { id }
-    ) as { cancelAvailability: Availability };
-    return response.cancelAvailability;
-  }
-
-  /**
-   * Rechercher des disponibilités
-   */
-  async searchAvailabilities(input: SearchAvailabilityInput): Promise<Availability[]> {
-    const response = await this.apiClient.query(
-      bookingQueries.SEARCH_AVAILABILITIES,
-      { input }
-    ) as { searchAvailabilities: Availability[] };
-    return response.searchAvailabilities;
-  }
-
   // ===== DISPONIBILITÉS HEBDOMADAIRES =====
-
-  /**
-   * Créer une disponibilité hebdomadaire
-   */
-  async createWeeklyAvailability(input: CreateWeeklyAvailabilityInput): Promise<WeeklyAvailability> {
-    const response = await this.apiClient.mutate(
-      bookingMutations.CREATE_WEEKLY_AVAILABILITY,
-      { input }
-    ) as { createWeeklyAvailability: WeeklyAvailability };
-    return response.createWeeklyAvailability;
-  }
 
   /**
    * Créer des disponibilités hebdomadaires en lot
@@ -227,28 +167,6 @@ export class BookingController {
   }
 
   // ===== CRÉNEAUX QUOTIDIENS =====
-
-  /**
-   * Créer des créneaux quotidiens
-   */
-  async createDailySlots(input: CreateDailySlotsInput): Promise<DailySlot[]> {
-    const response = await this.apiClient.mutate(
-      bookingMutations.CREATE_DAILY_SLOTS,
-      { input }
-    ) as { createDailySlots: DailySlot[] };
-    return response.createDailySlots;
-  }
-
-  /**
-   * Récupérer les créneaux quotidiens
-   */
-  async listDailySlots(input: SearchDailySlotsInput): Promise<DailySlot[]> {
-    const response = await this.apiClient.query(
-      bookingQueries.GET_DAILY_SLOTS,
-      { input }
-    ) as { dailySlots: DailySlot[] };
-    return response.dailySlots;
-  }
 
   // ===== CRÉNEAUX DISPONIBLES =====
 

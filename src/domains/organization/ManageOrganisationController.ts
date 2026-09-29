@@ -9,9 +9,22 @@ import { organizationQueries } from '../../api/graphql/organization/queries.js';
 
 
 // Types des réponses
+/** Rattachement membre ↔ organisation (type `UserOrganization` de mu-organization). */
+export interface UserOrganizationMembership {
+  userOrganizationID: string;
+  userID?: string | null;
+  organizationID?: string | null;
+  roleID?: string | null;
+  state?: string | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+}
+
 export interface AddUserToOrganizationResponse {
   success: boolean;
   message: string;
+  /** Renseigné par `addUserToOrganization`. */
+  userOrganization?: UserOrganizationMembership | null;
   token?: string;
   email?: string;
   organizationID?: string;
@@ -129,6 +142,7 @@ export interface UpdateUserRoleInOrganizationInput {
 export interface UpdateUserRoleInOrganizationResponse {
   success: boolean;
   message: string;
+  userOrganization?: UserOrganizationMembership | null;
 }
 
 export interface UserRole {
@@ -226,7 +240,7 @@ export class ManageOrganization {
   /**
    * Adds a user to an organization.
    */
-  async addUser(input: { userID: string; organizationID: string; role: string }): Promise<AddUserToOrganizationResponse> {
+  async addUser(input: { userID: string; organizationID: string; roleID?: string }): Promise<AddUserToOrganizationResponse> {
     const mutation = organizationMutations.ADD_USER_TO_ORGANIZATION;
     const variables = { input };
     const response = await this.client.mutate(mutation, variables) as { addUserToOrganization: AddUserToOrganizationResponse };

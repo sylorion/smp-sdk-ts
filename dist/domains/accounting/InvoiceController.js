@@ -81,39 +81,6 @@ export class Invoice {
         return response.invoicesByBuyerUser;
     }
     /**
-     * Fetches multiple invoices by an array of invoice IDs.
-     * @param invoiceIDs - An array of invoice IDs.
-     * @returns A list of invoices.
-     */
-    async getByIds(invoiceIDs) {
-        const query = invoiceQueries.GET_INVOICES_BY_IDS;
-        const variables = { invoiceIDs };
-        const response = await this.client.query(query, variables);
-        return response.data.invoicesByIDs;
-    }
-    /**
-     * Fetches an invoice by its slug.
-     * @param slug - The slug of the invoice.
-     * @returns The details of the invoice.
-     */
-    async getBySlug(slug) {
-        const query = invoiceQueries.GET_INVOICE_BY_SLUG;
-        const variables = { slug };
-        const response = await this.client.query(query, variables);
-        return response.data.invoiceBySlug;
-    }
-    /**
-     * Fetches multiple invoices by their slugs.
-     * @param slugs - An array of invoice slugs.
-     * @returns A list of invoices.
-     */
-    async getBySlugs(slugs) {
-        const query = invoiceQueries.GET_INVOICES_BY_SLUGS;
-        const variables = { slugs };
-        const response = await this.client.query(query, variables);
-        return response.data.invoicesBySlugs;
-    }
-    /**
      * Envoie une invitation de paiement pour une facture
      */
     async sendPayment(data) {

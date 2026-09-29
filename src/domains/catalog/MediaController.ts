@@ -11,7 +11,6 @@ interface CreateMediaInput {
   originalName?: string;
   finalName?: string;
   entityID?: string;
-  metadata?: any;
   entityName?: string;
   url?: string;
   size?: string;
@@ -23,7 +22,6 @@ interface UpdateMediaInput {
   summary?: string;
   originalName?: string;
   finalName?: string;
-  metadata?: any;
   url?: string;
   size?: string;
   state?: string;
@@ -43,17 +41,11 @@ interface MediaEntity {
   url: string;
   size: string;
   entityID: string;
-  metadata: any;
   entityName: string;
   state: string;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;
-}
-
-interface MutationResponse {
-  success: boolean;
-  message: string;
 }
 
 /**
@@ -83,10 +75,11 @@ export class Media {
     return response.updateMedia;
   }
 
-  async delete(mediaID: string): Promise<MutationResponse> {
+  /** Supprime un média — mu-document renvoie un booléen (`deleteMedia: Boolean!`). */
+  async delete(mediaID: string): Promise<boolean> {
     const mutation = mediaMutations.DELETE_MEDIA;
     const variables = { mediaID };
-    const response = await this.client.mutate(mutation, variables) as { deleteMedia: MutationResponse };
+    const response = await this.client.mutate(mutation, variables) as { deleteMedia: boolean };
     return response.deleteMedia;
   }
 
@@ -99,10 +92,10 @@ export class Media {
     return response.media;
   }
 
-  async list(pagination?: any, sort?: any, filter?: any[]): Promise<MediaEntity[]> {
+  /** Liste les médias — `medias` n'accepte ni pagination, ni tri, ni filtre côté mu-document. */
+  async list(): Promise<MediaEntity[]> {
     const query = mediaQueries.GET_MEDIAS;
-    const variables = { pagination, sort, filter };
-    const response = await this.client.query(query, variables) as { medias: MediaEntity[] };
+    const response = await this.client.query(query, {}) as { medias: MediaEntity[] };
     return response.medias;
   }
 

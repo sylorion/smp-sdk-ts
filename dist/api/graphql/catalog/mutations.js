@@ -394,7 +394,6 @@ const mediaMutations = {
         url
         size
         entityID
-        metadata
         entityName
         state
         createdAt
@@ -405,10 +404,7 @@ const mediaMutations = {
   `,
     DELETE_MEDIA: `
     mutation DeleteMedia($mediaID: ID!) {
-      deleteMedia(mediaID: $mediaID) {
-        success
-        message
-      }
+      deleteMedia(mediaID: $mediaID)
     }
   `
 };

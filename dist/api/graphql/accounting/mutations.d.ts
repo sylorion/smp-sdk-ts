@@ -1,20 +1,17 @@
 declare const invoiceMutations: {
     CREATE_INVOICE: string;
     UPDATE_INVOICE: string;
-    DELETE_INVOICE: string;
     UPDATE_INVOICE_DOWNLOAD_STATUS: string;
     SEND_INVOICE_EMAIL: string;
     SEND_INVOICE_PAYMENT: string;
     PROCESS_INVOICE_PAYMENT: string;
     VERIFY_INVOICE_PAYMENT_TOKEN: string;
     GENERATE_INVOICE_PDF: string;
-    MARK_INVOICE_DOWNLOADED: string;
 };
 export { invoiceMutations };
 declare const paymentMutations: {
     ADD_LINE: string;
     DELETE_LINE: string;
-    UPDATE_LINE: string;
     INITIATE_PAYMENT: string;
     INITIATE_SERVICE_SUBSCRIPTION_PAYMENT: string;
     CREATE_ESTIMATE: string;
@@ -22,7 +19,6 @@ declare const paymentMutations: {
     SEND_ESTIMATE: string;
     UPDATE_CONTRACT: string;
     CREATE_ORDER: string;
-    UPDATE_ORDER: string;
     CONFIRM_ORDER: string;
     MARK_ORDER_PAID: string;
     MARK_ORDER_DELIVERED: string;
@@ -76,5 +72,12 @@ declare const contractMutations: {
     SAVE_CONTRACT_AS_TEMPLATE: string;
     UPDATE_ORGANIZATION_CONTRACT_TEMPLATE: string;
     DELETE_ORGANIZATION_CONTRACT_TEMPLATE: string;
+    REJECT_CONTRACT: string;
+    RESEND_CONTRACT_INVITATION: string;
+    MARK_CONTRACT_INVITATION_OPENED: string;
+    DUPLICATE_CONTRACT: string;
+    UPDATE_ORGANIZATION_SIGNATURE_SETTINGS: string;
+    SAVE_ORGANIZATION_SIGNER: string;
+    REMOVE_ORGANIZATION_SIGNER: string;
 };
 export { contractMutations };

@@ -1,0 +1,436 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type ReviewPageInfo {
+  page: Int!
+  pageSize: Int!
+  total: Int!
+  hasNextPage: Boolean!
+}
+
+type LocalizedLabel {
+  locale: String!
+  value: String!
+}
+
+type ReviewCriterion {
+  criterionID: ID!
+  key: String!
+  labels: [LocalizedLabel!]!
+  descriptions: [LocalizedLabel!]!
+  block: CriterionBlock!
+  isLibrary: Boolean!
+}
+
+enum CriterionBlock {
+  COMMON
+  SPECIFIC
+  CUSTOM
+}
+
+type ResolvedCriterion {
+  criterionID: ID!
+  key: String!
+  labels: [LocalizedLabel!]!
+  descriptions: [LocalizedLabel!]!
+  block: CriterionBlock!
+  weight: Float!
+  order: Int!
+  required: Boolean!
+  criteriaSetID: ID
+  setVersion: Int
+}
+
+type CriteriaSetReference {
+  criteriaSetID: ID!
+  scope: CriteriaSetScope!
+  version: Int!
+  name: String!
+}
+
+enum CriteriaSetScope {
+  GLOBAL
+  TOPIC
+  SUBTOPIC
+  SERVICE_TYPE
+}
+
+type ServiceCriteria {
+  serviceID: ID!
+  sourceType: ServiceSourceType!
+  topicID: ID
+  topicSlug: String
+  criteria: [ResolvedCriterion!]!
+  sets: [CriteriaSetReference!]!
+  maxAdditionalCriteria: Int!
+}
+
+enum ServiceSourceType {
+  engagement
+  booking
+  order
+  agent
+}
+
+type CriteriaSetItem {
+  criterion: ReviewCriterion!
+  weight: Float!
+  order: Int!
+  required: Boolean!
+}
+
+type CriteriaSet {
+  criteriaSetID: ID!
+  scope: CriteriaSetScope!
+  topicID: ID
+  topicSlug: String
+  serviceType: ServiceSourceType
+  version: Int!
+  name: String!
+  isActive: Boolean!
+  items: [CriteriaSetItem!]!
+  createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type ServiceCriterionSelection {
+  serviceID: ID!
+  criterion: ReviewCriterion!
+  selectedBy: ID!
+  createdAt: DateTime!
+}
+
+type PerformanceCriterion {
+  key: String!
+  labels: [LocalizedLabel!]!
+  block: CriterionBlock!
+  average: Float
+  count: Int!
+  previousAverage: Float
+  previousCount: Int!
+
+  """Évolution relative en % vs période précédente"""
+  changePercent: Int
+}
+
+type PerformanceInsight {
+  kind: String!
+  criterionKey: String
+  title: String!
+  message: String!
+  value: Float
+  delta: Float
+}
+
+type PerformancePeriodStats {
+  periodStart: DateTime!
+  periodEnd: DateTime!
+  completedCount: Int!
+  reportCount: Int!
+  responseRate: Float
+  averageRating: Float
+  performanceScore: Float
+  recommendationRate: Float
+}
+
+type PerformanceOverview {
+  scope: PerformanceScope!
+  scopeID: ID!
+  range: PerformanceRangePreset!
+
+  """Performance Score courant /100 (moyenne glissante pondérée)"""
+  performanceScore: Float
+  current: PerformancePeriodStats!
+  previous: PerformancePeriodStats!
+  criteria: [PerformanceCriterion!]!
+  insights: [PerformanceInsight!]!
+
+  """Échantillon minimal requis pour les analyses statistiques"""
+  minSample: Int!
+
+  """Assez de données pour afficher une analyse"""
+  hasEnoughData: Boolean!
+}
+
+enum PerformanceScope {
+  service
+  organization
+}
+
+enum PerformanceRangePreset {
+  d7
+  d30
+  m3
+  m6
+  m12
+  all
+}
+
+type PerformanceSnapshot {
+  snapshotID: ID!
+  periodType: PerformancePeriodType!
+  periodStart: DateTime!
+  periodEnd: DateTime!
+  completedCount: Int!
+  reportCount: Int!
+  responseRate: Float
+  averageRating: Float
+  performanceScore: Float
+  criteria: [PerformanceCriterion!]!
+  computedAt: DateTime!
+}
+
+enum PerformancePeriodType {
+  day
+  week
+  month
+}
+
+type ReviewCommentReaction {
+  emoji: String!
+  count: Int!
+  reactedByMe: Boolean!
+}
+
+type ReviewComment {
+  commentID: ID!
+  serviceReportID: ID!
+  parentCommentID: ID
+  authorID: ID!
+  authorRole: CommentAuthorRole!
+  content: String!
+  gifUrl: String
+  likesCount: Int!
+  likedByMe: Boolean!
+  likedByProvider: Boolean!
+  reactions: [ReviewCommentReaction!]!
+  replies: [ReviewComment!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum CommentAuthorRole {
+  client
+  provider
+  other
+}
+
+type ReviewThread {
+  serviceReportID: ID!
+  comments: [ReviewComment!]!
+  total: Int!
+}
+
+type SelfAssessmentRating {
+  key: String!
+  labels: [LocalizedLabel!]!
+  block: CriterionBlock!
+  selfScore: Float!
+  clientAverage: Float
+
+  """selfScore − clientAverage"""
+  gap: Float
+}
+
+type SelfAssessment {
+  selfAssessmentID: ID!
+  serviceID: ID!
+  organizationID: ID!
+  period: String!
+  comment: String
+  ratings: [SelfAssessmentRating!]!
+  submittedAt: DateTime!
+}
+
+type SelfAssessmentStatus {
+  serviceID: ID!
+  currentPeriod: String!
+  canSubmit: Boolean!
+  latest: SelfAssessment
+}
+
+type CriterionRating {
+  criterionID: ID!
+  key: String!
+  labels: [LocalizedLabel!]!
+  descriptions: [LocalizedLabel!]!
+  block: CriterionBlock!
+  weight: Float!
+  score: Float
+  comment: String
+  order: Int!
+  required: Boolean!
+}
+
+type ServiceReport {
+  serviceReportID: ID!
+  sourceType: ServiceSourceType!
+  sourceID: ID!
+  serviceID: ID!
+  organizationID: ID!
+  providerUserID: ID
+  reviewerUserID: ID!
+  reviewerName: String
+  serviceTitle: String
+  organizationName: String
+  organizationLogoUrl: String
+  topicID: ID
+  status: ServiceReportStatus!
+  criteria: [CriterionRating!]!
+  overallComment: String
+  overallScore: Float
+
+  """
+  Performance Score /100 du rapport, visible du prestataire et des admins uniquement.
+  """
+  performanceScore: Float
+  wouldRecommend: Boolean
+  likesCount: Int!
+  likedByProvider: Boolean!
+  likedByMe: Boolean
+  commentsCount: Int!
+  rewardAmount: Int!
+  rewardStatus: String
+  completedAt: DateTime!
+  requestedAt: DateTime!
+  expiresAt: DateTime
+  submittedAt: DateTime
+  publishedAt: DateTime
+  editableUntil: DateTime
+  canEdit: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum ServiceReportStatus {
+  pending
+  draft
+  submitted
+  published
+  expired
+  cancelled
+}
+
+type ServiceReportPage {
+  items: [ServiceReport!]!
+  pageInfo: ReviewPageInfo!
+}
+
+type CriterionAverage {
+  key: String!
+  labels: [LocalizedLabel!]!
+  block: CriterionBlock!
+  average: Float
+  count: Int!
+  countLastMonth: Int!
+}
+
+type RatingBucket {
+  score: Int!
+  count: Int!
+}
+
+type ServiceReviewSummary {
+  serviceID: ID!
+  reportCount: Int!
+  averageRating: Float
+  performanceScore: Float
+  criteria: [CriterionAverage!]!
+  distribution: [RatingBucket!]!
+  recommendationRate: Float
+  lastReportAt: DateTime
+}
+
+type Query {
+  serviceCriteria(serviceID: ID!, sourceType: ServiceSourceType): ServiceCriteria!
+  criteriaLibrary(block: CriterionBlock, libraryOnly: Boolean): [ReviewCriterion!]!
+  criteriaSets(scope: CriteriaSetScope, activeOnly: Boolean): [CriteriaSet!]!
+  serviceAdditionalCriteria(serviceID: ID!): [ServiceCriterionSelection!]!
+  performanceOverview(scope: PerformanceScope!, scopeID: ID!, range: PerformanceRangePreset): PerformanceOverview!
+  performanceHistory(scope: PerformanceScope!, scopeID: ID!, periodType: PerformancePeriodType, limit: Int): [PerformanceSnapshot!]!
+  reviewThread(serviceReportID: ID!): ReviewThread!
+  selfAssessment(serviceID: ID!): SelfAssessmentStatus!
+  selfAssessmentHistory(serviceID: ID!): [SelfAssessment!]!
+  serviceReport(serviceReportID: ID!): ServiceReport!
+  pendingServiceReports(pagination: ReviewPaginationInput): ServiceReportPage!
+  myServiceReports(statuses: [ServiceReportStatus!], pagination: ReviewPaginationInput): ServiceReportPage!
+  receivedServiceReports(filter: ServiceReportsFilterInput!, pagination: ReviewPaginationInput): ServiceReportPage!
+  serviceReviews(serviceID: ID!, pagination: ReviewPaginationInput): ServiceReportPage!
+  serviceReviewSummary(serviceID: ID!): ServiceReviewSummary!
+}
+
+input ReviewPaginationInput {
+  page: Int
+  pageSize: Int
+}
+
+input ServiceReportsFilterInput {
+  serviceID: ID
+  organizationID: ID
+  statuses: [ServiceReportStatus!]
+}
+
+type Mutation {
+  selectAdditionalCriteria(serviceID: ID!, criterionKeys: [String!]!): [ServiceCriterionSelection!]!
+  publishCriteriaSet(input: PublishCriteriaSetInput!): CriteriaSet!
+  createReviewComment(input: CreateReviewCommentInput!): ReviewComment!
+  likeReviewComment(commentID: ID!, asProvider: Boolean): ReviewComment!
+  unlikeReviewComment(commentID: ID!, asProvider: Boolean): ReviewComment!
+  reactToReviewComment(commentID: ID!, emoji: String!, active: Boolean, asProvider: Boolean): ReviewComment!
+  submitSelfAssessment(input: SubmitSelfAssessmentInput!): SelfAssessment!
+  saveServiceReportDraft(serviceReportID: ID!, input: ServiceReportInput!): ServiceReport!
+  submitServiceReport(serviceReportID: ID!, input: ServiceReportInput!): ServiceReport!
+  likeServiceReport(serviceReportID: ID!): ServiceReport!
+  unlikeServiceReport(serviceReportID: ID!): ServiceReport!
+}
+
+input PublishCriteriaSetInput {
+  scope: CriteriaSetScope!
+  name: String!
+  topicID: ID
+  topicSlug: String
+  serviceType: ServiceSourceType
+  items: [CriteriaSetItemInput!]!
+}
+
+input CriteriaSetItemInput {
+  key: String!
+  weight: Float!
+  required: Boolean
+}
+
+input CreateReviewCommentInput {
+  serviceReportID: ID!
+  parentCommentID: ID
+  content: String!
+  gifUrl: String
+  asProvider: Boolean
+}
+
+input SubmitSelfAssessmentInput {
+  serviceID: ID!
+  ratings: [SelfAssessmentRatingInput!]!
+  comment: String
+}
+
+input SelfAssessmentRatingInput {
+  key: String!
+  score: Float!
+}
+
+input ServiceReportInput {
+  ratings: [CriterionRatingInput!]!
+  overallComment: String
+  wouldRecommend: Boolean
+}
+
+input CriterionRatingInput {
+  key: String!
+  score: Float!
+  comment: String
+}

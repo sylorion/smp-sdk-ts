@@ -1,0 +1,143 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type DocumentHeartbeat {
+  status: String!
+}
+
+type DocumentRef {
+  type: String!
+  id: String!
+}
+
+type DocumentLink {
+  linkId: ID!
+  sourceType: String!
+  sourceId: String!
+  targetType: String!
+  targetId: String!
+  relation: String!
+  origin: String!
+  sellerOrganizationId: String!
+  buyerOrganizationId: String
+  createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type DocumentGraph {
+  nodes: [DocumentRef!]!
+  links: [DocumentLink!]!
+  truncated: Boolean!
+}
+
+type Media {
+  mediaID: ID!
+  authorID: ID
+  mediaType: String
+  originalName: String
+  finalName: String
+  url: String
+  entityID: ID
+  entityName: String
+  size: String
+  slug: String
+  uniqRef: ID
+  legend: String
+  summary: String
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+enum ObjectStatus {
+  offline
+  staging
+  awaiting
+  reviewed
+  rejected
+  signaled
+  online
+  archived
+}
+
+type Query {
+  documentHello: String
+  documentVersion: String
+  documentRequestCounter: Int
+  documentHeartbeat: DocumentHeartbeat
+
+  """Dossier complet (documents reliés) à partir d’un document."""
+  documentGraph(organizationId: String!, document: DocumentRefInput!): DocumentGraph!
+
+  """Liens touchant une liste de documents (200 au plus)."""
+  documentLinksTouching(organizationId: String!, documents: [DocumentRefInput!]!): [DocumentLink!]!
+  media(mediaID: ID!): Media
+  medias: [Media!]!
+  mediaBySlug(Slug: String!): Media
+  mediasByIDs(mediaIDs: [ID!]!): [Media!]!
+  mediasBySlugs(slugs: [String!]!): [Media!]!
+  mediaByUniqRef(uniqRef: String!): Media
+}
+
+input DocumentRefInput {
+  type: String!
+  id: String!
+}
+
+type Mutation {
+  """Relier deux documents à la main."""
+  linkDocuments(input: LinkDocumentsInput!): DocumentLink!
+
+  """Retirer un lien posé à la main."""
+  unlinkDocuments(organizationId: String!, linkId: String!): Boolean!
+  createMedia(input: CreateMediaInput!): Media!
+  updateMedia(mediaID: ID!, input: UpdateMediaInput!): Media!
+  deleteMedia(mediaID: ID!): Boolean!
+}
+
+input LinkDocumentsInput {
+  organizationId: String!
+  from: DocumentRefInput!
+  to: DocumentRefInput!
+}
+
+input CreateMediaInput {
+  mediaType: MediaType!
+  authorID: ID!
+  legend: String
+  summary: String
+  originalName: String
+  finalName: String
+  entityID: ID!
+  entityName: String!
+  url: String
+  size: String
+  state: ObjectStatus
+}
+
+enum MediaType {
+  unknown
+  text
+  image
+  audio
+  video
+  archive
+  binary
+  document
+}
+
+input UpdateMediaInput {
+  legend: String
+  summary: String
+  originalName: String
+  finalName: String
+  url: String
+  size: String
+  state: ObjectStatus
+}

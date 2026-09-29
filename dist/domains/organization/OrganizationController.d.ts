@@ -177,17 +177,9 @@ export declare class Organization {
      */
     update(organizationID: string, input: UpdateOrganizationInput): Promise<Organization>;
     /**
-     * Deletes an organization by its ID.
+     * Supprime une organisation — mu-organization renvoie l'organisation supprimée.
      */
-    delete(organizationID: string): Promise<boolean>;
-    /**
-     * Fetches a single organization media by its ID.
-     */
-    getMediaById(organizationMediaID: string): Promise<OrganizationMedia>;
-    /**
-     * Fetches all media for an organization.
-     */
-    listMedias(organizationID: string): Promise<OrganizationMedia[]>;
+    delete(organizationID: string): Promise<Organization>;
     /**
      * Creates a new organization media.
      */

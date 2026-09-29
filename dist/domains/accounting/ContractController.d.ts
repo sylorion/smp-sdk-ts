@@ -1,5 +1,5 @@
 import { APIClient } from '../../api/APIClient.js';
-import type { ContractResponse, CreateContractInput, UpdateContractInput, SignContractInput, SendContractInput, OrganizationContractTemplate, SaveContractAsTemplateInput, UpdateOrganizationContractTemplateInput, VerifyTokenResponse, ContractTemplateSummary, ContractTemplateDetail } from '../../types/accounting/index.js';
+import type { ContractResponse, CreateContractInput, UpdateContractInput, SignContractInput, SendContractInput, OrganizationContractTemplate, SaveContractAsTemplateInput, UpdateOrganizationContractTemplateInput, VerifyTokenResponse, ContractTemplateSummary, ContractTemplateDetail, RejectContractInput, ResendContractInvitationResponse, OrganizationSignatureSettings, UpdateOrganizationSignatureSettingsInput, SaveOrganizationSignerInput } from '../../types/accounting/index.js';
 /**
  * The `Contract` class manages contract-related requests within the application.
  * Provides methods to create, retrieve, update, sign, and send contracts.
@@ -49,6 +49,21 @@ export declare class Contract {
      * Vérifie la validité d'un token d'invitation
      */
     verifyToken(token: string): Promise<VerifyTokenResponse>;
+    /** Refus du client, par son jeton d'invitation ; le motif est stocké dans `details.rejection`. */
+    reject(data: RejectContractInput): Promise<ContractResponse>;
+    /** Renvoie l'invitation au dernier destinataire (l'ancien lien est révoqué). Le jeton n'est pas renvoyé. */
+    resendInvitation(contractId: string): Promise<ResendContractInvitationResponse>;
+    /** Première ouverture du lien de signature (page publique) ; déclenche `contract.opened` si demandé à l'envoi. */
+    markInvitationOpened(invitationToken: string): Promise<boolean>;
+    /** Nouvelle version (v+1) d'un contrat figé ou refusé : les signatures sont à refaire. */
+    duplicate(contractId: string): Promise<ContractResponse>;
+    getSignatureSettings(organizationId: string): Promise<OrganizationSignatureSettings>;
+    /** `autoCountersign: true` exige le plan Pro (erreur `PLAN_REQUIRED`). */
+    updateSignatureSettings(organizationId: string, data: UpdateOrganizationSignatureSettingsInput): Promise<OrganizationSignatureSettings>;
+    /** L'appelant enregistre SA signature pour l'organisation. */
+    saveSigner(organizationId: string, data: SaveOrganizationSignerInput): Promise<OrganizationSignatureSettings>;
+    /** L'appelant retire sa propre signature. */
+    removeSigner(organizationId: string, userId: string): Promise<OrganizationSignatureSettings>;
     listOrganizationTemplates(organizationId: string): Promise<OrganizationContractTemplate[]>;
     getOrganizationTemplate(templateId: string): Promise<OrganizationContractTemplate>;
     saveAsTemplate(data: SaveContractAsTemplateInput): Promise<OrganizationContractTemplate>;

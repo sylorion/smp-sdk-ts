@@ -39,7 +39,6 @@ declare const topicQueries: {
 };
 export { topicQueries };
 declare const serviceQueries: {
-    GET_SERVICE_BY_AUTHOR_ID: string;
     GET_SERVICE_BY_ID: string;
     GET_SERVICE_BY_UNIQ_REF: string;
     GET_SERVICE_BY_SLUG: string;

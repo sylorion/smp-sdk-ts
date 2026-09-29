@@ -17,18 +17,9 @@ export interface CreatePaymentDto {
   currency: string;
 }
 
-// Inputs liés aux orders
-export interface CreateOrderInput {
-  userId?: string;
-  serviceId: string;
-  estimateId: string;
-  totalPrice: number;
-  transactionId?: string;
-  sellerOrganizationId: string;
-  buyerOrganizationId: string;
-  currency: string;
-  billingInformation?: BillingInformation;
-}
+// Inputs liés aux orders : type partagé, aligné sur mu-command (flowRunId inclus).
+import type { CreateOrderInput } from '../../types/accounting/index.js';
+export type { CreateOrderInput };
 
 export interface AddLineInput {
   orderAssetId: string; // tel que défini dans le schéma (ID!)
@@ -39,14 +30,6 @@ export interface AddLineInput {
   description: string;
   legalVatPercent: number;
   details: any; // JSON
-}
-
-export interface UpdateLineDataInput {
-  quantity: number;
-  unitPrice?: number;
-  title?: string;
-  description?: string;
-  legalVatPercent?: number;
 }
 
 export interface DeleteLineInput {
@@ -272,13 +255,11 @@ export class SMPPayment {
     return response.addLine;
   }
 
-  async updateLine(orderId: string, assetId: string, updateData: UpdateLineDataInput): Promise<Order> {
-    const mutation = paymentMutations.UPDATE_LINE;
-    const variables = { orderId, assetId, updateData };
-    const response = await this.client.mutate(mutation, variables) as { updateLine: Order };
-    return response.updateLine;
-  }
-
+  /**
+   * ⚠️ Aucune mutation `deleteLine` n'existe dans mu-command (seul `addLine` est exposé) :
+   * cet appel échoue à l'exécution (« Cannot query field deleteLine »). Conservé tant que
+   * `apps/front/web/smp-webapp/src/app/api/payment/order/route.ts` l'utilise.
+   */
   async deleteLine(orderId: string, assetId: string): Promise<Order> {
     const mutation = paymentMutations.DELETE_LINE;
     const variables = { input: { orderId, assetId } };
@@ -334,12 +315,6 @@ export class SMPPayment {
     const variables = { input: { transactionId } };
     const response = await this.client.query(query, variables) as { transaction: Transaction };
     return response.transaction;
-  }
-
-  async listTransactions(): Promise<Transaction[]> {
-    const query = transactionQueries.GET_TRANSACTIONS;
-    const response = await this.client.query(query, {}) as { transactions: Transaction[] };
-    return response.transactions;
   }
 
   async listTransactionsByBuyerUserId(buyerUserId: string): Promise<Transaction[]> {

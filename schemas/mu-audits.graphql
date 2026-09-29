@@ -1,0 +1,78 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuditLog {
+  auditLogID: ID!
+  uniqRef: String
+  slug: String
+  actionType: String
+  userID: ID
+  userIP: String
+  userOS: String
+  machineName: String
+  applicationID: ID
+  applicationVersion: String
+  actionDetails: JSON
+  clientDetails: JSON
+  state: ObjectStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+enum ObjectStatus {
+  offline
+  staging
+  awaiting
+  reviewed
+  rejected
+  signaled
+  online
+  archived
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Query {
+  auditLog(auditLogID: ID!): AuditLog
+  auditLogs: [AuditLog!]!
+  auditLogBySlug(Slug: String!): AuditLog
+  auditLogsByIDs(auditLogIDs: [ID!]!): [AuditLog!]!
+  auditLogsBySlugs(slugs: [String!]!): [AuditLog!]!
+  auditLogByUniqRef(uniqRef: String!): AuditLog
+}
+
+type Mutation {
+  createAuditLog(input: CreateAuditLogInput!): AuditLog!
+  updateAuditLog(auditLogID: ID!, input: UpdateAuditLogInput!): AuditLog!
+  deleteAuditLog(auditLogID: ID!): Boolean!
+}
+
+input CreateAuditLogInput {
+  actionType: String!
+  userID: ID
+  userIP: String
+  userOS: String
+  machineName: String
+  applicationID: ID
+  applicationVersion: String
+  actionDetails: JSON
+  clientDetails: JSON
+  state: ObjectStatus
+}
+
+input UpdateAuditLogInput {
+  machineName: String
+  applicationID: ID
+  applicationVersion: String
+  state: ObjectStatus
+}

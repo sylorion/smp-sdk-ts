@@ -24,8 +24,8 @@ export const assetMediaQueries = {
   `,
 
   GET_ASSET_MEDIAS: `
-    query GetAssetMedias($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-      assetMedias(pagination: $pagination, sort: $sort, filter: $filter) {
+    query GetAssetMedias {
+      assetMedias {
         assetMediaID
         assetID
         mediaID
@@ -466,8 +466,8 @@ const serviceAssetQueries = {
 
   // Récupère la liste des ServiceAssets (avec pagination, tri et filtres optionnels)
   GET_SERVICE_ASSETS: `
-      query GetServiceAssets($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-        serviceAssets(pagination: $pagination, sort: $sort, filter: $filter) {
+      query GetServiceAssets {
+        serviceAssets {
           serviceAssetID
           uniqRef
           slug
@@ -580,8 +580,8 @@ const serviceMediaQueries = {
   `,
 
   GET_SERVICE_MEDIAS: `
-    query GetServiceMedias($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-      serviceMedias(pagination: $pagination, sort: $sort, filter: $filter) {
+    query GetServiceMedias {
+      serviceMedias {
         serviceMediaID
         uniqRef
         slug
@@ -714,18 +714,6 @@ export { topicQueries };
 // Source: catalog/serviceQueries.ts
 // =========================================
 const serviceQueries = {
-  GET_SERVICE_BY_AUTHOR_ID: `
-    query GetServicesByUserId($authorID: String!) {
-      servicessByUserId(userID: $authorID) {
-        serviceID
-        authorID
-        organizationID
-        title
-        slug
-        uniqRef
-      }
-    }
-  `,
   GET_SERVICE_BY_ID: `
     query GetServiceByID($serviceID: ID!, $admin: Boolean) {
       service(serviceID: $serviceID, admin: $admin) {
@@ -1505,7 +1493,6 @@ const mediaQueries = {
         url
         size
         entityID
-        metadata
         entityName
         state
         createdAt
@@ -1516,8 +1503,8 @@ const mediaQueries = {
   `,
 
   GET_MEDIAS: `
-    query GetMedias($pagination: PaginationInput, $sort: SortInput, $filter: [FilterInput!]) {
-      medias(pagination: $pagination, sort: $sort, filter: $filter) {
+    query GetMedias {
+      medias {
         mediaID
         uniqRef
         slug
@@ -1530,7 +1517,6 @@ const mediaQueries = {
         url
         size
         entityID
-        metadata
         entityName
         state
         createdAt
@@ -1542,7 +1528,7 @@ const mediaQueries = {
 
   GET_MEDIA_BY_SLUG: `
     query GetMediaBySlug($slug: String!) {
-      mediaBySlug(slug: $slug) {
+      mediaBySlug(Slug: $slug) {
         mediaID
         uniqRef
         slug
@@ -1555,7 +1541,6 @@ const mediaQueries = {
         url
         size
         entityID
-        metadata
         entityName
         state
         createdAt
@@ -1580,7 +1565,6 @@ const mediaQueries = {
         url
         size
         entityID
-        metadata
         entityName
         state
         createdAt
@@ -1605,7 +1589,6 @@ const mediaQueries = {
         url
         size
         entityID
-        metadata
         entityName
         state
         createdAt
@@ -1630,7 +1613,6 @@ const mediaQueries = {
         url
         size
         entityID
-        metadata
         entityName
         state
         createdAt

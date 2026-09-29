@@ -1,0 +1,7 @@
+[
+  "accounting/mutations::DELETE_LINE",
+  "booking/mutations::CREATE_AVAILABILITY",
+  "booking/mutations::CREATE_ESTIMATE_REQUEST",
+  "booking/queries::GET_ESTIMATE_REQUESTS",
+  "communication/queries::GET_ENGAGEMENTS_BY_ESTIMATE"
+]

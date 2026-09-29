@@ -22,7 +22,8 @@ export class Contract {
      */
     async update(id, data) {
         const query = contractMutations.UPDATE_CONTRACT;
-        const response = await this.client.mutate(query, { id, data });
+        // `UpdateContractInput.contractId` est obligatoire dans le schéma de mu-contract.
+        const response = await this.client.mutate(query, { id, data: { ...data, contractId: data.contractId ?? id } });
         return response.updateContract;
     }
     /**
@@ -64,7 +65,8 @@ export class Contract {
     async list() {
         const query = contractQueries.GET_ALL_CONTRACTS;
         const response = await this.client.query(query, {});
-        return response.contracts;
+        // Le champ GraphQL est `getContracts` (lire `contracts` renvoyait toujours undefined).
+        return response.getContracts ?? [];
     }
     /**
      * Retrieves contracts by organization ID
@@ -89,6 +91,47 @@ export class Contract {
             data: { token }
         });
         return response.verifyToken;
+    }
+    // ── Suivi, refus, relance, nouvelle version ─────────────────────────
+    /** Refus du client, par son jeton d'invitation ; le motif est stocké dans `details.rejection`. */
+    async reject(data) {
+        const r = await this.client.mutate(contractMutations.REJECT_CONTRACT, { data });
+        return r.rejectContract;
+    }
+    /** Renvoie l'invitation au dernier destinataire (l'ancien lien est révoqué). Le jeton n'est pas renvoyé. */
+    async resendInvitation(contractId) {
+        const r = await this.client.mutate(contractMutations.RESEND_CONTRACT_INVITATION, { contractId });
+        return r.resendContractInvitation;
+    }
+    /** Première ouverture du lien de signature (page publique) ; déclenche `contract.opened` si demandé à l'envoi. */
+    async markInvitationOpened(invitationToken) {
+        const r = await this.client.mutate(contractMutations.MARK_CONTRACT_INVITATION_OPENED, { invitationToken });
+        return !!r.markContractInvitationOpened;
+    }
+    /** Nouvelle version (v+1) d'un contrat figé ou refusé : les signatures sont à refaire. */
+    async duplicate(contractId) {
+        const r = await this.client.mutate(contractMutations.DUPLICATE_CONTRACT, { contractId });
+        return r.duplicateContract;
+    }
+    // ── Signature de l'organisation (contre-signature) ──────────────────
+    async getSignatureSettings(organizationId) {
+        const r = await this.client.query(contractQueries.GET_ORGANIZATION_SIGNATURE_SETTINGS, { organizationId });
+        return r.organizationSignatureSettings;
+    }
+    /** `autoCountersign: true` exige le plan Pro (erreur `PLAN_REQUIRED`). */
+    async updateSignatureSettings(organizationId, data) {
+        const r = await this.client.mutate(contractMutations.UPDATE_ORGANIZATION_SIGNATURE_SETTINGS, { organizationId, data });
+        return r.updateOrganizationSignatureSettings;
+    }
+    /** L'appelant enregistre SA signature pour l'organisation. */
+    async saveSigner(organizationId, data) {
+        const r = await this.client.mutate(contractMutations.SAVE_ORGANIZATION_SIGNER, { organizationId, data });
+        return r.saveOrganizationSigner;
+    }
+    /** L'appelant retire sa propre signature. */
+    async removeSigner(organizationId, userId) {
+        const r = await this.client.mutate(contractMutations.REMOVE_ORGANIZATION_SIGNER, { organizationId, userId });
+        return r.removeOrganizationSigner;
     }
     // ── Modèles de l'organisation (contrats réutilisables) ──────────────
     async listOrganizationTemplates(organizationId) {

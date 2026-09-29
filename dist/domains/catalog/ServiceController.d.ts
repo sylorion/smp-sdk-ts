@@ -177,7 +177,6 @@ export declare class Service {
     constructor(client: APIClient);
     list(pagination?: any, sort?: any, filter?: any, admin?: boolean): Promise<ServiceEntity[]>;
     getById(serviceID: string, admin?: boolean): Promise<ServiceEntity>;
-    listByAuthorId(authorID: string, admin?: boolean): Promise<ServiceEntity[]>;
     getByUniqRef(uniqRef: string, admin?: boolean): Promise<ServiceEntity>;
     getBySlug(slug: string, admin?: boolean): Promise<ServiceEntity>;
     getByIds(serviceIDs: string[], admin?: boolean): Promise<ServiceEntity[]>;
@@ -186,7 +185,8 @@ export declare class Service {
     search(input: SearchServiceInput): Promise<ServiceEntity[]>;
     getByAgentID(agentID: string, admin?: boolean): Promise<ServiceEntity[]>;
     getMediaById(serviceMediaID: string): Promise<ServiceMediaEntity>;
-    listMedias(pagination?: any, sort?: any, filter?: any): Promise<ServiceMediaEntity[]>;
+    /** Liste les médias de services — `serviceMedias` n'accepte ni pagination, ni tri, ni filtre (mu-catalog). */
+    listMedias(): Promise<ServiceMediaEntity[]>;
     getMediaBySlug(slug: string): Promise<ServiceMediaEntity>;
     getMediasByIds(serviceMediaIDs: string[]): Promise<ServiceMediaEntity[]>;
     getMediasBySlugs(slugs: string[]): Promise<ServiceMediaEntity[]>;
