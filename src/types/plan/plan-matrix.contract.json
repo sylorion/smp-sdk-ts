@@ -21,7 +21,8 @@
     "USE_CUSTOM_BRANDING",
     "CUSTOMIZE_DOCUMENTS",
     "REMOVE_DOCUMENT_POWERED_BY",
-    "AUTO_COUNTERSIGN"
+    "AUTO_COUNTERSIGN",
+    "USE_ON_SITE_BOOKING"
   ],
   "actionToKey": {
     "CREATE_ORGANIZATION": "maxOrganizations",
@@ -40,7 +41,8 @@
     "USE_CUSTOM_BRANDING": "hasCustomBranding",
     "CUSTOMIZE_DOCUMENTS": "hasDocumentCustomization",
     "REMOVE_DOCUMENT_POWERED_BY": "hasDocumentPoweredByRemoval",
-    "AUTO_COUNTERSIGN": "hasAutoCountersign"
+    "AUTO_COUNTERSIGN": "hasAutoCountersign",
+    "USE_ON_SITE_BOOKING": "hasOnSiteBooking"
   },
   "scopes": {
     "maxOrganizations": "user",
@@ -59,7 +61,8 @@
     "maxOrganizations": "Seul quota de portée UTILISATEUR : l'organisation n'existe pas encore au moment du contrôle.",
     "others": "Tous les autres quotas sont de portée ORGANISATION, mais leur VALEUR vient du plan du propriétaire de l'organisation.",
     "hasDocumentPoweredByRemoval": "Retrait de la mention « Émis avec Services » sur les factures, avoirs, devis et bons de commande. Pro et Business uniquement (Starter personnalise mais garde la mention).",
-    "hasAutoCountersign": "Contre-signature automatique des contrats des flows de service par le signataire par défaut de l'organisation. Pro et Business uniquement."
+    "hasAutoCountersign": "Contre-signature automatique des contrats des flows de service par le signataire par défaut de l'organisation. Pro et Business uniquement.",
+    "hasOnSiteBooking": "Réservation sans paiement en ligne (paiement sur place) et page de réservation publique à partager, pour les services de réservation. Ouverte dès Starter."
   },
   "matrix": {
     "standard": {
@@ -82,7 +85,8 @@
       "hasServiceAiAgents": false,
       "hasDocumentCustomization": false,
       "hasDocumentPoweredByRemoval": false,
-      "hasAutoCountersign": false
+      "hasAutoCountersign": false,
+      "hasOnSiteBooking": false
     },
     "starter": {
       "maxOrganizations": 1,
@@ -104,7 +108,8 @@
       "hasServiceAiAgents": false,
       "hasDocumentCustomization": true,
       "hasDocumentPoweredByRemoval": false,
-      "hasAutoCountersign": false
+      "hasAutoCountersign": false,
+      "hasOnSiteBooking": true
     },
     "pro": {
       "maxOrganizations": 3,
@@ -126,7 +131,8 @@
       "hasServiceAiAgents": true,
       "hasDocumentCustomization": true,
       "hasDocumentPoweredByRemoval": true,
-      "hasAutoCountersign": true
+      "hasAutoCountersign": true,
+      "hasOnSiteBooking": true
     },
     "business": {
       "maxOrganizations": 5,
@@ -148,7 +154,8 @@
       "hasServiceAiAgents": true,
       "hasDocumentCustomization": true,
       "hasDocumentPoweredByRemoval": true,
-      "hasAutoCountersign": true
+      "hasAutoCountersign": true,
+      "hasOnSiteBooking": true
     }
   }
 }

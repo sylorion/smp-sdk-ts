@@ -80,6 +80,8 @@ export interface PlanFeatures {
   hasDocumentPoweredByRemoval: boolean;
   /** Contre-signature automatique des contrats des flows de service — Pro et Business. */
   hasAutoCountersign: boolean;
+  /** Réservation avec paiement sur place et page de réservation publique — dès Starter. */
+  hasOnSiteBooking: boolean;
 }
 
 export type PlanConfig = PlanLimits & PlanFeatures;
@@ -118,6 +120,7 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasDocumentCustomization: false,
     hasDocumentPoweredByRemoval: false,
     hasAutoCountersign: false,
+    hasOnSiteBooking: false,
   },
   [PlanTier.STARTER]: {
     maxOrganizations: 1,
@@ -140,6 +143,7 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasDocumentCustomization: true,
     hasDocumentPoweredByRemoval: false,
     hasAutoCountersign: false,
+    hasOnSiteBooking: true,
   },
   [PlanTier.PRO]: {
     maxOrganizations: 3,
@@ -162,6 +166,7 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasDocumentCustomization: true,
     hasDocumentPoweredByRemoval: true,
     hasAutoCountersign: true,
+    hasOnSiteBooking: true,
   },
   [PlanTier.BUSINESS]: {
     maxOrganizations: 5,
@@ -184,6 +189,7 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasDocumentCustomization: true,
     hasDocumentPoweredByRemoval: true,
     hasAutoCountersign: true,
+    hasOnSiteBooking: true,
   },
 };
 
@@ -325,6 +331,8 @@ export enum PlanAction {
   REMOVE_DOCUMENT_POWERED_BY = 'REMOVE_DOCUMENT_POWERED_BY',
   /** Contre-signature automatique des contrats des flows de service (Pro+). */
   AUTO_COUNTERSIGN = 'AUTO_COUNTERSIGN',
+  /** Réservation avec paiement sur place (Starter+). */
+  USE_ON_SITE_BOOKING = 'USE_ON_SITE_BOOKING',
 }
 
 /** Maps PlanAction to the relevant limit key in PlanLimits */
@@ -347,6 +355,7 @@ const ACTION_TO_LIMIT_KEY: Record<string, keyof PlanLimits | null> = {
   [PlanAction.CUSTOMIZE_DOCUMENTS]: null,
   [PlanAction.REMOVE_DOCUMENT_POWERED_BY]: null,
   [PlanAction.AUTO_COUNTERSIGN]: null,
+  [PlanAction.USE_ON_SITE_BOOKING]: null,
 };
 
 /** Maps PlanAction to the relevant feature key for boolean checks */
@@ -359,6 +368,7 @@ const ACTION_TO_FEATURE_KEY: Partial<Record<string, keyof PlanFeatures>> = {
   [PlanAction.CUSTOMIZE_DOCUMENTS]: 'hasDocumentCustomization',
   [PlanAction.REMOVE_DOCUMENT_POWERED_BY]: 'hasDocumentPoweredByRemoval',
   [PlanAction.AUTO_COUNTERSIGN]: 'hasAutoCountersign',
+  [PlanAction.USE_ON_SITE_BOOKING]: 'hasOnSiteBooking',
 };
 
 // ============================================================================
@@ -527,6 +537,7 @@ export function getPlanFeaturesForDisplay(plan?: string | null): Array<{
     { label: 'Factures et devis personnalisés', value: config.hasDocumentCustomization ? 'Inclus' : 'Non inclus', included: config.hasDocumentCustomization, category: 'feature' },
     { label: 'Sans mention « Émis avec Services »', value: config.hasDocumentPoweredByRemoval ? 'Inclus' : 'Non inclus', included: config.hasDocumentPoweredByRemoval, category: 'feature' },
     { label: 'Contre-signature automatique', value: config.hasAutoCountersign ? 'Inclus' : 'Non inclus', included: config.hasAutoCountersign, category: 'feature' },
+    { label: 'Réservation avec paiement sur place', value: config.hasOnSiteBooking ? 'Inclus' : 'Non inclus', included: config.hasOnSiteBooking, category: 'feature' },
     { label: 'Branding personnalisé', value: config.hasCustomBranding ? 'Inclus' : 'Non inclus', included: config.hasCustomBranding, category: 'feature' },
     { label: 'Retraits / mois', value: formatLimit(config.maxWithdrawalsPerMonth), included: true, category: 'limit' },
   ];
