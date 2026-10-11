@@ -6,6 +6,7 @@ import * as accountingQueries from '../../src/api/graphql/accounting/queries';
 import * as accountingMutations from '../../src/api/graphql/accounting/mutations';
 import * as applicationAuthMutations from '../../src/api/graphql/application/authMutations';
 import * as authQueries from '../../src/api/graphql/auth/queries';
+import * as adminQueries from '../../src/api/graphql/admin/queries';
 import * as authMutations from '../../src/api/graphql/auth/mutations';
 import * as bookingQueries from '../../src/api/graphql/booking/queries';
 import * as bookingMutations from '../../src/api/graphql/booking/mutations';
@@ -49,6 +50,7 @@ const MODULES: Record<string, Record<string, unknown>> = {
   'accounting/mutations': accountingMutations,
   'application/authMutations': applicationAuthMutations,
   'auth/queries': authQueries,
+  'admin/queries': adminQueries,
   'auth/mutations': authMutations,
   'booking/queries': bookingQueries,
   'booking/mutations': bookingMutations,

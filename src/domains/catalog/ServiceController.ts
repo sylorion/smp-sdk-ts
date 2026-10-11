@@ -4,6 +4,7 @@ import { serviceMutations } from '../../api/graphql/catalog/mutations.js';
 import { serviceMediaQueries } from '../../api/graphql/catalog/queries.js';
 import { serviceMediaMutations } from '../../api/graphql/catalog/mutations.js';
 import type { Place } from './LocationController.js';
+import { checkServiceCombination, type CombinationIssue, type ServiceCombination } from '../../service-profiles/service-profiles.generated.js';
 
 // Types pour les entités et les inputs
 
@@ -82,7 +83,42 @@ interface ServiceEntity {
 }
 
 
-interface CreateServiceInput {
+/**
+ * Réglages modalité × facturation × canal d'un service : soit les TROIS ensemble, et alors
+ * uniquement une combinaison exécutable par la plateforme (`ServiceCombination`, vérifiée à la
+ * compilation : `{ uptakeForm: 'instant', billingPlan: 'mensual', … }` ne compile pas), soit aucun
+ * (création : défauts de la base, instantané · prix fixe · sur place ; modification : inchangés).
+ * Source : libs/shared/service-profiles du monorepo (docs/architecture/workflows-de-service.md §3.2).
+ */
+export type ServiceCombinationFields =
+  | ServiceCombination
+  | { uptakeForm?: never; billingPlan?: never; supplyType?: never };
+
+/** Refus local (avant tout appel réseau) d'une combinaison non exécutable ; même règle que mu-catalog. */
+export class ServiceCombinationError extends Error {
+  readonly code = 'SERVICE_COMBINATION_INVALID' as const;
+  constructor(readonly issue: CombinationIssue) {
+    super(issue.message);
+    this.name = 'ServiceCombinationError';
+  }
+}
+
+/** Lève `ServiceCombinationError` si les réglages fournis forment une combinaison non exécutable. */
+export function assertServiceCombination(input: { uptakeForm?: unknown; billingPlan?: unknown; supplyType?: unknown }): void {
+  const has = (v: unknown) => v !== undefined && v !== null;
+  if (!has(input.uptakeForm) && !has(input.billingPlan) && !has(input.supplyType)) return;
+  const issue = checkServiceCombination({
+    uptakeForm: has(input.uptakeForm) ? String(input.uptakeForm) : null,
+    billingPlan: has(input.billingPlan) ? String(input.billingPlan) : null,
+    supplyType: has(input.supplyType) ? String(input.supplyType) : null,
+  });
+  if (issue) throw new ServiceCombinationError(issue);
+}
+
+type CreateServiceInput = CreateServiceBaseInput & ServiceCombinationFields;
+type UpdateServiceInput = UpdateServiceBaseInput & ServiceCombinationFields;
+
+interface CreateServiceBaseInput {
   authorID: string;
   title: string;
   description: string;
@@ -99,9 +135,6 @@ interface CreateServiceInput {
   upperPrice: number;
   negotiable?: boolean;
   perimeter?: number;
-  supplyType?: string;
-  uptakeForm?: string;
-  billingPlan?: string;
   onlineService?: boolean;
   advancedAttributes?: string;
   poweredByAgent?: boolean; // Indique si le service utilise un agent
@@ -109,7 +142,7 @@ interface CreateServiceInput {
   state: string;
 }
 
-interface UpdateServiceInput {
+interface UpdateServiceBaseInput {
   title?: string;
   description?: string;
   mediaBannerID?: string;
@@ -124,9 +157,6 @@ interface UpdateServiceInput {
   upperPrice?: number;
   negotiable?: boolean;
   perimeter?: number;
-  supplyType?: string;
-  uptakeForm?: string;
-  billingPlan?: string;
   onlineService?: boolean;
   advancedAttributes?: string;
   poweredByAgent?: boolean; // Indique si le service utilise un agent
@@ -309,6 +339,7 @@ export class Service {
   //========================== MUTATIONS =============================================================
 
   async create(input: CreateServiceInput): Promise<ServiceEntity> {
+    assertServiceCombination(input);
     const mutation = serviceMutations.CREATE_SERVICE;
     const variables = { input };
     const response = await this.client.mutate(mutation, variables) as { createService: ServiceEntity };
@@ -316,6 +347,7 @@ export class Service {
   }
 
   async update(serviceID: string, input: UpdateServiceInput): Promise<ServiceEntity> {
+    assertServiceCombination(input);
     const mutation = serviceMutations.UPDATE_SERVICE;
     const variables = { serviceID, input };
     const response = await this.client.mutate(mutation, variables) as { updateService: ServiceEntity };

@@ -51,6 +51,8 @@ export interface PlanFeatures {
     hasDocumentPoweredByRemoval: boolean;
     /** Contre-signature automatique des contrats des flows de service — Pro et Business. */
     hasAutoCountersign: boolean;
+    /** Réservation avec paiement sur place et page de réservation publique — dès Starter. */
+    hasOnSiteBooking: boolean;
 }
 export type PlanConfig = PlanLimits & PlanFeatures;
 /** Sentinel value for "unlimited" */
@@ -103,7 +105,9 @@ export declare enum PlanAction {
     /** Retrait de la mention « Émis avec Services » (Pro+). */
     REMOVE_DOCUMENT_POWERED_BY = "REMOVE_DOCUMENT_POWERED_BY",
     /** Contre-signature automatique des contrats des flows de service (Pro+). */
-    AUTO_COUNTERSIGN = "AUTO_COUNTERSIGN"
+    AUTO_COUNTERSIGN = "AUTO_COUNTERSIGN",
+    /** Réservation avec paiement sur place (Starter+). */
+    USE_ON_SITE_BOOKING = "USE_ON_SITE_BOOKING"
 }
 /**
  * Resolves a plan string to a PlanTier enum value.

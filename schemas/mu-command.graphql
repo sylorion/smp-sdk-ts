@@ -2,6 +2,59 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AdminDailyPoint {
+  date: String!
+  count: Int!
+}
+
+type AdminAmountByCurrency {
+  currency: String!
+  amount: Float!
+  count: Int!
+}
+
+type AdminStatusCount {
+  status: String!
+  count: Int!
+}
+
+type AdminRankedEntry {
+  id: String!
+  count: Int!
+  revenue: [AdminAmountByCurrency!]!
+}
+
+type AdminOrderAnalytics {
+  created: Int!
+  paid: Int!
+  paidPrevious: Int!
+  revenue: [AdminAmountByCurrency!]!
+  revenuePrevious: [AdminAmountByCurrency!]!
+  byStatus: [AdminStatusCount!]!
+  createdSeries: [AdminDailyPoint!]!
+  paidSeries: [AdminDailyPoint!]!
+  distinctBuyers: Int!
+}
+
+type AdminServiceSubscriptionAnalytics {
+  live: Int!
+  createdInPeriod: Int!
+  canceledInPeriod: Int!
+  byStatus: [AdminStatusCount!]!
+  createdSeries: [AdminDailyPoint!]!
+  topServices: [AdminRankedEntry!]!
+}
+
+type AdminCommerceAnalytics {
+  days: Int!
+  since: String!
+  generatedAt: String!
+  orders: AdminOrderAnalytics!
+  topServices: [AdminRankedEntry!]!
+  topSellers: [AdminRankedEntry!]!
+  subscriptions: AdminServiceSubscriptionAnalytics!
+}
+
 type AgentExecutionStatus {
   orderId: ID!
   engagementId: ID
@@ -35,6 +88,7 @@ type Booking {
   bookingStartDate: DateTime
   bookingEndDate: DateTime
   engagementId: ID
+  paymentMode: String
   createdAt: DateTime!
   updatedAt: DateTime
   deletedAt: DateTime
@@ -67,6 +121,53 @@ type BookingManagementInfo {
   cancelDeadline: DateTime
   cancelBlockedReason: String
   refundEligible: Boolean!
+}
+
+type BookingPaymentSettings {
+  serviceId: ID!
+  organizationId: ID
+  serviceTitle: String
+  onSitePaymentEnabled: Boolean!
+  platformPaymentEnabled: Boolean!
+  onSiteBookingAvailable: Boolean!
+  unavailableReason: String
+  publicBookingUrl: String!
+  slotDuration: Int!
+  advanceBookingLimit: Int!
+  cancellationWindow: Int!
+  cancellationPolicy: String
+  priceCents: Int!
+  currency: String!
+  supplyType: String
+}
+
+type OnSiteBookingSummary {
+  bookingId: ID!
+  serviceId: ID!
+  serviceTitle: String
+  providerName: String
+  status: String!
+  slotDate: String!
+  startTime: String!
+  endTime: String!
+  priceCents: Int!
+  currency: String!
+  customerName: String!
+  canCancel: Boolean!
+  cancellationDeadline: DateTime
+  cancellationPolicy: String
+  cancellationReason: String
+}
+
+type OnSiteBookingConfirmation {
+  booking: OnSiteBookingSummary!
+  manageToken: String
+}
+
+type BookingReminderResult {
+  bookingId: ID!
+  recipient: String!
+  sentAt: DateTime!
 }
 
 type ServiceCapacity {
@@ -578,6 +679,9 @@ type ServiceFlowRun {
   reviewDueAt: DateTime
   priceHoldUntil: DateTime
   expiresAt: DateTime
+
+  """Dernière activité du client"""
+  lastActivityAt: DateTime
   submittedAt: DateTime
   validatedAt: DateTime
   validatedBy: ID
@@ -617,12 +721,83 @@ type ServiceFlowContractPreparation {
   invitationToken: String!
 }
 
+type ServiceFlowRunReminderResult {
+  runId: ID!
+  sent: Boolean!
+  reminderNumber: Int
+  reason: String
+}
+
+type ServiceFlowReadinessIssue {
+  code: String!
+  severity: String!
+  message: String!
+  stepKey: String
+  variable: String
+  fixHint: String
+  fixRoute: String
+  group: String
+  fix: JSON
+}
+
+type ServiceFlowFixesResult {
+  flow: ServiceFlow!
+  questionsAdded: Int!
+  stepsRemoved: Int!
+  valuesSet: Int!
+}
+
+type ServiceFlowVariableResolution {
+  key: String!
+  required: Boolean!
+  status: String!
+  source: String!
+  path: String
+  hint: String
+  block: String
+  answerIgnored: String
+}
+
+type ServiceFlowContractReadiness {
+  stepKey: ID!
+  templateKind: String!
+  templateId: String!
+  templateTitle: String!
+  variables: [ServiceFlowVariableResolution!]!
+}
+
+type ServiceFlowProfileCandidate {
+  code: String!
+  label: String!
+}
+
+type ServiceFlowProfileReadiness {
+  code: String!
+  label: String!
+  family: String!
+  declared: Boolean!
+  ambiguous: Boolean!
+  candidates: [ServiceFlowProfileCandidate!]!
+}
+
+type ServiceFlowReadiness {
+  ready: Boolean!
+  kind: String
+  profile: ServiceFlowProfileReadiness
+  blocking: [ServiceFlowReadinessIssue!]!
+  warnings: [ServiceFlowReadinessIssue!]!
+  contracts: [ServiceFlowContractReadiness!]!
+}
+
 type Query {
+  adminCommerceAnalytics(days: Int, limit: Int): AdminCommerceAnalytics!
   agentExecutionStatus(orderId: ID!): AgentExecutionStatus!
   bookingsByService(serviceId: String!): [Booking!]!
   bookingsByUser(userId: String!): [Booking!]!
   booking(bookingId: String!): Booking!
   bookingManagementByEngagement(engagementId: String!, role: String = "client"): BookingManagementInfo!
+  bookingPaymentSettings(serviceId: ID!): BookingPaymentSettings!
+  onSiteBooking(token: String!): OnSiteBookingSummary!
   serviceCapacity(serviceId: ID!): ServiceCapacity!
   organizationCapacity(organizationId: ID!): OrganizationCapacity!
   serviceAvailability(serviceId: ID!): ServiceAvailability!
@@ -659,6 +834,7 @@ type Query {
   serviceFlow(flowId: ID!): ServiceFlow!
   serviceFlowVersions(flowId: ID!): [ServiceFlowVersion!]!
   serviceFlowForService(serviceId: ID!): ServiceFlowPublic
+  serviceFlowReadiness(flowId: ID!, serviceId: ID): ServiceFlowReadiness!
   serviceFlowStats(organizationId: ID!): ServiceFlowStats!
   serviceFlowUsage(flowId: ID!, days: Int = 30): ServiceFlowUsage!
   serviceFlowRuns(organizationId: ID!, flowId: ID, status: [ServiceFlowRunStatus!], limit: Int = 50, offset: Int = 0): [ServiceFlowRun!]!
@@ -680,6 +856,10 @@ type Mutation {
   confirmBooking(bookingId: String!): Booking!
   completeBooking(bookingId: String!): Booking!
   updateBooking(data: UpdateBookingInput!): Booking!
+  updateBookingPaymentSettings(serviceId: ID!, data: BookingPaymentSettingsInput!): BookingPaymentSettings!
+  createOnSiteBooking(data: CreateOnSiteBookingInput!): OnSiteBookingConfirmation!
+  cancelOnSiteBooking(token: String!, reason: String): OnSiteBookingSummary!
+  sendBookingReminder(bookingId: ID!, message: String): BookingReminderResult!
   upsertServiceCapacity(serviceId: ID!, data: ServiceCapacityInput!): ServiceCapacity!
   upsertOrganizationCapacity(organizationId: ID!, data: OrganizationCapacityInput!): OrganizationCapacity!
   createBookingConfiguration(input: CreateBookingConfigurationInput!): BookingConfiguration!
@@ -713,6 +893,7 @@ type Mutation {
   createAvailabilityException(input: CreateAvailabilityExceptionInput!): AvailabilityException!
   deleteAvailabilityException(availabilityExceptionId: String!): AvailabilityException!
   createServiceFlow(data: CreateServiceFlowInput!): ServiceFlow!
+  applyServiceFlowFixes(flowId: ID!, fixes: JSON!): ServiceFlowFixesResult!
   updateServiceFlowDraft(flowId: ID!, data: UpdateServiceFlowInput!): ServiceFlow!
   publishServiceFlow(flowId: ID!): ServiceFlow!
   duplicateServiceFlow(flowId: ID!): ServiceFlow!
@@ -727,10 +908,16 @@ type Mutation {
   editServiceFlowRunAnswers(runId: ID!): ServiceFlowRun!
   restartServiceFlowRun(runId: ID!): ServiceFlowRun!
   postServiceFlowRunMessage(runId: ID!, message: String!): ServiceFlowRun!
+  completeServiceFlowServiceStep(runId: ID!, stepKey: ID!, data: JSON!): ServiceFlowRun!
   validateServiceFlowRun(runId: ID!, data: ValidateServiceFlowRunInput): ServiceFlowRun!
   requestServiceFlowChanges(runId: ID!, data: RequestServiceFlowChangesInput!): ServiceFlowRun!
   refuseServiceFlowRun(runId: ID!, reason: String!): ServiceFlowRun!
   relaunchServiceFlowRun(runId: ID!): ServiceFlowRun!
+
+  """
+  Relance le client d'une exécution abandonnée (2 relances max, 48 h d'écart).
+  """
+  remindServiceFlowRun(runId: ID!): ServiceFlowRunReminderResult!
   closeServiceFlowRun(runId: ID!): ServiceFlowRun!
 }
 
@@ -749,11 +936,31 @@ input CreateBookingInput {
   engagementId: ID
   status: String
   hold: Boolean
+  holdHours: Int
 }
 
 input UpdateBookingInput {
   bookingId: ID!
   customerDetails: String
+}
+
+input BookingPaymentSettingsInput {
+  onSitePaymentEnabled: Boolean
+  platformPaymentEnabled: Boolean
+}
+
+input CreateOnSiteBookingInput {
+  serviceId: ID!
+  slotDate: String!
+  startMinutes: Int!
+  customer: OnSiteCustomerInput!
+}
+
+input OnSiteCustomerInput {
+  name: String!
+  email: String!
+  phone: String
+  note: String
 }
 
 input ServiceCapacityInput {

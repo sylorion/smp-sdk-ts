@@ -1,5 +1,6 @@
 import { APIClient } from '../../api/APIClient.js';
 import type { Place } from './LocationController.js';
+import { type CombinationIssue, type ServiceCombination } from '../../service-profiles/service-profiles.generated.js';
 /** Asset imbriqué dans ServiceAsset — chargé via la query service */
 interface ServiceAssetMediaEntity {
     listingPosition?: number;
@@ -72,7 +73,33 @@ interface ServiceEntity {
     /** Assets (options) inclus dans la query — source de vérité unique, plus de fetch cascade */
     serviceAssets?: ServiceAssetEntity[];
 }
-interface CreateServiceInput {
+/**
+ * Réglages modalité × facturation × canal d'un service : soit les TROIS ensemble, et alors
+ * uniquement une combinaison exécutable par la plateforme (`ServiceCombination`, vérifiée à la
+ * compilation : `{ uptakeForm: 'instant', billingPlan: 'mensual', … }` ne compile pas), soit aucun
+ * (création : défauts de la base, instantané · prix fixe · sur place ; modification : inchangés).
+ * Source : libs/shared/service-profiles du monorepo (docs/architecture/workflows-de-service.md §3.2).
+ */
+export type ServiceCombinationFields = ServiceCombination | {
+    uptakeForm?: never;
+    billingPlan?: never;
+    supplyType?: never;
+};
+/** Refus local (avant tout appel réseau) d'une combinaison non exécutable ; même règle que mu-catalog. */
+export declare class ServiceCombinationError extends Error {
+    readonly issue: CombinationIssue;
+    readonly code: "SERVICE_COMBINATION_INVALID";
+    constructor(issue: CombinationIssue);
+}
+/** Lève `ServiceCombinationError` si les réglages fournis forment une combinaison non exécutable. */
+export declare function assertServiceCombination(input: {
+    uptakeForm?: unknown;
+    billingPlan?: unknown;
+    supplyType?: unknown;
+}): void;
+type CreateServiceInput = CreateServiceBaseInput & ServiceCombinationFields;
+type UpdateServiceInput = UpdateServiceBaseInput & ServiceCombinationFields;
+interface CreateServiceBaseInput {
     authorID: string;
     title: string;
     description: string;
@@ -89,16 +116,13 @@ interface CreateServiceInput {
     upperPrice: number;
     negotiable?: boolean;
     perimeter?: number;
-    supplyType?: string;
-    uptakeForm?: string;
-    billingPlan?: string;
     onlineService?: boolean;
     advancedAttributes?: string;
     poweredByAgent?: boolean;
     agentConfiguration?: string;
     state: string;
 }
-interface UpdateServiceInput {
+interface UpdateServiceBaseInput {
     title?: string;
     description?: string;
     mediaBannerID?: string;
@@ -113,9 +137,6 @@ interface UpdateServiceInput {
     upperPrice?: number;
     negotiable?: boolean;
     perimeter?: number;
-    supplyType?: string;
-    uptakeForm?: string;
-    billingPlan?: string;
     onlineService?: boolean;
     advancedAttributes?: string;
     poweredByAgent?: boolean;

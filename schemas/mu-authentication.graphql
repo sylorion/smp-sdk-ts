@@ -109,6 +109,46 @@ type PlanStat {
   count: Int!
 }
 
+type AdminPlatformDailyPoint {
+  """Jour UTC, format AAAA-MM-JJ."""
+  date: String!
+  count: Int!
+}
+
+type AdminPlatformPlanBreakdown {
+  plan: String!
+  users: Int!
+  paying: Int!
+  trialing: Int!
+  monthly: Int!
+  yearly: Int!
+}
+
+type AdminPlatformRecentSignup {
+  userID: ID!
+  username: String!
+  email: String!
+  plan: String!
+  createdAt: String!
+}
+
+type AdminPlatformAnalytics {
+  days: Int!
+  since: String!
+  generatedAt: String!
+  totalUsers: Int!
+  signups: Int!
+  signupsPrevious: Int!
+
+  """Comptes connectés au moins une fois sur la période (`lastLogin`)."""
+  activeUsers: Int!
+  signupSeries: [AdminPlatformDailyPoint!]!
+  plans: [AdminPlatformPlanBreakdown!]!
+  payingUsers: Int!
+  trialingUsers: Int!
+  recentSignups: [AdminPlatformRecentSignup!]!
+}
+
 type Affiliate {
   affiliateId: ID!
   uniqRef: String
@@ -255,6 +295,7 @@ type Query {
   adminGetUserByEmail(email: String!): UserDetails
   adminGetPlanStats: [PlanStat!]!
   adminGetUserCount: Int!
+  adminPlatformAnalytics(days: Int): AdminPlatformAnalytics!
   affiliate(affiliateId: ID!): Affiliate
   affiliates(pagination: PaginationInput, sort: SortInput, filter: [FilterInput!]): [Affiliate!]!
   affiliateByToken(affiliateToken: String!): Affiliate

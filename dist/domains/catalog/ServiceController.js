@@ -2,6 +2,29 @@ import { serviceQueries } from '../../api/graphql/catalog/queries.js';
 import { serviceMutations } from '../../api/graphql/catalog/mutations.js';
 import { serviceMediaQueries } from '../../api/graphql/catalog/queries.js';
 import { serviceMediaMutations } from '../../api/graphql/catalog/mutations.js';
+import { checkServiceCombination } from '../../service-profiles/service-profiles.generated.js';
+/** Refus local (avant tout appel réseau) d'une combinaison non exécutable ; même règle que mu-catalog. */
+export class ServiceCombinationError extends Error {
+    constructor(issue) {
+        super(issue.message);
+        this.issue = issue;
+        this.code = 'SERVICE_COMBINATION_INVALID';
+        this.name = 'ServiceCombinationError';
+    }
+}
+/** Lève `ServiceCombinationError` si les réglages fournis forment une combinaison non exécutable. */
+export function assertServiceCombination(input) {
+    const has = (v) => v !== undefined && v !== null;
+    if (!has(input.uptakeForm) && !has(input.billingPlan) && !has(input.supplyType))
+        return;
+    const issue = checkServiceCombination({
+        uptakeForm: has(input.uptakeForm) ? String(input.uptakeForm) : null,
+        billingPlan: has(input.billingPlan) ? String(input.billingPlan) : null,
+        supplyType: has(input.supplyType) ? String(input.supplyType) : null,
+    });
+    if (issue)
+        throw new ServiceCombinationError(issue);
+}
 /**
  * `ServiceController` GÈRE LES REQUÊTES RELATIVES AUX SERVICES DANS L'APPLICATION.
  */
@@ -103,12 +126,14 @@ export class Service {
     }
     //========================== MUTATIONS =============================================================
     async create(input) {
+        assertServiceCombination(input);
         const mutation = serviceMutations.CREATE_SERVICE;
         const variables = { input };
         const response = await this.client.mutate(mutation, variables);
         return response.createService;
     }
     async update(serviceID, input) {
+        assertServiceCombination(input);
         const mutation = serviceMutations.UPDATE_SERVICE;
         const variables = { serviceID, input };
         const response = await this.client.mutate(mutation, variables);

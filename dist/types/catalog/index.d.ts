@@ -1,3 +1,4 @@
+import type { ServiceCombinationFields } from '../../domains/catalog/ServiceController.js';
 export type ServicePricingMode = 'money' | 'tokens' | 'both';
 export interface MediaEntity {
     mediaID: string;
@@ -130,7 +131,9 @@ export interface ServiceEntity {
         placeKind?: string | null;
     } | null;
 }
-export interface CreateServiceInput {
+/** Réglages modalité × facturation × canal : voir `ServiceCombinationFields` (les trois ensemble, combinaison exécutable). */
+export type CreateServiceInput = CreateServiceBaseInput & ServiceCombinationFields;
+export interface CreateServiceBaseInput {
     authorID: string;
     title: string;
     description: string;
@@ -147,9 +150,6 @@ export interface CreateServiceInput {
     upperPrice: number;
     negotiable?: boolean;
     perimeter?: number;
-    supplyType?: string;
-    uptakeForm?: string;
-    billingPlan?: string;
     /** Mode de tarification : money (défaut) | tokens (jetons STK uniquement) | both. */
     pricingMode?: ServicePricingMode;
     /** Prix en jetons plateforme (STK, 1 jeton = 0,10 €), requis si pricingMode ∈ {tokens, both}. */
@@ -160,7 +160,8 @@ export interface CreateServiceInput {
     agentConfiguration?: string;
     state: string;
 }
-export interface UpdateServiceInput {
+export type UpdateServiceInput = UpdateServiceBaseInput & ServiceCombinationFields;
+export interface UpdateServiceBaseInput {
     title?: string;
     description?: string;
     mediaBannerID?: string;
@@ -175,9 +176,6 @@ export interface UpdateServiceInput {
     upperPrice?: number;
     negotiable?: boolean;
     perimeter?: number;
-    supplyType?: string;
-    uptakeForm?: string;
-    billingPlan?: string;
     /** Mode de tarification : money (défaut) | tokens (jetons STK uniquement) | both. */
     pricingMode?: ServicePricingMode;
     /** Prix en jetons plateforme (STK, 1 jeton = 0,10 €), requis si pricingMode ∈ {tokens, both}. */

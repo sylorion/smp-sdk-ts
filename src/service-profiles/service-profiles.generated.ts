@@ -25,6 +25,12 @@
 // un code de profil (`ServiceAttribute` `profile_code`) que pour lever une
 // ambiguïté. Prix et devise viennent de `Service.price` / `Service.currency`,
 // jamais du profil. Fonctions pures, sans dépendance.
+//
+// COHÉRENCE : toutes les combinaisons d'enums ne sont pas exécutables par la
+// plateforme (un « instantané » facturé au mois n'a ni abonnement ni échéance).
+// `checkServiceCombination` dit si une combinaison est exécutable et, sinon, quel
+// réglage changer ; un profil n'est compatible qu'avec une combinaison cohérente,
+// et chaque combinaison cohérente a au moins un profil métier (vérifié par les tests).
 
 export const UPTAKE_FORMS = ['instant', 'periodic', 'prestation', 'booking_required'] as const;
 export type UptakeForm = (typeof UPTAKE_FORMS)[number];
@@ -40,6 +46,70 @@ export type ServiceKind = (typeof SERVICE_KINDS)[number];
 
 export const PROFILE_FAMILIES = ['consulting', 'person', 'rental', 'on_site', 'event_creative', 'digital', 'transport', 'leisure', 'b2b_admin', 'fallback'] as const;
 export type ProfileFamily = (typeof PROFILE_FAMILIES)[number];
+
+// ─── Cohérence modalité × facturation ────────────────────────────────────────
+
+/** Facturations des abonnements Stripe (`mu-catalog` `periodicRecurring`). */
+export const RECURRING_BILLING_PLANS = ['mensual', 'trimestrial', 'semestrial', 'annual'] as const satisfies readonly BillingPlan[];
+
+/**
+ * Facturations que la plateforme sait exécuter pour chaque modalité d'achat :
+ * - `instant` / `booking_required` : un encaissement unique (prix fixe ou par unité de temps / quantité) ;
+ * - `periodic` : un abonnement Stripe, donc une échéance mensuelle à annuelle ;
+ * - `prestation` : le devis fixe le montant final, d'où « à l'usage » et « mixte ».
+ * La minute suppose un créneau réservé : pas de minute en instantané.
+ * Le canal (`supplyType`) ne change pas le mécanisme ; il oriente seulement le profil.
+ */
+export const BILLING_PLANS_BY_UPTAKE = {
+  instant: ['direct', 'unit', 'hourly', 'dayly'],
+  booking_required: ['direct', 'unit', 'minute', 'hourly', 'dayly'],
+  periodic: RECURRING_BILLING_PLANS,
+  prestation: ['direct', 'usage', 'mixed', 'unit', 'hourly', 'dayly'],
+} as const satisfies Readonly<Record<UptakeForm, readonly BillingPlan[]>>;
+
+/** Facturations exécutables pour la modalité `U` (type). */
+export type BillingPlanFor<U extends UptakeForm> = (typeof BILLING_PLANS_BY_UPTAKE)[U][number];
+
+/**
+ * Combinaison exécutable par la plateforme, vérifiée À LA COMPILATION :
+ * `{ uptakeForm: 'instant', billingPlan: 'mensual', supplyType: 'irl' }` ne compile pas.
+ * Union discriminée par `uptakeForm` ; à utiliser pour toute création ou modification
+ * de ces trois réglages (SDK, webapp, services).
+ */
+export type ServiceCombination = {
+  [U in UptakeForm]: { uptakeForm: U; billingPlan: BillingPlanFor<U>; supplyType: SupplyType };
+}[UptakeForm];
+
+/** Toutes les combinaisons exécutables (figées), dans l'ordre des enums. */
+export const SERVICE_COMBINATIONS: readonly ServiceCombination[] = UPTAKE_FORMS.flatMap((u) =>
+  (BILLING_PLANS_BY_UPTAKE[u] as readonly BillingPlan[]).flatMap((b) =>
+    SUPPLY_TYPES.map((sp) => ({ uptakeForm: u, billingPlan: b, supplyType: sp }) as ServiceCombination)));
+
+/** Garde de type : la valeur (venue d'une saisie, d'une base, d'un appel) est-elle une combinaison exécutable ? */
+export function isServiceCombination(value: { uptakeForm?: unknown; billingPlan?: unknown; supplyType?: unknown } | null | undefined): value is ServiceCombination {
+  if (!value) return false;
+  const { uptakeForm: u, billingPlan: b, supplyType: sp } = value;
+  return typeof u === 'string' && typeof b === 'string' && typeof sp === 'string'
+    && (UPTAKE_FORMS as readonly string[]).includes(u)
+    && (SUPPLY_TYPES as readonly string[]).includes(sp)
+    && (BILLING_PLANS_BY_UPTAKE[u as UptakeForm] as readonly string[]).includes(b);
+}
+
+export type CombinationIssueCode =
+  | 'UPTAKE_FORM_UNKNOWN'
+  | 'BILLING_PLAN_UNKNOWN'
+  | 'SUPPLY_TYPE_UNKNOWN'
+  | 'BILLING_PLAN_INCOMPATIBLE'
+  | 'NO_PROFILE';
+
+export interface CombinationIssue {
+  code: CombinationIssueCode;
+  /** Réglage à changer sur la fiche du service. */
+  field: 'uptakeForm' | 'billingPlan' | 'supplyType';
+  message: string;
+  /** Facturations acceptées par la modalité (vide si la modalité est inconnue). */
+  allowedBillingPlans: readonly BillingPlan[];
+}
 
 export type StepCapability = 'questionnaire' | 'documents' | 'contract' | 'review_before_payment' | 'review_after_payment' | 'condition' | 'inspection' | 'deposit' | 'closure';
 
@@ -108,12 +178,12 @@ const warranty: ProfileAttribute = { key: 'warranty_days', type: 'integer', feed
 
 const p = (x: ServiceProfile): ServiceProfile => x;
 
-// ─── Les 31 profils ──────────────────────────────────────────────────────────
+// ─── Les 32 profils ──────────────────────────────────────────────────────────
 
 export const SERVICE_PROFILES: readonly ServiceProfile[] = [
   // Conseil & expertise
   p({ code: 'consulting_mission', family: 'consulting', label: 'Mission de conseil', kind: 'one_off',
-    uptakeForms: ['instant', 'prestation'], billingPlans: ['direct', 'usage'], supplyTypes: ALL_SUPPLY,
+    uptakeForms: ['instant', 'prestation'], billingPlans: ['direct', 'usage', 'mixed'], supplyTypes: ALL_SUPPLY,
     attributes: [{ ...scope, required: true }, deliverables, { key: 'duration_days', type: 'integer', feeds: ['duration_days'] }],
     stepsBeforePayment: BEFORE, stepsAfterPayment: CLOSURE, defaultContractTemplate: 'consulting-agreement',
     defaultAutomations: ['quote_followup', 'post_service_review'], suggestedOptions: [{ key: 'restitution_workshop', label: 'Atelier de restitution' }, { key: 'extra_days', label: 'Jours supplémentaires' }] }),
@@ -128,7 +198,7 @@ export const SERVICE_PROFILES: readonly ServiceProfile[] = [
     stepsBeforePayment: BEFORE, stepsAfterPayment: CLOSURE, defaultContractTemplate: 'consulting-agreement',
     defaultAutomations: ['missing_documents_reminder'], suggestedOptions: [{ key: 'site_visit', label: 'Visite sur site' }, { key: 'english_version', label: 'Version anglaise du rapport' }] }),
   p({ code: 'training_session', family: 'consulting', label: 'Formation / atelier', kind: 'appointment',
-    uptakeForms: ['instant', 'booking_required'], billingPlans: ['unit', 'direct'], supplyTypes: ALL_SUPPLY,
+    uptakeForms: ['instant', 'booking_required'], billingPlans: ['unit', 'direct', 'dayly'], supplyTypes: ALL_SUPPLY,
     attributes: [{ key: 'program', type: 'textarea', required: true, feeds: ['training_program'] }, { key: 'max_participants', type: 'integer', feeds: ['max_participants'] }, location],
     stepsBeforePayment: BEFORE, stepsAfterPayment: CLOSURE, defaultContractTemplate: 'service-agreement',
     defaultAutomations: ['reminder_day_before', 'post_service_review'], suggestedOptions: [{ key: 'extra_participant', label: 'Participant supplémentaire' }, { key: 'printed_material', label: 'Support imprimé' }, { key: 'certification', label: 'Certification' }] }),
@@ -215,6 +285,12 @@ export const SERVICE_PROFILES: readonly ServiceProfile[] = [
     stepsBeforePayment: BEFORE_NO_AFTER_REVIEW, stepsAfterPayment: CLOSURE, defaultContractTemplate: 'service-agreement',
     defaultAutomations: ['reminder_day_before', 'weekly_report'],
     suggestedOptions: [{ key: 'supplies', label: 'Produits fournis' }, { key: 'windows', label: 'Vitres' }, { key: 'ironing', label: 'Repassage' }] }),
+  p({ code: 'onsite_subscription', family: 'on_site', label: "Contrat d'entretien / abonnement sur site", kind: 'subscription',
+    uptakeForms: ['periodic'], billingPlans: RECURRING_BILLING_PLANS, supplyTypes: ['irl'],
+    attributes: [{ key: 'service_area', type: 'text', required: true, feeds: ['service_area'] }, { key: 'visit_frequency', type: 'text', required: true, feeds: ['visit_frequency'] }, { key: 'access_instructions', type: 'textarea', feeds: ['access_instructions'] }, scope],
+    stepsBeforePayment: BEFORE_NO_AFTER_REVIEW, stepsAfterPayment: [], defaultContractTemplate: 'service-agreement',
+    defaultAutomations: ['due_date_reminder', 'monthly_report'],
+    suggestedOptions: [{ key: 'extra_visit', label: 'Passage supplémentaire' }, { key: 'supplies', label: 'Produits / pièces fournis' }, { key: 'priority_callout', label: 'Intervention prioritaire' }] }),
   p({ code: 'repair_intervention', family: 'on_site', label: 'Dépannage / réparation', kind: 'one_off',
     uptakeForms: ['instant', 'booking_required', 'prestation'], billingPlans: ['direct', 'usage', 'mixed'], supplyTypes: ['irl'],
     attributes: [{ key: 'equipment_types', type: 'text', required: true, feeds: ['equipment_types'] }, { key: 'callout_fee', type: 'money', feeds: ['callout_fee'] }, warranty],
@@ -256,19 +332,19 @@ export const SERVICE_PROFILES: readonly ServiceProfile[] = [
 
   // Numérique
   p({ code: 'software_project', family: 'digital', label: 'Projet logiciel', kind: 'quoted_mission',
-    uptakeForms: ['prestation'], billingPlans: ['direct', 'usage'], supplyTypes: ['online', 'mixed'],
+    uptakeForms: ['prestation'], billingPlans: ['direct', 'usage', 'mixed'], supplyTypes: ['online', 'mixed'],
     attributes: [{ key: 'stack', type: 'text', feeds: ['stack'] }, { key: 'acceptance_process', type: 'textarea', feeds: ['acceptance_criteria'] }, { key: 'ip_terms', type: 'select', options: ['transfer', 'license'], feeds: ['ip_terms'] }],
     stepsBeforePayment: [], stepsAfterPayment: [], defaultContractTemplate: 'freelance-agreement',
     defaultAutomations: ['quote_followup', 'weekly_report'],
     suggestedOptions: [{ key: 'maintenance', label: 'Maintenance post-livraison' }, { key: 'training', label: 'Formation' }, { key: 'hosting', label: 'Hébergement' }] }),
   p({ code: 'managed_service', family: 'digital', label: 'Service managé (infogérance, maintenance)', kind: 'subscription',
-    uptakeForms: ['periodic'], billingPlans: ['mensual', 'trimestrial', 'annual'], supplyTypes: ['online', 'mixed'],
+    uptakeForms: ['periodic'], billingPlans: ['mensual', 'trimestrial', 'semestrial', 'annual'], supplyTypes: ['online', 'mixed'],
     attributes: [{ key: 'sla_level', type: 'text', required: true, feeds: ['sla_level'] }, { ...scope, required: true }, { key: 'on_call', type: 'select', options: ['yes', 'no'] }],
     stepsBeforePayment: BEFORE_NO_AFTER_REVIEW, stepsAfterPayment: [], defaultContractTemplate: 'service-agreement',
     defaultAutomations: ['monthly_report', 'due_date_reminder'],
     suggestedOptions: [{ key: 'extended_on_call', label: 'Astreinte étendue' }, { key: 'higher_sla', label: 'SLA supérieur' }, { key: 'extra_users', label: 'Utilisateurs supplémentaires' }] }),
   p({ code: 'digital_subscription', family: 'digital', label: 'Abonnement numérique (SaaS)', kind: 'subscription',
-    uptakeForms: ['periodic'], billingPlans: ['mensual', 'annual'], supplyTypes: ['online'],
+    uptakeForms: ['periodic'], billingPlans: ['mensual', 'semestrial', 'annual'], supplyTypes: ['online'],
     attributes: [{ key: 'plan_name', type: 'text', required: true, feeds: ['plan_name'] }, { key: 'quotas', type: 'textarea', feeds: ['quotas'] }, { key: 'cancellation_terms', type: 'textarea', feeds: ['cancellation_terms'] }],
     stepsBeforePayment: BEFORE_NO_AFTER_REVIEW, stepsAfterPayment: [], defaultContractTemplate: 'service-agreement',
     defaultAutomations: ['due_date_reminder', 'churn_followup'],
@@ -350,6 +426,8 @@ export interface DerivedProfile {
   candidates: readonly ServiceProfile[];
   /** La combinaison n'a pas de profil unique : le repli (ou la nature seule) a été retenu. */
   ambiguous: boolean;
+  /** Anomalie de la combinaison d'enums (null : exécutable par la plateforme). */
+  combinationIssue: CombinationIssue | null;
 }
 
 const norm = (v: unknown): string => String(v ?? '').trim().toLowerCase();
@@ -366,12 +444,94 @@ export function kindFromEnums(uptakeForm: string | null | undefined, billingPlan
   }
 }
 
-export function compatibleProfiles(shape: ServiceShape): ServiceProfile[] {
+const includes = (list: readonly string[], v: string): boolean => list.includes(v);
+
+/** Libellés français des réglages (messages d'erreur ; les écrans ont leurs propres traductions). */
+export const UPTAKE_FORM_LABELS: Readonly<Record<UptakeForm, string>> = {
+  instant: 'Instantané', periodic: 'Périodique', prestation: 'Sur devis', booking_required: 'Sur réservation',
+};
+export const BILLING_PLAN_LABELS: Readonly<Record<BillingPlan, string>> = {
+  usage: "À l'usage", mixed: 'Mixte', direct: 'Prix fixe', minute: 'À la minute', unit: "À l'unité", hourly: "À l'heure",
+  dayly: 'À la journée', mensual: 'Mensuel', trimestrial: 'Trimestriel', semestrial: 'Semestriel', annual: 'Annuel',
+};
+export const SUPPLY_TYPE_LABELS: Readonly<Record<SupplyType, string>> = { irl: 'Sur place', online: 'En ligne', mixed: 'Mixte' };
+
+/** Facturations acceptées par une modalité (vide si la modalité est inconnue). */
+export function billingPlansForUptake(uptakeForm: string | null | undefined): readonly BillingPlan[] {
+  const u = norm(uptakeForm);
+  return includes(UPTAKE_FORMS, u) ? BILLING_PLANS_BY_UPTAKE[u as UptakeForm] as readonly BillingPlan[] : [];
+}
+
+/** La modalité et la facturation (si toutes deux renseignées) sont-elles exécutables ensemble ? */
+export function isCoherentCombination(uptakeForm: string | null | undefined, billingPlan: string | null | undefined): boolean {
+  const u = norm(uptakeForm); const b = norm(billingPlan);
+  if (!u || !b) return true;
+  return includes(billingPlansForUptake(u), b);
+}
+
+/** Le profil accepte-t-il chaque enum renseigné (et la combinaison est-elle cohérente) ? */
+export function profileAccepts(profile: ServiceProfile, shape: ServiceShape): boolean {
   const u = norm(shape.uptakeForm); const b = norm(shape.billingPlan); const s = norm(shape.supplyType);
-  return SERVICE_PROFILES.filter((x) => x.code !== 'generic_service'
-    && (!u || (x.uptakeForms as readonly string[]).includes(u))
-    && (!b || (x.billingPlans as readonly string[]).includes(b))
-    && (!s || (x.supplyTypes as readonly string[]).includes(s)));
+  return (!u || includes(profile.uptakeForms, u))
+    && (!b || includes(profile.billingPlans, b))
+    && (!s || includes(profile.supplyTypes, s))
+    && isCoherentCombination(u, b);
+}
+
+export function compatibleProfiles(shape: ServiceShape): ServiceProfile[] {
+  return SERVICE_PROFILES.filter((x) => x.code !== 'generic_service' && profileAccepts(x, shape));
+}
+
+/**
+ * Vérifie qu'une combinaison d'enums est exécutable par la plateforme. Un enum non
+ * renseigné n'est pas une anomalie (la base applique son défaut). Renvoie null si
+ * la combinaison est exécutable, sinon l'anomalie et le réglage à changer.
+ */
+export function checkServiceCombination(shape: ServiceShape | null | undefined): CombinationIssue | null {
+  const sh = shape ?? {};
+  const u = norm(sh.uptakeForm); const b = norm(sh.billingPlan); const s = norm(sh.supplyType);
+  if (u && !includes(UPTAKE_FORMS, u)) {
+    return { code: 'UPTAKE_FORM_UNKNOWN', field: 'uptakeForm', message: `Modalité d'achat inconnue : « ${u} ».`, allowedBillingPlans: [] };
+  }
+  if (b && !includes(BILLING_PLANS, b)) {
+    return { code: 'BILLING_PLAN_UNKNOWN', field: 'billingPlan', message: `Facturation inconnue : « ${b} ».`, allowedBillingPlans: billingPlansForUptake(u) };
+  }
+  if (s && !includes(SUPPLY_TYPES, s)) {
+    return { code: 'SUPPLY_TYPE_UNKNOWN', field: 'supplyType', message: `Canal de livraison inconnu : « ${s} ».`, allowedBillingPlans: billingPlansForUptake(u) };
+  }
+  if (!isCoherentCombination(u, b)) {
+    const allowed = billingPlansForUptake(u);
+    return {
+      code: 'BILLING_PLAN_INCOMPATIBLE', field: 'billingPlan', allowedBillingPlans: allowed,
+      message: `La facturation « ${BILLING_PLAN_LABELS[b as BillingPlan]} » n'est pas exécutable pour un service « ${UPTAKE_FORM_LABELS[u as UptakeForm]} » : choisissez parmi ${allowed.map((x) => BILLING_PLAN_LABELS[x]).join(', ')}.`,
+    };
+  }
+  if (u && b && s && compatibleProfiles(sh).length === 0) {
+    return { code: 'NO_PROFILE', field: 'supplyType', message: 'Aucun profil métier ne couvre cette combinaison.', allowedBillingPlans: billingPlansForUptake(u) };
+  }
+  return null;
+}
+
+/**
+ * Combinaison exécutable la plus proche de `shape` pour `profile` : chaque réglage actuel est
+ * conservé s'il convient au profil, sinon remplacé par la première valeur exécutable.
+ */
+export function closestCombination(profile: ServiceProfile, shape: ServiceShape | null | undefined): ServiceCombination {
+  const cur = { u: norm(shape?.uptakeForm), b: norm(shape?.billingPlan), s: norm(shape?.supplyType) };
+  const all = profileChoices(profile);
+  const uptakeForm = includes(all.uptakeForms, cur.u) ? cur.u as UptakeForm : all.uptakeForms[0];
+  const plans = profileChoices(profile, uptakeForm).billingPlans;
+  const billingPlan = includes(plans, cur.b) ? cur.b as BillingPlan : plans[0];
+  const supplyType = includes(all.supplyTypes, cur.s) ? cur.s as SupplyType : all.supplyTypes[0];
+  return { uptakeForm, billingPlan, supplyType } as ServiceCombination;
+}
+
+/** Valeurs proposables pour un profil choisi : modalités, facturations (filtrées par la modalité), canaux. */
+export function profileChoices(profile: ServiceProfile, uptakeForm?: string | null): { uptakeForms: UptakeForm[]; billingPlans: BillingPlan[]; supplyTypes: SupplyType[] } {
+  const uptakeForms = profile.uptakeForms.filter((u) => profile.billingPlans.some((b) => isCoherentCombination(u, b)));
+  const u = norm(uptakeForm);
+  const billingPlans = profile.billingPlans.filter((b) => (u ? isCoherentCombination(u, b) : uptakeForms.some((x) => isCoherentCombination(x, b))));
+  return { uptakeForms: [...uptakeForms], billingPlans: [...billingPlans], supplyTypes: [...profile.supplyTypes] };
 }
 
 /**
@@ -381,20 +541,20 @@ export function compatibleProfiles(shape: ServiceShape): ServiceProfile[] {
  */
 export function deriveServiceProfile(shape: ServiceShape | null | undefined): DerivedProfile {
   const sh = shape ?? {};
+  const combinationIssue = checkServiceCombination(sh);
   const candidates = compatibleProfiles(sh);
   const declaredCode = norm(sh.attributes?.[PROFILE_CODE_ATTRIBUTE]);
   const declared = declaredCode ? PROFILE_BY_CODE[declaredCode] : undefined;
-  const u = norm(sh.uptakeForm);
-  if (declared && (!u || (declared.uptakeForms as readonly string[]).includes(u))) {
-    return { profile: declared, kind: declared.kind, declared: true, candidates, ambiguous: false };
+  if (declared && profileAccepts(declared, sh)) {
+    return { profile: declared, kind: declared.kind, declared: true, candidates, ambiguous: false, combinationIssue };
   }
   if (candidates.length === 1) {
-    return { profile: candidates[0], kind: candidates[0].kind, declared: false, candidates, ambiguous: false };
+    return { profile: candidates[0], kind: candidates[0].kind, declared: false, candidates, ambiguous: false, combinationIssue };
   }
   const kind = kindFromEnums(sh.uptakeForm, sh.billingPlan) ?? 'one_off';
   const sameKind = candidates.filter((c) => c.kind === kind);
-  if (sameKind.length === 1) return { profile: sameKind[0], kind, declared: false, candidates, ambiguous: false };
-  return { profile: PROFILE_BY_CODE.generic_service, kind, declared: false, candidates, ambiguous: candidates.length > 0 };
+  if (sameKind.length === 1) return { profile: sameKind[0], kind, declared: false, candidates, ambiguous: false, combinationIssue };
+  return { profile: PROFILE_BY_CODE.generic_service, kind, declared: false, candidates, ambiguous: candidates.length > 0, combinationIssue };
 }
 
 /** Attributs obligatoires du profil absents ou vides. */

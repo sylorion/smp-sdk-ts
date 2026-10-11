@@ -11,6 +11,16 @@ export class AdminUserController {
         this.client = client;
     }
     /**
+     * Copie du contrôleur dont les requêtes portent `x-smp-internal-secret`.
+     * Les requêtes `admin*` de mu-authentication sont réservées aux appels de service
+     * (BFF de smp-admin-webapp) : sans secret, elles répondent « Forbidden ».
+     */
+    withInternalSecret(secret) {
+        if (!secret)
+            throw new Error('withInternalSecret : secret de service manquant');
+        return new AdminUserController(this.client.withHeaders({ 'x-smp-internal-secret': secret }));
+    }
+    /**
      * Search users by username OR email (case-insensitive, partial match).
      * Also matches exact userID.
      */

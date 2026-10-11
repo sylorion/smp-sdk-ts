@@ -41,4 +41,36 @@ export * from './types/auth/index.js';
 // que de réimplémenter la formule : c'est ce qui garantit que le montant affiché
 // et le montant débité coïncident avec ce que facture le backend.
 export * from './pricing/pricing.generated.js';
+
+// ==========================================
+// PROFILS DE SERVICE — combinaisons exécutables et métiers
+// ==========================================
+// Recopié depuis libs/shared/service-profiles du monorepo par scripts/sync-service-profiles.sh.
+// `ServiceCombination` verrouille au typage les réglages modalité × facturation × canal ;
+// `Service.create` / `Service.update` refusent localement une combinaison non exécutable
+// (`ServiceCombinationError`), comme mu-catalog (`SERVICE_COMBINATION_INVALID`).
+// `UptakeForm` est déjà exporté par pricing : la liste du catalogue est `ServiceUptakeForm`.
+export {
+  UPTAKE_FORMS, BILLING_PLANS, SUPPLY_TYPES, SERVICE_KINDS, PROFILE_FAMILIES, RECURRING_BILLING_PLANS, BILLING_PLANS_BY_UPTAKE,
+  SERVICE_COMBINATIONS, SERVICE_PROFILES, PROFILE_BY_CODE, PROFILE_CODE_ATTRIBUTE, FAMILY_LABELS,
+  UPTAKE_FORM_LABELS, BILLING_PLAN_LABELS, SUPPLY_TYPE_LABELS,
+  isServiceCombination, checkServiceCombination, billingPlansForUptake, isCoherentCombination, profileAccepts,
+  compatibleProfiles, profileChoices, closestCombination, deriveServiceProfile, kindFromEnums,
+  missingProfileAttributes, invalidProfileAttributes, allowedSteps,
+} from './service-profiles/service-profiles.generated.js';
+export type {
+  UptakeForm as ServiceUptakeForm, BillingPlan, SupplyType, ServiceKind, ProfileFamily, StepCapability, AttributeType,
+  ProfileAttribute, SuggestedOption, ServiceProfile, BillingPlanFor, ServiceCombination, CombinationIssueCode, CombinationIssue,
+  ServiceShape, DerivedProfile,
+} from './service-profiles/service-profiles.generated.js';
+export { ServiceCombinationError, assertServiceCombination } from './domains/catalog/ServiceController.js';
+export type { ServiceCombinationFields } from './domains/catalog/ServiceController.js';
 export type { AgentExecutionStatus } from './domains/accounting/OrderController.js';
+export type {
+  AdminPlatformAnalytics,
+  AdminCommerceAnalytics,
+  AdminAmountByCurrency,
+  AdminDailyPoint,
+  AdminRankedEntry,
+  AdminStatusCount,
+} from './domains/auth/AdminAnalyticsController.js';

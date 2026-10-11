@@ -258,7 +258,12 @@ export interface TokenCostEstimate {
     baseCost: number;
     llmCost: number;
     total: number;
+    /** @deprecated Échelle 1 € = 657 crédits : utiliser `llmTokensPerEur` et `creditsPerEur`. */
     llmTokensPerPlatformToken: number;
+    /** Tokens LLM (entrée + sortie) couverts par 1 € de crédits IA. */
+    llmTokensPerEur: number;
+    /** Crédits IA pour 1 € (657). */
+    creditsPerEur: number;
 }
 export interface TokenUsageSummaryResponse {
     tokenUsageSummary: TokenUsageSummary;

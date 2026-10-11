@@ -658,6 +658,8 @@ const walletQueries = {
         llmCost
         total
         llmTokensPerPlatformToken
+        llmTokensPerEur
+        creditsPerEur
       }
     }
   `,

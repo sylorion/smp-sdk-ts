@@ -6,4 +6,5 @@
 export const REVIEW_SCORE_MIN = 1;
 export const REVIEW_SCORE_MAX = 5;
 export const REVIEW_SCORE_STEP = 0.5;
-export const REVIEW_REWARD_CREDITS = 10;
+/** Récompense d'un rapport de service, en crédits IA (1 € = 657 crédits ; monorepo SMP `libs/shared/credits`). */
+export const REVIEW_REWARD_CREDITS = 657;

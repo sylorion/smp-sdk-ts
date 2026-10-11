@@ -24,6 +24,12 @@ export declare class AdminUserController {
     private readonly client;
     constructor(client: APIClient);
     /**
+     * Copie du contrôleur dont les requêtes portent `x-smp-internal-secret`.
+     * Les requêtes `admin*` de mu-authentication sont réservées aux appels de service
+     * (BFF de smp-admin-webapp) : sans secret, elles répondent « Forbidden ».
+     */
+    withInternalSecret(secret: string): AdminUserController;
+    /**
      * Search users by username OR email (case-insensitive, partial match).
      * Also matches exact userID.
      */

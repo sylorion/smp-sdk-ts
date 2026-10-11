@@ -16,7 +16,8 @@ export type ReviewRewardStatus = 'requested' | 'granted' | 'failed' | 'cancelled
 export declare const REVIEW_SCORE_MIN = 1;
 export declare const REVIEW_SCORE_MAX = 5;
 export declare const REVIEW_SCORE_STEP = 0.5;
-export declare const REVIEW_REWARD_CREDITS = 10;
+/** Récompense d'un rapport de service, en crédits IA (1 € = 657 crédits ; monorepo SMP `libs/shared/credits`). */
+export declare const REVIEW_REWARD_CREDITS = 657;
 export interface LocalizedLabel {
     locale: string;
     value: string;
