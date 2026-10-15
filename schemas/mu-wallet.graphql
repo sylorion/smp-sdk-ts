@@ -73,6 +73,42 @@ type LimitConfigurationModel {
   deletedAt: DateTime
 }
 
+type SponsorAmount {
+  status: String!
+  currency: String!
+  amount: Int!
+}
+
+type SponsorRewardView {
+  rewardId: String!
+  amount: Int!
+  currency: String!
+  status: String!
+  reason: String
+  createdAt: DateTime!
+  payableAt: DateTime!
+  paidAt: DateTime
+}
+
+type SponsorshipSummary {
+  payoutOrganizationId: String
+  referrals: Int!
+  activeReferrals: Int!
+  referredOrganizations: Int!
+  totals: [SponsorAmount!]!
+  recent: [SponsorRewardView!]!
+  nextEligibleUntil: DateTime
+  rewardBps: Int!
+  months: Int!
+  holdDays: Int!
+}
+
+type SponsorPayoutResult {
+  paid: Int!
+  failed: Int!
+  waiting: Int!
+}
+
 type TokenUsageEntry {
   tokenUsageId: ID!
   walletId: ID!
@@ -107,9 +143,17 @@ type TokenUsageSummary {
   walletId: ID
   userId: ID
   organizationId: ID
+
+  """Allocation de la semaine (nom historique)"""
   dailyAllowance: Int!
+
+  """Reste de l'allocation de la semaine (nom historique)"""
   dailyRemaining: Int!
+
+  """Allocation de la semaine déjà utilisée (nom historique)"""
   dailyUsedToday: Int!
+
+  """Compteur de l'allocation hebdomadaire (nom historique)"""
   tokensDaily: Int!
   tokensFree: Int!
   tokensPaid: Int!
@@ -117,6 +161,10 @@ type TokenUsageSummary {
   totalAvailable: Int!
   consumedToday: Int!
   consumedLast30Days: Int!
+
+  """
+  Prochain rechargement de l'allocation : lundi 00:00 Europe/Paris (nom historique)
+  """
   nextDailyRefreshAt: DateTime!
   byAgentToday: [TokenUsageByAgent!]!
   byAgentLast30Days: [TokenUsageByAgent!]!
@@ -139,7 +187,15 @@ type TokenCostEstimate {
   baseCost: Int!
   llmCost: Int!
   total: Int!
-  llmTokensPerPlatformToken: Int!
+
+  """Tokens LLM couverts par un crédit (arrondi inférieur)."""
+  llmTokensPerPlatformToken: Int! @deprecated(reason: "Échelle 1 € = 657 crédits : utiliser llmTokensPerEur et creditsPerEur.")
+
+  """Tokens LLM (entrée + sortie) couverts par 1 € de crédits."""
+  llmTokensPerEur: Int!
+
+  """Crédits IA pour 1 €."""
+  creditsPerEur: Int!
 }
 
 type TokenServicePaymentResult {
@@ -324,6 +380,11 @@ type Query {
   batchConfigurations: [BatchConfigurationModel!]!
   walletLifecycleConfigurations: [WalletLifecycleConfigurationModel!]!
 
+  """
+  Parrainage de l'appelant (assertion signée) : filleuls, organisation de versement, reversements.
+  """
+  mySponsorship: SponsorshipSummary!
+
   """Usage des jetons (allocation du jour, solde, consommation par agent)"""
   tokenUsageSummary(walletId: ID, userId: ID, organizationId: ID): TokenUsageSummary!
   tokenUsageHistory(walletId: ID, userId: ID, organizationId: ID, limit: Int = 50, kinds: [String!]): [TokenUsageEntry!]!
@@ -362,6 +423,14 @@ type Mutation {
   updateBatchConfiguration(data: UpdateBatchConfigurationInput!): BatchConfigurationModel!
   createWalletLifecycleConfiguration(data: CreateWalletLifecycleConfigurationInput!): WalletLifecycleConfigurationModel!
   updateWalletLifecycleConfiguration(data: UpdateWalletLifecycleConfigurationInput!): WalletLifecycleConfigurationModel!
+
+  """
+  Organisation qui reçoit les reversements (appartenance vérifiée par la webapp).
+  """
+  setSponsorPayoutOrganization(organizationId: String!): SponsorshipSummary!
+
+  """Versement des reversements échus (service interne)."""
+  paySponsorRewardsDue(limit: Int): SponsorPayoutResult!
 
   """Débite le coût d'un appel d'agent (idempotent)"""
   consumeTokens(data: ConsumeTokensInput!): ConsumeTokensResult!

@@ -25,6 +25,7 @@ import * as organizationMutations from '../../src/api/graphql/organization/mutat
 import * as organizationContactQueries from '../../src/api/graphql/organization/contactQueries';
 import * as organizationContactMutations from '../../src/api/graphql/organization/contactMutations';
 import * as organizationDocumentSettings from '../../src/api/graphql/organization/documentSettings';
+import * as organizationWorkspace from '../../src/api/graphql/organization/workspace';
 import * as reviewQueries from '../../src/api/graphql/review/queries';
 import * as reviewMutations from '../../src/api/graphql/review/mutations';
 import * as userQueries from '../../src/api/graphql/user/queries';
@@ -69,6 +70,7 @@ const MODULES: Record<string, Record<string, unknown>> = {
   'organization/contactQueries': organizationContactQueries,
   'organization/contactMutations': organizationContactMutations,
   'organization/documentSettings': organizationDocumentSettings,
+  'organization/workspace': organizationWorkspace,
   'review/queries': reviewQueries,
   'review/mutations': reviewMutations,
   'user/queries': userQueries,

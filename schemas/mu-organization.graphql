@@ -61,6 +61,7 @@ type Organization {
   legalUniqIdentifier: String
   vatNumber: String
   communityVATNumber: String
+  rcs: String
   capital: Float
   insuranceRef: String
   insuranceName: String
@@ -248,6 +249,72 @@ enum OrgPaymentMethodType {
   other
 }
 
+type OrganizationTask {
+  taskID: ID!
+  organizationID: ID!
+  title: String!
+  description: String
+  status: OrganizationTaskStatus!
+  priority: OrganizationTaskPriority!
+  creatorUserID: ID!
+  assigneeUserID: ID
+  dueAt: DateTime
+  blockedReason: String
+  blockedByTaskID: ID
+  documentType: String
+  documentID: ID
+  labels: [String!]!
+  position: Int!
+  completedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum OrganizationTaskStatus {
+  todo
+  in_progress
+  blocked
+  done
+  cancelled
+}
+
+enum OrganizationTaskPriority {
+  low
+  normal
+  high
+  urgent
+}
+
+type OrganizationTaskComment {
+  commentID: ID!
+  organizationID: ID!
+  taskID: ID
+  documentType: String
+  documentID: ID
+  authorUserID: ID!
+  content: String!
+  createdAt: DateTime!
+}
+
+type OrganizationTaskEvent {
+  eventID: ID!
+  taskID: ID!
+  actorUserID: ID!
+  kind: OrganizationTaskEventKind!
+  data: String
+  createdAt: DateTime!
+}
+
+enum OrganizationTaskEventKind {
+  created
+  updated
+  assigned
+  status_changed
+  commented
+  dossier_handed_over
+  deleted
+}
+
 type UserOrganization {
   userOrganizationID: ID!
   uniqRef: String
@@ -391,6 +458,10 @@ type Query {
   organizationBySlug(slug: String!, admin: Boolean): Organization
   orgPaymentMethod(paymentMethodID: ID!): OrgPaymentMethod!
   orgPaymentMethods(organizationID: ID!, kind: String): [OrgPaymentMethod!]!
+  organizationTasks(filter: OrganizationTasksFilter!): [OrganizationTask!]!
+  organizationTask(taskID: ID!): OrganizationTask!
+  organizationTaskEvents(taskID: ID!): [OrganizationTaskEvent!]!
+  organizationTaskComments(filter: OrganizationTaskCommentsFilter!): [OrganizationTaskComment!]!
   userOrganization(userOrganizationID: ID!): UserOrganization
   userOrganizations(pagination: PaginationInput, sort: SortInput, filter: [FilterInput!]): [UserOrganization!]!
   userOrganizationBySlug(slug: String!): UserOrganization
@@ -424,6 +495,28 @@ input FilterInput {
   value: String!
 }
 
+input OrganizationTasksFilter {
+  organizationID: ID!
+  scope: OrganizationTaskScope
+  statuses: [OrganizationTaskStatus!]
+  assigneeUserID: ID
+  documentType: String
+  documentID: ID
+  limit: Int
+}
+
+enum OrganizationTaskScope {
+  mine
+  team
+}
+
+input OrganizationTaskCommentsFilter {
+  organizationID: ID!
+  taskID: ID
+  documentType: String
+  documentID: ID
+}
+
 input VerifyUserRoleInput {
   userID: ID!
   organizationID: ID!
@@ -446,6 +539,13 @@ type Mutation {
   createOrgPaymentMethod(input: CreateOrgPaymentMethodInput!): OrgPaymentMethod!
   updateOrgPaymentMethod(paymentMethodID: ID!, input: UpdateOrgPaymentMethodInput!): OrgPaymentMethod!
   deleteOrgPaymentMethod(paymentMethodID: ID!): Boolean!
+  createOrganizationTask(input: CreateOrganizationTaskInput!): OrganizationTask!
+  updateOrganizationTask(taskID: ID!, input: UpdateOrganizationTaskInput!): OrganizationTask!
+  changeOrganizationTaskStatus(input: ChangeOrganizationTaskStatusInput!): OrganizationTask!
+  assignOrganizationTask(input: AssignOrganizationTaskInput!): OrganizationTask!
+  deleteOrganizationTask(taskID: ID!): Boolean!
+  addOrganizationTaskComment(input: AddOrganizationTaskCommentInput!): OrganizationTaskComment!
+  handOverDossier(input: HandOverDossierInput!): OrganizationTask!
   createUserOrganization(input: CreateUserOrganizationInput!): UserOrganization!
   updateUserOrganization(userOrganizationID: ID!, input: UpdateUserOrganizationInput!): UserOrganization!
   deleteUserOrganization(userOrganizationID: ID!): MutationResponse!
@@ -567,6 +667,7 @@ input OrganizationInput {
   legalUniqIdentifier: String
   vatNumber: String
   communityVATNumber: String
+  rcs: String
   capital: Float
   insuranceRef: String
   insuranceName: String
@@ -620,6 +721,58 @@ input UpdateOrgPaymentMethodInput {
   cardType: OrgPaymentMethodType
   methodDetails: String
   isDefault: Boolean
+}
+
+input CreateOrganizationTaskInput {
+  organizationID: ID!
+  title: String!
+  description: String
+  priority: OrganizationTaskPriority
+  assigneeUserID: ID
+  dueAt: DateTime
+  documentType: String
+  documentID: ID
+  labels: [String!]
+}
+
+input UpdateOrganizationTaskInput {
+  title: String
+  description: String
+  priority: OrganizationTaskPriority
+  dueAt: DateTime
+  labels: [String!]
+  position: Int
+}
+
+input ChangeOrganizationTaskStatusInput {
+  taskID: ID!
+  status: OrganizationTaskStatus!
+  blockedReason: String
+  blockedByTaskID: ID
+}
+
+input AssignOrganizationTaskInput {
+  taskID: ID!
+  assigneeUserID: ID
+}
+
+input AddOrganizationTaskCommentInput {
+  organizationID: ID!
+  taskID: ID
+  documentType: String
+  documentID: ID
+  content: String!
+}
+
+input HandOverDossierInput {
+  organizationID: ID!
+  documentType: String!
+  documentID: ID!
+  toUserID: ID!
+  title: String
+  message: String
+  priority: OrganizationTaskPriority
+  dueAt: DateTime
 }
 
 input CreateUserOrganizationInput {
