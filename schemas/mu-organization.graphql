@@ -291,6 +291,42 @@ type OrganizationDocumentPresentation {
   logoUrl: String
 }
 
+"""Envoi groupé d'un e-mail aux contacts de l'organisation (historique)."""
+type OrganizationMailing {
+  mailingID: ID!
+  subject: String!
+
+  """Début du message (200 caractères)."""
+  excerpt: String!
+  sentAt: String!
+  actorUserID: ID!
+  recipientCount: Int!
+
+  """`queued` (remis à l’envoi) ou `failed`."""
+  status: String!
+}
+
+"""Destinataires que toucherait un envoi, avant de l’envoyer."""
+type OrganizationMailingPreview {
+  recipientCount: Int!
+
+  """Contacts écartés parce qu’ils se sont désabonnés."""
+  excludedOptOut: Int!
+
+  """Contacts écartés faute d’adresse e-mail valide."""
+  excludedNoEmail: Int!
+
+  """Adresses en double (un seul envoi par adresse)."""
+  duplicates: Int!
+
+  """Quelques noms de destinataires."""
+  sample: [String!]!
+  maxRecipients: Int!
+
+  """Envois encore possibles sur 24 heures."""
+  remainingToday: Int!
+}
+
 type OrgPaymentMethod {
   paymentMethodID: ID!
   authorID: String!
@@ -462,6 +498,10 @@ type Query {
   searchOrganizationContacts(organizationID: ID!, query: String!, callerUserID: ID @deprecated(reason: "Ignoré : l'appelant est l'identité signée de la requête."), limit: Int): [OrganizationContact!]!
   organizationDocumentSettings(organizationID: ID!): OrganizationDocumentSettings!
   organizationDocumentPresentation(organizationID: ID!): OrganizationDocumentPresentation!
+
+  """Historique des envois (50 derniers)."""
+  organizationMailings(organizationID: ID!): [OrganizationMailing!]!
+  organizationMailingPreview(organizationID: ID!, segment: MailingSegmentInput): OrganizationMailingPreview!
   organization(organizationID: ID!, admin: Boolean): Organization
   organizations(pagination: PaginationInput, sort: SortInput, filter: [FilterInput!], admin: Boolean): [Organization!]!
   organizationsByIDs(organizationIDs: [ID!]!, admin: Boolean): [Organization!]!
@@ -487,6 +527,16 @@ type Query {
   verifyUserRole(input: VerifyUserRoleInput!): VerifyUserRoleResponse!
   searchUsers(query: String!, limit: Float = 10): [SearchUsersResult!]!
   getMemberProfile(organizationID: ID!, userID: ID!): MemberProfileResponse!
+}
+
+input MailingSegmentInput {
+  statuses: [OrgContactStatus!]
+
+  """Au moins une de ces étiquettes."""
+  tags: [String!]
+
+  """Contacts choisis un par un."""
+  contactIDs: [ID!]
 }
 
 input PaginationInput {
@@ -544,6 +594,12 @@ type Mutation {
   handOverOrganizationContact(input: HandOverOrganizationContactInput!): OrganizationContact!
   updateOrganizationDocumentSettings(organizationID: ID!, settings: JSON!): OrganizationDocumentSettings!
   resetOrganizationDocumentSettings(organizationID: ID!): OrganizationDocumentSettings!
+  sendOrganizationMailing(input: SendOrganizationMailingInput!): OrganizationMailing!
+
+  """
+  Désinscription d’un contact (lien signé de l’e-mail). Réservé aux services internes.
+  """
+  unsubscribeOrganizationContactFromMailing(organizationID: ID!, contactID: ID!): Boolean!
   createOrganization(input: OrganizationInput!): Organization!
   updateOrganization(organizationID: ID!, input: OrganizationInput!): Organization!
   deleteOrganization(organizationID: ID!): Organization!
@@ -675,6 +731,17 @@ input HandOverOrganizationContactInput {
   message: String
   priority: OrganizationTaskPriority
   dueAt: DateTime
+}
+
+input SendOrganizationMailingInput {
+  organizationID: ID!
+  subject: String!
+
+  """
+  Texte brut ; les retours à la ligne sont conservés, aucun HTML n’est interprété.
+  """
+  message: String!
+  segment: MailingSegmentInput
 }
 
 input OrganizationInput {
