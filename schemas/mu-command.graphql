@@ -55,6 +55,35 @@ type AdminCommerceAnalytics {
   subscriptions: AdminServiceSubscriptionAnalytics!
 }
 
+type AgendaAttendee {
+  userId: ID!
+  status: String!
+}
+
+"""
+Événement de l'agenda d'un membre (réunion, rendez-vous, indisponibilité).
+"""
+type AgendaEvent {
+  eventId: ID!
+  organizationId: ID!
+  ownerUserId: ID!
+  title: String!
+  description: String
+  startAt: DateTime!
+  endAt: DateTime!
+  status: String!
+  location: String
+  contactId: ID
+  visibility: String!
+  attendees: [AgendaAttendee!]!
+  detailsHidden: Boolean!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type AgentExecutionStatus {
   orderId: ID!
   engagementId: ID
@@ -101,11 +130,6 @@ enum BookingStatus {
   canceled
   completed
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 """
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
@@ -791,6 +815,12 @@ type ServiceFlowReadiness {
 
 type Query {
   adminCommerceAnalytics(days: Int, limit: Int): AdminCommerceAnalytics!
+
+  """
+  Événements de l'agenda de l'équipe (ou de certains membres) sur une période.
+  """
+  agendaEvents(filter: AgendaEventsFilter!): [AgendaEvent!]!
+  agendaEvent(eventId: ID!): AgendaEvent!
   agentExecutionStatus(orderId: ID!): AgentExecutionStatus!
   bookingsByService(serviceId: String!): [Booking!]!
   bookingsByUser(userId: String!): [Booking!]!
@@ -843,6 +873,13 @@ type Query {
   activeServiceFlowRun(serviceId: ID!): ServiceFlowRun
 }
 
+input AgendaEventsFilter {
+  organizationId: ID!
+  from: DateTime!
+  to: DateTime!
+  userIds: [ID!]
+}
+
 input AvailableSlotsInput {
   serviceId: String!
   date: DateTime!
@@ -851,6 +888,10 @@ input AvailableSlotsInput {
 }
 
 type Mutation {
+  createAgendaEvent(input: CreateAgendaEventInput!): AgendaEvent!
+  updateAgendaEvent(eventId: ID!, input: UpdateAgendaEventInput!): AgendaEvent!
+  cancelAgendaEvent(eventId: ID!): AgendaEvent!
+  respondAgendaEvent(input: RespondAgendaEventInput!): AgendaEvent!
   createBooking(data: CreateBookingInput!): Booking!
   cancelBooking(bookingId: String!, message: String, initiatedBy: String = "client"): Booking!
   confirmBooking(bookingId: String!): Booking!
@@ -868,6 +909,7 @@ type Mutation {
   updateEngagement(engagementId: String!, data: UpdateEngagementInput!): Engagement!
   acceptPmCascadeMission(engagementId: String!): Engagement!
   acceptPmCascadeMissionByEstimateId(estimateId: String!): Engagement!
+  declinePmCascadeMissionByEstimateId(estimateId: String!): Engagement!
   createTimeSlot(data: CreateTimeSlotInput!): TimeSlot!
   updateTimeSlot(timeSlotId: String!, data: UpdateTimeSlotInput!): TimeSlot!
   createEngagementReport(data: CreateEngagementReportInput!): EngagementReport!
@@ -919,6 +961,35 @@ type Mutation {
   """
   remindServiceFlowRun(runId: ID!): ServiceFlowRunReminderResult!
   closeServiceFlowRun(runId: ID!): ServiceFlowRun!
+}
+
+input CreateAgendaEventInput {
+  organizationId: ID!
+  title: String!
+  description: String
+  startAt: DateTime!
+  endAt: DateTime!
+  location: String
+  contactId: ID
+  attendeeUserIds: [ID!]
+  visibility: String
+  allowOverlap: Boolean
+}
+
+input UpdateAgendaEventInput {
+  title: String
+  description: String
+  startAt: DateTime
+  endAt: DateTime
+  location: String
+  attendeeUserIds: [ID!]
+  visibility: String
+  allowOverlap: Boolean
+}
+
+input RespondAgendaEventInput {
+  eventId: ID!
+  status: String!
 }
 
 input CreateBookingInput {

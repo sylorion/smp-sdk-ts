@@ -10,6 +10,7 @@ import * as adminQueries from '../../src/api/graphql/admin/queries';
 import * as authMutations from '../../src/api/graphql/auth/mutations';
 import * as bookingQueries from '../../src/api/graphql/booking/queries';
 import * as bookingMutations from '../../src/api/graphql/booking/mutations';
+import * as bookingAgenda from '../../src/api/graphql/booking/agenda';
 import * as catalogQueries from '../../src/api/graphql/catalog/queries';
 import * as catalogMutations from '../../src/api/graphql/catalog/mutations';
 import * as communicationQueries from '../../src/api/graphql/communication/queries';
@@ -55,6 +56,7 @@ const MODULES: Record<string, Record<string, unknown>> = {
   'auth/mutations': authMutations,
   'booking/queries': bookingQueries,
   'booking/mutations': bookingMutations,
+  'booking/agenda': bookingAgenda,
   'catalog/queries': catalogQueries,
   'catalog/mutations': catalogMutations,
   'communication/queries': communicationQueries,
