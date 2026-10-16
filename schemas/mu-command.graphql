@@ -456,6 +456,55 @@ enum OrderStatus {
   canceled
 }
 
+"""Avancement d'un projet interne."""
+type ProjectProgressType {
+  total: Int!
+  done: Int!
+  percent: Int!
+  late: Int!
+  waiting: Int!
+  plannedHours: Float!
+  spentHours: Float!
+}
+
+"""Activité ou livrable d’un projet interne (engagement enfant)."""
+type ProjectActivity {
+  activityId: ID!
+  projectId: ID!
+  title: String!
+  description: String
+  type: String!
+  ownerUserId: ID!
+  startAt: DateTime
+  dueAt: DateTime
+  status: String!
+  state: String!
+  dependsOn: [ID!]!
+  waitingOn: [ID!]!
+  blocking: [ID!]!
+  estimatedHours: Float
+  actualHours: Float!
+  critical: Boolean!
+}
+
+"""
+Projet interne d’une organisation (engagement interne, sans client ni facturation).
+"""
+type InternalProject {
+  projectId: ID!
+  organizationId: ID!
+  name: String!
+  description: String
+  objective: String
+  ownerUserId: ID!
+  startAt: DateTime!
+  dueAt: DateTime
+  status: String!
+  progress: ProjectProgressType!
+  criticalPath: [ID!]!
+  activities: [ProjectActivity!]!
+}
+
 type ReferralOffer {
   serviceId: ID!
   organizationId: ID!
@@ -861,6 +910,13 @@ type Query {
   ordersByUser(userId: String!): [Order!]!
   ordersBySellerOrganization(sellerOrganizationId: String!): [Order!]!
   ordersByBuyerOrganization(buyerOrganizationId: String!): [Order!]!
+
+  """Projets internes de l'organisation, avec leur avancement."""
+  internalProjects(organizationId: ID!): [InternalProject!]!
+  internalProject(projectId: ID!): InternalProject!
+
+  """Projet d'une activité (lien d'une notification)."""
+  internalProjectOfActivity(activityId: ID!): InternalProject!
   referralOffer(serviceId: ID!): ReferralOffer
   referralMarketplace(apporteurOrganizationId: ID!, search: String, limit: Int = 50, offset: Int = 0): [ReferralMarketplaceService!]!
   referralPartnerships(organizationId: ID!, role: String!, status: [String!]): [ReferralPartnership!]!
@@ -955,6 +1011,13 @@ type Mutation {
   markOrderPaid(orderId: String!): Order!
   markOrderDelivered(orderId: String!): Order!
   cancelOrder(orderId: String!): Order!
+  createInternalProject(input: CreateInternalProjectInput!): InternalProject!
+  updateInternalProject(projectId: ID!, input: UpdateInternalProjectInput!): InternalProject!
+  addProjectActivity(input: AddProjectActivityInput!): InternalProject!
+  updateProjectActivity(activityId: ID!, input: UpdateProjectActivityInput!): InternalProject!
+
+  """Démarrer, terminer, mettre en pause, annuler ou rouvrir une activité."""
+  projectActivityAction(input: ProjectActivityActionInput!): InternalProject!
   upsertReferralOffer(serviceId: ID!, data: ReferralOfferInput!): ReferralOffer!
   requestReferralPartnership(data: RequestReferralPartnershipInput!): ReferralPartnership!
   decideReferralPartnership(partnershipId: ID!, decision: String!, reason: String): ReferralPartnership!
@@ -1309,6 +1372,53 @@ input AddLineInput {
   description: String!
   legalVatPercent: Int!
   details: String!
+}
+
+input CreateInternalProjectInput {
+  organizationId: ID!
+  name: String!
+  description: String
+  objective: String
+  ownerUserId: ID
+  startAt: DateTime
+  dueAt: DateTime
+}
+
+input UpdateInternalProjectInput {
+  name: String
+  description: String
+  objective: String
+  ownerUserId: ID
+  dueAt: DateTime
+  status: String
+}
+
+input AddProjectActivityInput {
+  projectId: ID!
+  title: String!
+  description: String
+  type: String
+  ownerUserId: ID
+  startAt: DateTime
+  dueAt: DateTime
+  estimatedHours: Float
+  dependsOn: [ID!]
+}
+
+input UpdateProjectActivityInput {
+  title: String
+  description: String
+  type: String
+  ownerUserId: ID
+  startAt: DateTime
+  dueAt: DateTime
+  estimatedHours: Float
+  dependsOn: [ID!]
+}
+
+input ProjectActivityActionInput {
+  activityId: ID!
+  action: String!
 }
 
 input ReferralOfferInput {

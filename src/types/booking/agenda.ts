@@ -45,7 +45,7 @@ export type AgendaEntry = 'event' | 'reminder';
  * (`agenda-reminder-policy.ts`).
  */
 export type AgendaSubjectType =
-  | 'task' | 'contact' | 'agenda_event'
+  | 'task' | 'contact' | 'agenda_event' | 'project_activity'
   | 'estimate_request' | 'estimate' | 'contract' | 'transaction' | 'order' | 'engagement' | 'booking' | 'invoice';
 
 export interface AgendaEventsFilter {

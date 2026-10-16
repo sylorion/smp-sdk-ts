@@ -317,3 +317,4 @@ export interface AvailableSlotsInput {
   maxSlots?: number;
 }
 export * from './agenda.js';
+export * from './projects.js';
