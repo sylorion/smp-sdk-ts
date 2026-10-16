@@ -12,6 +12,8 @@ export interface OrganizationContact {
   organizationID: string;
   userID?: string | null;
   assignedToUserOrgID?: string | null;
+  /** Utilisateur responsable du contact (lead), déduit de `assignedToUserOrgID`. */
+  assigneeUserID?: string | null;
   isPrivate: boolean;
   ownerUserOrgID?: string | null;
   contactType: 'individual' | 'company';
@@ -137,6 +139,31 @@ export interface BulkContactInput {
   notes?: string;
 }
 
+/** Filtres d'une liste ; `assignee` : `me`, `unassigned` ou l'identifiant d'un membre. */
+export interface ContactListFilters {
+  search?: string;
+  status?: string;
+  source?: string;
+  page?: number;
+  pageSize?: number;
+  assignee?: 'me' | 'unassigned' | string;
+}
+
+export interface HandOverContactInput {
+  contactID: string;
+  /** Collègue qui reprend le lead (membre de l'organisation, différent de l'appelant). */
+  toUserID: string;
+  message?: string;
+  priority?: 'low' | 'normal' | 'high' | 'urgent';
+  /** ISO 8601. */
+  dueAt?: string;
+}
+
+/**
+ * Note : depuis le CRM (mu-organization), l'appelant est TOUJOURS l'identité signée du client
+ * (`APIClient.withUserAssertion` côté serveur) ; le paramètre `callerUserID` des méthodes est
+ * conservé pour compatibilité mais ignoré par le service.
+ */
 // ── Controller ──
 
 export class ContactController {
@@ -151,7 +178,7 @@ export class ContactController {
   async list(
     organizationID: string,
     callerUserID: string,
-    filters?: { search?: string; status?: string; source?: string; page?: number; pageSize?: number },
+    filters?: ContactListFilters,
   ): Promise<OrganizationContact[]> {
     const query = contactQueries.GET_ORGANIZATION_CONTACTS;
     const variables = { organizationID, callerUserID, ...filters };
@@ -212,5 +239,19 @@ export class ContactController {
     const variables = { contactID, callerUserID, isPrivate };
     const response = await this.client.mutate(mutation, variables) as { setOrganizationContactPrivacy: OrganizationContact };
     return response.setOrganizationContactPrivacy;
+  }
+
+  // ── CRM : responsable d'un lead ──
+
+  /** `assigneeUserID` null : le contact n'a plus de responsable. */
+  async assign(contactID: string, assigneeUserID: string | null): Promise<OrganizationContact> {
+    const input = assigneeUserID ? { contactID, assigneeUserID } : { contactID };
+    const response = await this.client.mutate(contactMutations.ASSIGN_CONTACT, { input }) as { assignOrganizationContact: OrganizationContact };
+    return response.assignOrganizationContact;
+  }
+
+  async handOver(input: HandOverContactInput): Promise<OrganizationContact> {
+    const response = await this.client.mutate(contactMutations.HAND_OVER_CONTACT, { input }) as { handOverOrganizationContact: OrganizationContact };
+    return response.handOverOrganizationContact;
   }
 }

@@ -3,7 +3,7 @@ import { ManageOrganization } from './ManageOrganisationController.js';
 import { ContactController } from './ContactController.js';
 import { DocumentSettingsController } from './DocumentSettingsController.js';
 import { WorkspaceController } from './WorkspaceController.js';
-export { DocumentSettingsController, WorkspaceController };
+export { DocumentSettingsController, WorkspaceController, ContactController };
 export class OrganizationDomain {
     constructor(client) {
         this.organization = new Organization(client);

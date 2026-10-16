@@ -7,6 +7,8 @@ export interface OrganizationContact {
     organizationID: string;
     userID?: string | null;
     assignedToUserOrgID?: string | null;
+    /** Utilisateur responsable du contact (lead), déduit de `assignedToUserOrgID`. */
+    assigneeUserID?: string | null;
     isPrivate: boolean;
     ownerUserOrgID?: string | null;
     contactType: 'individual' | 'company';
@@ -130,16 +132,33 @@ export interface BulkContactInput {
     contactStatus?: string;
     notes?: string;
 }
+/** Filtres d'une liste ; `assignee` : `me`, `unassigned` ou l'identifiant d'un membre. */
+export interface ContactListFilters {
+    search?: string;
+    status?: string;
+    source?: string;
+    page?: number;
+    pageSize?: number;
+    assignee?: 'me' | 'unassigned' | string;
+}
+export interface HandOverContactInput {
+    contactID: string;
+    /** Collègue qui reprend le lead (membre de l'organisation, différent de l'appelant). */
+    toUserID: string;
+    message?: string;
+    priority?: 'low' | 'normal' | 'high' | 'urgent';
+    /** ISO 8601. */
+    dueAt?: string;
+}
+/**
+ * Note : depuis le CRM (mu-organization), l'appelant est TOUJOURS l'identité signée du client
+ * (`APIClient.withUserAssertion` côté serveur) ; le paramètre `callerUserID` des méthodes est
+ * conservé pour compatibilité mais ignoré par le service.
+ */
 export declare class ContactController {
     private client;
     constructor(client: APIClient);
-    list(organizationID: string, callerUserID: string, filters?: {
-        search?: string;
-        status?: string;
-        source?: string;
-        page?: number;
-        pageSize?: number;
-    }): Promise<OrganizationContact[]>;
+    list(organizationID: string, callerUserID: string, filters?: ContactListFilters): Promise<OrganizationContact[]>;
     getById(contactID: string, callerUserID: string): Promise<OrganizationContact>;
     search(organizationID: string, callerUserID: string, query: string, limit?: number): Promise<OrganizationContact[]>;
     create(input: CreateContactInput & {
@@ -154,4 +173,7 @@ export declare class ContactController {
         message?: string;
     }>;
     setPrivacy(contactID: string, callerUserID: string, isPrivate: boolean): Promise<OrganizationContact>;
+    /** `assigneeUserID` null : le contact n'a plus de responsable. */
+    assign(contactID: string, assigneeUserID: string | null): Promise<OrganizationContact>;
+    handOver(input: HandOverContactInput): Promise<OrganizationContact>;
 }

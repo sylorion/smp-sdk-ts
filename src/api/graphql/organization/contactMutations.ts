@@ -22,6 +22,7 @@ export const contactMutations = {
         isPrivate
         ownerUserOrgID
         assignedToUserOrgID
+        assigneeUserID
         createdAt
       }
     }
@@ -53,6 +54,7 @@ export const contactMutations = {
         isPrivate
         ownerUserOrgID
         assignedToUserOrgID
+        assigneeUserID
         state
         createdAt
         updatedAt
@@ -85,6 +87,34 @@ export const contactMutations = {
       setOrganizationContactPrivacy(contactID: $contactID, callerUserID: $callerUserID, isPrivate: $isPrivate) {
         contactID
         isPrivate
+      }
+    }
+  `,
+
+  /** Prendre un lead libre, le rendre, ou (gestionnaire) l'attribuer à un membre. Identité signée. */
+  ASSIGN_CONTACT: `
+    mutation AssignOrganizationContact($input: AssignOrganizationContactInput!) {
+      assignOrganizationContact(input: $input) {
+        contactID
+        organizationID
+        assignedToUserOrgID
+        assigneeUserID
+        contactStatus
+        updatedAt
+      }
+    }
+  `,
+
+  /** Transmettre un lead à un collègue (il devient responsable et reçoit une tâche). Identité signée. */
+  HAND_OVER_CONTACT: `
+    mutation HandOverOrganizationContact($input: HandOverOrganizationContactInput!) {
+      handOverOrganizationContact(input: $input) {
+        contactID
+        organizationID
+        assignedToUserOrgID
+        assigneeUserID
+        contactStatus
+        updatedAt
       }
     }
   `,

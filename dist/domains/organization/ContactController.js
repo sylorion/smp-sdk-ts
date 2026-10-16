@@ -1,5 +1,10 @@
 import { contactQueries } from '../../api/graphql/organization/contactQueries.js';
 import { contactMutations } from '../../api/graphql/organization/contactMutations.js';
+/**
+ * Note : depuis le CRM (mu-organization), l'appelant est TOUJOURS l'identité signée du client
+ * (`APIClient.withUserAssertion` côté serveur) ; le paramètre `callerUserID` des méthodes est
+ * conservé pour compatibilité mais ignoré par le service.
+ */
 // ── Controller ──
 export class ContactController {
     constructor(client) {
@@ -54,5 +59,16 @@ export class ContactController {
         const variables = { contactID, callerUserID, isPrivate };
         const response = await this.client.mutate(mutation, variables);
         return response.setOrganizationContactPrivacy;
+    }
+    // ── CRM : responsable d'un lead ──
+    /** `assigneeUserID` null : le contact n'a plus de responsable. */
+    async assign(contactID, assigneeUserID) {
+        const input = assigneeUserID ? { contactID, assigneeUserID } : { contactID };
+        const response = await this.client.mutate(contactMutations.ASSIGN_CONTACT, { input });
+        return response.assignOrganizationContact;
+    }
+    async handOver(input) {
+        const response = await this.client.mutate(contactMutations.HAND_OVER_CONTACT, { input });
+        return response.handOverOrganizationContact;
     }
 }

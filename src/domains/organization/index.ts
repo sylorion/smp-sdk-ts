@@ -5,7 +5,8 @@ import { ContactController } from './ContactController.js';
 import { DocumentSettingsController } from './DocumentSettingsController.js';
 import { WorkspaceController } from './WorkspaceController.js';
 
-export { DocumentSettingsController, WorkspaceController };
+export { DocumentSettingsController, WorkspaceController, ContactController };
+export type { ContactListFilters, HandOverContactInput } from './ContactController.js';
 
 export class OrganizationDomain {
   public organization: Organization;

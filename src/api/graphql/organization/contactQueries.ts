@@ -7,7 +7,8 @@ export const contactQueries = {
       $status: OrgContactStatus,
       $source: OrgContactSource,
       $page: Int,
-      $pageSize: Int
+      $pageSize: Int,
+      $assignee: String
     ) {
       organizationContacts(
         organizationID: $organizationID,
@@ -16,7 +17,8 @@ export const contactQueries = {
         status: $status,
         source: $source,
         page: $page,
-        pageSize: $pageSize
+        pageSize: $pageSize,
+        assignee: $assignee
       ) {
         contactID
         uniqRef
@@ -25,6 +27,7 @@ export const contactQueries = {
         organizationID
         userID
         assignedToUserOrgID
+        assigneeUserID
         isPrivate
         ownerUserOrgID
         contactType
@@ -75,6 +78,7 @@ export const contactQueries = {
         organizationID
         userID
         assignedToUserOrgID
+        assigneeUserID
         isPrivate
         ownerUserOrgID
         contactType

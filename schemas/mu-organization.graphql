@@ -1,3 +1,74 @@
+type OrganizationTask {
+  taskID: ID!
+  organizationID: ID!
+  title: String!
+  description: String
+  status: OrganizationTaskStatus!
+  priority: OrganizationTaskPriority!
+  creatorUserID: ID!
+  assigneeUserID: ID
+  dueAt: DateTime
+  blockedReason: String
+  blockedByTaskID: ID
+  documentType: String
+  documentID: ID
+  labels: [String!]!
+  position: Int!
+  completedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum OrganizationTaskStatus {
+  todo
+  in_progress
+  blocked
+  done
+  cancelled
+}
+
+enum OrganizationTaskPriority {
+  low
+  normal
+  high
+  urgent
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type OrganizationTaskComment {
+  commentID: ID!
+  organizationID: ID!
+  taskID: ID
+  documentType: String
+  documentID: ID
+  authorUserID: ID!
+  content: String!
+  createdAt: DateTime!
+}
+
+type OrganizationTaskEvent {
+  eventID: ID!
+  taskID: ID!
+  actorUserID: ID!
+  kind: OrganizationTaskEventKind!
+  data: String
+  createdAt: DateTime!
+}
+
+enum OrganizationTaskEventKind {
+  created
+  updated
+  assigned
+  status_changed
+  commented
+  dossier_handed_over
+  deleted
+}
+
 type MutationResponse {
   success: Boolean!
   message: String
@@ -31,11 +102,6 @@ enum ObjectStatus {
   online
   archived
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Place {
   placeID: ID!
@@ -133,6 +199,7 @@ type OrganizationContact {
   organizationID: ID!
   userID: ID
   assignedToUserOrgID: ID
+  assigneeUserID: ID
   isPrivate: Boolean!
   ownerUserOrgID: ID
   contactType: OrgContactType!
@@ -247,72 +314,6 @@ enum OrgPaymentMethodType {
   bank_transfer
   crypto
   other
-}
-
-type OrganizationTask {
-  taskID: ID!
-  organizationID: ID!
-  title: String!
-  description: String
-  status: OrganizationTaskStatus!
-  priority: OrganizationTaskPriority!
-  creatorUserID: ID!
-  assigneeUserID: ID
-  dueAt: DateTime
-  blockedReason: String
-  blockedByTaskID: ID
-  documentType: String
-  documentID: ID
-  labels: [String!]!
-  position: Int!
-  completedAt: DateTime
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-enum OrganizationTaskStatus {
-  todo
-  in_progress
-  blocked
-  done
-  cancelled
-}
-
-enum OrganizationTaskPriority {
-  low
-  normal
-  high
-  urgent
-}
-
-type OrganizationTaskComment {
-  commentID: ID!
-  organizationID: ID!
-  taskID: ID
-  documentType: String
-  documentID: ID
-  authorUserID: ID!
-  content: String!
-  createdAt: DateTime!
-}
-
-type OrganizationTaskEvent {
-  eventID: ID!
-  taskID: ID!
-  actorUserID: ID!
-  kind: OrganizationTaskEventKind!
-  data: String
-  createdAt: DateTime!
-}
-
-enum OrganizationTaskEventKind {
-  created
-  updated
-  assigned
-  status_changed
-  commented
-  dossier_handed_over
-  deleted
 }
 
 type UserOrganization {
@@ -445,9 +446,20 @@ type OwnerTransferResponse {
 }
 
 type Query {
-  organizationContact(contactID: ID!, callerUserID: ID!): OrganizationContact
-  organizationContacts(organizationID: ID!, callerUserID: ID!, search: String, status: OrgContactStatus, source: OrgContactSource, page: Int, pageSize: Int): [OrganizationContact!]!
-  searchOrganizationContacts(organizationID: ID!, callerUserID: ID!, query: String!, limit: Int): [OrganizationContact!]!
+  organizationContact(contactID: ID!, callerUserID: ID @deprecated(reason: "Ignoré : l'appelant est l'identité signée de la requête.")): OrganizationContact
+  organizationContacts(
+    organizationID: ID!
+    callerUserID: ID @deprecated(reason: "Ignoré : l'appelant est l'identité signée de la requête.")
+    search: String
+    status: OrgContactStatus
+    source: OrgContactSource
+    page: Int
+    pageSize: Int
+
+    """Responsable : `me`, `unassigned` ou l'identifiant d'un membre."""
+    assignee: String
+  ): [OrganizationContact!]!
+  searchOrganizationContacts(organizationID: ID!, query: String!, callerUserID: ID @deprecated(reason: "Ignoré : l'appelant est l'identité signée de la requête."), limit: Int): [OrganizationContact!]!
   organizationDocumentSettings(organizationID: ID!): OrganizationDocumentSettings!
   organizationDocumentPresentation(organizationID: ID!): OrganizationDocumentPresentation!
   organization(organizationID: ID!, admin: Boolean): Organization
@@ -524,10 +536,12 @@ input VerifyUserRoleInput {
 
 type Mutation {
   createOrganizationContact(input: CreateContactInput!): OrganizationContact!
-  updateOrganizationContact(contactID: ID!, input: UpdateContactInput!, callerUserID: ID!): OrganizationContact!
-  deleteOrganizationContact(contactID: ID!, callerUserID: ID!): MutationResponse!
-  bulkCreateOrganizationContacts(organizationID: ID!, callerUserID: ID!, contacts: [BulkContactInput!]!): BulkCreateContactsResponse!
-  setOrganizationContactPrivacy(contactID: ID!, isPrivate: Boolean!, callerUserID: ID!): OrganizationContact!
+  updateOrganizationContact(contactID: ID!, input: UpdateContactInput!, callerUserID: ID @deprecated(reason: "Ignoré : l'appelant est l'identité signée de la requête.")): OrganizationContact!
+  deleteOrganizationContact(contactID: ID!, callerUserID: ID @deprecated(reason: "Ignoré : l'appelant est l'identité signée de la requête.")): MutationResponse!
+  bulkCreateOrganizationContacts(organizationID: ID!, contacts: [BulkContactInput!]!, callerUserID: ID @deprecated(reason: "Ignoré : l'appelant est l'identité signée de la requête.")): BulkCreateContactsResponse!
+  setOrganizationContactPrivacy(contactID: ID!, isPrivate: Boolean!, callerUserID: ID @deprecated(reason: "Ignoré : l'appelant est l'identité signée de la requête.")): OrganizationContact!
+  assignOrganizationContact(input: AssignOrganizationContactInput!): OrganizationContact!
+  handOverOrganizationContact(input: HandOverOrganizationContactInput!): OrganizationContact!
   updateOrganizationDocumentSettings(organizationID: ID!, settings: JSON!): OrganizationDocumentSettings!
   resetOrganizationDocumentSettings(organizationID: ID!): OrganizationDocumentSettings!
   createOrganization(input: OrganizationInput!): Organization!
@@ -648,6 +662,19 @@ input BulkContactInput {
   socialProfiles: JSON
   contactStatus: OrgContactStatus
   notes: String
+}
+
+input AssignOrganizationContactInput {
+  contactID: ID!
+  assigneeUserID: ID
+}
+
+input HandOverOrganizationContactInput {
+  contactID: ID!
+  toUserID: ID!
+  message: String
+  priority: OrganizationTaskPriority
+  dueAt: DateTime
 }
 
 input OrganizationInput {
