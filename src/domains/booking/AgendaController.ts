@@ -3,7 +3,9 @@ import { agendaMutations, agendaQueries } from '../../api/graphql/booking/agenda
 import {
   AgendaEvent,
   AgendaEventsFilter,
+  AgendaRemindersFilter,
   CreateAgendaEventInput,
+  CreateAgendaReminderInput,
   UpdateAgendaEventInput,
 } from '../../types/booking/agenda.js';
 
@@ -37,5 +39,28 @@ export class AgendaController {
 
   async respond(eventId: string, status: 'accepted' | 'declined'): Promise<AgendaEvent> {
     return (await this.client.mutate<{ respondAgendaEvent: AgendaEvent }>(agendaMutations.RESPOND_AGENDA_EVENT, { input: { eventId, status } })).respondAgendaEvent;
+  }
+
+  // ── Rappels ──
+
+  /** Rappels de l'appelant (auteur ou destinataire), à venir ; `includeSent` : envoyés des 30 derniers jours. */
+  async listReminders(filter: AgendaRemindersFilter): Promise<AgendaEvent[]> {
+    const r = await this.client.query<{ agendaReminders: AgendaEvent[] }>(agendaQueries.AGENDA_REMINDERS, { filter });
+    return r.agendaReminders ?? [];
+  }
+
+  /** Programme un rappel (envoyé par e-mail et dans l'application à `remindAt`). */
+  async createReminder(input: CreateAgendaReminderInput): Promise<AgendaEvent> {
+    return (await this.client.mutate<{ createAgendaReminder: AgendaEvent }>(agendaMutations.CREATE_AGENDA_REMINDER, { input })).createAgendaReminder;
+  }
+
+  /** Reporte un rappel, même déjà envoyé. */
+  async snoozeReminder(eventId: string, remindAt: string): Promise<AgendaEvent> {
+    return (await this.client.mutate<{ snoozeAgendaReminder: AgendaEvent }>(agendaMutations.SNOOZE_AGENDA_REMINDER, { input: { eventId, remindAt } })).snoozeAgendaReminder;
+  }
+
+  /** « Terminer le point » : l'auteur clôt l'événement avec son compte rendu. */
+  async completeEvent(eventId: string, outcome?: string): Promise<AgendaEvent> {
+    return (await this.client.mutate<{ completeAgendaEvent: AgendaEvent }>(agendaMutations.COMPLETE_AGENDA_EVENT, { input: { eventId, ...(outcome ? { outcome } : {}) } })).completeAgendaEvent;
   }
 }

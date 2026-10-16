@@ -77,6 +77,13 @@ type AgendaEvent {
   visibility: String!
   attendees: [AgendaAttendee!]!
   detailsHidden: Boolean!
+  entry: String!
+  subjectType: String
+  subjectId: ID
+  reminderMinutesBefore: Int
+  parentEventId: ID
+  outcome: String
+  sentAt: DateTime
 }
 
 """
@@ -821,6 +828,11 @@ type Query {
   """
   agendaEvents(filter: AgendaEventsFilter!): [AgendaEvent!]!
   agendaEvent(eventId: ID!): AgendaEvent!
+
+  """
+  Rappels de l'appelant (auteur ou destinataire), à venir et, sur demande, envoyés.
+  """
+  agendaReminders(filter: AgendaRemindersFilter!): [AgendaEvent!]!
   agentExecutionStatus(orderId: ID!): AgentExecutionStatus!
   bookingsByService(serviceId: String!): [Booking!]!
   bookingsByUser(userId: String!): [Booking!]!
@@ -880,6 +892,13 @@ input AgendaEventsFilter {
   userIds: [ID!]
 }
 
+input AgendaRemindersFilter {
+  organizationId: ID!
+  includeSent: Boolean
+  subjectType: String
+  subjectId: ID
+}
+
 input AvailableSlotsInput {
   serviceId: String!
   date: DateTime!
@@ -892,6 +911,17 @@ type Mutation {
   updateAgendaEvent(eventId: ID!, input: UpdateAgendaEventInput!): AgendaEvent!
   cancelAgendaEvent(eventId: ID!): AgendaEvent!
   respondAgendaEvent(input: RespondAgendaEventInput!): AgendaEvent!
+
+  """
+  Programme un rappel, éventuellement lié à une tâche, un contact ou un document.
+  """
+  createAgendaReminder(input: CreateAgendaReminderInput!): AgendaEvent!
+
+  """Reporte un rappel (même déjà envoyé)."""
+  snoozeAgendaReminder(input: SnoozeAgendaReminderInput!): AgendaEvent!
+
+  """« Terminer le point » : clôt un événement avec son compte rendu."""
+  completeAgendaEvent(input: CompleteAgendaEventInput!): AgendaEvent!
   createBooking(data: CreateBookingInput!): Booking!
   cancelBooking(bookingId: String!, message: String, initiatedBy: String = "client"): Booking!
   confirmBooking(bookingId: String!): Booking!
@@ -974,6 +1004,9 @@ input CreateAgendaEventInput {
   attendeeUserIds: [ID!]
   visibility: String
   allowOverlap: Boolean
+  subjectType: String
+  subjectId: ID
+  reminderMinutesBefore: Int
 }
 
 input UpdateAgendaEventInput {
@@ -985,11 +1018,38 @@ input UpdateAgendaEventInput {
   attendeeUserIds: [ID!]
   visibility: String
   allowOverlap: Boolean
+  reminderMinutesBefore: Int
+  clearReminder: Boolean
 }
 
 input RespondAgendaEventInput {
   eventId: ID!
   status: String!
+}
+
+"""
+Rappel programmé dans l'agenda (« rappelle-moi de relancer ce client dans trois jours »).
+"""
+input CreateAgendaReminderInput {
+  organizationId: ID!
+  title: String!
+  note: String
+  remindAt: DateTime!
+  subjectType: String
+  subjectId: ID
+  recipientUserIds: [ID!]
+  visibility: String
+}
+
+input SnoozeAgendaReminderInput {
+  eventId: ID!
+  remindAt: DateTime!
+}
+
+"""« Terminer le point » : clôt un événement avec son compte rendu."""
+input CompleteAgendaEventInput {
+  eventId: ID!
+  outcome: String
 }
 
 input CreateBookingInput {

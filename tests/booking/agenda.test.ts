@@ -32,4 +32,25 @@ describe('AgendaController', () => {
     ]);
     for (const doc of Object.values(agendaMutations)) expect(doc).not.toMatch(/ownerUserId:\s*\$/);
   });
+
+  it('rappels et « Terminer le point » : documents et variables tels quels, sans auteur', async () => {
+    const c = {
+      query: jest.fn(async () => ({ agendaReminders: [ev] })),
+      mutate: jest.fn(async () => ({ createAgendaReminder: ev, snoozeAgendaReminder: ev, completeAgendaEvent: ev })),
+    };
+    const a = new AgendaController(c as any);
+    expect(await a.listReminders({ organizationId: 'o1', subjectType: 'invoice', subjectId: 'inv-1' })).toEqual([ev]);
+    expect(c.query).toHaveBeenCalledWith(agendaQueries.AGENDA_REMINDERS, { filter: { organizationId: 'o1', subjectType: 'invoice', subjectId: 'inv-1' } });
+    await a.createReminder({ organizationId: 'o1', title: 'Relancer', remindAt: '2027-01-10T08:00:00Z', subjectType: 'contact', subjectId: 'c1' });
+    await a.snoozeReminder('e1', '2027-01-11T08:00:00Z');
+    await a.completeEvent('e1', 'Devis à revoir');
+    await a.completeEvent('e1');
+    expect(c.mutate.mock.calls.map(([d, v]) => [d, v])).toEqual([
+      [agendaMutations.CREATE_AGENDA_REMINDER, { input: { organizationId: 'o1', title: 'Relancer', remindAt: '2027-01-10T08:00:00Z', subjectType: 'contact', subjectId: 'c1' } }],
+      [agendaMutations.SNOOZE_AGENDA_REMINDER, { input: { eventId: 'e1', remindAt: '2027-01-11T08:00:00Z' } }],
+      [agendaMutations.COMPLETE_AGENDA_EVENT, { input: { eventId: 'e1', outcome: 'Devis à revoir' } }],
+      [agendaMutations.COMPLETE_AGENDA_EVENT, { input: { eventId: 'e1' } }],
+    ]);
+    for (const doc of Object.values(agendaMutations)) expect(doc).not.toMatch(/ownerUserId:\s*\$/);
+  });
 });

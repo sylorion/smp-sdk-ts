@@ -4,7 +4,8 @@ import { ManageOrganization } from './ManageOrganisationController.js';
 import { ContactController } from './ContactController.js';
 import { DocumentSettingsController } from './DocumentSettingsController.js';
 import { WorkspaceController } from './WorkspaceController.js';
-export { DocumentSettingsController, WorkspaceController, ContactController };
+import { OrganizationMailingController } from './MailingController.js';
+export { DocumentSettingsController, WorkspaceController, ContactController, OrganizationMailingController };
 export type { ContactListFilters, HandOverContactInput } from './ContactController.js';
 export declare class OrganizationDomain {
     organization: Organization;
@@ -14,5 +15,7 @@ export declare class OrganizationDomain {
     documentSettings: DocumentSettingsController;
     /** Espace de travail : tâches, commentaires internes, transmission de dossiers. */
     workspace: WorkspaceController;
+    /** E-mailing CRM : aperçu, envoi aux contacts, historique. */
+    mailing: OrganizationMailingController;
     constructor(client: APIClient);
 }

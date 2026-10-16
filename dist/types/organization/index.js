@@ -3,3 +3,4 @@
 // ==============================
 export * from './documentSettings.js';
 export * from './workspace.js';
+export * from './mailing.js';
