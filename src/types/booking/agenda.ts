@@ -123,4 +123,6 @@ export interface AgendaReminderDueEvent {
   location: string | null;
   ownerUserId: string;
   recipientUserIds: string[];
+  /** Rappel posé par la plateforme : échéance d'une tâche (`task_due`) ou retard (`task_overdue`) ; null sinon. */
+  reason: 'task_due' | 'task_overdue' | null;
 }
