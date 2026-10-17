@@ -24,6 +24,8 @@ export interface OrganizationInvitation {
 export interface OrganizationMemberProfile {
   jobTitle?: string;
   missionDescription?: string;
+  /** Heures par semaine (35 si absente). */
+  weeklyCapacityHours?: number;
   updatedAt?: string;
 }
 

@@ -370,6 +370,7 @@ const organizationQueries = {
           expiresAt
           jobTitle
           missionDescription
+          weeklyCapacityHours
         }
         totalMembers
       }
@@ -427,6 +428,17 @@ const organizationQueries = {
         userID
         jobTitle
         missionDescription
+        weeklyCapacityHours
+      }
+    }
+  `,
+
+  // CAPACITÉ HEBDOMADAIRE DE CHAQUE MEMBRE (réservé aux membres de l'organisation)
+  GET_MEMBER_CAPACITIES: `
+    query MemberCapacities($organizationID: ID!) {
+      memberCapacities(organizationID: $organizationID) {
+        userID
+        weeklyCapacityHours
       }
     }
   `

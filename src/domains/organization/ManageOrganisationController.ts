@@ -122,6 +122,8 @@ export interface OrganizationMember {
   expiresAt?: string;
   jobTitle?: string;
   missionDescription?: string;
+  /** Heures par semaine (35 si non renseignée) ; absente pour une invitation en attente. */
+  weeklyCapacityHours?: number;
 }
 /**
  * The `OrganizationMembers` interface represents the response of the `listOrganizationMembers` query.
@@ -295,6 +297,13 @@ export class ManageOrganization {
     return response.getMemberProfile;
   }
 
+  /** Capacité hebdomadaire de chaque membre de l'organisation (35 h par défaut). Réservé aux membres. */
+  async getMemberCapacities(organizationID: string): Promise<MemberCapacity[]> {
+    const query = organizationQueries.GET_MEMBER_CAPACITIES;
+    const response = await this.client.query(query, { organizationID }) as { memberCapacities: MemberCapacity[] };
+    return response.memberCapacities ?? [];
+  }
+
   async updateMemberProfile(input: UpdateMemberProfileInput): Promise<MemberProfileResponse> {
     const mutation = organizationMutations.UPDATE_MEMBER_PROFILE;
     const variables = { input };
@@ -359,6 +368,13 @@ export interface MemberProfileResponse {
   userID?: string;
   jobTitle?: string;
   missionDescription?: string;
+  weeklyCapacityHours?: number;
+}
+
+/** Capacité hebdomadaire d'un membre (heures par semaine, 35 par défaut). */
+export interface MemberCapacity {
+  userID: string;
+  weeklyCapacityHours: number;
 }
 
 export interface UpdateMemberProfileInput {
@@ -367,6 +383,8 @@ export interface UpdateMemberProfileInput {
   callerUserID: string;
   jobTitle?: string;
   missionDescription?: string;
+  /** Heures par semaine, de 1 à 80. Absent ou null : inchangé. */
+  weeklyCapacityHours?: number;
 }
 
 export interface ResendInvitationResponse {

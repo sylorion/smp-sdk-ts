@@ -426,6 +426,7 @@ type OrganizationMemberItem {
   isInvitation: Boolean
   jobTitle: String
   missionDescription: String
+  weeklyCapacityHours: Float
 }
 
 type OrganizationMembersResponse {
@@ -468,6 +469,12 @@ type MemberProfileResponse {
   userID: ID
   jobTitle: String
   missionDescription: String
+  weeklyCapacityHours: Float
+}
+
+type MemberCapacity {
+  userID: ID!
+  weeklyCapacityHours: Float!
 }
 
 type ResendInvitationResponse {
@@ -527,6 +534,7 @@ type Query {
   verifyUserRole(input: VerifyUserRoleInput!): VerifyUserRoleResponse!
   searchUsers(query: String!, limit: Float = 10): [SearchUsersResult!]!
   getMemberProfile(organizationID: ID!, userID: ID!): MemberProfileResponse!
+  memberCapacities(organizationID: ID!): [MemberCapacity!]!
 }
 
 input MailingSegmentInput {
@@ -930,6 +938,7 @@ input UpdateMemberProfileInput {
   callerUserID: ID!
   jobTitle: String
   missionDescription: String
+  weeklyCapacityHours: Float
 }
 
 input ResendInvitationInput {

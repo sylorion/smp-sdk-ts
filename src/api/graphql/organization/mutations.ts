@@ -300,6 +300,7 @@ export const organizationMutations = {
         userID
         jobTitle
         missionDescription
+        weeklyCapacityHours
       }
     }
   `,
