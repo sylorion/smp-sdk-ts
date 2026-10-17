@@ -467,6 +467,57 @@ type ProjectProgressType {
   spentHours: Float!
 }
 
+"""
+Temps alloué à une activité : valeur validée (`estimatedHours`) et négociation en cours.
+"""
+type ActivityTime {
+  status: String!
+  proposedHours: Float
+  counterHours: Float
+  comment: String
+  initiatedByUserId: ID
+  lastNudgeAt: DateTime
+}
+
+"""Difficulté signalée sur une activité."""
+type ActivityIssue {
+  issueId: ID!
+  byUserId: ID!
+  createdAt: DateTime!
+  category: String!
+  text: String!
+  newDueAt: DateTime
+  need: String
+  open: Boolean!
+  resolvedAt: DateTime
+  resolvedByUserId: ID
+  resolvedNote: String
+}
+
+"""Livrable déposé sur une activité de type `deliverable`."""
+type ActivityDeliverable {
+  name: String!
+  url: String!
+  mimeType: String
+  sizeBytes: Float
+  depositedByUserId: ID
+  depositedVia: String!
+  depositedByLabel: String
+  depositedAt: DateTime!
+  validatedByUserId: ID
+  validatedAt: DateTime
+}
+
+"""Entrée du journal d’une activité."""
+type ActivityEvent {
+  eventId: ID!
+  at: DateTime!
+  byUserId: ID
+  kind: String!
+  hours: Float
+  text: String!
+}
+
 """Activité ou livrable d’un projet interne (engagement enfant)."""
 type ProjectActivity {
   activityId: ID!
@@ -485,6 +536,10 @@ type ProjectActivity {
   estimatedHours: Float
   actualHours: Float!
   critical: Boolean!
+  time: ActivityTime!
+  issues: [ActivityIssue!]!
+  deliverable: ActivityDeliverable
+  journal: [ActivityEvent!]!
 }
 
 """
@@ -503,6 +558,58 @@ type InternalProject {
   progress: ProjectProgressType!
   criticalPath: [ID!]!
   activities: [ProjectActivity!]!
+}
+
+"""Lien créé : le jeton n’est renvoyé que cette fois."""
+type ProjectShareLinkCreated {
+  linkId: ID!
+  token: String!
+  expiresAt: DateTime
+  allowUpload: Boolean!
+  targetType: String!
+  targetId: ID!
+}
+
+"""Lien de partage d’un projet, sans jeton ni empreinte."""
+type ProjectShareLinkType {
+  linkId: ID!
+  targetType: String!
+  targetId: ID!
+  createdAt: DateTime!
+  expiresAt: DateTime
+  allowUpload: Boolean!
+  revokedAt: DateTime
+  state: String!
+}
+
+"""
+Activité telle que la voit une personne extérieure : titre, état, échéance.
+"""
+type SharedActivityType {
+  activityId: ID!
+  title: String!
+  type: String!
+  ownerUserId: ID!
+  startAt: DateTime
+  dueAt: DateTime
+  state: String!
+  critical: Boolean!
+}
+
+"""Vue en lecture seule d’un projet ou d’une activité partagés par lien."""
+type SharedProjectView {
+  state: String!
+  allowUpload: Boolean!
+  targetType: String
+  projectName: String
+  objective: String
+  organizationId: ID
+  progress: ProjectProgressType
+  activities: [SharedActivityType!]!
+  prerequisiteTitles: [String!]!
+  focusActivityId: ID
+  focusDescription: String
+  deliverableReceived: Boolean!
 }
 
 type ReferralOffer {
@@ -917,6 +1024,14 @@ type Query {
 
   """Projet d'une activité (lien d'une notification)."""
   internalProjectOfActivity(activityId: ID!): InternalProject!
+
+  """Liens de partage du projet, sans jeton."""
+  projectShareLinks(projectId: ID!): [ProjectShareLinkType!]!
+
+  """
+  PUBLIC. Vue en lecture seule d’un projet ou d’une activité partagés par lien.
+  """
+  sharedProjectView(token: String!): SharedProjectView!
   referralOffer(serviceId: ID!): ReferralOffer
   referralMarketplace(apporteurOrganizationId: ID!, search: String, limit: Int = 50, offset: Int = 0): [ReferralMarketplaceService!]!
   referralPartnerships(organizationId: ID!, role: String!, status: [String!]): [ReferralPartnership!]!
@@ -1016,8 +1131,47 @@ type Mutation {
   addProjectActivity(input: AddProjectActivityInput!): InternalProject!
   updateProjectActivity(activityId: ID!, input: UpdateProjectActivityInput!): InternalProject!
 
-  """Démarrer, terminer, mettre en pause, annuler ou rouvrir une activité."""
+  """
+  Démarrer, terminer, mettre en pause, annuler ou rouvrir une activité. Un livrable se termine après dépôt, par le responsable du projet.
+  """
   projectActivityAction(input: ProjectActivityActionInput!): InternalProject!
+
+  """
+  Décale l'échéance d'une activité (responsable du projet) ; les activités suivantes sont poussées en cascade.
+  """
+  shiftProjectActivity(input: ShiftProjectActivityInput!): InternalProject!
+
+  """
+  Temps alloué : set, propose, ask, accept, counter, acceptCounter, keep, nudge.
+  """
+  projectActivityTime(input: ProjectActivityTimeInput!): InternalProject!
+
+  """Signale une difficulté (une seule ouverte par activité)."""
+  reportActivityIssue(input: ReportActivityIssueInput!): InternalProject!
+
+  """Résout une difficulté ; peut accepter la nouvelle échéance proposée."""
+  resolveActivityIssue(input: ResolveActivityIssueInput!): InternalProject!
+
+  """
+  Dépose le livrable d'une activité de type livrable (remplace le précédent).
+  """
+  depositActivityDeliverable(input: DepositActivityDeliverableInput!): InternalProject!
+
+  """
+  Valide le livrable déposé (responsable du projet) : termine l’activité.
+  """
+  validateActivityDeliverable(activityId: ID!): InternalProject!
+
+  """Crée un lien de partage ; le jeton n’est renvoyé que cette fois."""
+  createProjectShareLink(input: CreateProjectShareLinkInput!): ProjectShareLinkCreated!
+
+  """Retire un lien de partage."""
+  revokeProjectShareLink(projectId: ID!, linkId: ID!): Boolean!
+
+  """
+  PUBLIC. Dépôt d’un livrable par une personne extérieure, via un lien qui l’autorise.
+  """
+  sharedDeposit(input: SharedDepositInput!): Boolean!
   upsertReferralOffer(serviceId: ID!, data: ReferralOfferInput!): ReferralOffer!
   requestReferralPartnership(data: RequestReferralPartnershipInput!): ReferralPartnership!
   decideReferralPartnership(partnershipId: ID!, decision: String!, reason: String): ReferralPartnership!
@@ -1419,6 +1573,57 @@ input UpdateProjectActivityInput {
 input ProjectActivityActionInput {
   activityId: ID!
   action: String!
+}
+
+input ShiftProjectActivityInput {
+  activityId: ID!
+  deltaDays: Int!
+}
+
+input ProjectActivityTimeInput {
+  activityId: ID!
+  action: String!
+  hours: Float
+  comment: String
+}
+
+input ReportActivityIssueInput {
+  activityId: ID!
+  category: String!
+  text: String!
+  newDueAt: DateTime
+  need: String
+}
+
+input ResolveActivityIssueInput {
+  activityId: ID!
+  issueId: ID!
+  acceptNewDue: Boolean
+  note: String
+}
+
+input DepositActivityDeliverableInput {
+  activityId: ID!
+  name: String!
+  url: String!
+  mimeType: String
+  sizeBytes: Float
+}
+
+input CreateProjectShareLinkInput {
+  targetType: String!
+  targetId: ID!
+  validityHours: Int
+  allowUpload: Boolean
+}
+
+input SharedDepositInput {
+  token: String!
+  name: String!
+  url: String!
+  mimeType: String
+  sizeBytes: Float
+  depositorLabel: String
 }
 
 input ReferralOfferInput {
