@@ -169,6 +169,31 @@ type GenerateInvoicePDFResponse {
   pdfBase64: String
 }
 
+type InvoiceExportPreview {
+  invoiceCount: Int!
+  salesCount: Int!
+  purchasesCount: Int!
+
+  """Plafond de factures par export."""
+  maxInvoices: Int!
+}
+
+type InvoiceExportResult {
+  exportId: String!
+  fileName: String!
+  invoiceCount: Int!
+
+  """Factures dont le PDF est dans l’archive (base du débit STK)."""
+  pdfCount: Int!
+
+  """Numéros des factures sans PDF (listées dans l’index)."""
+  missingPdfs: [String!]!
+
+  """Lien signé de l’archive, valable une heure."""
+  downloadUrl: String!
+  expiresAt: DateTime!
+}
+
 type Query {
   transaction(input: TransactionIdInput!): Transaction
   transactions: [Transaction!]!
@@ -185,6 +210,9 @@ type Query {
   invoiceByTransactionId(transactionId: String!): Invoice
   invoiceByOrderId(orderId: String!): Invoice
   verifyInvoiceToken(input: VerifyInvoiceTokenInput!): VerifyInvoiceTokenResponse!
+
+  """Nombre de factures exportables sur la période (service interne)."""
+  invoiceExportPreview(input: InvoiceExportInput!): InvoiceExportPreview!
 }
 
 input TransactionIdInput {
@@ -194,6 +222,29 @@ input TransactionIdInput {
 input VerifyInvoiceTokenInput {
   """Token de facture à vérifier"""
   token: String!
+}
+
+input InvoiceExportInput {
+  organizationID: String!
+
+  """
+  Premier jour de la période (AAAA-MM-JJ, inclus), sur la date d’émission.
+  """
+  from: String!
+
+  """Dernier jour de la période (AAAA-MM-JJ, inclus)."""
+  to: String!
+  side: InvoiceExportSide! = all
+
+  """Membre à l’origine de l’export (journal)."""
+  requestedByUserID: String
+}
+
+"""Factures émises (ventes), reçues (achats) ou les deux."""
+enum InvoiceExportSide {
+  sales
+  purchases
+  all
 }
 
 type Mutation {
@@ -207,6 +258,11 @@ type Mutation {
   verifyInvoicePaymentToken(input: VerifyInvoicePaymentTokenInput!): VerifyInvoicePaymentTokenResponse!
   processInvoicePayment(token: String!, input: ProcessInvoicePaymentInput!): SendInvoicePaymentResponse!
   generateInvoicePDF(invoiceId: String!, input: GenerateInvoicePDFInput!): GenerateInvoicePDFResponse!
+
+  """
+  Archive ZIP des factures de la période (PDF + index CSV), lien signé d’une heure (service interne).
+  """
+  exportInvoices(input: InvoiceExportInput!): InvoiceExportResult!
 }
 
 input CreateTransactionInput {

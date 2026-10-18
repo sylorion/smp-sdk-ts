@@ -3,6 +3,7 @@
 import { APIClient } from '../../api/APIClient.js';
 import { invoiceQueries } from '../../api/graphql/accounting/queries.js';
 import { invoiceMutations } from '../../api/graphql/accounting/mutations.js';
+import type { InvoiceExportInput, InvoiceExportPreview, InvoiceExportResult } from '../../types/accounting/invoiceExport.js';
 
 interface InvoiceResponse {
   invoiceId: string;
@@ -299,4 +300,20 @@ export class Invoice {
   // Note: getSecurePDFUrl et markAsDownloaded sont supprimées
   // L'URL de téléchargement est maintenant stockée directement dans invoice.pdfData.downloadUrl
   // après avoir appelé generateAndUploadPDF
+
+  /**
+   * Export comptable — nombre de factures exportables sur la période.
+   * Réservé aux services internes : `client` doit porter `x-smp-internal-secret`
+   * (`httpApiClient.withHeaders(...)`) ; l'appelant a vérifié le droit `invoices.export`.
+   */
+  async getExportPreview(input: InvoiceExportInput): Promise<InvoiceExportPreview> {
+    const response = await this.client.query(invoiceQueries.INVOICE_EXPORT_PREVIEW, { input }) as { invoiceExportPreview: InvoiceExportPreview };
+    return response.invoiceExportPreview;
+  }
+
+  /** Export comptable — archive ZIP des factures de la période (service interne, voir `getExportPreview`). */
+  async exportInvoices(input: InvoiceExportInput): Promise<InvoiceExportResult> {
+    const response = await this.client.mutate(invoiceMutations.EXPORT_INVOICES, { input }) as { exportInvoices: InvoiceExportResult };
+    return response.exportInvoices;
+  }
 }
