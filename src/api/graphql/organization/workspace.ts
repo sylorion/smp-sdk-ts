@@ -1,5 +1,5 @@
 /**
- * Espace de travail de l'organisation (mu-organization, domaine task) : tâches, commentaires
+ * Espace de travail de l'organisation (mu-command, domaine « Travail de l'organisation »; ex-mu-organization) : tâches, commentaires
  * internes, journal, transmission de dossiers. L'appelant est TOUJOURS l'identité signée de la
  * requête (assertion `x-smp-user-id` / jeton) : aucun document ne transmet d'auteur.
  */

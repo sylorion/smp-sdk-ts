@@ -1,4 +1,4 @@
-/** Espace de travail de l'organisation (mu-organization) : types publics. */
+/** Espace de travail de l'organisation (mu-command, ex-mu-organization) : types publics. */
 export type OrganizationTaskStatus = 'todo' | 'in_progress' | 'blocked' | 'done' | 'cancelled';
 export type OrganizationTaskPriority = 'low' | 'normal' | 'high' | 'urgent';
 export type OrganizationTaskEventKind = 'created' | 'updated' | 'assigned' | 'status_changed' | 'commented' | 'dossier_handed_over' | 'deleted';
