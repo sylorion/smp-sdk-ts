@@ -9,6 +9,7 @@ export const profileQueries = {
       query Profile($profileId: ID!) {
         profile(profileID: $profileId) {
           profileID
+          userID
           uniqRef
           slug
           firstName
