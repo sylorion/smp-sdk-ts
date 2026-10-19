@@ -22,7 +22,8 @@
     "CUSTOMIZE_DOCUMENTS",
     "REMOVE_DOCUMENT_POWERED_BY",
     "AUTO_COUNTERSIGN",
-    "USE_ON_SITE_BOOKING"
+    "USE_ON_SITE_BOOKING",
+    "CUSTOMIZE_EMAILS"
   ],
   "actionToKey": {
     "CREATE_ORGANIZATION": "maxOrganizations",
@@ -42,7 +43,8 @@
     "CUSTOMIZE_DOCUMENTS": "hasDocumentCustomization",
     "REMOVE_DOCUMENT_POWERED_BY": "hasDocumentPoweredByRemoval",
     "AUTO_COUNTERSIGN": "hasAutoCountersign",
-    "USE_ON_SITE_BOOKING": "hasOnSiteBooking"
+    "USE_ON_SITE_BOOKING": "hasOnSiteBooking",
+    "CUSTOMIZE_EMAILS": "hasEmailCustomization"
   },
   "scopes": {
     "maxOrganizations": "user",
@@ -63,7 +65,8 @@
     "others": "Tous les autres quotas sont de portée ORGANISATION, mais leur VALEUR vient du plan du propriétaire de l'organisation.",
     "hasDocumentPoweredByRemoval": "Retrait de la mention « Émis avec Services » sur les factures, avoirs, devis et bons de commande. Pro et Business uniquement (Starter personnalise mais garde la mention).",
     "hasAutoCountersign": "Contre-signature automatique des contrats des flows de service par le signataire par défaut de l'organisation. Pro et Business uniquement.",
-    "hasOnSiteBooking": "Réservation sans paiement en ligne (paiement sur place) et page de réservation publique à partager, pour les services de réservation. Ouverte dès Starter."
+    "hasOnSiteBooking": "Réservation sans paiement en ligne (paiement sur place) et page de réservation publique à partager, pour les services de réservation. Ouverte dès Starter.",
+    "hasEmailCustomization": "Charte e-mail de l'organisation et mise en forme des campagnes (mise en page, couleur, logo). Pro et Business. Sans elle, les e-mails partent dans la mise en forme standard de Services (contenu, bouton et signature restent ouverts à tous)."
   },
   "matrix": {
     "standard": {
@@ -87,7 +90,8 @@
       "hasDocumentCustomization": false,
       "hasDocumentPoweredByRemoval": false,
       "hasAutoCountersign": false,
-      "hasOnSiteBooking": false
+      "hasOnSiteBooking": false,
+      "hasEmailCustomization": false
     },
     "starter": {
       "maxOrganizations": 1,
@@ -110,7 +114,8 @@
       "hasDocumentCustomization": true,
       "hasDocumentPoweredByRemoval": false,
       "hasAutoCountersign": false,
-      "hasOnSiteBooking": true
+      "hasOnSiteBooking": true,
+      "hasEmailCustomization": false
     },
     "pro": {
       "maxOrganizations": 3,
@@ -133,7 +138,8 @@
       "hasDocumentCustomization": true,
       "hasDocumentPoweredByRemoval": true,
       "hasAutoCountersign": true,
-      "hasOnSiteBooking": true
+      "hasOnSiteBooking": true,
+      "hasEmailCustomization": true
     },
     "business": {
       "maxOrganizations": 5,
@@ -156,7 +162,8 @@
       "hasDocumentCustomization": true,
       "hasDocumentPoweredByRemoval": true,
       "hasAutoCountersign": true,
-      "hasOnSiteBooking": true
+      "hasOnSiteBooking": true,
+      "hasEmailCustomization": true
     }
   }
 }
