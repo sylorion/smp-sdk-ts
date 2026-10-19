@@ -149,6 +149,22 @@ export interface ContactListFilters {
   assignee?: 'me' | 'unassigned' | string;
 }
 
+/** Décompte des contacts visibles par statut. */
+export interface OrganizationContactsSummary {
+  total: number;
+  byStatus: Array<{ status: string; count: number }>;
+}
+
+/** Une seule modification à la fois : statut, responsable (ou aucun), ou archivage. 500 contacts au plus. */
+export interface BulkUpdateContactsInput {
+  organizationID: string;
+  contactIDs: string[];
+  contactStatus?: string;
+  assigneeUserID?: string;
+  unassign?: boolean;
+  archive?: boolean;
+}
+
 export interface HandOverContactInput {
   contactID: string;
   /** Collègue qui reprend le lead (membre de l'organisation, différent de l'appelant). */
@@ -253,5 +269,16 @@ export class ContactController {
   async handOver(input: HandOverContactInput): Promise<OrganizationContact> {
     const response = await this.client.mutate(contactMutations.HAND_OVER_CONTACT, { input }) as { handOverOrganizationContact: OrganizationContact };
     return response.handOverOrganizationContact;
+  }
+
+  async summary(organizationID: string): Promise<OrganizationContactsSummary> {
+    const response = await this.client.query(contactQueries.GET_ORGANIZATION_CONTACTS_SUMMARY, { organizationID }) as { organizationContactsSummary: OrganizationContactsSummary };
+    return response.organizationContactsSummary;
+  }
+
+  /** Contacts modifiés et contacts refusés (droits). */
+  async bulkUpdate(input: BulkUpdateContactsInput): Promise<{ updated: number; refused: number }> {
+    const response = await this.client.mutate(contactMutations.BULK_UPDATE_CONTACTS, { input }) as { bulkUpdateOrganizationContacts: { updated: number; refused: number } };
+    return response.bulkUpdateOrganizationContacts;
   }
 }

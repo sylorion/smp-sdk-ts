@@ -142,4 +142,11 @@ export const contactQueries = {
       }
     }
   `,
+
+  /** Décompte des contacts visibles par statut. */
+  GET_ORGANIZATION_CONTACTS_SUMMARY: `
+    query OrganizationContactsSummary($organizationID: ID!) {
+      organizationContactsSummary(organizationID: $organizationID) { total byStatus { status count } }
+    }
+  `,
 };

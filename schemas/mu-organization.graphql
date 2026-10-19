@@ -1,74 +1,3 @@
-type OrganizationTask {
-  taskID: ID!
-  organizationID: ID!
-  title: String!
-  description: String
-  status: OrganizationTaskStatus!
-  priority: OrganizationTaskPriority!
-  creatorUserID: ID!
-  assigneeUserID: ID
-  dueAt: DateTime
-  blockedReason: String
-  blockedByTaskID: ID
-  documentType: String
-  documentID: ID
-  labels: [String!]!
-  position: Int!
-  completedAt: DateTime
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-enum OrganizationTaskStatus {
-  todo
-  in_progress
-  blocked
-  done
-  cancelled
-}
-
-enum OrganizationTaskPriority {
-  low
-  normal
-  high
-  urgent
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type OrganizationTaskComment {
-  commentID: ID!
-  organizationID: ID!
-  taskID: ID
-  documentType: String
-  documentID: ID
-  authorUserID: ID!
-  content: String!
-  createdAt: DateTime!
-}
-
-type OrganizationTaskEvent {
-  eventID: ID!
-  taskID: ID!
-  actorUserID: ID!
-  kind: OrganizationTaskEventKind!
-  data: String
-  createdAt: DateTime!
-}
-
-enum OrganizationTaskEventKind {
-  created
-  updated
-  assigned
-  status_changed
-  commented
-  dossier_handed_over
-  deleted
-}
-
 type MutationResponse {
   success: Boolean!
   message: String
@@ -102,6 +31,11 @@ enum ObjectStatus {
   online
   archived
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type Place {
   placeID: ID!
@@ -268,6 +202,21 @@ type BulkCreateContactsResponse {
   message: String
 }
 
+type OrganizationContactStatusCount {
+  status: OrgContactStatus!
+  count: Int!
+}
+
+type OrganizationContactsSummary {
+  total: Int!
+  byStatus: [OrganizationContactStatusCount!]!
+}
+
+type BulkUpdateOrganizationContactsResult {
+  updated: Int!
+  refused: Int!
+}
+
 type DocumentEntitlements {
   canCustomize: Boolean!
   canRemovePoweredBy: Boolean!
@@ -291,6 +240,14 @@ type OrganizationDocumentPresentation {
   logoUrl: String
 }
 
+"""
+Date du dernier e-mail envoyé à un contact par l’e-mailing de l’organisation.
+"""
+type OrganizationContactLastMailed {
+  contactID: ID!
+  lastMailedAt: String!
+}
+
 """Envoi groupé d'un e-mail aux contacts de l'organisation (historique)."""
 type OrganizationMailing {
   mailingID: ID!
@@ -302,8 +259,17 @@ type OrganizationMailing {
   actorUserID: ID!
   recipientCount: Int!
 
-  """`queued` (remis à l’envoi) ou `failed`."""
+  """
+  `queued` (en cours de traitement), `sent` (remis au service d’envoi) ou `failed`.
+  """
   status: String!
+
+  """Campagne d’origine."""
+  campaignID: ID
+
+  """E-mails remis au service d’envoi (compte rendu de mu-notification)."""
+  delivered: Int
+  failedCount: Int
 }
 
 """Destinataires que toucherait un envoi, avant de l’envoyer."""
@@ -502,12 +468,18 @@ type Query {
     """Responsable : `me`, `unassigned` ou l'identifiant d'un membre."""
     assignee: String
   ): [OrganizationContact!]!
+  organizationContactsSummary(organizationID: ID!): OrganizationContactsSummary!
   searchOrganizationContacts(organizationID: ID!, query: String!, callerUserID: ID @deprecated(reason: "Ignoré : l'appelant est l'identité signée de la requête."), limit: Int): [OrganizationContact!]!
   organizationDocumentSettings(organizationID: ID!): OrganizationDocumentSettings!
   organizationDocumentPresentation(organizationID: ID!): OrganizationDocumentPresentation!
 
   """Historique des envois (50 derniers)."""
   organizationMailings(organizationID: ID!): [OrganizationMailing!]!
+
+  """
+  Dernier e-mail envoyé à chaque contact visible (colonne « Dernier échange »).
+  """
+  organizationContactsLastMailed(organizationID: ID!): [OrganizationContactLastMailed!]!
   organizationMailingPreview(organizationID: ID!, segment: MailingSegmentInput): OrganizationMailingPreview!
   organization(organizationID: ID!, admin: Boolean): Organization
   organizations(pagination: PaginationInput, sort: SortInput, filter: [FilterInput!], admin: Boolean): [Organization!]!
@@ -517,10 +489,6 @@ type Query {
   organizationBySlug(slug: String!, admin: Boolean): Organization
   orgPaymentMethod(paymentMethodID: ID!): OrgPaymentMethod!
   orgPaymentMethods(organizationID: ID!, kind: String): [OrgPaymentMethod!]!
-  organizationTasks(filter: OrganizationTasksFilter!): [OrganizationTask!]!
-  organizationTask(taskID: ID!): OrganizationTask!
-  organizationTaskEvents(taskID: ID!): [OrganizationTaskEvent!]!
-  organizationTaskComments(filter: OrganizationTaskCommentsFilter!): [OrganizationTaskComment!]!
   userOrganization(userOrganizationID: ID!): UserOrganization
   userOrganizations(pagination: PaginationInput, sort: SortInput, filter: [FilterInput!]): [UserOrganization!]!
   userOrganizationBySlug(slug: String!): UserOrganization
@@ -565,28 +533,6 @@ input FilterInput {
   value: String!
 }
 
-input OrganizationTasksFilter {
-  organizationID: ID!
-  scope: OrganizationTaskScope
-  statuses: [OrganizationTaskStatus!]
-  assigneeUserID: ID
-  documentType: String
-  documentID: ID
-  limit: Int
-}
-
-enum OrganizationTaskScope {
-  mine
-  team
-}
-
-input OrganizationTaskCommentsFilter {
-  organizationID: ID!
-  taskID: ID
-  documentType: String
-  documentID: ID
-}
-
 input VerifyUserRoleInput {
   userID: ID!
   organizationID: ID!
@@ -600,6 +546,7 @@ type Mutation {
   setOrganizationContactPrivacy(contactID: ID!, isPrivate: Boolean!, callerUserID: ID @deprecated(reason: "Ignoré : l'appelant est l'identité signée de la requête.")): OrganizationContact!
   assignOrganizationContact(input: AssignOrganizationContactInput!): OrganizationContact!
   handOverOrganizationContact(input: HandOverOrganizationContactInput!): OrganizationContact!
+  bulkUpdateOrganizationContacts(input: BulkUpdateOrganizationContactsInput!): BulkUpdateOrganizationContactsResult!
   updateOrganizationDocumentSettings(organizationID: ID!, settings: JSON!): OrganizationDocumentSettings!
   resetOrganizationDocumentSettings(organizationID: ID!): OrganizationDocumentSettings!
   sendOrganizationMailing(input: SendOrganizationMailingInput!): OrganizationMailing!
@@ -617,13 +564,6 @@ type Mutation {
   createOrgPaymentMethod(input: CreateOrgPaymentMethodInput!): OrgPaymentMethod!
   updateOrgPaymentMethod(paymentMethodID: ID!, input: UpdateOrgPaymentMethodInput!): OrgPaymentMethod!
   deleteOrgPaymentMethod(paymentMethodID: ID!): Boolean!
-  createOrganizationTask(input: CreateOrganizationTaskInput!): OrganizationTask!
-  updateOrganizationTask(taskID: ID!, input: UpdateOrganizationTaskInput!): OrganizationTask!
-  changeOrganizationTaskStatus(input: ChangeOrganizationTaskStatusInput!): OrganizationTask!
-  assignOrganizationTask(input: AssignOrganizationTaskInput!): OrganizationTask!
-  deleteOrganizationTask(taskID: ID!): Boolean!
-  addOrganizationTaskComment(input: AddOrganizationTaskCommentInput!): OrganizationTaskComment!
-  handOverDossier(input: HandOverDossierInput!): OrganizationTask!
   createUserOrganization(input: CreateUserOrganizationInput!): UserOrganization!
   updateUserOrganization(userOrganizationID: ID!, input: UpdateUserOrganizationInput!): UserOrganization!
   deleteUserOrganization(userOrganizationID: ID!): MutationResponse!
@@ -741,6 +681,22 @@ input HandOverOrganizationContactInput {
   dueAt: DateTime
 }
 
+enum OrganizationTaskPriority {
+  low
+  normal
+  high
+  urgent
+}
+
+input BulkUpdateOrganizationContactsInput {
+  organizationID: ID!
+  contactIDs: [ID!]!
+  contactStatus: OrgContactStatus
+  assigneeUserID: ID
+  unassign: Boolean
+  archive: Boolean
+}
+
 input SendOrganizationMailingInput {
   organizationID: ID!
   subject: String!
@@ -750,6 +706,17 @@ input SendOrganizationMailingInput {
   """
   message: String!
   segment: MailingSegmentInput
+  preheader: String
+  design: CampaignDesignInput
+}
+
+input CampaignDesignInput {
+  layout: String
+  color: String
+  logo: String
+  ctaLabel: String
+  ctaUrl: String
+  signature: String
 }
 
 input OrganizationInput {
@@ -823,58 +790,6 @@ input UpdateOrgPaymentMethodInput {
   cardType: OrgPaymentMethodType
   methodDetails: String
   isDefault: Boolean
-}
-
-input CreateOrganizationTaskInput {
-  organizationID: ID!
-  title: String!
-  description: String
-  priority: OrganizationTaskPriority
-  assigneeUserID: ID
-  dueAt: DateTime
-  documentType: String
-  documentID: ID
-  labels: [String!]
-}
-
-input UpdateOrganizationTaskInput {
-  title: String
-  description: String
-  priority: OrganizationTaskPriority
-  dueAt: DateTime
-  labels: [String!]
-  position: Int
-}
-
-input ChangeOrganizationTaskStatusInput {
-  taskID: ID!
-  status: OrganizationTaskStatus!
-  blockedReason: String
-  blockedByTaskID: ID
-}
-
-input AssignOrganizationTaskInput {
-  taskID: ID!
-  assigneeUserID: ID
-}
-
-input AddOrganizationTaskCommentInput {
-  organizationID: ID!
-  taskID: ID
-  documentType: String
-  documentID: ID
-  content: String!
-}
-
-input HandOverDossierInput {
-  organizationID: ID!
-  documentType: String!
-  documentID: ID!
-  toUserID: ID!
-  title: String
-  message: String
-  priority: OrganizationTaskPriority
-  dueAt: DateTime
 }
 
 input CreateUserOrganizationInput {

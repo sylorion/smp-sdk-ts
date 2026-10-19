@@ -36,3 +36,18 @@ describe('ContactController — CRM', () => {
     for (const doc of [contactMutations.ASSIGN_CONTACT, contactMutations.HAND_OVER_CONTACT]) expect(doc).not.toMatch(/callerUserID/);
   });
 });
+
+describe('ContactController — décompte et modification groupée', () => {
+  it('summary et bulkUpdate : une requête, aucune identité d’auteur', async () => {
+    const c = {
+      query: jest.fn(async () => ({ organizationContactsSummary: { total: 3, byStatus: [{ status: 'prospect', count: 3 }] } })),
+      mutate: jest.fn(async () => ({ bulkUpdateOrganizationContacts: { updated: 2, refused: 1 } })),
+    };
+    const ctrl = new ContactController(c as any);
+    expect((await ctrl.summary('o1')).total).toBe(3);
+    expect(c.query).toHaveBeenCalledWith(contactQueries.GET_ORGANIZATION_CONTACTS_SUMMARY, { organizationID: 'o1' });
+    expect(await ctrl.bulkUpdate({ organizationID: 'o1', contactIDs: ['c1', 'c2', 'c3'], archive: true })).toEqual({ updated: 2, refused: 1 });
+    expect(c.mutate).toHaveBeenCalledWith(contactMutations.BULK_UPDATE_CONTACTS, { input: { organizationID: 'o1', contactIDs: ['c1', 'c2', 'c3'], archive: true } });
+    expect(contactMutations.BULK_UPDATE_CONTACTS).not.toMatch(/callerUserID/);
+  });
+});
