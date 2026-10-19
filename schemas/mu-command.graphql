@@ -1048,6 +1048,78 @@ type ServiceFlowReadiness {
   contracts: [ServiceFlowContractReadiness!]!
 }
 
+"""
+Créneau d'agenda réservé pour une tâche (point de l'agenda lié à la tâche).
+"""
+type OrganizationTaskPlannedSlot {
+  eventID: ID!
+  startAt: DateTime!
+  endAt: DateTime!
+}
+
+"""Livrable attendu d’une tâche."""
+type OrganizationTaskDeliverable {
+  deliverableID: ID!
+  name: String!
+  ownerUserID: ID
+  dueAt: DateTime
+  status: OrganizationTaskDeliverableStatus!
+  providedAt: DateTime
+
+  """Dépôt qui l’a fourni."""
+  fileID: ID
+  createdAt: DateTime!
+}
+
+enum OrganizationTaskDeliverableStatus {
+  expected
+  provided
+}
+
+"""
+Livrable déposé sur une tâche : fichier privé, image privée ou lien externe.
+"""
+type OrganizationTaskFile {
+  fileID: ID!
+  type: OrganizationTaskFileType!
+  name: String!
+  description: String
+
+  """
+  Chemin de stockage privé (lu par la webapp pour signer une adresse de téléchargement).
+  """
+  path: String
+
+  """Lien externe (https)."""
+  url: String
+  fileName: String
+  mimeType: String
+  sizeBytes: Int
+  uploadedByUserID: ID!
+  uploadedAt: DateTime!
+
+  """Livrable attendu auquel ce dépôt répond."""
+  deliverableID: ID
+}
+
+enum OrganizationTaskFileType {
+  file
+  image
+  link
+}
+
+"""Saisie de la feuille de temps d’une tâche (créneau `timesheet_entry`)."""
+type OrganizationTaskTimeEntry {
+  timeEntryID: ID!
+  taskID: ID!
+  userID: ID!
+  startAt: DateTime!
+  endAt: DateTime!
+  minutes: Int!
+  note: String
+  createdAt: DateTime!
+}
+
 type OrganizationTask {
   taskID: ID!
   organizationID: ID!
@@ -1067,6 +1139,18 @@ type OrganizationTask {
   completedAt: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
+
+  """Temps estimé, en heures."""
+  estimatedHours: Float
+
+  """Faux : seule la date de l’échéance compte (pas d’heure)."""
+  dueHasTime: Boolean!
+
+  """`iro` : proposée par IRO, validée par l’utilisateur."""
+  origin: String
+  planned: OrganizationTaskPlannedSlot
+  deliverables: [OrganizationTaskDeliverable!]!
+  files: [OrganizationTaskFile!]!
 }
 
 enum OrganizationTaskStatus {
@@ -1112,6 +1196,16 @@ enum OrganizationTaskEventKind {
   commented
   dossier_handed_over
   deleted
+  planned
+  unplanned
+  deliverable_added
+  deliverable_provided
+  deliverable_reopened
+  deliverable_removed
+  file_added
+  file_removed
+  time_logged
+  time_removed
 }
 
 type Query {
@@ -1202,6 +1296,9 @@ type Query {
   serviceFlowRun(runId: ID!): ServiceFlowRun!
   myServiceFlowRuns(status: [ServiceFlowRunStatus!]): [ServiceFlowRun!]!
   activeServiceFlowRun(serviceId: ID!): ServiceFlowRun
+
+  """Feuille de temps de la tâche, de la plus récente à la plus ancienne."""
+  organizationTaskTimeEntries(taskID: ID!): [OrganizationTaskTimeEntry!]!
   organizationTasks(filter: OrganizationTasksFilter!): [OrganizationTask!]!
   organizationTask(taskID: ID!): OrganizationTask!
   organizationTaskEvents(taskID: ID!): [OrganizationTaskEvent!]!
@@ -1389,6 +1486,25 @@ type Mutation {
   """
   remindServiceFlowRun(runId: ID!): ServiceFlowRunReminderResult!
   closeServiceFlowRun(runId: ID!): ServiceFlowRun!
+
+  """Réserve un créneau d’agenda pour la tâche (remplace le précédent)."""
+  planOrganizationTask(input: PlanOrganizationTaskInput!): OrganizationTask!
+
+  """Retire le créneau d’agenda de la tâche."""
+  unplanOrganizationTask(taskID: ID!): OrganizationTask!
+  addOrganizationTaskDeliverable(input: AddOrganizationTaskDeliverableInput!): OrganizationTask!
+
+  """Livrable attendu marqué fourni, ou rouvert."""
+  setOrganizationTaskDeliverableStatus(input: SetOrganizationTaskDeliverableStatusInput!): OrganizationTask!
+  removeOrganizationTaskDeliverable(taskID: ID!, deliverableID: ID!): OrganizationTask!
+
+  """
+  Enregistre un livrable déposé (fichier déjà téléversé par la webapp, ou lien).
+  """
+  addOrganizationTaskFile(input: AddOrganizationTaskFileInput!): OrganizationTask!
+  removeOrganizationTaskFile(taskID: ID!, fileID: ID!): OrganizationTask!
+  logOrganizationTaskTime(input: LogOrganizationTaskTimeInput!): OrganizationTaskTimeEntry!
+  deleteOrganizationTaskTime(taskID: ID!, timeEntryID: ID!): Boolean!
   createOrganizationTask(input: CreateOrganizationTaskInput!): OrganizationTask!
   updateOrganizationTask(taskID: ID!, input: UpdateOrganizationTaskInput!): OrganizationTask!
   changeOrganizationTaskStatus(input: ChangeOrganizationTaskStatusInput!): OrganizationTask!
@@ -1889,6 +2005,45 @@ input RequestServiceFlowChangesInput {
   message: String!
 }
 
+input PlanOrganizationTaskInput {
+  taskID: ID!
+  startAt: DateTime!
+  endAt: DateTime!
+}
+
+input AddOrganizationTaskDeliverableInput {
+  taskID: ID!
+  name: String!
+  ownerUserID: ID
+  dueAt: DateTime
+}
+
+input SetOrganizationTaskDeliverableStatusInput {
+  taskID: ID!
+  deliverableID: ID!
+  status: OrganizationTaskDeliverableStatus!
+}
+
+input AddOrganizationTaskFileInput {
+  taskID: ID!
+  type: OrganizationTaskFileType!
+  name: String!
+  description: String
+  path: String
+  url: String
+  fileName: String
+  mimeType: String
+  sizeBytes: Int
+  deliverableID: ID
+}
+
+input LogOrganizationTaskTimeInput {
+  taskID: ID!
+  startAt: DateTime!
+  endAt: DateTime!
+  note: String
+}
+
 input CreateOrganizationTaskInput {
   organizationID: ID!
   title: String!
@@ -1899,6 +2054,16 @@ input CreateOrganizationTaskInput {
   documentType: String
   documentID: ID
   labels: [String!]
+  estimatedHours: Float
+  dueHasTime: Boolean
+  origin: String
+  deliverables: [TaskDeliverableDraftInput!]
+}
+
+input TaskDeliverableDraftInput {
+  name: String!
+  ownerUserID: ID
+  dueAt: DateTime
 }
 
 input UpdateOrganizationTaskInput {
@@ -1908,6 +2073,10 @@ input UpdateOrganizationTaskInput {
   dueAt: DateTime
   labels: [String!]
   position: Int
+  estimatedHours: Float
+  clearEstimatedHours: Boolean
+  dueHasTime: Boolean
+  clearDueAt: Boolean
 }
 
 input ChangeOrganizationTaskStatusInput {

@@ -1,7 +1,12 @@
 /** Espace de travail de l'organisation (mu-command, ex-mu-organization) : types publics. */
 export type OrganizationTaskStatus = 'todo' | 'in_progress' | 'blocked' | 'done' | 'cancelled';
 export type OrganizationTaskPriority = 'low' | 'normal' | 'high' | 'urgent';
-export type OrganizationTaskEventKind = 'created' | 'updated' | 'assigned' | 'status_changed' | 'commented' | 'dossier_handed_over' | 'deleted';
+export type OrganizationTaskEventKind =
+  | 'created' | 'updated' | 'assigned' | 'status_changed' | 'commented' | 'dossier_handed_over' | 'deleted'
+  | 'planned' | 'unplanned' | 'deliverable_added' | 'deliverable_provided' | 'deliverable_reopened' | 'deliverable_removed'
+  | 'file_added' | 'file_removed' | 'time_logged' | 'time_removed';
+export type OrganizationTaskDeliverableStatus = 'expected' | 'provided';
+export type OrganizationTaskFileType = 'file' | 'image' | 'link';
 /** Type de document du fil documentaire (`libs/shared/document-link`). */
 export type OrganizationTaskDocumentType = 'estimate_request' | 'estimate' | 'contract' | 'transaction' | 'order' | 'engagement' | 'booking' | 'invoice';
 
@@ -24,6 +29,62 @@ export interface OrganizationTask {
   completedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  /** Temps estimé, en heures. */
+  estimatedHours: number | null;
+  /** Faux : seule la date de l'échéance compte (affichée sans heure). */
+  dueHasTime: boolean;
+  /** `iro` : proposée par IRO puis validée par l'utilisateur. */
+  origin: string | null;
+  /** Créneau d'agenda réservé pour la tâche. */
+  planned: OrganizationTaskPlannedSlot | null;
+  /** Livrables attendus (ce qui doit être fourni, par qui, pour quand). */
+  deliverables: OrganizationTaskDeliverable[];
+  /** Livrables déposés (fichier privé, image privée ou lien) ; le chemin de stockage n'est pas lu. */
+  files: OrganizationTaskFile[];
+}
+
+export interface OrganizationTaskPlannedSlot {
+  eventID: string;
+  startAt: string;
+  endAt: string;
+}
+
+export interface OrganizationTaskDeliverable {
+  deliverableID: string;
+  name: string;
+  ownerUserID: string | null;
+  dueAt: string | null;
+  status: OrganizationTaskDeliverableStatus;
+  providedAt: string | null;
+  fileID: string | null;
+  createdAt: string;
+}
+
+export interface OrganizationTaskFile {
+  fileID: string;
+  type: OrganizationTaskFileType;
+  name: string;
+  description: string | null;
+  /** Lien externe (https) ; vide pour un fichier privé (adresse signée par la webapp). */
+  url: string | null;
+  fileName: string | null;
+  mimeType: string | null;
+  sizeBytes: number | null;
+  uploadedByUserID: string;
+  uploadedAt: string;
+  deliverableID: string | null;
+}
+
+/** Saisie de la feuille de temps d'une tâche. */
+export interface OrganizationTaskTimeEntry {
+  timeEntryID: string;
+  taskID: string;
+  userID: string;
+  startAt: string;
+  endAt: string;
+  minutes: number;
+  note: string | null;
+  createdAt: string;
 }
 
 export interface OrganizationTaskComment {
@@ -66,6 +127,19 @@ export interface CreateOrganizationTaskInput {
   documentType?: OrganizationTaskDocumentType;
   documentID?: string;
   labels?: string[];
+  estimatedHours?: number;
+  /** Faux : seule la date compte. */
+  dueHasTime?: boolean;
+  /** `iro` : tâche proposée par IRO. */
+  origin?: 'iro';
+  /** Livrables attendus créés avec la tâche (30 au plus). */
+  deliverables?: OrganizationTaskDeliverableDraft[];
+}
+
+export interface OrganizationTaskDeliverableDraft {
+  name: string;
+  ownerUserID?: string;
+  dueAt?: string;
 }
 
 export interface UpdateOrganizationTaskInput {
@@ -75,6 +149,53 @@ export interface UpdateOrganizationTaskInput {
   dueAt?: string;
   labels?: string[];
   position?: number;
+  dueHasTime?: boolean;
+  estimatedHours?: number;
+  /** Retire l'échéance. */
+  clearDueAt?: boolean;
+  /** Retire le temps estimé. */
+  clearEstimatedHours?: boolean;
+}
+
+export interface PlanOrganizationTaskInput {
+  taskID: string;
+  startAt: string;
+  endAt: string;
+}
+
+export interface AddOrganizationTaskDeliverableInput extends OrganizationTaskDeliverableDraft {
+  taskID: string;
+}
+
+export interface SetOrganizationTaskDeliverableStatusInput {
+  taskID: string;
+  deliverableID: string;
+  status: OrganizationTaskDeliverableStatus;
+}
+
+/**
+ * Dépôt d'un livrable : un lien (`type: 'link'`, `url` https) ou un fichier déjà téléversé dans le
+ * stockage privé de la tâche (`path`, sous `task-deliverables/<organisation>/<tâche>/`).
+ */
+export interface AddOrganizationTaskFileInput {
+  taskID: string;
+  type: OrganizationTaskFileType;
+  name: string;
+  description?: string;
+  url?: string;
+  path?: string;
+  fileName?: string;
+  mimeType?: string;
+  sizeBytes?: number;
+  /** Livrable attendu auquel il répond (marqué fourni). */
+  deliverableID?: string;
+}
+
+export interface LogOrganizationTaskTimeInput {
+  taskID: string;
+  startAt: string;
+  endAt: string;
+  note?: string;
 }
 
 export interface ChangeOrganizationTaskStatusInput {

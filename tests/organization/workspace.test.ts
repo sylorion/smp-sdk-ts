@@ -41,3 +41,44 @@ describe('WorkspaceController', () => {
     for (const doc of Object.values(workspaceMutations)) expect(doc).not.toMatch(/creatorUserID:|authorUserID:\s*\$|callerUserID/);
   });
 });
+
+describe('WorkspaceController · travail sur la tâche (créneau, livrables, dépôts, temps)', () => {
+  const client = () => ({
+    query: jest.fn(async () => ({ organizationTaskTimeEntries: [{ timeEntryID: 'te1', minutes: 90 }] })),
+    mutate: jest.fn(async (doc: string) => {
+      const field = /\{\s*(\w+)\(/.exec(doc)?.[1] as string;
+      return { [field]: field === 'logOrganizationTaskTime' ? { timeEntryID: 'te1' } : field === 'deleteOrganizationTaskTime' ? true : TASK };
+    }),
+  });
+
+  it('chaque action envoie son document et ses variables, jamais une identité', async () => {
+    const c = client();
+    const w = new WorkspaceController(c as any);
+    await w.plan({ taskID: 't1', startAt: '2026-10-19T12:00:00Z', endAt: '2026-10-19T12:30:00Z' });
+    await w.unplan('t1');
+    await w.addDeliverable({ taskID: 't1', name: 'Devis signé', ownerUserID: 'u2' });
+    await w.setDeliverableStatus({ taskID: 't1', deliverableID: 'd1', status: 'provided' });
+    await w.removeDeliverable('t1', 'd1');
+    await w.addFile({ taskID: 't1', type: 'link', name: 'Maquettes', url: 'https://exemple.com/m' });
+    await w.removeFile('t1', 'f1');
+    expect(await w.logTime({ taskID: 't1', startAt: '2026-10-19T07:00:00Z', endAt: '2026-10-19T08:30:00Z', note: 'Chiffrage' })).toEqual({ timeEntryID: 'te1' });
+    expect(await w.deleteTime('t1', 'te1')).toBe(true);
+    expect(await w.listTimeEntries('t1')).toEqual([{ timeEntryID: 'te1', minutes: 90 }]);
+    expect(c.mutate.mock.calls.map(([, vars]) => vars)).toEqual([
+      { input: { taskID: 't1', startAt: '2026-10-19T12:00:00Z', endAt: '2026-10-19T12:30:00Z' } },
+      { taskID: 't1' },
+      { input: { taskID: 't1', name: 'Devis signé', ownerUserID: 'u2' } },
+      { input: { taskID: 't1', deliverableID: 'd1', status: 'provided' } },
+      { taskID: 't1', deliverableID: 'd1' },
+      { input: { taskID: 't1', type: 'link', name: 'Maquettes', url: 'https://exemple.com/m' } },
+      { taskID: 't1', fileID: 'f1' },
+      { input: { taskID: 't1', startAt: '2026-10-19T07:00:00Z', endAt: '2026-10-19T08:30:00Z', note: 'Chiffrage' } },
+      { taskID: 't1', timeEntryID: 'te1' },
+    ]);
+    expect(c.query).toHaveBeenCalledWith(workspaceQueries.LIST_ORGANIZATION_TASK_TIME_ENTRIES, { taskID: 't1' });
+  });
+
+  it('le chemin de stockage privé d’un dépôt n’est jamais lu', () => {
+    for (const doc of [...Object.values(workspaceQueries), ...Object.values(workspaceMutations)]) expect(doc).not.toMatch(/\bpath\b(?!:)/);
+  });
+});
