@@ -21,7 +21,8 @@ export interface Campaign {
 }
 
 export interface CreateCampaignInput {
-  emailCampaignTemplateID: string;
+  /** Absent : `platform-campaign` (mu-notification). */
+  emailCampaignTemplateID?: string;
   subject: string;
   contentHTML?: string;
   contentText?: string;

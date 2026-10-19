@@ -27,3 +27,29 @@ describe('OrganizationMailingController', () => {
     expect(await m.unsubscribeContact('org1', 'ct1')).toBe(true);
   });
 });
+
+describe('OrganizationMailingController — campagnes et charte', () => {
+  const CAMPAIGN = { campaignID: 'k1', name: 'Rentrée', status: 'draft' };
+  it('campagnes, copie, envoi, suppression, charte : variables sans identité d’auteur', async () => {
+    const c = {
+      query: jest.fn(async (doc: string) => (doc === mailingQueries.LIST_ORGANIZATION_CAMPAIGNS ? { organizationCampaigns: [CAMPAIGN] }
+        : doc === mailingQueries.ORGANIZATION_EMAIL_SETTINGS ? { organizationEmailSettings: { canCustomize: true } } : { organizationContactsLastMailed: [] })),
+      mutate: jest.fn(async () => ({
+        saveOrganizationCampaign: CAMPAIGN, duplicateOrganizationCampaign: { ...CAMPAIGN, campaignID: 'k2' }, sendOrganizationCampaign: { ...CAMPAIGN, status: 'sent' },
+        deleteOrganizationCampaign: true, saveOrganizationEmailTemplate: { canCustomize: true },
+      })),
+    };
+    const m = new OrganizationMailingController(c as any);
+    expect(await m.campaigns('o1')).toEqual([CAMPAIGN]);
+    await m.saveCampaign({ organizationID: 'o1', name: 'Rentrée', scheduledAt: null });
+    expect(c.mutate).toHaveBeenLastCalledWith(mailingMutations.SAVE_ORGANIZATION_CAMPAIGN, { input: { organizationID: 'o1', name: 'Rentrée', scheduledAt: null } });
+    expect((await m.duplicateCampaign('o1', 'k1')).campaignID).toBe('k2');
+    expect((await m.sendCampaign('o1', 'k1')).status).toBe('sent');
+    expect(await m.deleteCampaign('o1', 'k1')).toBe(true);
+    expect((await m.emailSettings('o1')).canCustomize).toBe(true);
+    await m.saveEmailTemplate('o1', { layout: 'lettre' });
+    expect(c.mutate).toHaveBeenLastCalledWith(mailingMutations.SAVE_ORGANIZATION_EMAIL_TEMPLATE, { input: { organizationID: 'o1', layout: 'lettre' } });
+    expect(await m.contactsLastMailed('o1')).toEqual([]);
+    for (const doc of Object.values(mailingMutations)) expect(doc).not.toMatch(/createdBy:\s*\$|actorUserID:\s*\$/);
+  });
+});

@@ -4,7 +4,7 @@
 
 type CampaignEntity {
   campaignID: ID!
-  emailCampaignTemplateID: String
+  emailCampaignTemplateID: String!
   subject: String!
   contentHTML: String
   contentText: String
@@ -19,6 +19,100 @@ type CampaignEntity {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+"""Mise en forme propre à une campagne (aucune bibliothèque de modèles)."""
+type OrganizationCampaignDesign {
+  """`sobre`, `annonce` ou `lettre` (plan Pro ; sinon `sobre`)."""
+  layout: String!
+
+  """Couleur `#RRGGBB`."""
+  color: String!
+
+  """`org` (logo de la fiche) ou `none`."""
+  logo: String!
+  ctaLabel: String!
+  ctaUrl: String!
+  signature: String!
+}
+
+type OrganizationCampaignAudience {
+  statuses: [OrgContactStatus!]
+  tags: [String!]
+  contactIDs: [ID!]
+
+  """
+  Libellé lisible de la sélection (« Prospects sans échange depuis 30 jours »).
+  """
+  label: String
+}
+
+enum OrgContactStatus {
+  active
+  inactive
+  prospect
+  lead
+  churned
+  blocked
+}
+
+"""
+Campagne e-mail de l'organisation : son contenu, sa mise en forme, son audience et son envoi (ligne `Campaign`).
+"""
+type OrganizationCampaign {
+  campaignID: ID!
+  name: String!
+
+  """`draft`, `scheduled`, `sending`, `sent` ou `failed`."""
+  status: String!
+  subject: String!
+  preheader: String!
+
+  """Texte brut ; variables `{prénom}` et `{entreprise}`."""
+  body: String!
+  design: OrganizationCampaignDesign!
+  audience: OrganizationCampaignAudience!
+  scheduledAt: String
+  scheduledBy: ID
+
+  """Envoi lié dans l’historique (`organizationMailings`)."""
+  mailingID: ID
+  sentAt: String
+  recipientCount: Int
+
+  """E-mails remis au service d’envoi."""
+  deliveredCount: Int
+
+  """E-mails qui n’ont pas pu être remis."""
+  failedCount: Int
+  failureReason: String
+
+  """`iro` : préparée avec IRO."""
+  origin: String
+  createdBy: ID!
+  createdAt: String!
+  updatedBy: ID!
+  updatedAt: String!
+}
+
+type OrganizationEmailTemplate {
+  layout: String!
+  color: String!
+  logo: String!
+  signature: String!
+  footer: String!
+}
+
+"""
+Charte e-mail de l'organisation et droit du plan à la personnaliser (Pro).
+"""
+type OrganizationEmailSettings {
+  template: OrganizationEmailTemplate!
+
+  """
+  Vrai quand le plan ouvre la mise en page, la couleur et le logo (`CUSTOMIZE_EMAILS`).
+  """
+  canCustomize: Boolean!
+}
 
 type NewsletterEntity {
   newsletterID: ID!
@@ -107,6 +201,12 @@ enum NotificationType {
 type Query {
   campaigns: [CampaignEntity!]!
   campaign(campaignID: ID!): CampaignEntity
+
+  """
+  Campagnes de l'organisation (50 au plus), les plus récemment modifiées d'abord.
+  """
+  organizationCampaigns(organizationID: ID!): [OrganizationCampaign!]!
+  organizationEmailSettings(organizationID: ID!): OrganizationEmailSettings!
   contactGroups: [ContactGroupEntity!]!
   contactGroup(groupID: ID!): ContactGroupEntity
   newsletterContacts: [NewsletterContactEntity!]!
@@ -129,6 +229,23 @@ type Mutation {
   updateCampaign(campaignID: ID!, input: UpdateCampaignInput!): CampaignEntity!
   deleteCampaign(campaignID: ID!): Boolean!
   sendCampaign(campaignID: ID!): Boolean!
+
+  """
+  Crée ou modifie une campagne ; `scheduledAt` la programme, `null` la déprogramme.
+  """
+  saveOrganizationCampaign(input: SaveOrganizationCampaignInput!): OrganizationCampaign!
+
+  """Copie indépendante d’une campagne (contenu, mise en forme, audience)."""
+  duplicateOrganizationCampaign(organizationID: ID!, campaignID: ID!): OrganizationCampaign!
+  deleteOrganizationCampaign(organizationID: ID!, campaignID: ID!): Boolean!
+
+  """
+  Lance l’envoi de la campagne : elle passe `sending`, puis `sent` (ou `failed`) quand mu-organization a choisi les destinataires et que les e-mails sont remis.
+  """
+  sendOrganizationCampaign(organizationID: ID!, campaignID: ID!): OrganizationCampaign!
+
+  """Charte e-mail de l'organisation (plan Pro)."""
+  saveOrganizationEmailTemplate(input: SaveOrganizationEmailTemplateInput!): OrganizationEmailSettings!
   createContactGroup(input: CreateContactGroupInput!): ContactGroupEntity!
   updateContactGroup(groupID: ID!, input: UpdateContactGroupInput!): ContactGroupEntity!
   deleteContactGroup(groupID: ID!): Boolean!
@@ -170,6 +287,48 @@ input UpdateCampaignInput {
   groupIDs: [ID!]
   scheduledAt: DateTime
   sentAt: DateTime
+}
+
+input SaveOrganizationCampaignInput {
+  organizationID: ID!
+  campaignID: ID
+  name: String
+  subject: String
+  preheader: String
+  body: String
+  design: CampaignDesignInput
+  audience: CampaignAudienceInput
+  scheduledAt: DateTime
+  origin: String
+}
+
+input CampaignDesignInput {
+  layout: String
+  color: String
+  logo: String
+  ctaLabel: String
+  ctaUrl: String
+  signature: String
+}
+
+input CampaignAudienceInput {
+  statuses: [OrgContactStatus!]
+
+  """Au moins une de ces étiquettes."""
+  tags: [String!]
+
+  """Contacts choisis un par un."""
+  contactIDs: [ID!]
+  label: String
+}
+
+input SaveOrganizationEmailTemplateInput {
+  organizationID: ID!
+  layout: String
+  color: String
+  logo: String
+  signature: String
+  footer: String
 }
 
 input CreateContactGroupInput {
