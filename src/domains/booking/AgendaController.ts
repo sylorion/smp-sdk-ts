@@ -4,6 +4,9 @@ import {
   AgendaEvent,
   AgendaEventsFilter,
   AgendaRemindersFilter,
+  AgendaWorkload,
+  ContactLastActivitiesFilter,
+  ContactLastActivity,
   CreateAgendaEventInput,
   CreateAgendaReminderInput,
   UpdateAgendaEventInput,
@@ -57,6 +60,16 @@ export class AgendaController {
   /** Reporte un rappel, même déjà envoyé. */
   async snoozeReminder(eventId: string, remindAt: string): Promise<AgendaEvent> {
     return (await this.client.mutate<{ snoozeAgendaReminder: AgendaEvent }>(agendaMutations.SNOOZE_AGENDA_REMINDER, { input: { eventId, remindAt } })).snoozeAgendaReminder;
+  }
+
+  /** Charge de travail des missions sur la période (agenda v2). */
+  async workload(filter: AgendaEventsFilter): Promise<AgendaWorkload> {
+    return (await this.client.query<{ agendaWorkload: AgendaWorkload }>(agendaQueries.AGENDA_WORKLOAD, { filter })).agendaWorkload;
+  }
+
+  /** Dernier rendez-vous ou tâche lié à chaque contact. */
+  async contactLastActivities(filter: ContactLastActivitiesFilter): Promise<ContactLastActivity[]> {
+    return (await this.client.query<{ contactLastActivities: ContactLastActivity[] }>(agendaQueries.CONTACT_LAST_ACTIVITIES, { filter })).contactLastActivities ?? [];
   }
 
   /** « Terminer le point » : l'auteur clôt l'événement avec son compte rendu. */

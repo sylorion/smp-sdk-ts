@@ -54,3 +54,15 @@ describe('AgendaController', () => {
     for (const doc of Object.values(agendaMutations)) expect(doc).not.toMatch(/ownerUserId:\s*\$/);
   });
 });
+
+describe('AgendaController — charge de travail et derniers échanges (agenda v2)', () => {
+  it('workload et contactLastActivities : filtre transmis tel quel', async () => {
+    const workload = { missions: [], slots: [], bookings: [], workingHours: [], truncated: false };
+    const c = { query: jest.fn(async (doc: string) => (doc === agendaQueries.AGENDA_WORKLOAD ? { agendaWorkload: workload } : { contactLastActivities: [{ contactId: 'c1', lastActivityAt: 'x' }] })), mutate: jest.fn() };
+    const a = new AgendaController(c as any);
+    expect(await a.workload({ organizationId: 'o1', from: 'a', to: 'b', userIds: ['u1'] })).toEqual(workload);
+    expect(c.query).toHaveBeenCalledWith(agendaQueries.AGENDA_WORKLOAD, { filter: { organizationId: 'o1', from: 'a', to: 'b', userIds: ['u1'] } });
+    expect(await a.contactLastActivities({ organizationId: 'o1' })).toEqual([{ contactId: 'c1', lastActivityAt: 'x' }]);
+    expect(agendaQueries.AGENDA_EVENTS).toMatch(/autoReason origin/);
+  });
+});
