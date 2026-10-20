@@ -11,6 +11,8 @@ declare const estimateQueries: {
 };
 export { estimateQueries };
 declare const invoiceQueries: {
+    /** Export comptable : nombre de factures d'une période — service interne (`x-smp-internal-secret`). */
+    INVOICE_EXPORT_PREVIEW: string;
     GET_INVOICE_BY_ID: string;
     GET_ALL_INVOICES: string;
     GET_INVOICES_BY_SELLER: string;

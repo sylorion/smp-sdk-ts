@@ -8,4 +8,6 @@ export declare const contactMutations: {
     ASSIGN_CONTACT: string;
     /** Transmettre un lead à un collègue (il devient responsable et reçoit une tâche). Identité signée. */
     HAND_OVER_CONTACT: string;
+    /** Modification groupée (statut, responsable, archivage) ; droits appliqués contact par contact. */
+    BULK_UPDATE_CONTACTS: string;
 };

@@ -1,4 +1,5 @@
 import { APIClient } from '../../api/APIClient.js';
+import type { InvoiceExportInput, InvoiceExportPreview, InvoiceExportResult } from '../../types/accounting/invoiceExport.js';
 interface InvoiceResponse {
     invoiceId: string;
     transactionId: string;
@@ -192,5 +193,13 @@ export declare class Invoice {
         downloadCount?: number;
         pdfBase64?: string;
     }>;
+    /**
+     * Export comptable — nombre de factures exportables sur la période.
+     * Réservé aux services internes : `client` doit porter `x-smp-internal-secret`
+     * (`httpApiClient.withHeaders(...)`) ; l'appelant a vérifié le droit `invoices.export`.
+     */
+    getExportPreview(input: InvoiceExportInput): Promise<InvoiceExportPreview>;
+    /** Export comptable — archive ZIP des factures de la période (service interne, voir `getExportPreview`). */
+    exportInvoices(input: InvoiceExportInput): Promise<InvoiceExportResult>;
 }
 export {};

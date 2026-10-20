@@ -16,6 +16,8 @@ export interface OrganizationInvitation {
 export interface OrganizationMemberProfile {
     jobTitle?: string;
     missionDescription?: string;
+    /** Heures par semaine (35 si absente). */
+    weeklyCapacityHours?: number;
     updatedAt?: string;
 }
 export interface OrganizationAdvancedAttributes {
@@ -276,3 +278,4 @@ export interface SignupAfterInvitationResponse {
 export * from './documentSettings.js';
 export * from './workspace.js';
 export * from './mailing.js';
+export * from './businessHours.js';

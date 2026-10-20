@@ -10,5 +10,6 @@ declare const organizationQueries: {
     VERIFY_USER_ROLE: string;
     SEARCH_USERS: string;
     GET_MEMBER_PROFILE: string;
+    GET_MEMBER_CAPACITIES: string;
 };
 export { organizationQueries };

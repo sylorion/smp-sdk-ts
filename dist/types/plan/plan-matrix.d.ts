@@ -53,6 +53,8 @@ export interface PlanFeatures {
     hasAutoCountersign: boolean;
     /** Réservation avec paiement sur place et page de réservation publique — dès Starter. */
     hasOnSiteBooking: boolean;
+    /** Charte e-mail de l'organisation et mise en forme des campagnes (Pro et Business). */
+    hasEmailCustomization: boolean;
 }
 export type PlanConfig = PlanLimits & PlanFeatures;
 /** Sentinel value for "unlimited" */
@@ -107,7 +109,8 @@ export declare enum PlanAction {
     /** Contre-signature automatique des contrats des flows de service (Pro+). */
     AUTO_COUNTERSIGN = "AUTO_COUNTERSIGN",
     /** Réservation avec paiement sur place (Starter+). */
-    USE_ON_SITE_BOOKING = "USE_ON_SITE_BOOKING"
+    USE_ON_SITE_BOOKING = "USE_ON_SITE_BOOKING",
+    CUSTOMIZE_EMAILS = "CUSTOMIZE_EMAILS"
 }
 /**
  * Resolves a plan string to a PlanTier enum value.

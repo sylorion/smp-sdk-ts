@@ -9,6 +9,12 @@
 // =========================================
 // smp-sdk-ts/src/api/graphql/mutations/accounting/invoiceMutations.ts
 const invoiceMutations = {
+    /** Export comptable : archive ZIP (PDF + index CSV), lien signé d'une heure — service interne. */
+    EXPORT_INVOICES: `
+    mutation ExportInvoices($input: InvoiceExportInput!) {
+      exportInvoices(input: $input) { exportId fileName invoiceCount pdfCount missingPdfs downloadUrl expiresAt }
+    }
+  `,
     // MUTATION TO CREATE AN INVOICE
     CREATE_INVOICE: `
     mutation CreateInvoice($input: CreateInvoiceInput!) {

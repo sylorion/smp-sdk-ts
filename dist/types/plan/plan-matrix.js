@@ -72,6 +72,7 @@ export const PLAN_MATRIX = {
         hasDocumentPoweredByRemoval: false,
         hasAutoCountersign: false,
         hasOnSiteBooking: false,
+        hasEmailCustomization: false,
     },
     [PlanTier.STARTER]: {
         maxOrganizations: 1,
@@ -95,6 +96,7 @@ export const PLAN_MATRIX = {
         hasDocumentPoweredByRemoval: false,
         hasAutoCountersign: false,
         hasOnSiteBooking: true,
+        hasEmailCustomization: false,
     },
     [PlanTier.PRO]: {
         maxOrganizations: 3,
@@ -118,6 +120,7 @@ export const PLAN_MATRIX = {
         hasDocumentPoweredByRemoval: true,
         hasAutoCountersign: true,
         hasOnSiteBooking: true,
+        hasEmailCustomization: true,
     },
     [PlanTier.BUSINESS]: {
         maxOrganizations: 5,
@@ -141,6 +144,7 @@ export const PLAN_MATRIX = {
         hasDocumentPoweredByRemoval: true,
         hasAutoCountersign: true,
         hasOnSiteBooking: true,
+        hasEmailCustomization: true,
     },
 };
 export const PLAN_DISPLAY_CONFIG = {
@@ -253,6 +257,7 @@ export var PlanAction;
     PlanAction["AUTO_COUNTERSIGN"] = "AUTO_COUNTERSIGN";
     /** Réservation avec paiement sur place (Starter+). */
     PlanAction["USE_ON_SITE_BOOKING"] = "USE_ON_SITE_BOOKING";
+    PlanAction["CUSTOMIZE_EMAILS"] = "CUSTOMIZE_EMAILS";
 })(PlanAction || (PlanAction = {}));
 /** Maps PlanAction to the relevant limit key in PlanLimits */
 const ACTION_TO_LIMIT_KEY = {
@@ -275,6 +280,7 @@ const ACTION_TO_LIMIT_KEY = {
     [PlanAction.REMOVE_DOCUMENT_POWERED_BY]: null,
     [PlanAction.AUTO_COUNTERSIGN]: null,
     [PlanAction.USE_ON_SITE_BOOKING]: null,
+    [PlanAction.CUSTOMIZE_EMAILS]: null,
 };
 /** Maps PlanAction to the relevant feature key for boolean checks */
 const ACTION_TO_FEATURE_KEY = {
@@ -287,6 +293,7 @@ const ACTION_TO_FEATURE_KEY = {
     [PlanAction.REMOVE_DOCUMENT_POWERED_BY]: 'hasDocumentPoweredByRemoval',
     [PlanAction.AUTO_COUNTERSIGN]: 'hasAutoCountersign',
     [PlanAction.USE_ON_SITE_BOOKING]: 'hasOnSiteBooking',
+    [PlanAction.CUSTOMIZE_EMAILS]: 'hasEmailCustomization',
 };
 // ============================================================================
 // HELPER FUNCTIONS
@@ -431,6 +438,7 @@ export function getPlanFeaturesForDisplay(plan) {
         { label: 'Sans mention « Émis avec Services »', value: config.hasDocumentPoweredByRemoval ? 'Inclus' : 'Non inclus', included: config.hasDocumentPoweredByRemoval, category: 'feature' },
         { label: 'Contre-signature automatique', value: config.hasAutoCountersign ? 'Inclus' : 'Non inclus', included: config.hasAutoCountersign, category: 'feature' },
         { label: 'Réservation avec paiement sur place', value: config.hasOnSiteBooking ? 'Inclus' : 'Non inclus', included: config.hasOnSiteBooking, category: 'feature' },
+        { label: 'Charte e-mail personnalisée', value: config.hasEmailCustomization ? 'Inclus' : 'Non inclus', included: config.hasEmailCustomization, category: 'feature' },
         { label: 'Branding personnalisé', value: config.hasCustomBranding ? 'Inclus' : 'Non inclus', included: config.hasCustomBranding, category: 'feature' },
         { label: 'Retraits / mois', value: formatLimit(config.maxWithdrawalsPerMonth), included: true, category: 'limit' },
     ];

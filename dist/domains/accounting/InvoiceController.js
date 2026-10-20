@@ -112,4 +112,21 @@ export class Invoice {
         const response = await this.client.mutate(mutation, { invoiceId, input: data });
         return response.generateInvoicePDF;
     }
+    // Note: getSecurePDFUrl et markAsDownloaded sont supprimées
+    // L'URL de téléchargement est maintenant stockée directement dans invoice.pdfData.downloadUrl
+    // après avoir appelé generateAndUploadPDF
+    /**
+     * Export comptable — nombre de factures exportables sur la période.
+     * Réservé aux services internes : `client` doit porter `x-smp-internal-secret`
+     * (`httpApiClient.withHeaders(...)`) ; l'appelant a vérifié le droit `invoices.export`.
+     */
+    async getExportPreview(input) {
+        const response = await this.client.query(invoiceQueries.INVOICE_EXPORT_PREVIEW, { input });
+        return response.invoiceExportPreview;
+    }
+    /** Export comptable — archive ZIP des factures de la période (service interne, voir `getExportPreview`). */
+    async exportInvoices(input) {
+        const response = await this.client.mutate(invoiceMutations.EXPORT_INVOICES, { input });
+        return response.exportInvoices;
+    }
 }

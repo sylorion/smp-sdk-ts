@@ -112,4 +112,10 @@ export const contactMutations = {
       }
     }
   `,
+    /** Modification groupée (statut, responsable, archivage) ; droits appliqués contact par contact. */
+    BULK_UPDATE_CONTACTS: `
+    mutation BulkUpdateOrganizationContacts($input: BulkUpdateOrganizationContactsInput!) {
+      bulkUpdateOrganizationContacts(input: $input) { updated refused }
+    }
+  `,
 };

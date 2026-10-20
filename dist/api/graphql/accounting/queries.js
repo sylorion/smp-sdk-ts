@@ -165,6 +165,12 @@ export { estimateQueries };
 // =========================================
 // smp-sdk-ts/src/api/graphql/queries/accounting/invoiceQueries.ts
 const invoiceQueries = {
+    /** Export comptable : nombre de factures d'une période — service interne (`x-smp-internal-secret`). */
+    INVOICE_EXPORT_PREVIEW: `
+    query InvoiceExportPreview($input: InvoiceExportInput!) {
+      invoiceExportPreview(input: $input) { invoiceCount salesCount purchasesCount maxInvoices }
+    }
+  `,
     // QUERY TO GET AN INVOICE BY ITS UNIQUE ID
     GET_INVOICE_BY_ID: `
       query Invoice($invoiceId: String!) {

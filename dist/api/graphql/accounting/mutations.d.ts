@@ -1,4 +1,6 @@
 declare const invoiceMutations: {
+    /** Export comptable : archive ZIP (PDF + index CSV), lien signé d'une heure — service interne. */
+    EXPORT_INVOICES: string;
     CREATE_INVOICE: string;
     UPDATE_INVOICE: string;
     UPDATE_INVOICE_DOWNLOAD_STATUS: string;

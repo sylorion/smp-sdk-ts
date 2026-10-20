@@ -1,4 +1,5 @@
 import { APIClient } from '../../api/APIClient.js';
+import type { OrganizationBusinessHours, UpdateOrganizationBusinessHoursInput } from '../../types/organization/businessHours.js';
 /** Rattachement membre ↔ organisation (type `UserOrganization` de mu-organization). */
 export interface UserOrganizationMembership {
     userOrganizationID: string;
@@ -102,6 +103,8 @@ export interface OrganizationMember {
     expiresAt?: string;
     jobTitle?: string;
     missionDescription?: string;
+    /** Heures par semaine (35 si non renseignée) ; absente pour une invitation en attente. */
+    weeklyCapacityHours?: number;
 }
 /**
  * The `OrganizationMembers` interface represents the response of the `listOrganizationMembers` query.
@@ -191,6 +194,12 @@ export declare class ManageOrganization {
     }): Promise<VerifyUserRoleResponse>;
     searchUsers(query: string, limit?: number): Promise<SearchUsersResult[]>;
     getMemberProfile(organizationID: string, userID: string): Promise<MemberProfileResponse>;
+    /** Capacité hebdomadaire de chaque membre de l'organisation (35 h par défaut). Réservé aux membres. */
+    getMemberCapacities(organizationID: string): Promise<MemberCapacity[]>;
+    /** Horaires d'ouverture de l'organisation. Réservé aux membres (identité de l'utilisateur). */
+    getBusinessHours(organizationID: string): Promise<OrganizationBusinessHours>;
+    /** Règle les horaires (propriétaire, administrateur). Ni `alwaysOpen` ni plage : retirés. */
+    updateBusinessHours(input: UpdateOrganizationBusinessHoursInput): Promise<OrganizationBusinessHours>;
     updateMemberProfile(input: UpdateMemberProfileInput): Promise<MemberProfileResponse>;
     resendInvitation(input: {
         email: string;
@@ -226,6 +235,12 @@ export interface MemberProfileResponse {
     userID?: string;
     jobTitle?: string;
     missionDescription?: string;
+    weeklyCapacityHours?: number;
+}
+/** Capacité hebdomadaire d'un membre (heures par semaine, 35 par défaut). */
+export interface MemberCapacity {
+    userID: string;
+    weeklyCapacityHours: number;
 }
 export interface UpdateMemberProfileInput {
     organizationID: string;
@@ -233,6 +248,8 @@ export interface UpdateMemberProfileInput {
     callerUserID: string;
     jobTitle?: string;
     missionDescription?: string;
+    /** Heures par semaine, de 1 à 80. Absent ou null : inchangé. */
+    weeklyCapacityHours?: number;
 }
 export interface ResendInvitationResponse {
     success: boolean;

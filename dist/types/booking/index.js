@@ -40,3 +40,4 @@ export var AvailabilityStatus;
     AvailabilityStatus["CANCELLED"] = "CANCELLED";
 })(AvailabilityStatus || (AvailabilityStatus = {}));
 export * from './agenda.js';
+export * from './projects.js';

@@ -141,6 +141,23 @@ export interface ContactListFilters {
     pageSize?: number;
     assignee?: 'me' | 'unassigned' | string;
 }
+/** Décompte des contacts visibles par statut. */
+export interface OrganizationContactsSummary {
+    total: number;
+    byStatus: Array<{
+        status: string;
+        count: number;
+    }>;
+}
+/** Une seule modification à la fois : statut, responsable (ou aucun), ou archivage. 500 contacts au plus. */
+export interface BulkUpdateContactsInput {
+    organizationID: string;
+    contactIDs: string[];
+    contactStatus?: string;
+    assigneeUserID?: string;
+    unassign?: boolean;
+    archive?: boolean;
+}
 export interface HandOverContactInput {
     contactID: string;
     /** Collègue qui reprend le lead (membre de l'organisation, différent de l'appelant). */
@@ -176,4 +193,10 @@ export declare class ContactController {
     /** `assigneeUserID` null : le contact n'a plus de responsable. */
     assign(contactID: string, assigneeUserID: string | null): Promise<OrganizationContact>;
     handOver(input: HandOverContactInput): Promise<OrganizationContact>;
+    summary(organizationID: string): Promise<OrganizationContactsSummary>;
+    /** Contacts modifiés et contacts refusés (droits). */
+    bulkUpdate(input: BulkUpdateContactsInput): Promise<{
+        updated: number;
+        refused: number;
+    }>;
 }

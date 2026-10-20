@@ -71,4 +71,13 @@ export class ContactController {
         const response = await this.client.mutate(contactMutations.HAND_OVER_CONTACT, { input });
         return response.handOverOrganizationContact;
     }
+    async summary(organizationID) {
+        const response = await this.client.query(contactQueries.GET_ORGANIZATION_CONTACTS_SUMMARY, { organizationID });
+        return response.organizationContactsSummary;
+    }
+    /** Contacts modifiés et contacts refusés (droits). */
+    async bulkUpdate(input) {
+        const response = await this.client.mutate(contactMutations.BULK_UPDATE_CONTACTS, { input });
+        return response.bulkUpdateOrganizationContacts;
+    }
 }
