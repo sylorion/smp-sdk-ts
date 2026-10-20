@@ -31,18 +31,20 @@ export const NOTIFICATION_ACTION_STATES = ['none', 'pending', 'done', 'dismissed
 export const NOTIFICATION_TABS = ['all', 'todo', 'unread', 'snoozed', 'done'];
 /**
  * Actions proposées sur une notification. `mode` :
- *  - `direct`   : un clic, exécutée par une route métier existante, puis la notification passe `done` ;
- *  - `navigate` : ouvre la page de l'objet (actions à choix, à texte, ou juridiquement engageantes) ;
- *  - `dialog`   : demande une saisie courte avant d'appeler la route métier (motif, créneau…).
- * `completes` : l'action traite la notification (état `done`).
+ *  - `direct`   : un clic, exécutée par une route métier existante (démarrer une tâche, valider un
+ *                 livrable, confirmer un rendez-vous), puis la notification passe `done` ;
+ *  - `navigate` : ouvre la page de l'objet — actions à choix, à texte, qui engagent (paiement,
+ *                 signature, acceptation ou refus d'un devis, relance) ou dont la page porte le parcours.
+ * `completes` : l'action traite la notification (état `done`). Quand l'objet change ensuite (facture
+ * payée, devis accepté…), c'est l'ÉVÉNEMENT métier qui clôt le fil, pas le clic.
  */
 export const NOTIFICATION_ACTIONS = {
     pay_invoice: { mode: 'navigate', completes: false },
-    remind_invoice: { mode: 'direct', completes: true },
+    remind_invoice: { mode: 'navigate', completes: false },
     view_invoice: { mode: 'navigate', completes: false },
     create_deposit_invoice: { mode: 'navigate', completes: false },
-    accept_estimate: { mode: 'direct', completes: true },
-    refuse_estimate: { mode: 'dialog', completes: true },
+    accept_estimate: { mode: 'navigate', completes: false },
+    refuse_estimate: { mode: 'navigate', completes: false },
     view_estimate: { mode: 'navigate', completes: false },
     reply_negotiation: { mode: 'navigate', completes: false },
     sign_contract: { mode: 'navigate', completes: false },
@@ -52,7 +54,7 @@ export const NOTIFICATION_ACTIONS = {
     reassign_task: { mode: 'navigate', completes: false },
     view_task: { mode: 'navigate', completes: false },
     validate_deliverable: { mode: 'direct', completes: true },
-    request_changes: { mode: 'dialog', completes: true },
+    request_changes: { mode: 'navigate', completes: false },
     confirm_booking: { mode: 'direct', completes: true },
     propose_slot: { mode: 'navigate', completes: false },
     view_booking: { mode: 'navigate', completes: false },

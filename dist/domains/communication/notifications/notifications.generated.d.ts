@@ -22,10 +22,12 @@ export declare const NOTIFICATION_TABS: readonly ["all", "todo", "unread", "snoo
 export type NotificationTab = (typeof NOTIFICATION_TABS)[number];
 /**
  * Actions proposées sur une notification. `mode` :
- *  - `direct`   : un clic, exécutée par une route métier existante, puis la notification passe `done` ;
- *  - `navigate` : ouvre la page de l'objet (actions à choix, à texte, ou juridiquement engageantes) ;
- *  - `dialog`   : demande une saisie courte avant d'appeler la route métier (motif, créneau…).
- * `completes` : l'action traite la notification (état `done`).
+ *  - `direct`   : un clic, exécutée par une route métier existante (démarrer une tâche, valider un
+ *                 livrable, confirmer un rendez-vous), puis la notification passe `done` ;
+ *  - `navigate` : ouvre la page de l'objet — actions à choix, à texte, qui engagent (paiement,
+ *                 signature, acceptation ou refus d'un devis, relance) ou dont la page porte le parcours.
+ * `completes` : l'action traite la notification (état `done`). Quand l'objet change ensuite (facture
+ * payée, devis accepté…), c'est l'ÉVÉNEMENT métier qui clôt le fil, pas le clic.
  */
 export declare const NOTIFICATION_ACTIONS: {
     readonly pay_invoice: {
@@ -33,8 +35,8 @@ export declare const NOTIFICATION_ACTIONS: {
         readonly completes: false;
     };
     readonly remind_invoice: {
-        readonly mode: "direct";
-        readonly completes: true;
+        readonly mode: "navigate";
+        readonly completes: false;
     };
     readonly view_invoice: {
         readonly mode: "navigate";
@@ -45,12 +47,12 @@ export declare const NOTIFICATION_ACTIONS: {
         readonly completes: false;
     };
     readonly accept_estimate: {
-        readonly mode: "direct";
-        readonly completes: true;
+        readonly mode: "navigate";
+        readonly completes: false;
     };
     readonly refuse_estimate: {
-        readonly mode: "dialog";
-        readonly completes: true;
+        readonly mode: "navigate";
+        readonly completes: false;
     };
     readonly view_estimate: {
         readonly mode: "navigate";
@@ -89,8 +91,8 @@ export declare const NOTIFICATION_ACTIONS: {
         readonly completes: true;
     };
     readonly request_changes: {
-        readonly mode: "dialog";
-        readonly completes: true;
+        readonly mode: "navigate";
+        readonly completes: false;
     };
     readonly confirm_booking: {
         readonly mode: "direct";
