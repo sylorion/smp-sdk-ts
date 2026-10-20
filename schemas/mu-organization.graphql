@@ -293,6 +293,36 @@ type OrganizationMailingPreview {
   remainingToday: Int!
 }
 
+"""
+Plage d'ouverture d'un jour. Une fin avant le début : la plage finit le lendemain (nuit).
+"""
+type BusinessHoursRangeView {
+  """1 = lundi … 7 = dimanche."""
+  isoDay: Int!
+
+  """HH:mm"""
+  start: String!
+
+  """HH:mm (24:00 accepté)."""
+  end: String!
+}
+
+"""
+Horaires d'ouverture de l'organisation (agenda, créneaux proposés par IRO).
+"""
+type OrganizationBusinessHours {
+  organizationID: ID!
+
+  """Faux : jamais réglés, l’agenda garde son horaire par défaut."""
+  configured: Boolean!
+  alwaysOpen: Boolean!
+
+  """Fuseau IANA ; absent : heure locale de chaque membre."""
+  timezone: String
+  ranges: [BusinessHoursRangeView!]!
+  updatedAt: String
+}
+
 type OrgPaymentMethod {
   paymentMethodID: ID!
   authorID: String!
@@ -481,6 +511,9 @@ type Query {
   """
   organizationContactsLastMailed(organizationID: ID!): [OrganizationContactLastMailed!]!
   organizationMailingPreview(organizationID: ID!, segment: MailingSegmentInput): OrganizationMailingPreview!
+
+  """Horaires d'ouverture (membres de l'organisation)."""
+  organizationBusinessHours(organizationID: ID!): OrganizationBusinessHours!
   organization(organizationID: ID!, admin: Boolean): Organization
   organizations(pagination: PaginationInput, sort: SortInput, filter: [FilterInput!], admin: Boolean): [Organization!]!
   organizationsByIDs(organizationIDs: [ID!]!, admin: Boolean): [Organization!]!
@@ -555,6 +588,9 @@ type Mutation {
   Désinscription d’un contact (lien signé de l’e-mail). Réservé aux services internes.
   """
   unsubscribeOrganizationContactFromMailing(organizationID: ID!, contactID: ID!): Boolean!
+
+  """Règle les horaires d'ouverture (propriétaire, administrateur)."""
+  updateOrganizationBusinessHours(input: UpdateOrganizationBusinessHoursInput!): OrganizationBusinessHours!
   createOrganization(input: OrganizationInput!): Organization!
   updateOrganization(organizationID: ID!, input: OrganizationInput!): Organization!
   deleteOrganization(organizationID: ID!): Organization!
@@ -717,6 +753,20 @@ input CampaignDesignInput {
   ctaLabel: String
   ctaUrl: String
   signature: String
+}
+
+"""Ni « 24 h/24 » ni plage : les horaires sont retirés."""
+input UpdateOrganizationBusinessHoursInput {
+  organizationID: ID!
+  alwaysOpen: Boolean!
+  timezone: String
+  ranges: [BusinessHoursRangeInput!]!
+}
+
+input BusinessHoursRangeInput {
+  isoDay: Int!
+  start: String!
+  end: String!
 }
 
 input OrganizationInput {

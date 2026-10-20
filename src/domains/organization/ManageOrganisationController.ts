@@ -3,6 +3,8 @@ import { organizationMutations } from '../../api/graphql/organization/mutations.
 import { authMutations } from '../../api/graphql/index.js';
 const { MUTATION_SIGNUP_AFTER_INVITATION } = authMutations;
 import { organizationQueries } from '../../api/graphql/organization/queries.js';
+import { businessHoursMutations, businessHoursQueries } from '../../api/graphql/organization/businessHours.js';
+import type { OrganizationBusinessHours, UpdateOrganizationBusinessHoursInput } from '../../types/organization/businessHours.js';
 
 
 
@@ -302,6 +304,18 @@ export class ManageOrganization {
     const query = organizationQueries.GET_MEMBER_CAPACITIES;
     const response = await this.client.query(query, { organizationID }) as { memberCapacities: MemberCapacity[] };
     return response.memberCapacities ?? [];
+  }
+
+  /** Horaires d'ouverture de l'organisation. Réservé aux membres (identité de l'utilisateur). */
+  async getBusinessHours(organizationID: string): Promise<OrganizationBusinessHours> {
+    const response = await this.client.query(businessHoursQueries.GET_ORGANIZATION_BUSINESS_HOURS, { organizationID }) as { organizationBusinessHours: OrganizationBusinessHours };
+    return response.organizationBusinessHours;
+  }
+
+  /** Règle les horaires (propriétaire, administrateur). Ni `alwaysOpen` ni plage : retirés. */
+  async updateBusinessHours(input: UpdateOrganizationBusinessHoursInput): Promise<OrganizationBusinessHours> {
+    const response = await this.client.mutate(businessHoursMutations.UPDATE_ORGANIZATION_BUSINESS_HOURS, { input }) as { updateOrganizationBusinessHours: OrganizationBusinessHours };
+    return response.updateOrganizationBusinessHours;
   }
 
   async updateMemberProfile(input: UpdateMemberProfileInput): Promise<MemberProfileResponse> {

@@ -29,6 +29,7 @@ import * as organizationContactMutations from '../../src/api/graphql/organizatio
 import * as organizationDocumentSettings from '../../src/api/graphql/organization/documentSettings';
 import * as organizationWorkspace from '../../src/api/graphql/organization/workspace';
 import * as organizationMailing from '../../src/api/graphql/organization/mailing';
+import * as organizationBusinessHours from '../../src/api/graphql/organization/businessHours';
 import * as reviewQueries from '../../src/api/graphql/review/queries';
 import * as reviewMutations from '../../src/api/graphql/review/mutations';
 import * as userQueries from '../../src/api/graphql/user/queries';
@@ -77,6 +78,7 @@ const MODULES: Record<string, Record<string, unknown>> = {
   'organization/documentSettings': organizationDocumentSettings,
   'organization/workspace': organizationWorkspace,
   'organization/mailing': organizationMailing,
+  'organization/businessHours': organizationBusinessHours,
   'review/queries': reviewQueries,
   'review/mutations': reviewMutations,
   'user/queries': userQueries,
