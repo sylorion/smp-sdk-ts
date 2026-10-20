@@ -24,7 +24,7 @@ export interface RecordNotificationActionInput {
  * The `Notification` class manages notification-related requests within the application.
  *
  * Centre de notifications (20/10) : `feed`, `counters`, `markRead` / `markUnread`, `snooze`,
- * `recordAction`, `reopen`, `markAllReadInScope` — le périmètre vient de l'identité portée par
+ * `recordAction`, `reopen`, `markManyRead`, `markAllReadInScope` — le périmètre vient de l'identité portée par
  * le client (jeton utilisateur ou assertion signée), jamais des variables. Les méthodes
  * historiques (`getByUserId`, `getByOrganizationId`, `markAsRead`) restent pour l'app mobile ;
  * mu-notification les réserve désormais au titulaire du fil ou aux membres de l'organisation.
@@ -52,6 +52,8 @@ export declare class Notification {
     /** À appeler APRÈS le succès de l'action métier : enregistre le traitement. */
     recordAction(input: RecordNotificationActionInput): Promise<NotificationFeedItem>;
     reopen(notificationID: string): Promise<NotificationFeedItem>;
+    /** Lot : marque lues les notifications données (200 max) en une mutation ; renvoie le nombre mis à jour. */
+    markManyRead(notificationIDs: string[]): Promise<number>;
     /** Tout marquer comme lu dans le périmètre de l'appelant ; renvoie le nombre de lignes. */
     markAllReadInScope(organizationID?: string | null): Promise<number>;
 }

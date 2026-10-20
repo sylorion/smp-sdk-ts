@@ -40,6 +40,10 @@ describe('Notification — centre de notifications (20/10)', () => {
     await n.reopen('n1');
     expect(await n.markAllReadInScope('org1')).toBe(4);
     expect(c.mutate).toHaveBeenLastCalledWith(notificationFeedMutations.MARK_ALL_NOTIFICATIONS_READ_IN_SCOPE, { organizationID: 'org1' });
+    expect(await n.markManyRead([])).toBe(0);
+    c.mutate.mockResolvedValueOnce({ markNotificationsRead: 2 });
+    expect(await n.markManyRead(['n1', 'n2', 'n1'])).toBe(2);
+    expect(c.mutate).toHaveBeenLastCalledWith(notificationFeedMutations.MARK_NOTIFICATIONS_READ, { notificationIDs: ['n1', 'n2'] });
   });
 
   it('le contrat partagé est embarqué (descripteurs et onglets utilisables côté client)', () => {

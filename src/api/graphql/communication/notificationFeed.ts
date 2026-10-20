@@ -76,6 +76,11 @@ export const notificationFeedMutations = {
       reopenNotification(notificationID: $notificationID) { ${NOTIFICATION_FEED_FIELDS} }
     }
   `,
+  MARK_NOTIFICATIONS_READ: `
+    mutation MarkNotificationsRead($notificationIDs: [ID!]!) {
+      markNotificationsRead(notificationIDs: $notificationIDs)
+    }
+  `,
   MARK_ALL_NOTIFICATIONS_READ_IN_SCOPE: `
     mutation MarkAllNotificationsReadInScope($organizationID: ID) {
       markAllNotificationsReadInScope(organizationID: $organizationID)

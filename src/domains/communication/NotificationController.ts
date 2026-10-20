@@ -38,7 +38,7 @@ export interface RecordNotificationActionInput {
  * The `Notification` class manages notification-related requests within the application.
  *
  * Centre de notifications (20/10) : `feed`, `counters`, `markRead` / `markUnread`, `snooze`,
- * `recordAction`, `reopen`, `markAllReadInScope` — le périmètre vient de l'identité portée par
+ * `recordAction`, `reopen`, `markManyRead`, `markAllReadInScope` — le périmètre vient de l'identité portée par
  * le client (jeton utilisateur ou assertion signée), jamais des variables. Les méthodes
  * historiques (`getByUserId`, `getByOrganizationId`, `markAsRead`) restent pour l'app mobile ;
  * mu-notification les réserve désormais au titulaire du fil ou aux membres de l'organisation.
@@ -147,6 +147,14 @@ export class Notification {
   async reopen(notificationID: string): Promise<NotificationFeedItem> {
     const response = await this.client.mutate(notificationFeedMutations.REOPEN_NOTIFICATION, { notificationID }) as { reopenNotification: NotificationFeedItem };
     return response.reopenNotification;
+  }
+
+  /** Lot : marque lues les notifications données (200 max) en une mutation ; renvoie le nombre mis à jour. */
+  async markManyRead(notificationIDs: string[]): Promise<number> {
+    const ids = Array.from(new Set(notificationIDs.filter((id) => typeof id === 'string' && id.length > 0)));
+    if (ids.length === 0) return 0;
+    const response = await this.client.mutate(notificationFeedMutations.MARK_NOTIFICATIONS_READ, { notificationIDs: ids }) as { markNotificationsRead: number };
+    return response.markNotificationsRead ?? 0;
   }
 
   /** Tout marquer comme lu dans le périmètre de l'appelant ; renvoie le nombre de lignes. */

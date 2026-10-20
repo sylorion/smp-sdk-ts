@@ -10,5 +10,6 @@ export declare const notificationFeedMutations: {
     SNOOZE_NOTIFICATION: string;
     RECORD_NOTIFICATION_ACTION: string;
     REOPEN_NOTIFICATION: string;
+    MARK_NOTIFICATIONS_READ: string;
     MARK_ALL_NOTIFICATIONS_READ_IN_SCOPE: string;
 };
