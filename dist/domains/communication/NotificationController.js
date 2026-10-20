@@ -1,13 +1,20 @@
-// smp-sdk-ts/src/notification/notification.ts
+// smp-sdk-ts/src/domains/communication/NotificationController.ts
 import { notificationQueries } from '../../api/graphql/communication/queries.js';
+import { notificationFeedMutations, notificationFeedQueries } from '../../api/graphql/communication/notificationFeed.js';
 /**
  * The `Notification` class manages notification-related requests within the application.
+ *
+ * Centre de notifications (20/10) : `feed`, `counters`, `markRead` / `markUnread`, `snooze`,
+ * `recordAction`, `reopen`, `markAllReadInScope` — le périmètre vient de l'identité portée par
+ * le client (jeton utilisateur ou assertion signée), jamais des variables. Les méthodes
+ * historiques (`getByUserId`, `getByOrganizationId`, `markAsRead`) restent pour l'app mobile ;
+ * mu-notification les réserve désormais au titulaire du fil ou aux membres de l'organisation.
  */
 export class Notification {
     constructor(client) {
         this.client = client;
     }
-    /** Notification par identifiant, ou `null` si elle n'existe pas. */
+    /** Notification par identifiant, ou `null` si elle n'existe pas (ou hors périmètre). */
     async getById(notificationID) {
         const query = notificationQueries.GET_NOTIFICATION_BY_ID;
         const variables = { notificationID };
@@ -55,5 +62,44 @@ export class Notification {
         const variables = { notificationID };
         const response = await this.client.mutate(query, variables);
         return response.markNotificationAsRead;
+    }
+    // ======================= Centre de notifications (20/10) =======================
+    /** Fil paginé de l'appelant (curseur opaque dans `nextCursor`). */
+    async feed(input = {}) {
+        const variables = { input: { ...input, organizationID: input.organizationID ?? null } };
+        const response = await this.client.query(notificationFeedQueries.NOTIFICATION_FEED, variables);
+        return { items: response.notificationFeed?.items ?? [], nextCursor: response.notificationFeed?.nextCursor ?? null };
+    }
+    /** Non lues, à traiter, à traiter par catégorie (et par espace en vue unifiée). */
+    async counters(organizationID) {
+        const response = await this.client.query(notificationFeedQueries.NOTIFICATION_COUNTERS, { organizationID: organizationID ?? null });
+        return response.notificationCounters;
+    }
+    async markRead(notificationID) {
+        const response = await this.client.mutate(notificationFeedMutations.MARK_NOTIFICATION_READ, { notificationID });
+        return response.markNotificationRead;
+    }
+    async markUnread(notificationID) {
+        const response = await this.client.mutate(notificationFeedMutations.MARK_NOTIFICATION_UNREAD, { notificationID });
+        return response.markNotificationUnread;
+    }
+    /** « Plus tard » ; `until` null annule le report. */
+    async snooze(notificationID, until) {
+        const response = await this.client.mutate(notificationFeedMutations.SNOOZE_NOTIFICATION, { notificationID, until });
+        return response.snoozeNotification;
+    }
+    /** À appeler APRÈS le succès de l'action métier : enregistre le traitement. */
+    async recordAction(input) {
+        const response = await this.client.mutate(notificationFeedMutations.RECORD_NOTIFICATION_ACTION, { input });
+        return response.recordNotificationAction;
+    }
+    async reopen(notificationID) {
+        const response = await this.client.mutate(notificationFeedMutations.REOPEN_NOTIFICATION, { notificationID });
+        return response.reopenNotification;
+    }
+    /** Tout marquer comme lu dans le périmètre de l'appelant ; renvoie le nombre de lignes. */
+    async markAllReadInScope(organizationID) {
+        const response = await this.client.mutate(notificationFeedMutations.MARK_ALL_NOTIFICATIONS_READ_IN_SCOPE, { organizationID: organizationID ?? null });
+        return response.markAllNotificationsReadInScope ?? 0;
     }
 }

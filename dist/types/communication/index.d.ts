@@ -11,7 +11,8 @@ export interface Campaign {
     updatedAt: string;
 }
 export interface CreateCampaignInput {
-    emailCampaignTemplateID: string;
+    /** Absent : `platform-campaign` (mu-notification). */
+    emailCampaignTemplateID?: string;
     subject: string;
     contentHTML?: string;
     contentText?: string;
@@ -99,3 +100,5 @@ export interface UpdateNewsletterContactInput {
     state?: string;
 }
 export * from './EngagementTypes.js';
+export * from '../../domains/communication/notifications/notifications.generated.js';
+export type { NotificationFeedInput, NotificationFeedPage, RecordNotificationActionInput } from '../../domains/communication/NotificationController.js';
