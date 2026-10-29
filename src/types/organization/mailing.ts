@@ -84,7 +84,7 @@ export interface OrganizationCampaign {
   deliveredCount?: number | null;
   failedCount?: number | null;
   failureReason?: string | null;
-  /** `iro` : préparée avec IRO. */
+  /** `iro` : préparée avec Iro. */
   origin?: string | null;
   createdBy: string;
   createdAt: string;

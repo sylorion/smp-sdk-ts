@@ -54,6 +54,9 @@ describe('liaisons', () => {
   it('catalogue : sources fixes et caractéristiques du service', () => {
     expect(sourceInfo('organization.rcs')).toMatchObject({ block: 'organization' });
     expect(sourceInfo('service.attributes.deposit_amount')).toMatchObject({ block: 'service', format: 'money' });
+    // Conditions de règlement : la phrase et l'acompte à la commande, distincts de la caution.
+    expect(sourceInfo('transaction.paymentTerms')).toMatchObject({ block: 'service', format: 'textarea' });
+    expect(sourceInfo('transaction.schedule.downPayment')).toMatchObject({ block: 'service', format: 'money', label: 'Acompte à la commande' });
     expect(sourceInfo('service.attributes.Bad Key')).toBeNull();
     expect(sourceInfo('organization.passwordHash')).toBeNull();
   });
@@ -172,6 +175,12 @@ describe('variables d’un contrat libre (sans modèle standard)', () => {
     expect(b('tarif_journalier', { type: 'number' })).toMatchObject({ block: 'service', sources: ['transaction.pricing.unitRate', 'service.attributes.rate_day', 'service.price'] });
     expect(b('date_debut')).toMatchObject({ block: 'client', sources: ['transaction.booking.startDate'], format: 'date' });
     expect(b('numero_permis')).toMatchObject({ block: 'client', sensitive: true });
+    // Acompte (conditions de règlement) ≠ caution ; conditions de règlement en texte.
+    expect(b('montant_acompte', { type: 'number' })).toEqual({ block: 'service', sources: ['transaction.schedule.downPayment'], format: 'money' });
+    expect(b('montant_caution', { type: 'number' })).toMatchObject({ sources: ['transaction.pricing.deposit', 'service.attributes.deposit_amount'] });
+    expect(b('conditions_de_reglement')).toEqual({ block: 'service', sources: ['transaction.paymentTerms'], format: 'text' });
+    expect(b('payment_conditions')).toMatchObject({ sources: ['transaction.paymentTerms'] });
+    expect(b('down_payment_amount', { type: 'number' })).toMatchObject({ sources: ['transaction.schedule.downPayment'], format: 'money' });
     expect(b('nom_du_locataire')).toEqual({ block: 'client', sources: ['client.name'], format: 'text' });
     expect(b('siret_prestataire')).toMatchObject({ block: 'organization', sources: ['organization.siret'] });
     expect(b('lieu_signature')).toMatchObject({ block: 'organization', sources: ['organization.city'] });

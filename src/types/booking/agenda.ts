@@ -37,7 +37,7 @@ export interface AgendaEvent {
   sentAt?: string | null;
   /** Rappel posé par la plateforme (échéance d'une tâche : `task_due`, `task_overdue`) ; null sinon. */
   autoReason?: string | null;
-  /** `iro` : créé en acceptant une proposition d'IRO. */
+  /** `iro` : créé en acceptant une proposition d'Iro. */
   origin?: 'iro' | null;
 }
 
@@ -75,7 +75,7 @@ export interface CreateAgendaEventInput {
   subjectId?: string;
   /** Rappel N minutes avant (0 à 10 080). */
   reminderMinutesBefore?: number;
-  /** `iro` : l'utilisateur accepte une proposition d'IRO. */
+  /** `iro` : l'utilisateur accepte une proposition d'Iro. */
   origin?: 'iro';
 }
 

@@ -86,7 +86,7 @@ type OrganizationCampaign {
   failedCount: Int
   failureReason: String
 
-  """`iro` : préparée avec IRO."""
+  """`iro` : préparée avec Iro."""
   origin: String
   createdBy: ID!
   createdAt: String!

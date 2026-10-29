@@ -308,7 +308,7 @@ type BusinessHoursRangeView {
 }
 
 """
-Horaires d'ouverture de l'organisation (agenda, créneaux proposés par IRO).
+Horaires d'ouverture de l'organisation (agenda, créneaux proposés par Iro).
 """
 type OrganizationBusinessHours {
   organizationID: ID!

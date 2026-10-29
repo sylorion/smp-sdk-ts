@@ -33,7 +33,7 @@ export interface OrganizationTask {
   estimatedHours: number | null;
   /** Faux : seule la date de l'échéance compte (affichée sans heure). */
   dueHasTime: boolean;
-  /** `iro` : proposée par IRO puis validée par l'utilisateur. */
+  /** `iro` : proposée par Iro puis validée par l'utilisateur. */
   origin: string | null;
   /** Créneau d'agenda réservé pour la tâche. */
   planned: OrganizationTaskPlannedSlot | null;
@@ -130,7 +130,7 @@ export interface CreateOrganizationTaskInput {
   estimatedHours?: number;
   /** Faux : seule la date compte. */
   dueHasTime?: boolean;
-  /** `iro` : tâche proposée par IRO. */
+  /** `iro` : tâche proposée par Iro. */
   origin?: 'iro';
   /** Livrables attendus créés avec la tâche (30 au plus). */
   deliverables?: OrganizationTaskDeliverableDraft[];

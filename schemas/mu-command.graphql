@@ -1146,7 +1146,7 @@ type OrganizationTask {
   """Faux : seule la date de l’échéance compte (pas d’heure)."""
   dueHasTime: Boolean!
 
-  """`iro` : proposée par IRO, validée par l’utilisateur."""
+  """`iro` : proposée par Iro, validée par l’utilisateur."""
   origin: String
   planned: OrganizationTaskPlannedSlot
   deliverables: [OrganizationTaskDeliverable!]!

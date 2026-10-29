@@ -90,6 +90,9 @@ export const SOURCE_CATALOG: Readonly<Record<string, SourceInfo>> = {
   'transaction.pricing.units': { block: 'service', format: 'integer', label: 'Nombre d’unités (jours…)' },
   'transaction.pricing.total': { block: 'service', format: 'money', label: 'Total calculé' },
   'transaction.pricing.deposit': { block: 'service', format: 'money', label: 'Caution calculée' },
+  'transaction.paymentTerms': { block: 'service', format: 'textarea', label: 'Conditions de règlement' },
+  'transaction.schedule.downPayment': { block: 'service', format: 'money', label: 'Acompte à la commande' },
+  'transaction.schedule.paymentDelayDays': { block: 'service', format: 'integer', label: 'Délai de paiement (jours)' },
   'client.name': { block: 'client', format: 'text', label: 'Nom du client' },
   'client.company': { block: 'client', format: 'text', label: 'Société du client' },
   'client.address': { block: 'client', format: 'text', label: 'Adresse du client' },
@@ -462,6 +465,10 @@ const SERVICE_SOURCES: Record<string, string[]> = {
   equipment_description: ['service.attributes.equipment_label', 'service.description', 'service.title'],
   equipment_value: ['service.attributes.equipment_value'],
   deposit_amount: ['transaction.pricing.deposit', 'service.attributes.deposit_amount'],
+  // Conditions de règlement (libs/shared/payment-terms) : phrase et acompte à la commande — jamais la
+  // caution. `payment_terms` reste le DÉLAI en jours des modèles standards (clause du prestataire).
+  payment_conditions: ['transaction.paymentTerms'],
+  down_payment_amount: ['transaction.schedule.downPayment'],
   franchise_amount: ['service.attributes.franchise_amount'],
   mileage_limit: ['service.attributes.mileage_included'],
   mileage_extra_cost: ['service.attributes.mileage_extra_cost'],
@@ -507,6 +514,8 @@ function formatOf(key: string, def: Record<string, any>): FieldFormat {
 function inferFreeBinding(key: string, format: FieldFormat, ctx: InferContext): Record<string, any> {
   if (has(key, SENSITIVE_WORDS)) return { block: 'client', format, sensitive: true };
   if (has(key, /_(caution|deposit|depot)_/) && format === 'money') return { block: 'service', sources: ['transaction.pricing.deposit', 'service.attributes.deposit_amount'], format };
+  if (has(key, /_(acompte|down_payment|downpayment)_/) && format === 'money') return { block: 'service', sources: ['transaction.schedule.downPayment'], format };
+  if (has(key, /_(conditions_de_reglement|conditions_de_paiement|modalites_de_paiement|payment_conditions|echeancier)_/)) return { block: 'service', sources: ['transaction.paymentTerms'], format };
   if (format === 'money' && has(key, /_(journalier|jour|daily|day)_/)) return { block: 'service', sources: ['transaction.pricing.unitRate', 'service.attributes.rate_day', 'service.price'], format };
   if (format === 'money' && has(key, /_(horaire|heure|hourly|hour)_/)) return { block: 'service', sources: ['service.attributes.rate_hour', 'service.price'], format };
   if (format === 'money' && has(key, /_(prix|price|montant|amount|total|tarif|cout|cost|honoraires|fee|fees)_/)) return { block: 'service', sources: ['transaction.amount', 'service.price'], format };

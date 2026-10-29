@@ -537,7 +537,7 @@ export function getPlanFeaturesForDisplay(plan?: string | null): Array<{
     { label: 'Factures / mois', value: formatLimit(config.maxInvoicesPerMonth), included: true, category: 'limit' },
     { label: 'Contrats digitaux / mois', value: formatLimit(config.maxContractsPerMonth), included: true, category: 'limit' },
     { label: 'STK / mois', value: formatLimit(config.maxAiCreditsPerMonth), included: true, category: 'limit' },
-    { label: "Agents natifs (outils d'IRO)", value: formatLimit(config.maxNativeAgents), included: config.maxNativeAgents > 0, category: 'limit' },
+    { label: "Agents natifs (outils d'Iro)", value: formatLimit(config.maxNativeAgents), included: config.maxNativeAgents > 0, category: 'limit' },
     { label: 'Agent Formulaire', value: config.hasFormAgent ? 'Inclus' : 'Non inclus', included: config.hasFormAgent, category: 'feature' },
     { label: 'Support email', value: config.hasEmailSupport ? 'Inclus' : 'Non inclus', included: config.hasEmailSupport, category: 'feature' },
     { label: 'Support prioritaire', value: config.hasPrioritySupport ? 'Inclus' : 'Non inclus', included: config.hasPrioritySupport, category: 'feature' },

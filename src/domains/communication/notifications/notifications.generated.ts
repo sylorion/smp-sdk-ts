@@ -195,7 +195,7 @@ export const NOTIFICATION_TYPES: Record<string, NotificationTypeDescriptor> = {
   'notification.service.created': info('services'),
   'notification.performance.weekly': info('services', 'low'),
   'notification.performance.monthly': info('services', 'low'),
-  // IRO, agents et automatisations
+  // Iro, agents et automatisations
   'notification.agent.result': info('iro', 'normal', ['review_run']),
   'notification.agent.report': info('iro', 'normal', ['review_run']),
   'notification.automation.report': info('automations', 'normal', ['review_run']),
@@ -206,6 +206,11 @@ export const NOTIFICATION_TYPES: Record<string, NotificationTypeDescriptor> = {
   'service.subscription.activated': info('marketplace'),
   'service.subscription.renewed': info('marketplace'),
   'service.subscription.cancelled': info('marketplace', 'high'),
+  // Prélèvement refusé : à traiter (mettre à jour le moyen de paiement), relance Stripe en cours.
+  'service.subscription.payment_failed': todo('marketplace', ['open'], 'urgent'),
+  'subscription.payment_failed': todo('marketplace', ['open'], 'urgent'),
+  // Facture d'abonnement au plan de la plateforme (mu-billing, PLAN-) : lecture seule.
+  'platform.subscription.invoiced': info('invoices', 'normal', ['view_invoice']),
   'notification.marketing.campaign': info('marketplace', 'low'),
   'notification.campaign.send': info('marketplace', 'low'),
   'notification.newsletter.send': info('marketplace', 'low'),
@@ -431,7 +436,8 @@ export const NOTIFICATION_ENTITIES: Record<string, NotificationEntityDescriptor>
   referral_partnership: { category: 'referrals', organizationPath: (o) => `/o/${enc(o)}/referrals`, personalPath: () => '/affiliation' },
   referral_commission: { category: 'referrals', organizationPath: (o) => `/o/${enc(o)}/referrals`, personalPath: () => '/affiliation' },
   affiliation: { category: 'referrals', organizationPath: null, personalPath: () => '/affiliation' },
-  service_subscription: { category: 'marketplace', organizationPath: (o) => `/o/${enc(o)}/services`, personalPath: () => '/billing' },
+  service_subscription: { category: 'marketplace', organizationPath: (o) => `/o/${enc(o)}/services`, personalPath: () => '/engagements' },
+  platform_subscription: { category: 'marketplace', organizationPath: null, personalPath: () => '/billing' },
   wallet: { category: 'wallet', organizationPath: (o) => `/o/${enc(o)}/accounting/transactions`, personalPath: () => '/billing' },
   organization: { category: 'account', organizationPath: (o) => `/o/${enc(o)}`, personalPath: null },
   user: { category: 'account', organizationPath: null, personalPath: () => '/details' },
