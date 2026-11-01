@@ -112,7 +112,11 @@ export interface CreateUserInput {
 */
 export interface OrganizationMember {
   userID: string;
+  /** Regroupement historique (Owner, Admin, Member, Moderator, Guest). */
   role: string;
+  /** Rôle exact (accès plateforme) : SMP_OWNER, SMP_ADMIN, SMP_FINANCIAL_MANAGER… ; null si orphelin ou invitation. */
+  roleName?: string | null;
+  roleID?: string | null;
   username: string;
   email: string;
   name: string;

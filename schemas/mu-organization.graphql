@@ -410,6 +410,8 @@ type RemoveInvitationResponse {
 type OrganizationMemberItem {
   userID: ID!
   role: String!
+  roleName: String
+  roleID: ID
   username: String
   email: String
   name: String
