@@ -77,6 +77,7 @@ type Invoice {
   deliveryParty: JSON
   payeeParty: JSON
   buyerOrganizationId: String
+  buyerUserId: String
   additionalDocuments: JSON
   docAllowanceCharges: JSON
   currency: String
@@ -169,6 +170,19 @@ type GenerateInvoicePDFResponse {
   pdfBase64: String
 }
 
+type InvoicePaymentDue {
+  invoiceId: String!
+  currency: String!
+  carriesPlatformFees: Boolean!
+  carriesCommission: Boolean!
+  invoiceTotalCents: Int!
+  priceHTCents: Int!
+  vatCents: Int!
+  platformFeeCents: Int!
+  stripeFeeCents: Int!
+  amountDueCents: Int!
+}
+
 type InvoiceExportPreview {
   invoiceCount: Int!
   salesCount: Int!
@@ -176,6 +190,11 @@ type InvoiceExportPreview {
 
   """Plafond de factures par export."""
   maxInvoices: Int!
+
+  """
+  Factures au PDF déjà archivé (relu, moins coûteux) : base de l’estimation STK.
+  """
+  archivedCount: Int!
 }
 
 type InvoiceExportResult {
@@ -194,6 +213,58 @@ type InvoiceExportResult {
   expiresAt: DateTime!
 }
 
+type InvoiceExportJob {
+  exportId: String!
+
+  """queued | running | done | failed"""
+  status: String!
+
+  """dashboard | agent | automation"""
+  origin: String!
+  automationRunId: String
+  from: String!
+  to: String!
+  side: InvoiceExportSide!
+
+  """Factures annoncées à la demande, puis exportées."""
+  invoiceCount: Int!
+
+  """Avancement : factures déjà traitées par l’agent."""
+  processedCount: Int!
+  pdfCount: Int
+  missingCount: Int!
+  fileName: String
+  requestedAt: String!
+  finishedAt: String
+
+  """
+  Téléchargeable jusqu’à cette date (null : envoyée par e-mail ou supprimée).
+  """
+  availableUntil: String
+
+  """STK débités à ce stade (au fil de l’eau), coût réel une fois livré."""
+  tokenCost: Int!
+
+  """Archive jointe à l’e-mail (supprimée du stockage dès l’envoi)."""
+  attachedToEmail: Boolean!
+  downloadable: Boolean!
+  error: String
+}
+
+"""Factures émises (ventes), reçues (achats) ou les deux."""
+enum InvoiceExportSide {
+  sales
+  purchases
+  all
+}
+
+type InvoiceExportDownload {
+  """Lien signé d’une heure."""
+  downloadUrl: String!
+  fileName: String!
+  expiresAt: DateTime!
+}
+
 type Query {
   transaction(input: TransactionIdInput!): Transaction
   transactions: [Transaction!]!
@@ -201,6 +272,7 @@ type Query {
   transactionsByBuyerOrganizationId(buyerOrganizationId: String!): [Transaction!]!
   transactionsBySellerOrganizationId(sellerOrganizationId: String!): [Transaction!]!
   invoice(invoiceId: String!): Invoice
+  invoicePaymentDue(invoiceId: String!, cardCountry: String): InvoicePaymentDue
   invoices: [Invoice!]!
   invoicesBySeller(sellerOrganizationId: String!): [Invoice!]!
   invoicesByBuyer(buyerOrganizationId: String!): [Invoice!]!
@@ -213,6 +285,22 @@ type Query {
 
   """Nombre de factures exportables sur la période (service interne)."""
   invoiceExportPreview(input: InvoiceExportInput!): InvoiceExportPreview!
+
+  """État et avancement d’un export (service interne)."""
+  invoiceExportStatus(input: InvoiceExportStatusInput!): InvoiceExportJob!
+
+  """
+  Factures d’abonnement au plan de la plateforme (back-office). `paymentStatus` : PAID ou PENDING (échec de prélèvement en cours de relance).
+  """
+  platformSubscriptionInvoices(paymentStatus: String, limit: Int, offset: Int): [Invoice!]!
+
+  """Factures d’un relevé de temps (organisation prestataire)."""
+  invoicesByTimesheet(input: TimesheetInvoicesInput!): [Invoice!]!
+
+  """
+  Factures des relevés de temps d’une prestation (organisation prestataire).
+  """
+  invoicesByEngagement(input: TimesheetInvoicesInput!): [Invoice!]!
 }
 
 input TransactionIdInput {
@@ -240,11 +328,18 @@ input InvoiceExportInput {
   requestedByUserID: String
 }
 
-"""Factures émises (ventes), reçues (achats) ou les deux."""
-enum InvoiceExportSide {
-  sales
-  purchases
-  all
+input InvoiceExportStatusInput {
+  organizationID: String!
+  exportId: String!
+}
+
+input TimesheetInvoicesInput {
+  organizationId: String!
+
+  """
+  Relevé de temps (reportId) ou prestation (engagementId) selon la requête.
+  """
+  id: String!
 }
 
 type Mutation {
@@ -260,9 +355,20 @@ type Mutation {
   generateInvoicePDF(invoiceId: String!, input: GenerateInvoicePDFInput!): GenerateInvoicePDFResponse!
 
   """
-  Archive ZIP des factures de la période (PDF + index CSV), lien signé d’une heure (service interne).
+  Lance l’export comptable de la période en tâche de fond ; notification à la fin (service interne).
+  """
+  requestInvoiceExport(input: RequestInvoiceExportInput!): InvoiceExportJob!
+
+  """Lien de téléchargement frais d’une archive livrée (service interne)."""
+  downloadInvoiceExport(input: InvoiceExportStatusInput!): InvoiceExportDownload!
+
+  """
+  Archive ZIP des factures de la période (PDF + index CSV), lien signé d’une heure (service interne). Préférer requestInvoiceExport.
   """
   exportInvoices(input: InvoiceExportInput!): InvoiceExportResult!
+
+  """Émet la facture (INV-…) d’un relevé de temps approuvé. Rejouable."""
+  createInvoiceFromTimesheet(input: CreateInvoiceFromTimesheetInput!): Invoice!
 }
 
 input CreateTransactionInput {
@@ -390,6 +496,7 @@ input ProcessInvoicePaymentInput {
   amount: Float!
   currency: String!
   transactionId: String
+  invoiceId: String
 }
 
 input GenerateInvoicePDFInput {
@@ -400,4 +507,43 @@ input GenerateInvoicePDFInput {
   forceDraft: Boolean
   sellerLogoUrl: String
   language: String
+}
+
+input RequestInvoiceExportInput {
+  organizationID: String!
+
+  """
+  Premier jour de la période (AAAA-MM-JJ, inclus), sur la date d’émission.
+  """
+  from: String!
+
+  """Dernier jour de la période (AAAA-MM-JJ, inclus)."""
+  to: String!
+  side: InvoiceExportSide! = all
+
+  """
+  Membre à l’origine de l’export : notifié à la fin, débité des STK (vérifié par la webapp).
+  """
+  requestedByUserID: String!
+
+  """dashboard | agent | automation"""
+  origin: String! = "dashboard"
+
+  """
+  Exécution d’automatisation qui demande l’export (livrable de l’exécution).
+  """
+  automationRunId: String
+
+  """Langue des notifications (fr, en, es)."""
+  language: String
+}
+
+input CreateInvoiceFromTimesheetInput {
+  """
+  Organisation prestataire (appartenance vérifiée par le BFF et par mu-command).
+  """
+  organizationId: String!
+
+  """Relevé de temps (EngagementReport) approuvé par le client."""
+  reportId: String!
 }

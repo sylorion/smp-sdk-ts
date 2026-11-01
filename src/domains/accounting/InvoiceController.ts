@@ -3,7 +3,8 @@
 import { APIClient } from '../../api/APIClient.js';
 import { invoiceQueries } from '../../api/graphql/accounting/queries.js';
 import { invoiceMutations } from '../../api/graphql/accounting/mutations.js';
-import type { InvoiceExportInput, InvoiceExportPreview, InvoiceExportResult } from '../../types/accounting/invoiceExport.js';
+import type { InvoiceExportDownload, InvoiceExportInput, InvoiceExportJob, InvoiceExportPreview, InvoiceExportResult, InvoiceExportStatusInput, RequestInvoiceExportInput } from '../../types/accounting/invoiceExport.js';
+import type { InvoicePaymentDue } from '../../types/accounting/invoicePaymentDue.js';
 
 interface InvoiceResponse {
   invoiceId: string;
@@ -249,6 +250,17 @@ export class Invoice {
   }
 
   /**
+   * Montant dû pour régler la facture par lien de paiement (C115) : TTC + commission + frais sur une
+   * vente de la place de marché, TTC + frais de paiement sur une facture manuelle. C'est ce montant,
+   * et non `totalAmount`, qu'il faut passer à `initiatePayment` ; mu-billing le recalcule au règlement.
+   * `cardCountry` (ISO 3166-1 alpha-2) affine les frais de paiement ; défaut : pays de l'acheteur.
+   */
+  async getPaymentDue(invoiceId: string, cardCountry?: string | null): Promise<InvoicePaymentDue | null> {
+    const response = await this.client.query(invoiceQueries.INVOICE_PAYMENT_DUE, { invoiceId, cardCountry: cardCountry ?? null }) as { invoicePaymentDue: InvoicePaymentDue | null };
+    return response.invoicePaymentDue ?? null;
+  }
+
+  /**
    * Traite le paiement d'une facture
    */
   async processPayment(token: string, data: {
@@ -311,9 +323,34 @@ export class Invoice {
     return response.invoiceExportPreview;
   }
 
-  /** Export comptable — archive ZIP des factures de la période (service interne, voir `getExportPreview`). */
+  /**
+   * Export comptable SYNCHRONE — archive ZIP produite pendant l'appel (service interne). Préférer
+   * `requestExport` : l'export asynchrone ne bloque pas l'appel, notifie à la fin et débite au fil de l'eau.
+   */
   async exportInvoices(input: InvoiceExportInput): Promise<InvoiceExportResult> {
     const response = await this.client.mutate(invoiceMutations.EXPORT_INVOICES, { input }) as { exportInvoices: InvoiceExportResult };
     return response.exportInvoices;
+  }
+
+  /**
+   * Export comptable ASYNCHRONE (service interne) : répond aussitôt (`queued`) ; mu-billing produit
+   * l'archive en tâche de fond, débite les STK au fil de l'eau selon la charge réelle et prévient le
+   * membre à la fin (in-app, push, e-mail — ZIP joint s'il est léger).
+   */
+  async requestExport(input: RequestInvoiceExportInput): Promise<InvoiceExportJob> {
+    const response = await this.client.mutate(invoiceMutations.REQUEST_INVOICE_EXPORT, { input }) as { requestInvoiceExport: InvoiceExportJob };
+    return response.requestInvoiceExport;
+  }
+
+  /** État et avancement d'un export de l'organisation (service interne). */
+  async getExportStatus(input: InvoiceExportStatusInput): Promise<InvoiceExportJob> {
+    const response = await this.client.query(invoiceQueries.INVOICE_EXPORT_STATUS, { input }) as { invoiceExportStatus: InvoiceExportJob };
+    return response.invoiceExportStatus;
+  }
+
+  /** Lien signé d'une heure d'une archive livrée ; le premier téléchargement programme sa suppression (service interne). */
+  async downloadExport(input: InvoiceExportStatusInput): Promise<InvoiceExportDownload> {
+    const response = await this.client.mutate(invoiceMutations.DOWNLOAD_INVOICE_EXPORT, { input }) as { downloadInvoiceExport: InvoiceExportDownload };
+    return response.downloadInvoiceExport;
   }
 }

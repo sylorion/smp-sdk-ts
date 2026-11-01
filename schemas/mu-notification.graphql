@@ -178,6 +178,24 @@ type Notification {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
+
+  """Clé de l’événement d’origine (contrat partagé)."""
+  eventType: String
+  category: String
+  priority: String
+
+  """none | pending | done | dismissed"""
+  actionState: String
+  actedAt: DateTime
+  actedByUserID: ID
+  snoozedUntil: DateTime
+  threadKey: String
+
+  """Interlocuteur (auteur de l’événement), jamais le destinataire."""
+  actorID: ID
+
+  """Instantané d’aperçu (NotificationData du contrat partagé)."""
+  data: JSON
 }
 
 enum ObjectStatus {
@@ -198,6 +216,29 @@ enum NotificationType {
   front
 }
 
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type NotificationFeedPage {
+  items: [Notification!]!
+  nextCursor: String
+}
+
+type NotificationCountersType {
+  unread: Int!
+  todo: Int!
+
+  """`{ invoices: 2, tasks: 1 }` — à traiter par catégorie."""
+  todoByCategory: JSON!
+
+  """
+  Vue unifiée : `{ personal: {unread,todo}, <organizationID>: {unread,todo} }`.
+  """
+  byScope: JSON
+}
+
 type Query {
   campaigns: [CampaignEntity!]!
   campaign(campaignID: ID!): CampaignEntity
@@ -214,14 +255,45 @@ type Query {
   newsletterContactsByUserID(userID: ID!): [NewsletterContactEntity!]!
   newsletters: [NewsletterEntity!]!
   newsletter(newsletterID: ID!): NewsletterEntity
+
+  """
+  Fil paginé de l’appelant : une organisation (membre, catégories du rôle) ou la vue unifiée de ses espaces.
+  """
+  notificationFeed(input: NotificationFeedInput): NotificationFeedPage!
+
+  """
+  Non lues, à traiter et à traiter par catégorie, dans le périmètre de l’appelant.
+  """
+  notificationCounters(organizationID: ID): NotificationCountersType!
   notification(notificationID: ID!): Notification
+
+  """Toute la table — appels de service seulement."""
   notifications: [Notification!]!
   notificationBySlug(Slug: String!): Notification
   notificationsByIDs(notificationIDs: [ID!]!): [Notification!]!
   notificationsBySlugs(slugs: [String!]!): [Notification!]!
   notificationByUniqRef(uniqRef: String!): Notification
+
+  """Fil personnel : réservé à son titulaire (ou appel de service)."""
   notificationsByUserID(userID: ID!): [Notification!]!
+
+  """Fil d’une organisation : réservé à ses membres (catégories du rôle)."""
   notificationsByOrganizationID(organizationID: ID!): [Notification!]!
+}
+
+"""
+Fil de notifications : organisation seule (`organizationID`) ou vue unifiée de l’appelant.
+"""
+input NotificationFeedInput {
+  organizationID: ID
+
+  """all | todo | unread | snoozed | done"""
+  tab: String
+  category: String
+
+  """Curseur opaque renvoyé par la page précédente."""
+  cursor: String
+  limit: Int
 }
 
 type Mutation {
@@ -260,12 +332,43 @@ type Mutation {
   updateNewsletter(newsletterID: ID!, input: UpdateNewsletterInput!): NewsletterEntity!
   deleteNewsletter(newsletterID: ID!): Boolean!
   sendNewsletter(newsletterID: ID!): Boolean!
+  markNotificationRead(notificationID: ID!): Notification!
+  markNotificationUnread(notificationID: ID!): Notification!
+
+  """« Plus tard » : `until` null annule le report."""
+  snoozeNotification(notificationID: ID!, until: DateTime): Notification!
+
+  """
+  Enregistre le traitement d’une notification après succès de l’action métier (utilisateur, ou service au nom de l’utilisateur).
+  """
+  recordNotificationAction(input: RecordNotificationActionInput!): Notification!
+
+  """
+  Rouvre une notification traitée (seulement si l’action métier est réversible, ce que décide la route appelante).
+  """
+  reopenNotification(notificationID: ID!): Notification!
+
+  """
+  Lot : marque lues les notifications données (200 max) que l’appelant peut lire ; renvoie le nombre mis à jour.
+  """
+  markNotificationsRead(notificationIDs: [ID!]!): Int!
+
+  """
+  Tout marquer comme lu dans le périmètre de l’appelant (organisation ou vue unifiée).
+  """
+  markAllNotificationsReadInScope(organizationID: ID): Int!
+
+  """Appels de service seulement."""
   createNotification(input: CreateNotificationInput!): Notification!
+
+  """Appels de service seulement."""
   updateNotification(notificationID: ID!, input: UpdateNotificationInput!): Notification!
+
+  """Appels de service seulement."""
   deleteNotification(notificationID: ID!): Boolean!
 
   """
-  Marque comme lues toutes les notifications d’un fil (utilisateur OU organisation).
+  Marque comme lues toutes les notifications d’un fil : le fil personnel de l’appelant, ou une organisation dont il est membre.
   """
   markAllNotificationsAsRead(userID: ID, organizationID: ID): Int!
   markNotificationAsRead(notificationID: ID!): Notification!
@@ -396,6 +499,21 @@ input UpdateNewsletterInput {
   contentText: String
   scheduledAt: DateTime
   sentAt: DateTime
+}
+
+input RecordNotificationActionInput {
+  notificationID: ID!
+
+  """Clé d’action du contrat partagé (pay_invoice, accept_estimate…)."""
+  actionKey: String!
+
+  """done (défaut) | dismissed"""
+  state: String
+
+  """
+  Appel de service seulement : utilisateur qui a agi (la route BFF l’a authentifié).
+  """
+  actedByUserID: ID
 }
 
 input CreateNotificationInput {

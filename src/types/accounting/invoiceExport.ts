@@ -22,6 +22,62 @@ export interface InvoiceExportPreview {
   purchasesCount: number;
   /** Plafond de factures par export (500). */
   maxInvoices: number;
+  /** Factures au PDF déjà archivé (relu, moins coûteux) : base de l'estimation STK. */
+  archivedCount: number;
+}
+
+// ── Export ASYNCHRONE (01/11) : demande, avancement, téléchargement — services internes ──
+
+export type InvoiceExportOrigin = 'dashboard' | 'agent' | 'automation';
+export type InvoiceExportStatus = 'queued' | 'running' | 'done' | 'failed';
+
+export interface RequestInvoiceExportInput extends InvoiceExportInput {
+  /** Membre notifié à la fin et débité des STK (vérifié par l'appelant). */
+  requestedByUserID: string;
+  origin?: InvoiceExportOrigin;
+  /** Exécution d'automatisation qui demande l'export (livrable de l'exécution). */
+  automationRunId?: string;
+  /** Langue des notifications : fr, en, es. */
+  language?: string;
+}
+
+export interface InvoiceExportStatusInput {
+  organizationID: string;
+  exportId: string;
+}
+
+/** État d'un export : avancement en direct, coût débité au fil de l'eau, livraison. */
+export interface InvoiceExportJob {
+  exportId: string;
+  status: InvoiceExportStatus;
+  origin: InvoiceExportOrigin;
+  automationRunId: string | null;
+  from: string;
+  to: string;
+  side: InvoiceExportSide;
+  invoiceCount: number;
+  /** Factures déjà traitées par l'agent. */
+  processedCount: number;
+  pdfCount: number | null;
+  missingCount: number;
+  fileName: string | null;
+  requestedAt: string;
+  finishedAt: string | null;
+  /** Téléchargeable jusqu'à cette date (null : envoyée par e-mail ou supprimée). */
+  availableUntil: string | null;
+  /** STK débités à ce stade, coût réel une fois livré. */
+  tokenCost: number;
+  /** Archive jointe à l'e-mail (supprimée du stockage dès l'envoi). */
+  attachedToEmail: boolean;
+  downloadable: boolean;
+  error: string | null;
+}
+
+export interface InvoiceExportDownload {
+  /** Lien signé d'une heure ; le premier téléchargement programme la suppression de l'archive. */
+  downloadUrl: string;
+  fileName: string;
+  expiresAt: string;
 }
 
 export interface InvoiceExportResult {

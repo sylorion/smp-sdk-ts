@@ -20,6 +20,18 @@ const invoiceMutations = {
       exportInvoices(input: $input) { exportId fileName invoiceCount pdfCount missingPdfs downloadUrl expiresAt }
     }
   `,
+  /** Export asynchrone : lance l'export en tâche de fond, notification à la fin — service interne. */
+  REQUEST_INVOICE_EXPORT: `
+    mutation RequestInvoiceExport($input: RequestInvoiceExportInput!) {
+      requestInvoiceExport(input: $input) { exportId status origin automationRunId from to side invoiceCount processedCount pdfCount missingCount fileName requestedAt finishedAt availableUntil tokenCost attachedToEmail downloadable error }
+    }
+  `,
+  /** Export asynchrone : lien signé frais d'une archive livrée — service interne. */
+  DOWNLOAD_INVOICE_EXPORT: `
+    mutation DownloadInvoiceExport($input: InvoiceExportStatusInput!) {
+      downloadInvoiceExport(input: $input) { downloadUrl fileName expiresAt }
+    }
+  `,
   // MUTATION TO CREATE AN INVOICE
   CREATE_INVOICE: `
     mutation CreateInvoice($input: CreateInvoiceInput!) {

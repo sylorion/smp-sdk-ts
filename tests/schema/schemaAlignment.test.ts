@@ -16,6 +16,7 @@ import * as catalogQueries from '../../src/api/graphql/catalog/queries';
 import * as catalogMutations from '../../src/api/graphql/catalog/mutations';
 import * as communicationQueries from '../../src/api/graphql/communication/queries';
 import * as communicationMutations from '../../src/api/graphql/communication/mutations';
+import * as communicationNotificationFeed from '../../src/api/graphql/communication/notificationFeed';
 import * as flowQueries from '../../src/api/graphql/flow/queries';
 import * as flowMutations from '../../src/api/graphql/flow/mutations';
 import * as referralQueries from '../../src/api/graphql/referral/queries';
@@ -65,6 +66,7 @@ const MODULES: Record<string, Record<string, unknown>> = {
   'catalog/mutations': catalogMutations,
   'communication/queries': communicationQueries,
   'communication/mutations': communicationMutations,
+  'communication/notificationFeed': communicationNotificationFeed,
   'flow/queries': flowQueries,
   'flow/mutations': flowMutations,
   'referral/queries': referralQueries,

@@ -25,4 +25,20 @@ describe('factures — export comptable', () => {
     await expect(invoice.exportInvoices({ ...input, requestedByUserID: 'u1' })).resolves.toEqual({ exportId: 'e1', pdfCount: 3 });
     expect(client.mutate).toHaveBeenCalledWith(invoiceMutations.EXPORT_INVOICES, { input: { ...input, requestedByUserID: 'u1' } });
   });
+
+  test('export asynchrone : documents valides, demande / état / téléchargement transmis tels quels', async () => {
+    for (const doc of [invoiceMutations.REQUEST_INVOICE_EXPORT, invoiceQueries.INVOICE_EXPORT_STATUS, invoiceMutations.DOWNLOAD_INVOICE_EXPORT]) expect(() => parse(doc)).not.toThrow();
+    for (const f of ['processedCount', 'tokenCost', 'attachedToEmail', 'downloadable', 'availableUntil']) expect(invoiceQueries.INVOICE_EXPORT_STATUS).toContain(f);
+    expect(invoiceQueries.INVOICE_EXPORT_PREVIEW).toContain('archivedCount');
+    const client: any = { query: jest.fn(), mutate: jest.fn() };
+    const invoice = new Invoice(client);
+    const req = { organizationID: 'org-1', from: '2026-10-01', to: '2026-10-31', side: 'all' as const, requestedByUserID: 'u1', origin: 'dashboard' as const };
+    client.mutate.mockResolvedValueOnce({ requestInvoiceExport: { exportId: 'e1', status: 'queued' } });
+    await expect(invoice.requestExport(req)).resolves.toEqual({ exportId: 'e1', status: 'queued' });
+    expect(client.mutate).toHaveBeenLastCalledWith(invoiceMutations.REQUEST_INVOICE_EXPORT, { input: req });
+    client.query.mockResolvedValueOnce({ invoiceExportStatus: { exportId: 'e1', status: 'running', processedCount: 4 } });
+    await expect(invoice.getExportStatus({ organizationID: 'org-1', exportId: 'e1' })).resolves.toMatchObject({ processedCount: 4 });
+    client.mutate.mockResolvedValueOnce({ downloadInvoiceExport: { downloadUrl: 'https://s3/x', fileName: 'f.zip', expiresAt: 'x' } });
+    await expect(invoice.downloadExport({ organizationID: 'org-1', exportId: 'e1' })).resolves.toMatchObject({ downloadUrl: 'https://s3/x' });
+  });
 });

@@ -747,5 +747,6 @@ export * from './Wallet.js';
 export * from './subscription.js';
 export * from './documentPresentation.js';
 export * from './invoiceExport.js';
+export * from './invoicePaymentDue.js';
 
 

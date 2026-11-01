@@ -117,6 +117,9 @@ export const NOTIFICATION_TYPES: Record<string, NotificationTypeDescriptor> = {
   'notification.invoice.paid.buyer': closes('invoices', ['view_invoice']),
   'notification.invoice.paid.seller': closes('invoices', ['view_invoice']),
   'invoice.fees.created': info('invoices', 'normal', ['view_invoice']),
+  // Export comptable asynchrone : archive prête (télécharger) ou en échec (relancer depuis la page).
+  'invoice.export.completed': info('invoices', 'normal', ['view_document']),
+  'invoice.export.failed': info('invoices', 'high', ['open']),
   'notification.payment.receipt': info('invoices', 'normal', ['view_invoice']),
   'notification.order.paid.provider': info('marketplace', 'normal', ['open']),
   // Devis et négociations

@@ -179,10 +179,28 @@ export { estimateQueries };
 // smp-sdk-ts/src/api/graphql/queries/accounting/invoiceQueries.ts
 
 const invoiceQueries = {
+  /**
+   * Montant dû pour régler une facture par lien de paiement (C115) : acheteur identifié de la
+   * facture, membre d'une de ses organisations, ou service interne.
+   */
+  INVOICE_PAYMENT_DUE: `
+    query InvoicePaymentDue($invoiceId: String!, $cardCountry: String) {
+      invoicePaymentDue(invoiceId: $invoiceId, cardCountry: $cardCountry) {
+        invoiceId currency carriesPlatformFees carriesCommission
+        invoiceTotalCents priceHTCents vatCents platformFeeCents stripeFeeCents amountDueCents
+      }
+    }
+  `,
   /** Export comptable : nombre de factures d'une période — service interne (`x-smp-internal-secret`). */
   INVOICE_EXPORT_PREVIEW: `
     query InvoiceExportPreview($input: InvoiceExportInput!) {
-      invoiceExportPreview(input: $input) { invoiceCount salesCount purchasesCount maxInvoices }
+      invoiceExportPreview(input: $input) { invoiceCount salesCount purchasesCount maxInvoices archivedCount }
+    }
+  `,
+  /** Export asynchrone : état et avancement — service interne. */
+  INVOICE_EXPORT_STATUS: `
+    query InvoiceExportStatus($input: InvoiceExportStatusInput!) {
+      invoiceExportStatus(input: $input) { exportId status origin automationRunId from to side invoiceCount processedCount pdfCount missingCount fileName requestedAt finishedAt availableUntil tokenCost attachedToEmail downloadable error }
     }
   `,
   // QUERY TO GET AN INVOICE BY ITS UNIQUE ID
