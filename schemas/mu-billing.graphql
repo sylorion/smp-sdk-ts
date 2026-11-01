@@ -216,7 +216,7 @@ type InvoiceExportResult {
 type InvoiceExportJob {
   exportId: String!
 
-  """queued | running | done | failed"""
+  """queued | running | paused | done | failed"""
   status: String!
 
   """dashboard | agent | automation"""
@@ -244,6 +244,9 @@ type InvoiceExportJob {
 
   """STK débités à ce stade (au fil de l’eau), coût réel une fois livré."""
   tokenCost: Int!
+
+  """En pause faute de STK : STK manquants au refus."""
+  missingTokens: Int
 
   """Archive jointe à l’e-mail (supprimée du stockage dès l’envoi)."""
   attachedToEmail: Boolean!
@@ -358,6 +361,11 @@ type Mutation {
   Lance l’export comptable de la période en tâche de fond ; notification à la fin (service interne).
   """
   requestInvoiceExport(input: RequestInvoiceExportInput!): InvoiceExportJob!
+
+  """
+  Reprend un export en pause (STK insuffisants) après recharge (service interne).
+  """
+  resumeInvoiceExport(input: InvoiceExportStatusInput!): InvoiceExportJob!
 
   """Lien de téléchargement frais d’une archive livrée (service interne)."""
   downloadInvoiceExport(input: InvoiceExportStatusInput!): InvoiceExportDownload!

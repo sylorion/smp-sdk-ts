@@ -200,7 +200,7 @@ const invoiceQueries = {
   /** Export asynchrone : état et avancement — service interne. */
   INVOICE_EXPORT_STATUS: `
     query InvoiceExportStatus($input: InvoiceExportStatusInput!) {
-      invoiceExportStatus(input: $input) { exportId status origin automationRunId from to side invoiceCount processedCount pdfCount missingCount fileName requestedAt finishedAt availableUntil tokenCost attachedToEmail downloadable error }
+      invoiceExportStatus(input: $input) { exportId status origin automationRunId from to side invoiceCount processedCount pdfCount missingCount fileName requestedAt finishedAt availableUntil tokenCost missingTokens attachedToEmail downloadable error }
     }
   `,
   // QUERY TO GET AN INVOICE BY ITS UNIQUE ID

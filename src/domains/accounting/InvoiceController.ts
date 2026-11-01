@@ -348,6 +348,15 @@ export class Invoice {
     return response.invoiceExportStatus;
   }
 
+  /**
+   * Reprise d'un export mis en pause faute de STK (service interne ; l'appelant vérifie le solde) :
+   * les tranches déjà payées ne sont pas redébitées.
+   */
+  async resumeExport(input: InvoiceExportStatusInput): Promise<InvoiceExportJob> {
+    const response = await this.client.mutate(invoiceMutations.RESUME_INVOICE_EXPORT, { input }) as { resumeInvoiceExport: InvoiceExportJob };
+    return response.resumeInvoiceExport;
+  }
+
   /** Lien signé d'une heure d'une archive livrée ; le premier téléchargement programme sa suppression (service interne). */
   async downloadExport(input: InvoiceExportStatusInput): Promise<InvoiceExportDownload> {
     const response = await this.client.mutate(invoiceMutations.DOWNLOAD_INVOICE_EXPORT, { input }) as { downloadInvoiceExport: InvoiceExportDownload };

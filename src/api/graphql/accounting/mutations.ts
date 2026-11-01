@@ -23,7 +23,13 @@ const invoiceMutations = {
   /** Export asynchrone : lance l'export en tâche de fond, notification à la fin — service interne. */
   REQUEST_INVOICE_EXPORT: `
     mutation RequestInvoiceExport($input: RequestInvoiceExportInput!) {
-      requestInvoiceExport(input: $input) { exportId status origin automationRunId from to side invoiceCount processedCount pdfCount missingCount fileName requestedAt finishedAt availableUntil tokenCost attachedToEmail downloadable error }
+      requestInvoiceExport(input: $input) { exportId status origin automationRunId from to side invoiceCount processedCount pdfCount missingCount fileName requestedAt finishedAt availableUntil tokenCost missingTokens attachedToEmail downloadable error }
+    }
+  `,
+  /** Export asynchrone : reprise d'un export en pause (STK insuffisants) après recharge — service interne. */
+  RESUME_INVOICE_EXPORT: `
+    mutation ResumeInvoiceExport($input: InvoiceExportStatusInput!) {
+      resumeInvoiceExport(input: $input) { exportId status origin automationRunId from to side invoiceCount processedCount pdfCount missingCount fileName requestedAt finishedAt availableUntil tokenCost missingTokens attachedToEmail downloadable error }
     }
   `,
   /** Export asynchrone : lien signé frais d'une archive livrée — service interne. */

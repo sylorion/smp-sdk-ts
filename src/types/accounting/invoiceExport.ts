@@ -29,7 +29,7 @@ export interface InvoiceExportPreview {
 // ── Export ASYNCHRONE (01/11) : demande, avancement, téléchargement — services internes ──
 
 export type InvoiceExportOrigin = 'dashboard' | 'agent' | 'automation';
-export type InvoiceExportStatus = 'queued' | 'running' | 'done' | 'failed';
+export type InvoiceExportStatus = 'queued' | 'running' | 'paused' | 'done' | 'failed';
 
 export interface RequestInvoiceExportInput extends InvoiceExportInput {
   /** Membre notifié à la fin et débité des STK (vérifié par l'appelant). */
@@ -67,6 +67,8 @@ export interface InvoiceExportJob {
   availableUntil: string | null;
   /** STK débités à ce stade, coût réel une fois livré. */
   tokenCost: number;
+  /** En pause faute de STK : STK manquants au refus (recharger puis `resumeExport`). */
+  missingTokens: number | null;
   /** Archive jointe à l'e-mail (supprimée du stockage dès l'envoi). */
   attachedToEmail: boolean;
   downloadable: boolean;

@@ -38,6 +38,10 @@ describe('factures — export comptable', () => {
     expect(client.mutate).toHaveBeenLastCalledWith(invoiceMutations.REQUEST_INVOICE_EXPORT, { input: req });
     client.query.mockResolvedValueOnce({ invoiceExportStatus: { exportId: 'e1', status: 'running', processedCount: 4 } });
     await expect(invoice.getExportStatus({ organizationID: 'org-1', exportId: 'e1' })).resolves.toMatchObject({ processedCount: 4 });
+    expect(() => parse(invoiceMutations.RESUME_INVOICE_EXPORT)).not.toThrow();
+    client.mutate.mockResolvedValueOnce({ resumeInvoiceExport: { exportId: 'e1', status: 'queued' } });
+    await expect(invoice.resumeExport({ organizationID: 'org-1', exportId: 'e1' })).resolves.toMatchObject({ status: 'queued' });
+    expect(client.mutate).toHaveBeenLastCalledWith(invoiceMutations.RESUME_INVOICE_EXPORT, { input: { organizationID: 'org-1', exportId: 'e1' } });
     client.mutate.mockResolvedValueOnce({ downloadInvoiceExport: { downloadUrl: 'https://s3/x', fileName: 'f.zip', expiresAt: 'x' } });
     await expect(invoice.downloadExport({ organizationID: 'org-1', exportId: 'e1' })).resolves.toMatchObject({ downloadUrl: 'https://s3/x' });
   });

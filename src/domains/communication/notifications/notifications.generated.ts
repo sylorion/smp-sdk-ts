@@ -120,6 +120,8 @@ export const NOTIFICATION_TYPES: Record<string, NotificationTypeDescriptor> = {
   // Export comptable asynchrone : archive prête (télécharger) ou en échec (relancer depuis la page).
   'invoice.export.completed': info('invoices', 'normal', ['view_document']),
   'invoice.export.failed': info('invoices', 'high', ['open']),
+  // Export arrêté faute de STK : à reprendre après une recharge.
+  'invoice.export.paused': todo('invoices', ['open'], 'high'),
   'notification.payment.receipt': info('invoices', 'normal', ['view_invoice']),
   'notification.order.paid.provider': info('marketplace', 'normal', ['open']),
   // Devis et négociations
