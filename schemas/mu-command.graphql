@@ -110,6 +110,7 @@ type AgendaMission {
   hourlyRate: Int
   currency: String
   internal: Boolean!
+  datesEditable: Boolean!
 }
 
 """Créneau de travail (feuille de temps) d'une mission."""
@@ -161,6 +162,29 @@ Dernière activité suivie avec un contact du CRM (rendez-vous passé, tâche ou
 type ContactLastActivity {
   contactId: ID!
   lastActivityAt: DateTime!
+}
+
+"""
+Plage où un membre n'est pas disponible : `busy` (rendez-vous, créneau de mission, tâche planifiée) ou `absence`.
+"""
+type AgendaBusyInterval {
+  startAt: DateTime!
+  endAt: DateTime!
+  kind: String!
+}
+
+"""
+Disponibilités d'un membre sur une période : ses plages occupées et ses heures de travail.
+"""
+type AgendaMemberAvailability {
+  userId: ID!
+  busy: [AgendaBusyInterval!]!
+  workingHours: [AgendaWorkingHours!]!
+}
+
+type AgendaAvailability {
+  members: [AgendaMemberAvailability!]!
+  truncated: Boolean!
 }
 
 type AgentExecutionStatus {
@@ -484,6 +508,146 @@ enum EngagementPriority {
   medium
   high
   urgent
+}
+
+type TimesheetLineModel {
+  timeSlotId: ID
+
+  """AAAA-MM-JJ"""
+  date: String!
+
+  """HH:MM"""
+  start: String
+
+  """HH:MM"""
+  end: String
+  label: String!
+  description: String
+  minutes: Int!
+  billable: Boolean!
+
+  """Montant HT de la ligne, unités mineures (0 si non facturable)."""
+  amountMinor: Int!
+}
+
+type TimesheetAdjustmentModel {
+  id: ID!
+
+  """Minutes signées : + ajout, − retrait."""
+  minutes: Int!
+  label: String!
+  reason: String
+  at: String!
+}
+
+type TimesheetClientValidationModel {
+  """approved | rejected"""
+  decision: String!
+  name: String!
+  decidedAt: String!
+  reason: String
+
+  """link (lien signé reçu par e-mail) | account (espace client)"""
+  channel: String!
+}
+
+type TimesheetTotalsModel {
+  """Tout le temps saisi (facturable ou non, hors ajustements)."""
+  totalMinutes: Int!
+
+  """Temps facturé : lignes facturables + ajustements."""
+  billableMinutes: Int!
+  adjustmentMinutes: Int!
+  billableLines: Int!
+  workedDays: Int!
+
+  """Quantité dans l'unité du relevé (heures, jours de 8 h, livrables)."""
+  quantity: Float!
+
+  """Montant HT, unités mineures."""
+  amountMinor: Int!
+}
+
+type Timesheet {
+  reportId: ID!
+
+  """RT-AAAA-MM-NNN, attribuée à la première soumission."""
+  reference: String
+  engagementId: ID!
+  serviceId: ID!
+  projectName: String!
+  organizationId: ID!
+  consultantUserId: ID!
+  consultantName: String
+  buyerUserId: ID
+  buyerOrganizationId: ID
+  clientName: String
+  contactName: String
+  orderId: ID
+  estimateId: ID
+  month: Int!
+  year: Int!
+
+  """hour | day | deliverable"""
+  unit: String!
+
+  """Taux par unité (heure, jour ou livrable), unités mineures."""
+  rateMinor: Int!
+  currency: String!
+  totals: TimesheetTotalsModel!
+  status: EngagementReportStatus!
+
+  """
+  draft | submitted | rejected | approved | invoiced | paid | cancelled (« invoiced » = approuvé + facture).
+  """
+  displayStatus: String!
+
+  """Jours écoulés depuis la soumission (relevé chez le client)."""
+  pendingDays: Int
+  submittedAt: DateTime
+  approvedAt: DateTime
+  paidAt: DateTime
+  invoiceId: ID
+  clientValidation: TimesheetClientValidationModel
+
+  """Destinataire de la demande de validation (prestataire seulement)."""
+  recipientEmail: String
+  reminders: [String!]!
+  adjustments: [TimesheetAdjustmentModel!]!
+  lines: [TimesheetLineModel!]!
+  notes: String
+}
+
+type ClientTimesheet {
+  """Renseigné pour le client connecté seulement."""
+  reportId: ID
+  reference: String
+  projectName: String!
+  providerName: String!
+  providerPerson: String
+  clientName: String
+  month: Int!
+  year: Int!
+  unit: String!
+  rateMinor: Int!
+  currency: String!
+  vatPercent: Int
+  totals: TimesheetTotalsModel!
+  displayStatus: String!
+
+  """Vrai tant que le relevé attend la décision du client."""
+  canDecide: Boolean!
+  submittedAt: DateTime
+  linkExpiresAt: String
+  clientValidation: TimesheetClientValidationModel
+  adjustments: [TimesheetAdjustmentModel!]!
+  lines: [TimesheetLineModel!]!
+}
+
+type TimesheetPdf {
+  filename: String!
+  contentType: String!
+  contentBase64: String!
 }
 
 type OrderAsset {
@@ -1077,6 +1241,27 @@ enum OrganizationTaskDeliverableStatus {
 }
 
 """
+Étape d’une tâche (à faire, en cours, faite) : jamais un jalon de paiement.
+"""
+type OrganizationTaskStep {
+  stepID: ID!
+  title: String!
+  status: OrganizationTaskStepStatus!
+  position: Int!
+
+  """Temps estimé, en heures."""
+  estimatedHours: Float
+  createdAt: DateTime!
+  completedAt: DateTime
+}
+
+enum OrganizationTaskStepStatus {
+  todo
+  in_progress
+  done
+}
+
+"""
 Livrable déposé sur une tâche : fichier privé, image privée ou lien externe.
 """
 type OrganizationTaskFile {
@@ -1129,6 +1314,9 @@ type OrganizationTask {
   priority: OrganizationTaskPriority!
   creatorUserID: ID!
   assigneeUserID: ID
+
+  """Membres tagués (@) : voient et commentent la tâche."""
+  taggedUserIDs: [ID!]!
   dueAt: DateTime
   blockedReason: String
   blockedByTaskID: ID
@@ -1149,8 +1337,20 @@ type OrganizationTask {
   """`iro` : proposée par Iro, validée par l’utilisateur."""
   origin: String
   planned: OrganizationTaskPlannedSlot
+
+  """
+  Détail du créneau d’agenda : `team`, `managers` (responsables) ou `private` ; les autres voient « Occupé ».
+  """
+  visibility: String!
+
+  """
+  Étape d’une prestation : jalon de paiement qu’elle prépare (validé par le client, jamais par la tâche).
+  """
+  paymentMilestoneKey: String
+  paymentMilestoneLabel: String
   deliverables: [OrganizationTaskDeliverable!]!
   files: [OrganizationTaskFile!]!
+  steps: [OrganizationTaskStep!]!
 }
 
 enum OrganizationTaskStatus {
@@ -1206,6 +1406,11 @@ enum OrganizationTaskEventKind {
   file_removed
   time_logged
   time_removed
+  step_added
+  step_updated
+  step_done
+  step_reopened
+  step_removed
 }
 
 type Query {
@@ -1220,6 +1425,11 @@ type Query {
   Missions, créneaux de travail, réservations et heures de travail affichés par l'agenda sur une période.
   """
   agendaWorkload(filter: AgendaEventsFilter!): AgendaWorkload!
+
+  """
+  Disponibilités des membres (plages occupées ou absences, heures de travail), sans le détail de leurs rendez-vous.
+  """
+  agendaAvailability(filter: AgendaEventsFilter!): AgendaAvailability!
 
   """
   Dernier échange suivi avec les contacts du CRM (colonne « Dernier échange »).
@@ -1244,16 +1454,41 @@ type Query {
   servicesAvailability(serviceIds: [ID!]!): [ServiceAvailability!]!
   bookingConfiguration(id: String!): BookingConfiguration
   bookingConfigurationByService(serviceId: String!): BookingConfiguration
+  engagementDispute(engagementId: ID!): JSONObject
+  disputes(status: String, limit: Int, offset: Int): [JSONObject!]!
   engagementsByService(serviceId: String!, organizationId: String): [Engagement!]!
   engagementsByConsultant(consultantUserId: String!): [Engagement!]!
   engagementsByBuyer(buyerUserId: String!): [Engagement!]!
   engagementsByOrganization(organizationId: String!): [Engagement!]!
+  engagementsByPmSession(sessionId: String!): [Engagement!]!
   engagement(engagementId: String!): Engagement
-  engagementReportByToken(token: String!): EngagementReport!
+  engagementReportByToken(token: String!): EngagementReport
   engagementReportsByEngagement(engagementId: String!): [EngagementReport!]!
   engagementReportsByConsultant(consultantUserId: String!): [EngagementReport!]!
   engagementReportsByOrganization(organizationId: String!): [EngagementReport!]!
   engagementReportsByPeriod(year: Float!, periodType: String!, periodValue: Float!): [EngagementReport!]!
+  engagementPaymentSchedule(engagementId: ID!): JSONObject
+
+  """
+  Relevés de temps d’une organisation (membres seulement), du plus récent au plus ancien.
+  """
+  organizationTimesheets(organizationId: ID!, filter: OrganizationTimesheetsFilter): [Timesheet!]!
+
+  """
+  Relevé facturé par cette facture (membres de l’organisation) ; null sinon.
+  """
+  timesheetForInvoice(organizationId: ID!, invoiceId: ID!): Timesheet
+  timesheet(reportId: ID!): Timesheet!
+  timesheetPdf(reportId: ID!, variant: TimesheetPdfVariant! = simple): TimesheetPdf!
+
+  """Relevé désigné par un lien de validation signé et non expiré."""
+  timesheetByToken(token: String!): ClientTimesheet!
+  timesheetPdfByToken(token: String!, variant: TimesheetPdfVariant! = simple): TimesheetPdf!
+
+  """Relevés adressés au client connecté."""
+  clientTimesheets: [ClientTimesheet!]!
+  clientTimesheet(reportId: ID!): ClientTimesheet!
+  clientTimesheetPdf(reportId: ID!, variant: TimesheetPdfVariant! = simple): TimesheetPdf!
   orders: [Order!]!
   order(orderId: String!): Order!
   ordersByUser(userId: String!): [Order!]!
@@ -1297,6 +1532,9 @@ type Query {
   myServiceFlowRuns(status: [ServiceFlowRunStatus!]): [ServiceFlowRun!]!
   activeServiceFlowRun(serviceId: ID!): ServiceFlowRun
 
+  """Back-office : abonnements de service (tous vendeurs), par statut."""
+  adminServiceSubscriptions(status: String, limit: Int, offset: Int): [JSONObject!]!
+
   """Feuille de temps de la tâche, de la plus récente à la plus ancienne."""
   organizationTaskTimeEntries(taskID: ID!): [OrganizationTaskTimeEntry!]!
   organizationTasks(filter: OrganizationTasksFilter!): [OrganizationTask!]!
@@ -1322,6 +1560,39 @@ input AgendaRemindersFilter {
   includeSent: Boolean
   subjectType: String
   subjectId: ID
+}
+
+input OrganizationTimesheetsFilter {
+  year: Int
+  month: Int
+  consultantUserId: ID
+  displayStatus: String
+
+  """Mission (prestation suivie)."""
+  engagementId: ID
+
+  """Service du catalogue."""
+  serviceId: ID
+
+  """Devis à l’origine de la prestation."""
+  estimateId: ID
+
+  """Compte client acheteur."""
+  buyerUserId: ID
+
+  """Organisation cliente."""
+  buyerOrganizationId: ID
+
+  """Contact du client (e-mail de facturation, destinataire ou signataire)."""
+  buyerEmail: String
+}
+
+"""
+Version imprimée du relevé : simple (temps par jour) ou détaillée (tâches).
+"""
+enum TimesheetPdfVariant {
+  simple
+  detailed
 }
 
 input AvailableSlotsInput {
@@ -1384,10 +1655,18 @@ type Mutation {
   upsertOrganizationCapacity(organizationId: ID!, data: OrganizationCapacityInput!): OrganizationCapacity!
   createBookingConfiguration(input: CreateBookingConfigurationInput!): BookingConfiguration!
   updateBookingConfiguration(id: String!, input: UpdateBookingConfigurationInput!): BookingConfiguration!
+  openEngagementDispute(data: OpenDisputeInput!): JSONObject!
+  addEngagementDisputeMessage(data: DisputeMessageInput!, actorId: String): JSONObject!
+  addEngagementDisputeEvidence(engagementId: ID!, data: DisputeEvidenceInput!, actorId: String): JSONObject!
+  withdrawEngagementDispute(engagementId: ID!, note: String): JSONObject!
+  reviewEngagementDispute(engagementId: ID!, status: String!, actorId: String!, note: String): JSONObject!
+  resolveEngagementDispute(data: ResolveDisputeInput!, actorId: String!): JSONObject!
   createEngagement(data: CreateEngagementInput!): Engagement!
+  reviewEngagementDeliverable(engagementId: String!, deliverableId: String!, decision: String!, comment: String): Engagement!
   updateEngagement(engagementId: String!, data: UpdateEngagementInput!): Engagement!
   acceptPmCascadeMission(engagementId: String!): Engagement!
   acceptPmCascadeMissionByEstimateId(estimateId: String!): Engagement!
+  withdrawFromPmMissionByEstimateId(estimateId: String!, reason: String): Engagement!
   declinePmCascadeMissionByEstimateId(estimateId: String!): Engagement!
   createTimeSlot(data: CreateTimeSlotInput!): TimeSlot!
   updateTimeSlot(timeSlotId: String!, data: UpdateTimeSlotInput!): TimeSlot!
@@ -1398,8 +1677,29 @@ type Mutation {
   deleteEngagement(engagementId: String!): Engagement!
   createReportForNewPeriod(engagementId: String!, periodType: String!, periodValue: Float!, year: Float!): EngagementReport!
   sendWorkReportNotification(data: SendWorkReportNotificationInput!): Boolean!
+  validateEngagementMilestone(engagementId: ID!, milestoneKey: String!): JSONObject!
+  addTimesheetAdjustment(input: AddTimesheetAdjustmentInput!): Timesheet!
+  removeTimesheetAdjustment(reportId: ID!, adjustmentId: ID!): Timesheet!
+
+  """
+  Brouillon ou refusé → chez le client : e-mail avec lien de validation signé (30 j).
+  """
+  submitTimesheet(input: SubmitTimesheetInput!): Timesheet!
+
+  """
+  Relance du client (au plus une par 24 h) ; un nouveau lien remplace l’ancien.
+  """
+  remindTimesheet(reportId: ID!): Timesheet!
+
+  """Refusé → brouillon, pour corriger avant une nouvelle soumission."""
+  correctTimesheet(reportId: ID!): Timesheet!
+  approveTimesheetByToken(token: String!, name: String!): ClientTimesheet!
+  rejectTimesheetByToken(token: String!, name: String!, reason: String!): ClientTimesheet!
+  approveTimesheet(reportId: ID!, name: String): ClientTimesheet!
+  rejectTimesheet(reportId: ID!, reason: String!, name: String): ClientTimesheet!
   createOrder(input: CreateOrderInput!): Order!
   confirmOrder(orderId: String!): Order!
+  activateOrderWithoutPayment(orderId: String!): Order!
   addLine(orderId: String!, input: AddLineInput!): Order!
   markOrderPaid(orderId: String!): Order!
   markOrderDelivered(orderId: String!): Order!
@@ -1487,6 +1787,13 @@ type Mutation {
   remindServiceFlowRun(runId: ID!): ServiceFlowRunReminderResult!
   closeServiceFlowRun(runId: ID!): ServiceFlowRun!
 
+  """Ajoute une étape à la tâche."""
+  addOrganizationTaskStep(input: AddOrganizationTaskStepInput!): OrganizationTask!
+
+  """Modifie une étape : titre, statut, temps estimé, position."""
+  updateOrganizationTaskStep(input: UpdateOrganizationTaskStepInput!): OrganizationTask!
+  removeOrganizationTaskStep(taskID: ID!, stepID: ID!): OrganizationTask!
+
   """Réserve un créneau d’agenda pour la tâche (remplace le précédent)."""
   planOrganizationTask(input: PlanOrganizationTaskInput!): OrganizationTask!
 
@@ -1529,6 +1836,7 @@ input CreateAgendaEventInput {
   subjectId: ID
   reminderMinutesBefore: Int
   origin: String
+  entry: String
 }
 
 input UpdateAgendaEventInput {
@@ -1670,6 +1978,41 @@ input UpdateBookingConfigurationInput {
   autoSendPostBookingMessage: Boolean
 }
 
+input OpenDisputeInput {
+  engagementId: ID!
+  subject: String!
+  reason: String!
+  description: String!
+  request: String!
+  amountCents: Int
+  references: JSONObject
+  answers: JSONObject
+  summary: String
+  evidence: [DisputeEvidenceInput!]
+}
+
+input DisputeEvidenceInput {
+  name: String!
+  storageKey: String!
+  mimeType: String!
+  sizeBytes: Int!
+  note: String
+}
+
+input DisputeMessageInput {
+  engagementId: ID!
+  text: String!
+  evidenceIds: [String!]
+}
+
+input ResolveDisputeInput {
+  engagementId: ID!
+  status: String!
+  outcome: String
+  note: String!
+  amountCents: Int
+}
+
 input CreateEngagementInput {
   consultantUserId: ID!
   organizationId: ID!
@@ -1807,6 +2150,23 @@ input SendWorkReportNotificationInput {
   billingPlan: String
   senderName: String
   senderEmail: String
+}
+
+input AddTimesheetAdjustmentInput {
+  reportId: ID!
+
+  """Minutes signées, non nulles (100 h au plus)."""
+  minutes: Int!
+  label: String!
+  reason: String
+}
+
+input SubmitTimesheetInput {
+  reportId: ID!
+
+  """Destinataire ; par défaut, l'e-mail du client de la prestation."""
+  recipientEmail: String
+  recipientName: String
 }
 
 input CreateOrderInput {
@@ -2005,6 +2365,22 @@ input RequestServiceFlowChangesInput {
   message: String!
 }
 
+input AddOrganizationTaskStepInput {
+  taskID: ID!
+  title: String!
+  estimatedHours: Float
+}
+
+input UpdateOrganizationTaskStepInput {
+  taskID: ID!
+  stepID: ID!
+  title: String
+  status: OrganizationTaskStepStatus
+  estimatedHours: Float
+  clearEstimatedHours: Boolean
+  position: Int
+}
+
 input PlanOrganizationTaskInput {
   taskID: ID!
   startAt: DateTime!
@@ -2050,6 +2426,7 @@ input CreateOrganizationTaskInput {
   description: String
   priority: OrganizationTaskPriority
   assigneeUserID: ID
+  taggedUserIDs: [ID!]
   dueAt: DateTime
   documentType: String
   documentID: ID
@@ -2057,6 +2434,8 @@ input CreateOrganizationTaskInput {
   estimatedHours: Float
   dueHasTime: Boolean
   origin: String
+  visibility: String
+  paymentMilestoneKey: String
   deliverables: [TaskDeliverableDraftInput!]
 }
 
@@ -2076,7 +2455,9 @@ input UpdateOrganizationTaskInput {
   estimatedHours: Float
   clearEstimatedHours: Boolean
   dueHasTime: Boolean
+  visibility: String
   clearDueAt: Boolean
+  taggedUserIDs: [ID!]
 }
 
 input ChangeOrganizationTaskStatusInput {

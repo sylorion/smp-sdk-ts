@@ -171,6 +171,8 @@ export const NOTIFICATION_TYPES: Record<string, NotificationTypeDescriptor> = {
   'engagement.reminder.due': info('services', 'high'),
   // Tâches et travail d'équipe
   'organization.task.assigned': todo('tasks', ['start_task', 'reassign_task', 'view_task']),
+  // Membre tagué (@) sur une tâche : il la voit et peut la commenter (02/11).
+  'organization.task.tagged': info('mentions', 'normal', ['view_task']),
   'organization.task.status.changed': info('tasks', 'normal', ['view_task']),
   'organization.task.commented': todo('mentions', ['reply_mention', 'view_task'], 'normal'),
   'organization.task.due.changed': info('tasks', 'high', ['view_task']),
