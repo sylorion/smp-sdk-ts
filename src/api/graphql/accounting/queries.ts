@@ -784,6 +784,8 @@ export const orderQueries = {
         attempts
         startedAt
         completedAt
+        nextRetryAt
+        finalFailure
         result
       }
     }

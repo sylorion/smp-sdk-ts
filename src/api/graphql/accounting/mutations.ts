@@ -512,6 +512,25 @@ const paymentMutations = {
       }
     }
   `,
+  // Relance par le prestataire de la réalisation d'une commande par son agent (mu-command).
+  RETRY_AGENT_EXECUTION: `
+    mutation RetryAgentExecution($orderId: ID!) {
+      retryAgentExecution(orderId: $orderId) {
+        orderId
+        engagementId
+        executionId
+        agentId
+        status
+        error
+        attempts
+        startedAt
+        completedAt
+        nextRetryAt
+        finalFailure
+        result
+      }
+    }
+  `,
   // MUTATION POUR ANNULER UN ORDER
   CANCEL_ORDER: `
     mutation CancelOrder($orderId: String!) {

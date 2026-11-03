@@ -1,5 +1,6 @@
 import { APIClient } from '../../api/APIClient.js';
 import { orderQueries } from '../../api/graphql/accounting/queries.js';
+import { paymentMutations } from '../../api/graphql/accounting/mutations.js';
 
 interface OrderResponse {
   orderId: string;
@@ -50,6 +51,10 @@ export interface AgentExecutionStatus {
   attempts?: number | null;
   startedAt?: string | null;
   completedAt?: string | null;
+  /** Échec : heure du prochain essai automatique (null si définitif). */
+  nextRetryAt?: string | null;
+  /** Échec définitif : plus d'essai automatique, le prestataire peut relancer. */
+  finalFailure?: boolean | null;
   result?: unknown;
 }
 
@@ -101,5 +106,12 @@ export class Order {
     const response = await this.client.query<{ agentExecutionStatus: AgentExecutionStatus }>(
       orderQueries.GET_AGENT_EXECUTION_STATUS, { orderId });
     return response.agentExecutionStatus;
+  }
+
+  /** Relance par le prestataire d'une réalisation en échec (membre de l'organisation vendeuse). */
+  async retryAgentExecution(orderId: string): Promise<AgentExecutionStatus> {
+    const response = await this.client.mutate<{ retryAgentExecution: AgentExecutionStatus }>(
+      paymentMutations.RETRY_AGENT_EXECUTION, { orderId });
+    return response.retryAgentExecution;
   }
 }
