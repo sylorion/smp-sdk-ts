@@ -218,6 +218,8 @@ export const NOTIFICATION_TYPES: Record<string, NotificationTypeDescriptor> = {
   'subscription.payment_failed': todo('marketplace', ['open'], 'urgent'),
   // Facture d'abonnement au plan de la plateforme (mu-billing, PLAN-) : lecture seule.
   'platform.subscription.invoiced': info('invoices', 'normal', ['view_invoice']),
+  // Facture STK- (achat de STK) ou reçu DEP- (rechargement) d'un wallet (mu-billing) : lecture seule.
+  'platform.topup.invoiced': info('invoices', 'normal', ['view_invoice']),
   'notification.marketing.campaign': info('marketplace', 'low'),
   'notification.campaign.send': info('marketplace', 'low'),
   'notification.newsletter.send': info('marketplace', 'low'),

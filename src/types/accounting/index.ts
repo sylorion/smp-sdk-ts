@@ -716,8 +716,13 @@ export interface CreateTransactionInput {
 // ==============================
 export interface CreatePaymentDto {
     transactionId?: string;
-    orderId: string;
+    orderId?: string;
+    /** PURCHASE (commande) ou DEPOSIT (rechargement d'un wallet, avec `walletId`). */
     type: string;
+    /** Rechargement : wallet à créditer (vérifié par mu-wallet : celui du payeur ou d'une organisation dont il est membre). */
+    walletId?: string;
+    /** Rechargement : convertir le montant en STK dès le crédit du wallet. */
+    convertToTokens?: boolean;
     amount: number;
     currency: string;
     customerEmail?: string;
