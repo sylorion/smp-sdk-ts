@@ -37,6 +37,8 @@ export interface AgendaEvent {
   sentAt?: string | null;
   /** Rappel posé par la plateforme (échéance d'une tâche : `task_due`, `task_overdue`) ; null sinon. */
   autoReason?: string | null;
+  /** Rappel automatique d'une tâche : son échéance (ISO). */
+  deadlineAt?: string | null;
   /** `iro` : créé en acceptant une proposition d'Iro. */
   origin?: 'iro' | null;
 }

@@ -5,7 +5,7 @@
  */
 const EVENT_FIELDS = `eventId organizationId ownerUserId title description startAt endAt status location contactId
   visibility detailsHidden attendees { userId status }
-  entry subjectType subjectId reminderMinutesBefore parentEventId outcome sentAt autoReason origin`;
+  entry subjectType subjectId reminderMinutesBefore parentEventId outcome sentAt autoReason deadlineAt origin`;
 /** Charge de travail des missions (agenda v2) : missions, créneaux, réservations, heures de travail. */
 const WORKLOAD_FIELDS = `missions { missionId ownerUserId title clientLabel serviceId startAt endAt status estimatedHours actualHours hourlyRate currency internal }
   slots { slotId missionId ownerUserId title startAt endAt status }
