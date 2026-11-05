@@ -11,6 +11,10 @@ const TASK_FIELDS = `taskID organizationID title description status priority cre
   files { fileID type name description url fileName mimeType sizeBytes uploadedByUserID uploadedAt deliverableID }`;
 const TIME_FIELDS = 'timeEntryID taskID userID startAt endAt minutes note createdAt';
 const COMMENT_FIELDS = 'commentID taskID documentType documentID authorUserID content createdAt';
+/** Rapport Services d'une tâche : brouillon et versions en JSON, actions déjà créées. */
+const REPORT_FIELDS = 'taskID draft versions { version depositedAt depositedByUserID content } createdActions { key kind taskID }';
+/** Rapport d'activité de l'équipe : faits et rapport figé en JSON. */
+const ACTIVITY_REPORT_FIELDS = 'organizationID period scope facts snapshot';
 
 export const workspaceQueries = {
   LIST_ORGANIZATION_TASKS: `query OrganizationTasks($filter: OrganizationTasksFilter!) { organizationTasks(filter: $filter) { ${TASK_FIELDS} } }`,
@@ -18,6 +22,8 @@ export const workspaceQueries = {
   LIST_ORGANIZATION_TASK_EVENTS: `query OrganizationTaskEvents($taskID: ID!) { organizationTaskEvents(taskID: $taskID) { eventID actorUserID kind data createdAt } }`,
   LIST_ORGANIZATION_TASK_COMMENTS: `query OrganizationTaskComments($filter: OrganizationTaskCommentsFilter!) { organizationTaskComments(filter: $filter) { ${COMMENT_FIELDS} } }`,
   LIST_ORGANIZATION_TASK_TIME_ENTRIES: `query OrganizationTaskTimeEntries($taskID: ID!) { organizationTaskTimeEntries(taskID: $taskID) { ${TIME_FIELDS} } }`,
+  GET_ORGANIZATION_TASK_REPORT: `query OrganizationTaskReport($taskID: ID!) { organizationTaskReport(taskID: $taskID) { ${REPORT_FIELDS} } }`,
+  GET_ORGANIZATION_ACTIVITY_REPORT: `query OrganizationActivityReport($input: OrganizationActivityReportInput!) { organizationActivityReport(input: $input) { ${ACTIVITY_REPORT_FIELDS} } }`,
 };
 
 export const workspaceMutations = {
@@ -37,4 +43,10 @@ export const workspaceMutations = {
   REMOVE_ORGANIZATION_TASK_FILE: `mutation RemoveOrganizationTaskFile($taskID: ID!, $fileID: ID!) { removeOrganizationTaskFile(taskID: $taskID, fileID: $fileID) { ${TASK_FIELDS} } }`,
   LOG_ORGANIZATION_TASK_TIME: `mutation LogOrganizationTaskTime($input: LogOrganizationTaskTimeInput!) { logOrganizationTaskTime(input: $input) { ${TIME_FIELDS} } }`,
   DELETE_ORGANIZATION_TASK_TIME: `mutation DeleteOrganizationTaskTime($taskID: ID!, $timeEntryID: ID!) { deleteOrganizationTaskTime(taskID: $taskID, timeEntryID: $timeEntryID) }`,
+  SAVE_ORGANIZATION_TASK_REPORT: `mutation SaveOrganizationTaskReport($input: SaveOrganizationTaskReportInput!) { saveOrganizationTaskReport(input: $input) { ${REPORT_FIELDS} } }`,
+  EDIT_ORGANIZATION_TASK_REPORT: `mutation EditOrganizationTaskReport($input: EditOrganizationTaskReportInput!) { editOrganizationTaskReport(input: $input) { ${REPORT_FIELDS} } }`,
+  DEPOSIT_ORGANIZATION_TASK_REPORT: `mutation DepositOrganizationTaskReport($taskID: ID!) { depositOrganizationTaskReport(taskID: $taskID) { ${TASK_FIELDS} } }`,
+  CREATE_ORGANIZATION_TASK_REPORT_ACTIONS: `mutation CreateOrganizationTaskReportActions($input: CreateOrganizationTaskReportActionsInput!) { createOrganizationTaskReportActions(input: $input) { report { ${REPORT_FIELDS} } created { ${TASK_FIELDS} } unplannedMeetings } }`,
+  SAVE_ORGANIZATION_ACTIVITY_REPORT: `mutation SaveOrganizationActivityReport($input: SaveOrganizationActivityReportInput!) { saveOrganizationActivityReport(input: $input) { ${ACTIVITY_REPORT_FIELDS} } }`,
+  EDIT_ORGANIZATION_ACTIVITY_REPORT: `mutation EditOrganizationActivityReport($input: EditOrganizationActivityReportInput!) { editOrganizationActivityReport(input: $input) { ${ACTIVITY_REPORT_FIELDS} } }`,
 };

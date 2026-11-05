@@ -16,6 +16,11 @@ import {
   OrganizationTaskEvent,
   OrganizationTasksFilter,
   UpdateOrganizationTaskInput,
+  OrganizationTaskReport,
+  OrganizationTaskReportActionsResult,
+  OrganizationActivityReport,
+  OrganizationActivityReportInput,
+  SaveOrganizationActivityReportInput,
 } from '../../types/organization/workspace.js';
 
 const decode = (raw: unknown): Record<string, unknown> | null => {
@@ -125,5 +130,39 @@ export class WorkspaceController {
 
   async deleteTime(taskID: string, timeEntryID: string): Promise<boolean> {
     return (await this.client.mutate<{ deleteOrganizationTaskTime: boolean }>(workspaceMutations.DELETE_ORGANIZATION_TASK_TIME, { taskID, timeEntryID })).deleteOrganizationTaskTime;
+  }
+
+  // ── Rapport Services d'une tâche ──────────────────────────────────────────
+  async getTaskReport(taskID: string): Promise<OrganizationTaskReport> {
+    return (await this.client.query<{ organizationTaskReport: OrganizationTaskReport }>(workspaceQueries.GET_ORGANIZATION_TASK_REPORT, { taskID })).organizationTaskReport;
+  }
+
+  async saveTaskReport(taskID: string, content: string): Promise<OrganizationTaskReport> {
+    return (await this.client.mutate<{ saveOrganizationTaskReport: OrganizationTaskReport }>(workspaceMutations.SAVE_ORGANIZATION_TASK_REPORT, { input: { taskID, content } })).saveOrganizationTaskReport;
+  }
+
+  async editTaskReport(taskID: string, synthesis: string): Promise<OrganizationTaskReport> {
+    return (await this.client.mutate<{ editOrganizationTaskReport: OrganizationTaskReport }>(workspaceMutations.EDIT_ORGANIZATION_TASK_REPORT, { input: { taskID, synthesis } })).editOrganizationTaskReport;
+  }
+
+  async depositTaskReport(taskID: string): Promise<OrganizationTask> {
+    return (await this.client.mutate<{ depositOrganizationTaskReport: OrganizationTask }>(workspaceMutations.DEPOSIT_ORGANIZATION_TASK_REPORT, { taskID })).depositOrganizationTaskReport;
+  }
+
+  async createTaskReportActions(taskID: string, keys: string[]): Promise<OrganizationTaskReportActionsResult> {
+    return (await this.client.mutate<{ createOrganizationTaskReportActions: OrganizationTaskReportActionsResult }>(workspaceMutations.CREATE_ORGANIZATION_TASK_REPORT_ACTIONS, { input: { taskID, keys } })).createOrganizationTaskReportActions;
+  }
+
+  // ── Rapport d'activité de l'équipe ────────────────────────────────────────
+  async getActivityReport(input: OrganizationActivityReportInput): Promise<OrganizationActivityReport> {
+    return (await this.client.query<{ organizationActivityReport: OrganizationActivityReport }>(workspaceQueries.GET_ORGANIZATION_ACTIVITY_REPORT, { input })).organizationActivityReport;
+  }
+
+  async saveActivityReport(input: SaveOrganizationActivityReportInput): Promise<OrganizationActivityReport> {
+    return (await this.client.mutate<{ saveOrganizationActivityReport: OrganizationActivityReport }>(workspaceMutations.SAVE_ORGANIZATION_ACTIVITY_REPORT, { input })).saveOrganizationActivityReport;
+  }
+
+  async editActivityReport(input: OrganizationActivityReportInput & { summary: string }): Promise<OrganizationActivityReport> {
+    return (await this.client.mutate<{ editOrganizationActivityReport: OrganizationActivityReport }>(workspaceMutations.EDIT_ORGANIZATION_ACTIVITY_REPORT, { input })).editOrganizationActivityReport;
   }
 }

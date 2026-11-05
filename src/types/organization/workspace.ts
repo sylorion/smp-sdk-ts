@@ -226,3 +226,33 @@ export interface HandOverDossierInput {
   priority?: OrganizationTaskPriority;
   dueAt?: string;
 }
+
+/** Rapport Services d'une tâche (rapport ou compte rendu) ; contenus en JSON (`ReportContent` de mu-command). */
+export interface OrganizationTaskReport {
+  taskID: string;
+  draft: string | null;
+  versions: Array<{ version: number; depositedAt: string; depositedByUserID: string; content: string }>;
+  createdActions: Array<{ key: string; kind: string; taskID: string | null }>;
+}
+export interface OrganizationTaskReportActionsResult {
+  report: OrganizationTaskReport;
+  created: OrganizationTask[];
+  unplannedMeetings: number;
+}
+/** Rapport d'activité de l'équipe (`period` : `2026-W45` ou `2026-11-05` ; `scope` : `team` ou `member:<id>`). */
+export interface OrganizationActivityReport {
+  organizationID: string;
+  period: string;
+  scope: string;
+  /** Faits calculés par mu-command (JSON). */
+  facts: string;
+  /** Rapport figé (JSON), null tant qu'il n'est pas généré. */
+  snapshot: string | null;
+}
+export interface OrganizationActivityReportInput { organizationID: string; period: string; scope: string }
+export interface SaveOrganizationActivityReportInput extends OrganizationActivityReportInput {
+  summary: string;
+  priorities: string[];
+  writer: 'iro' | 'rules';
+  trigger: 'automation' | 'manual';
+}
