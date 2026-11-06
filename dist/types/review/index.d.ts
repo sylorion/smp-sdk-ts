@@ -83,7 +83,7 @@ export interface ServiceReport {
     serviceID: string;
     organizationID: string;
     providerUserID?: string | null;
-    reviewerUserID: string;
+    reviewerUserID?: string | null;
     reviewerName?: string | null;
     serviceTitle?: string | null;
     organizationName?: string | null;

@@ -1,6 +1,17 @@
 import { SERVICE_FLOW_FIELDS, SERVICE_FLOW_RUN_FIELDS } from './fragments.js';
 
 const serviceFlowQueries = {
+  GET_SERVICE_FLOW_READINESS: `
+    query ServiceFlowReadiness($flowId: ID!, $serviceId: ID) {
+      serviceFlowReadiness(flowId: $flowId, serviceId: $serviceId) {
+        ready kind
+        profile { code label family declared ambiguous candidates { code label } }
+        blocking { code severity message stepKey variable fixHint fixRoute group fix }
+        warnings { code severity message stepKey variable fixHint fixRoute group fix }
+        contracts { stepKey templateKind templateId templateTitle variables { key required status source path hint block answerIgnored } }
+      }
+    }
+  `,
   GET_SERVICE_FLOWS: `
     query ServiceFlows($organizationId: ID!, $status: ServiceFlowStatus) {
       serviceFlows(organizationId: $organizationId, status: $status) {${SERVICE_FLOW_FIELDS}}

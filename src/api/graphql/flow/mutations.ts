@@ -1,6 +1,16 @@
 import { SERVICE_FLOW_FIELDS, SERVICE_FLOW_RUN_FIELDS } from './fragments.js';
 
 const serviceFlowMutations = {
+  APPLY_SERVICE_FLOW_FIXES: `
+    mutation ApplyServiceFlowFixes($flowId: ID!, $fixes: JSON!) {
+      applyServiceFlowFixes(flowId: $flowId, fixes: $fixes) { questionsAdded stepsRemoved valuesSet flow {${SERVICE_FLOW_FIELDS}} }
+    }
+  `,
+  REMIND_SERVICE_FLOW_RUN: `
+    mutation RemindServiceFlowRun($runId: ID!) {
+      remindServiceFlowRun(runId: $runId) { runId sent reminderNumber reason }
+    }
+  `,
   CREATE_SERVICE_FLOW: `
     mutation CreateServiceFlow($data: CreateServiceFlowInput!) {
       createServiceFlow(data: $data) {${SERVICE_FLOW_FIELDS}}

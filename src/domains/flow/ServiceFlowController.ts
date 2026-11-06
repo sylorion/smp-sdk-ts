@@ -6,8 +6,12 @@ import type {
   RequestServiceFlowChangesInput,
   ServiceFlow,
   ServiceFlowContractPreparation,
+  ServiceFlowDefinitionFix,
+  ServiceFlowFixesResult,
   ServiceFlowPublic,
+  ServiceFlowReadiness,
   ServiceFlowRun,
+  ServiceFlowRunReminderResult,
   ServiceFlowRunStatus,
   ServiceFlowRunsFilter,
   ServiceFlowStats,
@@ -66,6 +70,26 @@ export class ServiceFlowController {
     const r = await this.client.query<{ serviceFlowUsage: ServiceFlowUsage }>(
       serviceFlowQueries.GET_SERVICE_FLOW_USAGE, { flowId, days });
     return r.serviceFlowUsage;
+  }
+
+  /**
+   * Pre-flight « Prêt à activer ? » (§3.3) : brouillon du flow, et le service si fourni.
+   * Anomalies bloquantes et avertissements, avec la correction guidée (`group`, `fix`).
+   */
+  async readiness(flowId: string, serviceId?: string): Promise<ServiceFlowReadiness> {
+    const r = await this.client.query<{ serviceFlowReadiness: ServiceFlowReadiness }>(
+      serviceFlowQueries.GET_SERVICE_FLOW_READINESS, { flowId, ...(serviceId ? { serviceId } : {}) });
+    return r.serviceFlowReadiness;
+  }
+
+  /**
+   * Applique au BROUILLON les corrections guidées qui touchent le flow (`add_questions`,
+   * `remove_steps`, `set_contract_values`). La version publiée ne change qu'à la republication.
+   */
+  async applyFixes(flowId: string, fixes: ServiceFlowDefinitionFix[]): Promise<ServiceFlowFixesResult> {
+    const r = await this.client.mutate<{ applyServiceFlowFixes: ServiceFlowFixesResult }>(
+      serviceFlowMutations.APPLY_SERVICE_FLOW_FIXES, { flowId, fixes });
+    return r.applyServiceFlowFixes;
   }
 
   async create(data: CreateServiceFlowInput): Promise<ServiceFlow> {
@@ -147,6 +171,16 @@ export class ServiceFlowController {
     const r = await this.client.mutate<{ relaunchServiceFlowRun: ServiceFlowRun }>(
       serviceFlowMutations.RELAUNCH_SERVICE_FLOW_RUN, { runId });
     return r.relaunchServiceFlowRun;
+  }
+
+  /**
+   * Relance du client (membre de l'organisation, §8) : 2 relances au plus, 48 h d'écart.
+   * Un refus n'est pas une erreur : `sent: false` et `reason`.
+   */
+  async remindRun(runId: string): Promise<ServiceFlowRunReminderResult> {
+    const r = await this.client.mutate<{ remindServiceFlowRun: ServiceFlowRunReminderResult }>(
+      serviceFlowMutations.REMIND_SERVICE_FLOW_RUN, { runId });
+    return r.remindServiceFlowRun;
   }
 
   async closeRun(runId: string): Promise<ServiceFlowRun> {

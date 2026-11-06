@@ -93,7 +93,8 @@ export interface ServiceReport {
   serviceID: string;
   organizationID: string;
   providerUserID?: string | null;
-  reviewerUserID: string;
+  /** Null pour un visiteur : rendu seulement à l'auteur, au prestataire et à un admin (C341). */
+  reviewerUserID?: string | null;
   reviewerName?: string | null;
   serviceTitle?: string | null;
   organizationName?: string | null;

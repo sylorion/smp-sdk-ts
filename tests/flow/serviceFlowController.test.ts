@@ -42,6 +42,9 @@ describe('flow — documents GraphQL', () => {
     REFUSE_SERVICE_FLOW_RUN: 'refuseServiceFlowRun',
     RELAUNCH_SERVICE_FLOW_RUN: 'relaunchServiceFlowRun',
     CLOSE_SERVICE_FLOW_RUN: 'closeServiceFlowRun',
+    GET_SERVICE_FLOW_READINESS: 'serviceFlowReadiness',
+    APPLY_SERVICE_FLOW_FIXES: 'applyServiceFlowFixes',
+    REMIND_SERVICE_FLOW_RUN: 'remindServiceFlowRun',
   };
   const all: Record<string, string> = { ...serviceFlowQueries, ...serviceFlowMutations };
 
@@ -142,6 +145,34 @@ describe('ServiceFlowController', () => {
     client.mutate.mockResolvedValue({ refuseServiceFlowRun: { status: 'refused' } });
     await ctl.refuseRun('r1', 'Hors périmètre');
     expect(client.mutate).toHaveBeenLastCalledWith(serviceFlowMutations.REFUSE_SERVICE_FLOW_RUN, { runId: 'r1', reason: 'Hors périmètre' });
+  });
+
+  test('pre-flight : service facultatif, profil et variables des contrats demandés', async () => {
+    const { ctl, client } = build();
+    client.query.mockResolvedValue({ serviceFlowReadiness: { ready: false, blocking: [{ code: 'TEMPLATE_VARIABLE_UNRESOLVED' }], warnings: [], contracts: [] } });
+    await expect(ctl.readiness('f1')).resolves.toMatchObject({ ready: false });
+    expect(client.query).toHaveBeenLastCalledWith(serviceFlowQueries.GET_SERVICE_FLOW_READINESS, { flowId: 'f1' });
+    await ctl.readiness('f1', 's1');
+    expect(client.query).toHaveBeenLastCalledWith(serviceFlowQueries.GET_SERVICE_FLOW_READINESS, { flowId: 'f1', serviceId: 's1' });
+    for (const f of ['profile {', 'candidates {', 'fix', 'group', 'answerIgnored']) {
+      expect(serviceFlowQueries.GET_SERVICE_FLOW_READINESS).toContain(f);
+    }
+  });
+
+  test('corrections guidées : renvoie aussi valuesSet (clauses fixées)', async () => {
+    const { ctl, client } = build();
+    const fixes = [{ kind: 'set_contract_values', stepKey: 'k1', values: { notice_days: '30' } }];
+    client.mutate.mockResolvedValue({ applyServiceFlowFixes: { questionsAdded: 0, stepsRemoved: 0, valuesSet: 1, flow: { flowId: 'f1' } } });
+    await expect(ctl.applyFixes('f1', fixes)).resolves.toMatchObject({ valuesSet: 1 });
+    expect(client.mutate).toHaveBeenLastCalledWith(serviceFlowMutations.APPLY_SERVICE_FLOW_FIXES, { flowId: 'f1', fixes });
+    expect(serviceFlowMutations.APPLY_SERVICE_FLOW_FIXES).toContain('valuesSet');
+  });
+
+  test('relance du client : un refus est une réponse, pas une erreur', async () => {
+    const { ctl, client } = build();
+    client.mutate.mockResolvedValue({ remindServiceFlowRun: { runId: 'r1', sent: false, reason: 'too_soon' } });
+    await expect(ctl.remindRun('r1')).resolves.toEqual({ runId: 'r1', sent: false, reason: 'too_soon' });
+    expect(client.mutate).toHaveBeenLastCalledWith(serviceFlowMutations.REMIND_SERVICE_FLOW_RUN, { runId: 'r1' });
   });
 
   test('booléens : delete et unlink renvoient toujours un booléen', async () => {

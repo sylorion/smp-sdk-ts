@@ -274,7 +274,7 @@ type ServiceReport {
   serviceID: ID!
   organizationID: ID!
   providerUserID: ID
-  reviewerUserID: ID!
+  reviewerUserID: ID
   reviewerName: String
   serviceTitle: String
   organizationName: String

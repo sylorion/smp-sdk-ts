@@ -381,3 +381,82 @@ export interface ServiceFlowStepFieldError {
   code: 'required' | 'invalid_type' | 'unknown_option' | 'invalid_email' | 'invalid_date' | 'out_of_range' | 'too_long' | 'format' | 'size' | 'too_many_files' | 'invalid_file' | string;
   message: string;
 }
+
+// ── Pre-flight (« Prêt à activer ? »), corrections guidées, relance ───────────
+// docs/architecture/workflows-de-service.md §3.3 et §8 (mu-command readiness.service.ts,
+// readiness-fixes.ts, flow-reminder.ts).
+
+export interface ServiceFlowReadinessIssue {
+  code: string;
+  severity: 'blocking' | 'warning' | string;
+  message: string;
+  stepKey?: string | null;
+  variable?: string | null;
+  fixHint?: string | null;
+  /** organization_settings | service_profile | signature_settings | flow_editor */
+  fixRoute?: string | null;
+  /** service | client | organization | contract | flow */
+  group?: string | null;
+  /** Correction structurée (add_questions, remove_steps, set_contract_values, set_service_profile…). */
+  fix?: unknown;
+}
+
+export interface ServiceFlowVariableResolution {
+  key: string;
+  required: boolean;
+  /** resolved | default | pending_answer | pending_customer | pending_transaction | pending_service | missing */
+  status: string;
+  source: string;
+  path?: string | null;
+  hint?: string | null;
+  block?: string | null;
+  answerIgnored?: string | null;
+}
+
+export interface ServiceFlowContractReadiness {
+  stepKey: string;
+  templateKind: string;
+  templateId: string;
+  templateTitle: string;
+  variables: ServiceFlowVariableResolution[];
+}
+
+export interface ServiceFlowProfileReadiness {
+  code: string;
+  label: string;
+  family: string;
+  declared: boolean;
+  ambiguous: boolean;
+  candidates: Array<{ code: string; label: string }>;
+}
+
+export interface ServiceFlowReadiness {
+  ready: boolean;
+  kind?: string | null;
+  profile?: ServiceFlowProfileReadiness | null;
+  blocking: ServiceFlowReadinessIssue[];
+  warnings: ServiceFlowReadinessIssue[];
+  contracts: ServiceFlowContractReadiness[];
+}
+
+/** Corrections acceptées par `applyServiceFlowFixes` (les autres se font sur le service ou l'organisation). */
+export type ServiceFlowDefinitionFix =
+  | { kind: 'add_questions'; stepKey?: string | null; questions: Array<{ variable: string; label: string; type: string }> }
+  | { kind: 'remove_steps'; stepKeys: string[] }
+  | { kind: 'set_contract_values'; stepKey: string; values: Record<string, unknown>; fields?: unknown[] }
+  | Record<string, unknown>;
+
+export interface ServiceFlowFixesResult {
+  flow: ServiceFlow;
+  questionsAdded: number;
+  stepsRemoved: number;
+  valuesSet: number;
+}
+
+export interface ServiceFlowRunReminderResult {
+  runId: string;
+  sent: boolean;
+  reminderNumber?: number | null;
+  /** status | no_email | recent_activity | price_hold_over | max_reminders | too_soon */
+  reason?: string | null;
+}
