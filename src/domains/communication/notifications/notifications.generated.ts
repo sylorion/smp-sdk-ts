@@ -124,6 +124,8 @@ export const NOTIFICATION_TYPES: Record<string, NotificationTypeDescriptor> = {
   'invoice.export.paused': todo('invoices', ['open'], 'high'),
   'notification.payment.receipt': info('invoices', 'normal', ['view_invoice']),
   'notification.order.paid.provider': info('marketplace', 'normal', ['open']),
+  // Achat commencé non finalisé (relance unique à 24 h, mu-billing) : rouvre le tunnel du service.
+  'notification.checkout.abandoned.reminder': info('marketplace', 'normal', ['open']),
   // Devis et négociations
   'notification.estimate.submitted.provider': todo('estimates', ['view_estimate']),
   'notification.estimate.submitted.client': todo('estimates', ['accept_estimate', 'refuse_estimate', 'view_estimate']),
