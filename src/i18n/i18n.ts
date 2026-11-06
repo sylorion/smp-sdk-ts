@@ -18,23 +18,39 @@ export class I18n {
   private langModule: any;
 
   constructor(lang: SupportedLang = defaultLanguage) {
-    this.lang = lang;
+    this.lang = defaultLanguage;
     this.loadLanguage(lang);
   }
 
+  /**
+   * Langue prise en charge la plus proche : code exact (`fr_FR`), forme BCP 47
+   * (`fr-FR`) ou langue seule (`fr`, `en`) ; sinon la langue par défaut.
+   * Avant : un code non reconnu (`en`, `fr`) laissait `messages` vide et
+   * `langModule` indéfini — toutes les traductions renvoyaient leur clé et
+   * `formatDate` / `formatNumber` levaient une TypeError.
+   */
+  static resolveLanguage(lang: unknown): SupportedLang {
+    if (typeof lang !== 'string' || !lang.trim()) return defaultLanguage;
+    const normalized = lang.trim().replace('-', '_');
+    const supported = Object.keys(messagesMapping) as SupportedLang[];
+    const exact = supported.find((l) => l.toLowerCase() === normalized.toLowerCase());
+    if (exact) return exact;
+    const base = normalized.split('_')[0].toLowerCase();
+    return supported.find((l) => l.split('_')[0].toLowerCase() === base) ?? defaultLanguage;
+  }
+
   async loadLanguage(lang: SupportedLang = defaultLanguage) {
+    const resolved = I18n.resolveLanguage(lang);
+    if (resolved !== lang) {
+      logger.warn(`Unsupported language: ${String(lang)}. Using ${resolved}.`);
+    }
     try {
-      const module = messagesMapping[lang] ; //await import(`./locales/${lang}.ts`);
-      this.langModule = module ;
-      this.messages = module.messages || {};
-      if (this.messages) {
-        this.lang = lang;
-      } else {
-        logger.warn(`Unsupported language: ${lang}. Falling back to default ${defaultLanguage}.`);
-        this.lang = defaultLanguage;
-      }
+      const module = messagesMapping[resolved];
+      this.langModule = module;
+      this.messages = module?.messages || {};
+      this.lang = resolved;
     } catch (error) {
-      logger.error(`Failed to load translations for language: ${lang}`, error);
+      logger.error(`Failed to load translations for language: ${String(lang)}`, error);
     }
   }
 
@@ -59,12 +75,17 @@ export class I18n {
 
   formatDate(date: Date, format: 'short' | 'long' = 'short'): string {
     const options = this.langModule.dateTimeFormat[format];
-    return new Intl.DateTimeFormat(this.lang, options).format(date);
+    return new Intl.DateTimeFormat(this.intlLocale(), options).format(date);
   }
 
   formatNumber(value: number, style: 'currency' | 'decimal' = 'decimal'): string {
     const options = this.langModule.numberFormat[style];
-    return new Intl.NumberFormat(this.lang, options).format(value);
+    return new Intl.NumberFormat(this.intlLocale(), options).format(value);
+  }
+
+  /** `Intl` attend une balise BCP 47 (`fr-FR`) : `fr_FR` y lève une RangeError. */
+  private intlLocale(): string {
+    return this.lang.replace('_', '-');
   }
 
   getCurrentLanguage(): SupportedLang {
