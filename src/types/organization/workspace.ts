@@ -255,4 +255,6 @@ export interface SaveOrganizationActivityReportInput extends OrganizationActivit
   priorities: string[];
   writer: 'iro' | 'rules';
   trigger: 'automation' | 'manual';
+  /** Notes de l'équipe analysées par le fils d'Iro (JSON : notes corrigées, décisions, points, blocages, actions, questions, précisions). */
+  analysis?: string | null;
 }
