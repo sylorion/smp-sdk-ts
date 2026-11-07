@@ -14,6 +14,7 @@
 import {
   bindingOf, canonicalValues, clientMayEdit, completeVariableDefs, crossCheck, extractVariableKeys, filledBy, inferBinding, isIsoDate,
   mergeFieldValues, providerMayEdit, redactSensitive, sourceInfo, validateFieldValue, validateTemplateBindings, type FieldBinding,
+  documentLanguage, documentParties, standardPartyRoles, formatDocumentValue, formatDocumentValues, isOmittableLine, missingDocumentVariables,
 } from './contract-fields.generated';
 
 const rental = {
@@ -220,5 +221,69 @@ describe('variables d’un contrat libre (sans modèle standard)', () => {
     expect(r.defs.fixed_price.binding.role).toBeUndefined();
     expect(r.defs.insurance_type.binding).toEqual({ block: 'provider', format: 'select' });
     expect(validateTemplateBindings(r.defs)).toEqual([]);
+  });
+});
+
+describe('document : complétude, affichage, parties', () => {
+  const para = (text: string) => ({ type: 'paragraph', content: [{ type: 'text', text }] });
+  const content = {
+    language: 'fr',
+    partyRoles: { self: 'lessor', counterparty: 'renter' },
+    sections: [{ id: 'a', content: { type: 'doc', content: [para('{{lessor_name}} loue à {{renter_name}} du {{start_date}} pour {{daily_rate}} euros. {{note}} {{libre}}')] } }],
+    variableDefs: {
+      lessor_name: { required: true }, renter_name: { required: true },
+      start_date: { type: 'date', required: true, binding: { block: 'client', format: 'date' } },
+      daily_rate: { type: 'number', required: true, binding: { block: 'service', format: 'money' } },
+      note: { required: false },
+    },
+  };
+
+  it('missingDocumentVariables : obligatoires du texte vides ; une variable sans définition compte comme obligatoire ; facultative ignorée', () => {
+    expect(missingDocumentVariables(content, { lessor_name: 'Asmauto', renter_name: '  ', daily_rate: 0 }))
+      .toEqual(['renter_name', 'start_date', 'libre']);
+    expect(missingDocumentVariables(content, { lessor_name: 'A', renter_name: 'B', start_date: '2026-11-07', daily_rate: '55', libre: 'x' })).toEqual([]);
+    expect(missingDocumentVariables(null, {})).toEqual([]);
+  });
+
+  it('formatDocumentValue : date longue dans la langue du document, montant groupé, année sans séparateur, valeur illisible rendue telle quelle', () => {
+    expect(formatDocumentValue('start_date', content.variableDefs.start_date, '2026-10-27', 'fr')).toBe('27 octobre 2026');
+    expect(formatDocumentValue('start_date', content.variableDefs.start_date, '2026-10-27', 'en')).toBe('27 October 2026');
+    expect(formatDocumentValue('start_date', content.variableDefs.start_date, '27/10/2026', 'es')).toBe('27 de octubre de 2026');
+    expect(formatDocumentValue('daily_rate', content.variableDefs.daily_rate, '2500', 'fr')).toBe('2\u00a0500');
+    expect(formatDocumentValue('daily_rate', content.variableDefs.daily_rate, '0.25', 'fr')).toBe('0,25');
+    expect(formatDocumentValue('daily_rate', content.variableDefs.daily_rate, '1234.5', 'en')).toBe('1,234.50');
+    expect(formatDocumentValue('vehicle_year', { type: 'number', binding: { block: 'service', format: 'integer' } }, '2026', 'fr')).toBe('2026');
+    expect(formatDocumentValue('start_date', content.variableDefs.start_date, 'demain', 'fr')).toBe('demain');
+    expect(formatDocumentValue('x', undefined, '', 'fr')).toBe('');
+    expect(formatDocumentValues(content, { start_date: '2026-01-05', empty: '' })).toEqual({ start_date: '5 janvier 2026' });
+    expect(documentLanguage('EN')).toBe('en');
+    expect(documentLanguage('de')).toBe('fr');
+  });
+
+  it('isOmittableLine : seulement des variables facultatives vides', () => {
+    expect(isOmittableLine('{{note}}', content, {})).toBe(true);
+    expect(isOmittableLine('{{note}}', content, { note: 'x' })).toBe(false);
+    expect(isOmittableLine('{{renter_name}}', content, {})).toBe(false);
+    expect(isOmittableLine('Tél. : {{note}}', content, {})).toBe(false);
+    expect(isOmittableLine('Texte fixe', content, {})).toBe(false);
+  });
+
+  it('documentParties : préfixes du modèle, désignation dans la langue, repli sur le nom de l’organisation', () => {
+    const [self, other] = documentParties({
+      content, templateId: 'car-rental-agreement',
+      values: { lessor_name: 'Asmauto', lessor_rcs: '123 456 789 00012', lessor_address: "1 allée de l'Arche", lessor_representative: 'L. Yopa', renter_name: 'Ahmed A.' },
+    });
+    expect(self).toMatchObject({ side: 'self', prefix: 'lessor', label: 'Le Loueur', name: 'Asmauto', representative: 'L. Yopa' });
+    expect(self.lines).toEqual(['SIRET 123 456 789 00012', "1 allée de l'Arche"]);
+    expect(other).toMatchObject({ side: 'counterparty', prefix: 'renter', label: 'Le Locataire', name: 'Ahmed A.', lines: [] });
+    const [lessor] = documentParties({ content: { ...content, language: 'en' }, templateId: 'lease-agreement-en', values: {} , selfFallbackName: 'Org' });
+    expect(lessor).toMatchObject({ label: 'The Lessor', name: 'Org' });
+    // Contrat sans rôles enregistrés : ceux du modèle standard d'origine.
+    const [legacySelf, legacyOther] = documentParties({ content: {}, templateId: 'car-rental-agreement-es', values: { lessor_name: 'L', renter_name: 'R' } });
+    expect([legacySelf.label, legacySelf.name, legacyOther.label, legacyOther.name]).toEqual(['Le Loueur', 'L', 'Le Locataire', 'R']);
+    expect(standardPartyRoles('subscription-termination-en')).toEqual({ self: 'sender', counterparty: 'provider' });
+    expect(standardPartyRoles('inconnu')).toBeUndefined();
+    const [p, c] = documentParties({ content: {}, values: { provider_name: 'P', client_name: 'C' } });
+    expect([p.label, p.name, c.label, c.name]).toEqual(['Le Prestataire', 'P', 'Le Client', 'C']);
   });
 });

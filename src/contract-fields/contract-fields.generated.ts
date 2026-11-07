@@ -642,3 +642,220 @@ export function completeVariableDefs(input: CompleteDefsInput): { defs: Record<s
   }
   return { defs: out, added, replaced };
 }
+
+// ─── Document : complétude, affichage des valeurs, parties ─────────────────
+//
+// Règles communes à l'aperçu de la webapp, au PDF serveur de mu-contract et aux contrôles
+// avant envoi ou signature : une variable s'affiche partout de la même façon, et un contrat
+// n'est envoyé ni signé avec un champ obligatoire vide.
+
+/** Langue d'un document de contrat (`content.language`), français par défaut. */
+export type DocumentLanguage = 'fr' | 'en' | 'es';
+
+export function documentLanguage(value: unknown): DocumentLanguage {
+  const v = String(value ?? '').toLowerCase().slice(0, 2);
+  return v === 'en' || v === 'es' ? v : 'fr';
+}
+
+const INTL_LOCALE: Record<DocumentLanguage, string> = { fr: 'fr-FR', en: 'en-GB', es: 'es-ES' };
+
+/** Valeur renseignée : ni absente, ni vide une fois les espaces retirés. */
+export function isFilledValue(value: unknown): boolean {
+  if (value === null || value === undefined) return false;
+  if (typeof value === 'number') return Number.isFinite(value);
+  return String(value).trim() !== '';
+}
+
+/**
+ * Variables à renseigner avant d'envoyer ou de signer : utilisées dans le texte, obligatoires
+ * (définition `required`, ou variable du texte sans définition) et vides. Une variable facultative
+ * vide n'empêche rien (sa ligne est omise ou laissée en blanc à remplir).
+ */
+export function missingDocumentVariables(content: unknown, values: Record<string, unknown> | null | undefined): string[] {
+  const c = isObject(content) ? content : {};
+  const defs = isObject(c.variableDefs) ? c.variableDefs : {};
+  const vals = values ?? {};
+  return extractVariableKeys(c.sections).filter((key) => {
+    const def = defs[key];
+    const required = isObject(def) ? def.required === true : true;
+    return required && !isFilledValue(vals[key]);
+  });
+}
+
+/** Format d'affichage d'une variable : celui de sa liaison, sinon de son type, sinon déduit de son nom. */
+export function displayFormatOf(key: string, def: unknown): FieldFormat {
+  const b = bindingOf(def);
+  if (b) return b.format;
+  if (isObject(def) && typeof def.type === 'string') return formatForType(def.type);
+  return formatForType(inferVariableType(key));
+}
+
+/**
+ * Valeur telle qu'elle apparaît dans le document : date ISO → « 27 octobre 2026 », montant →
+ * « 2 500 » / « 0,25 » (séparateurs de la langue), autre valeur → texte saisi. Une valeur qui ne
+ * se lit pas dans son format est rendue telle quelle (jamais perdue). Vide → chaîne vide.
+ */
+export function formatDocumentValue(key: string, def: unknown, raw: unknown, language: DocumentLanguage = 'fr'): string {
+  if (!isFilledValue(raw)) return '';
+  const value = String(raw).trim();
+  const locale = INTL_LOCALE[language] ?? INTL_LOCALE.fr;
+  const format = displayFormatOf(key, def);
+  try {
+    if (format === 'date') {
+      const iso = toIsoDate(value);
+      if (!iso) return value;
+      return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+        .format(new Date(`${iso}T00:00:00Z`));
+    }
+    if (format === 'money' || format === 'number' || format === 'integer' || format === 'percent') {
+      const n = parseNumber(value);
+      if (n === null) return value;
+      const money = format === 'money';
+      const out = new Intl.NumberFormat(locale, {
+        minimumFractionDigits: money && !Number.isInteger(n) ? 2 : 0,
+        maximumFractionDigits: 2,
+        // Une année ou un kilométrage (≤ 4 chiffres) ne prend pas de séparateur de milliers.
+        useGrouping: money || Math.abs(n) >= 10000,
+      }).format(n);
+      // Espace fine insécable (fr) → espace insécable : lisible partout, y compris en WinAnsi (PDF).
+      return out.replace(/ /g, ' ');
+    }
+  } catch {
+    return value;
+  }
+  return value;
+}
+
+/** Valeurs prêtes à afficher, clé par clé (les clés vides sont omises). */
+export function formatDocumentValues(content: unknown, values: Record<string, unknown> | null | undefined): Record<string, string> {
+  const c = isObject(content) ? content : {};
+  const defs = isObject(c.variableDefs) ? c.variableDefs : {};
+  const language = documentLanguage(c.language);
+  const out: Record<string, string> = {};
+  for (const [key, raw] of Object.entries(values ?? {})) {
+    const v = formatDocumentValue(key, defs[key], raw, language);
+    if (v) out[key] = v;
+  }
+  return out;
+}
+
+/**
+ * Un paragraphe fait seulement de variables facultatives vides (« {{sender_phone}} ») est omis
+ * du document, au lieu de laisser une ligne vide ou un blanc à remplir.
+ */
+export function isOmittableLine(text: string, content: unknown, values: Record<string, unknown> | null | undefined): boolean {
+  const keys = [...String(text ?? '').matchAll(TEXT_VAR_RE)].map((m) => m[1]);
+  if (!keys.length) return false;
+  if (String(text).replace(TEXT_VAR_RE, '').replace(/[\s,;:·•—–\-/()]/g, '') !== '') return false;
+  const c = isObject(content) ? content : {};
+  const defs = isObject(c.variableDefs) ? c.variableDefs : {};
+  const vals = values ?? {};
+  return keys.every((k) => !isFilledValue(vals[k]) && !(isObject(defs[k]) && defs[k].required === true));
+}
+
+// Désignation des parties (« Le Loueur », « The Tenant »…), reprise du texte de chaque modèle.
+type Labels = Record<DocumentLanguage, string>;
+const PARTY_LABELS: Record<string, Labels> = {
+  provider: { fr: 'Le Prestataire', en: 'The Service Provider', es: 'El Prestador de Servicios' },
+  client: { fr: 'Le Client', en: 'The Client', es: 'El Cliente' },
+  lessor: { fr: 'Le Loueur', en: 'The Lessor', es: 'El Arrendador' },
+  renter: { fr: 'Le Locataire', en: 'The Tenant', es: 'El Arrendatario' },
+  lessee: { fr: 'Le Locataire', en: 'The Tenant', es: 'El Arrendatario' },
+  consultant: { fr: 'Le Consultant', en: 'The Consultant', es: 'El Consultor' },
+  freelancer: { fr: 'Le Prestataire', en: 'The Service Provider', es: 'El Prestador de Servicios' },
+  employer: { fr: "L'Employeur", en: 'The Employer', es: 'El Empleador' },
+  employee: { fr: 'Le Salarié', en: 'The Employee', es: 'El Empleado' },
+  company: { fr: "L'Organisme d'accueil", en: 'The Host Organisation', es: 'La Entidad de Acogida' },
+  intern: { fr: 'Le Stagiaire', en: 'The Intern', es: 'El Estudiante en Prácticas' },
+  party_a: { fr: 'La Partie Divulgatrice', en: 'The Disclosing Party', es: 'La Parte Informante' },
+  party_b: { fr: 'La Partie Réceptrice', en: 'The Receiving Party', es: 'La Parte Receptora' },
+  partner_a: { fr: 'Partenaire A', en: 'Partner A', es: 'Socio A' },
+  partner_b: { fr: 'Partenaire B', en: 'Partner B', es: 'Socio B' },
+  contractor: { fr: "L'Entrepreneur Principal", en: 'The Main Contractor', es: 'El Contratista Principal' },
+  subcontractor: { fr: 'Le Sous-Traitant', en: 'The Subcontractor', es: 'El Subcontratista' },
+  sender: { fr: "L'Abonné", en: 'The Subscriber', es: 'El Abonado' },
+};
+/** Désignations propres à un modèle quand le même préfixe change de nom (bail : « Le Bailleur »). */
+const TEMPLATE_PARTY_LABELS: Record<string, Record<string, Labels>> = {
+  'lease-agreement': { lessor: { fr: 'Le Bailleur', en: 'The Lessor', es: 'El Arrendador' } },
+};
+
+/**
+ * Préfixes des parties des modèles standards (identifiant sans suffixe de langue) : `self` =
+ * l'organisation qui rédige, `counterparty` = le client / cocontractant. Source unique, reprise par
+ * mu-contract (`partyRolesFor`) et par l'aperçu de la webapp pour les contrats sans `partyRoles`.
+ */
+export const STANDARD_PARTY_ROLES: Readonly<Record<string, { self: string; counterparty: string }>> = {
+  'car-rental-agreement': { self: 'lessor', counterparty: 'renter' },
+  'consulting-agreement': { self: 'consultant', counterparty: 'client' },
+  'employment-agreement': { self: 'employer', counterparty: 'employee' },
+  'freelance-agreement': { self: 'freelancer', counterparty: 'client' },
+  'internship-agreement': { self: 'company', counterparty: 'intern' },
+  'lease-agreement': { self: 'lessor', counterparty: 'lessee' },
+  'nda-agreement': { self: 'party_a', counterparty: 'party_b' },
+  'partnership-agreement': { self: 'partner_a', counterparty: 'partner_b' },
+  'service-agreement': { self: 'provider', counterparty: 'client' },
+  'subcontracting-agreement': { self: 'contractor', counterparty: 'subcontractor' },
+  'subscription-termination': { self: 'sender', counterparty: 'provider' },
+};
+
+/** Rôles d'un modèle standard (`car-rental-agreement-en` → loueur / locataire), ou `undefined`. */
+export function standardPartyRoles(templateId: string | null | undefined): { self: string; counterparty: string } | undefined {
+  if (!templateId) return undefined;
+  return STANDARD_PARTY_ROLES[String(templateId).replace(/-(en|es)$/, '')];
+}
+
+export interface DocumentParty {
+  /** `self` : l'organisation qui rédige ; `counterparty` : le client / cocontractant. */
+  side: 'self' | 'counterparty';
+  /** Préfixe des variables de la partie (`lessor`, `renter`…). */
+  prefix: string;
+  /** Désignation dans le contrat (« Le Loueur »). */
+  label: string;
+  /** Nom de la partie (société ou personne), vide si non renseigné. */
+  name: string;
+  /** Personne qui signe pour la partie (représentant), si connue. */
+  representative: string;
+  /** Lignes d'identification : immatriculation, adresse (valeurs renseignées seulement). */
+  lines: string[];
+}
+
+/**
+ * Les deux parties d'un contrat, d'après `content.partyRoles` (préfixes des variables), dans
+ * l'ordre « organisation qui rédige » puis « cocontractant ». Sans rôles : `provider` / `client`.
+ */
+export function documentParties(input: {
+  content: unknown;
+  values: Record<string, unknown> | null | undefined;
+  templateId?: string | null;
+  /** Nom de l'organisation quand aucune variable ne le porte (profil, `details.from.name`). */
+  selfFallbackName?: string | null;
+}): [DocumentParty, DocumentParty] {
+  const c = isObject(input.content) ? input.content : {};
+  // Contrat enregistré avant les rôles dans le contenu : ceux du modèle standard d'origine.
+  const roles: Record<string, any> = isObject(c.partyRoles) ? c.partyRoles : standardPartyRoles(input.templateId) ?? {};
+  const language = documentLanguage(c.language);
+  const vals = input.values ?? {};
+  const base = input.templateId ? String(input.templateId).replace(/-(en|es)$/, '') : '';
+  const str = (k: string) => (isFilledValue(vals[k]) ? String(vals[k]).trim() : '');
+  const first = (...keys: string[]) => { for (const k of keys) { const v = str(k); if (v) return v; } return ''; };
+  const party = (side: 'self' | 'counterparty', prefix: string, legacy: string): DocumentParty => {
+    const labels = TEMPLATE_PARTY_LABELS[base]?.[prefix] ?? PARTY_LABELS[prefix] ?? PARTY_LABELS[side === 'self' ? 'provider' : 'client'];
+    const registration = first(`${prefix}_rcs`, `${prefix}_siret`);
+    const lines = [
+      registration ? (/^\d[\d\s]{8,}$/.test(registration) ? `SIRET ${registration}` : registration) : '',
+      first(`${prefix}_address`),
+    ].filter(Boolean);
+    return {
+      side,
+      prefix,
+      label: labels[language],
+      name: first(`${prefix}_name`, `${prefix}_company`, `${legacy}_name`) || (side === 'self' ? String(input.selfFallbackName ?? '').trim() : ''),
+      representative: first(`${prefix}_representative`),
+      lines,
+    };
+  };
+  const self = typeof roles.self === 'string' && VARIABLE_KEY_RE.test(roles.self) ? roles.self : 'provider';
+  const counterparty = typeof roles.counterparty === 'string' && VARIABLE_KEY_RE.test(roles.counterparty) ? roles.counterparty : 'client';
+  return [party('self', self, 'provider'), party('counterparty', counterparty, 'client')];
+}
