@@ -617,6 +617,12 @@ export const PAYMENT_SCHEDULE_EVENTS = {
   installmentDue: 'engagement.installment.due',
   /** mu-billing → mu-command : la facture de l'échéance est émise (statut `invoiced`). */
   installmentInvoiced: 'invoice.installment.created',
+  /**
+   * mu-billing → mu-command, exploitation (C362) : la facture de l'échéance n'a pas pu être émise
+   * (quota de factures du plan vendeur, mu-organization injoignable…). L'échéance reste `due` ;
+   * mu-command la redemande (`replayStalled`, C361). Signal seulement : aucun état n'en dépend.
+   */
+  installmentInvoiceFailed: 'invoice.installment.failed',
   /** mu-command → (notifications, Iro) : une échéance est réglée. */
   installmentPaid: 'engagement.installment.paid',
 } as const;
@@ -654,6 +660,20 @@ export interface PmInstallmentDuePayload {
   retentionCents?: number;
   /** Pénalités dues par le prestataire déduites de ce versement (fonds de garantie — C158). */
   penaltyDeductionCents?: number;
+}
+
+/** Payload de `invoice.installment.failed` (C362). */
+export interface InstallmentInvoiceFailedPayload {
+  engagementId: string;
+  installmentKey: string;
+  orderId: string | null;
+  sellerOrganizationId: string;
+  /** `plan_limit` : quota ou fonctionnalité du plan vendeur ; `error` : panne (gRPC, base…). */
+  reason: 'plan_limit' | 'error';
+  /** Code d'erreur connu (`PLAN_LIMIT_EXCEEDED`…) ou `null`. */
+  code: string | null;
+  message: string;
+  failedAt: string;
 }
 
 /** Payload de `engagement.installment.due` : tout ce qu'il faut pour facturer sans relire mu-command. */
