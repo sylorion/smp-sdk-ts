@@ -137,7 +137,11 @@ export const NOTIFICATION_TYPES: Record<string, NotificationTypeDescriptor> = {
   'notification.contract.signature': todo('contracts', ['sign_contract', 'read_contract']),
   'notification.contract.reminder': todo('contracts', ['sign_contract', 'read_contract'], 'urgent'),
   'notification.contract.opened': info('contracts', 'low', ['read_contract']),
+  // Prestataire : le client a signé, contrat pas encore actif → contre-signature attendue.
   'notification.contract.signed': todo('contracts', ['countersign_contract', 'read_contract']),
+  // Prestataire : contrat actif (signé des deux parties, contre-signature automatique comprise) →
+  // ferme le fil du contrat (« Contre-signer » et le compteur « à traiter » disparaissent).
+  'notification.contract.active': closes('contracts', ['read_contract']),
   'notification.contract.rejected': closes('contracts', ['read_contract'], 'high'),
   'notification.service_flow.countersign.required': todo('contracts', ['countersign_contract', 'read_contract']),
   // Flows de service (dossiers)
@@ -503,6 +507,8 @@ export interface NotificationCounters {
   unread: number;
   todo: number;
   todoByCategory: Partial<Record<NotificationCategory, number>>;
+  /** Non lues par catégorie (badges de la barre latérale) : suivent « lu / non lu », comme la cloche. */
+  unreadByCategory?: Partial<Record<NotificationCategory, number>>;
   /** Par espace (vue unifiée seulement) : `organizationID` → compteurs ; `personal` pour le fil personnel. */
   byScope?: Record<string, { unread: number; todo: number }>;
 }
