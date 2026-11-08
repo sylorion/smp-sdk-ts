@@ -37,6 +37,10 @@ export interface AgentExecutionStatus {
     attempts?: number | null;
     startedAt?: string | null;
     completedAt?: string | null;
+    /** Échec : heure du prochain essai automatique (null si définitif). */
+    nextRetryAt?: string | null;
+    /** Échec définitif : plus d'essai automatique, le prestataire peut relancer. */
+    finalFailure?: boolean | null;
     result?: unknown;
 }
 export declare class Order {
@@ -60,5 +64,7 @@ export declare class Order {
     listByBuyerOrganizationId(buyerOrganizationId: string): Promise<OrderResponse[]>;
     /** Suivi de l'exécution par un agent pour la commande donnée. */
     getAgentExecutionStatus(orderId: string): Promise<AgentExecutionStatus>;
+    /** Relance par le prestataire d'une réalisation en échec (membre de l'organisation vendeuse). */
+    retryAgentExecution(orderId: string): Promise<AgentExecutionStatus>;
 }
 export {};

@@ -57,7 +57,8 @@ export const PLAN_MATRIX = {
         maxEstimatesPerMonth: 2,
         maxInvoicesPerMonth: 1,
         maxContractsPerMonth: 1,
-        maxAiCreditsPerMonth: 1950,
+        maxContractTemplatesPerOrg: 1,
+        maxAiCreditsPerMonth: 1300,
         maxNativeAgents: 0,
         maxWithdrawalsPerMonth: 1,
         hasFormAgent: false,
@@ -81,7 +82,8 @@ export const PLAN_MATRIX = {
         maxEstimatesPerMonth: 5,
         maxInvoicesPerMonth: 5,
         maxContractsPerMonth: 3,
-        maxAiCreditsPerMonth: 5200,
+        maxContractTemplatesPerOrg: 5,
+        maxAiCreditsPerMonth: 3900,
         maxNativeAgents: 1,
         maxWithdrawalsPerMonth: 2,
         hasFormAgent: false,
@@ -105,7 +107,8 @@ export const PLAN_MATRIX = {
         maxEstimatesPerMonth: 30,
         maxInvoicesPerMonth: 30,
         maxContractsPerMonth: 20,
-        maxAiCreditsPerMonth: 13000,
+        maxContractTemplatesPerOrg: 10,
+        maxAiCreditsPerMonth: 9750,
         maxNativeAgents: 3,
         maxWithdrawalsPerMonth: 5,
         hasFormAgent: true,
@@ -129,7 +132,8 @@ export const PLAN_MATRIX = {
         maxEstimatesPerMonth: UNLIMITED,
         maxInvoicesPerMonth: UNLIMITED,
         maxContractsPerMonth: UNLIMITED,
-        maxAiCreditsPerMonth: 26000,
+        maxContractTemplatesPerOrg: 30,
+        maxAiCreditsPerMonth: 19500,
         maxNativeAgents: UNLIMITED,
         maxWithdrawalsPerMonth: UNLIMITED,
         hasFormAgent: true,
@@ -234,6 +238,8 @@ export var PlanAction;
     PlanAction["CREATE_ESTIMATE"] = "CREATE_ESTIMATE";
     PlanAction["CREATE_INVOICE"] = "CREATE_INVOICE";
     PlanAction["CREATE_CONTRACT"] = "CREATE_CONTRACT";
+    /** Enregistrer un contrat comme modèle (stock par organisation). */
+    PlanAction["CREATE_CONTRACT_TEMPLATE"] = "CREATE_CONTRACT_TEMPLATE";
     PlanAction["USE_AI_CREDITS"] = "USE_AI_CREDITS";
     PlanAction["USE_NATIVE_AGENT"] = "USE_NATIVE_AGENT";
     PlanAction["USE_FORM_AGENT"] = "USE_FORM_AGENT";
@@ -267,6 +273,7 @@ const ACTION_TO_LIMIT_KEY = {
     [PlanAction.CREATE_ESTIMATE]: 'maxEstimatesPerMonth',
     [PlanAction.CREATE_INVOICE]: 'maxInvoicesPerMonth',
     [PlanAction.CREATE_CONTRACT]: 'maxContractsPerMonth',
+    [PlanAction.CREATE_CONTRACT_TEMPLATE]: 'maxContractTemplatesPerOrg',
     [PlanAction.USE_AI_CREDITS]: 'maxAiCreditsPerMonth',
     [PlanAction.USE_NATIVE_AGENT]: 'maxNativeAgents',
     [PlanAction.PERFORM_WITHDRAWAL]: 'maxWithdrawalsPerMonth',
@@ -428,7 +435,7 @@ export function getPlanFeaturesForDisplay(plan) {
         { label: 'Factures / mois', value: formatLimit(config.maxInvoicesPerMonth), included: true, category: 'limit' },
         { label: 'Contrats digitaux / mois', value: formatLimit(config.maxContractsPerMonth), included: true, category: 'limit' },
         { label: 'STK / mois', value: formatLimit(config.maxAiCreditsPerMonth), included: true, category: 'limit' },
-        { label: "Agents natifs (outils d'IRO)", value: formatLimit(config.maxNativeAgents), included: config.maxNativeAgents > 0, category: 'limit' },
+        { label: "Agents natifs (outils d'Iro)", value: formatLimit(config.maxNativeAgents), included: config.maxNativeAgents > 0, category: 'limit' },
         { label: 'Agent Formulaire', value: config.hasFormAgent ? 'Inclus' : 'Non inclus', included: config.hasFormAgent, category: 'feature' },
         { label: 'Support email', value: config.hasEmailSupport ? 'Inclus' : 'Non inclus', included: config.hasEmailSupport, category: 'feature' },
         { label: 'Support prioritaire', value: config.hasPrioritySupport ? 'Inclus' : 'Non inclus', included: config.hasPrioritySupport, category: 'feature' },

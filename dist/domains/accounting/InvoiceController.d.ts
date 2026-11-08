@@ -1,5 +1,6 @@
 import { APIClient } from '../../api/APIClient.js';
-import type { InvoiceExportInput, InvoiceExportPreview, InvoiceExportResult } from '../../types/accounting/invoiceExport.js';
+import type { InvoiceExportDownload, InvoiceExportInput, InvoiceExportJob, InvoiceExportPreview, InvoiceExportResult, InvoiceExportStatusInput, RequestInvoiceExportInput } from '../../types/accounting/invoiceExport.js';
+import type { InvoicePaymentDue } from '../../types/accounting/invoicePaymentDue.js';
 interface InvoiceResponse {
     invoiceId: string;
     transactionId: string;
@@ -155,6 +156,13 @@ export declare class Invoice {
         status?: string;
     }>;
     /**
+     * Montant dû pour régler la facture par lien de paiement (C115) : TTC + commission + frais sur une
+     * vente de la place de marché, TTC + frais de paiement sur une facture manuelle. C'est ce montant,
+     * et non `totalAmount`, qu'il faut passer à `initiatePayment` ; mu-billing le recalcule au règlement.
+     * `cardCountry` (ISO 3166-1 alpha-2) affine les frais de paiement ; défaut : pays de l'acheteur.
+     */
+    getPaymentDue(invoiceId: string, cardCountry?: string | null): Promise<InvoicePaymentDue | null>;
+    /**
      * Traite le paiement d'une facture
      */
     processPayment(token: string, data: {
@@ -199,7 +207,25 @@ export declare class Invoice {
      * (`httpApiClient.withHeaders(...)`) ; l'appelant a vérifié le droit `invoices.export`.
      */
     getExportPreview(input: InvoiceExportInput): Promise<InvoiceExportPreview>;
-    /** Export comptable — archive ZIP des factures de la période (service interne, voir `getExportPreview`). */
+    /**
+     * Export comptable SYNCHRONE — archive ZIP produite pendant l'appel (service interne). Préférer
+     * `requestExport` : l'export asynchrone ne bloque pas l'appel, notifie à la fin et débite au fil de l'eau.
+     */
     exportInvoices(input: InvoiceExportInput): Promise<InvoiceExportResult>;
+    /**
+     * Export comptable ASYNCHRONE (service interne) : répond aussitôt (`queued`) ; mu-billing produit
+     * l'archive en tâche de fond, débite les STK au fil de l'eau selon la charge réelle et prévient le
+     * membre à la fin (in-app, push, e-mail — ZIP joint s'il est léger).
+     */
+    requestExport(input: RequestInvoiceExportInput): Promise<InvoiceExportJob>;
+    /** État et avancement d'un export de l'organisation (service interne). */
+    getExportStatus(input: InvoiceExportStatusInput): Promise<InvoiceExportJob>;
+    /**
+     * Reprise d'un export mis en pause faute de STK (service interne ; l'appelant vérifie le solde) :
+     * les tranches déjà payées ne sont pas redébitées.
+     */
+    resumeExport(input: InvoiceExportStatusInput): Promise<InvoiceExportJob>;
+    /** Lien signé d'une heure d'une archive livrée ; le premier téléchargement programme sa suppression (service interne). */
+    downloadExport(input: InvoiceExportStatusInput): Promise<InvoiceExportDownload>;
 }
 export {};

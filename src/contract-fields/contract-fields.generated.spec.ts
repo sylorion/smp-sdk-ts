@@ -15,6 +15,7 @@ import {
   bindingOf, canonicalValues, clientMayEdit, completeVariableDefs, crossCheck, extractVariableKeys, filledBy, inferBinding, isIsoDate,
   mergeFieldValues, providerMayEdit, redactSensitive, sourceInfo, validateFieldValue, validateTemplateBindings, type FieldBinding,
   documentLanguage, documentParties, standardPartyRoles, formatDocumentValue, formatDocumentValues, isOmittableLine, missingDocumentVariables,
+  initialsOf, normalizeInitials, signatureInitials,
 } from './contract-fields.generated';
 
 const rental = {
@@ -285,5 +286,36 @@ describe('document : complétude, affichage, parties', () => {
     expect(standardPartyRoles('inconnu')).toBeUndefined();
     const [p, c] = documentParties({ content: {}, values: { provider_name: 'P', client_name: 'C' } });
     expect([p.label, p.name, c.label, c.name]).toEqual(['Le Prestataire', 'P', 'Le Client', 'C']);
+  });
+});
+
+
+describe('paraphes', () => {
+  it('initiales d’un nom : prénoms composés, accents, au plus quatre lettres', () => {
+    expect(initialsOf('Leonce Yopa')).toBe('L.Y.');
+    expect(initialsOf('Jean-Pierre Martin')).toBe('J.P.M.');
+    expect(initialsOf('élodie d’Arcy')).toBe('É.D.A.');
+    expect(initialsOf('asmauto')).toBe('A.');
+    expect(initialsOf('a b c d e')).toBe('A.B.C.D.');
+    expect(initialsOf('  ')).toBe('');
+    expect(initialsOf(null)).toBe('');
+  });
+
+  it('paraphe saisi : nettoyé, en capitales, borné', () => {
+    expect(normalizeInitials(' l.y. ')).toBe('L.Y.');
+    expect(normalizeInitials('<b>LY</b>')).toBe('BLYB');
+    expect(normalizeInitials('ABCDEFGHIJ')).toBe('ABCDEFGH');
+    expect(normalizeInitials(42)).toBe('');
+  });
+
+  it('paraphe d’une partie : vide sans signature ; saisi, sinon déduit du signataire ou de la partie', () => {
+    const party = { representative: 'Leonce Yopa', name: 'asmauto' };
+    expect(signatureInitials(null, party)).toBe('');
+    expect(signatureInitials({ initials: 'XY' }, party)).toBe('');
+    expect(signatureInitials({ hash: 'h', initials: 'ly' }, party)).toBe('LY');
+    expect(signatureInitials({ hash: 'h', signerName: 'Claire Dupont' }, party)).toBe('C.D.');
+    expect(signatureInitials({ hash: 'h', type: 'type', text: 'Ahmed Adjroud' }, { name: 'Client' })).toBe('A.A.');
+    expect(signatureInitials({ hash: 'h', type: 'draw' }, party)).toBe('L.Y.');
+    expect(signatureInitials({ hash: 'h', type: 'draw' }, { name: 'Maison Pradel' })).toBe('M.P.');
   });
 });

@@ -859,3 +859,42 @@ export function documentParties(input: {
   const counterparty = typeof roles.counterparty === 'string' && VARIABLE_KEY_RE.test(roles.counterparty) ? roles.counterparty : 'client';
   return [party('self', self, 'provider'), party('counterparty', counterparty, 'client')];
 }
+
+// ─── Paraphes ────────────────────────────────────────────────────────────────
+//
+// Pied de chaque page de texte d'un contrat : « Paraphes · ___ ___ », un trait par partie (dans
+// l'ordre des parties). Le paraphe d'une partie y est imprimé dès qu'elle a signé : celui saisi à la
+// signature (`details.signatures.<rôle>.initials`), sinon les initiales du signataire. Mêmes règles
+// dans l'aperçu web et dans le PDF serveur.
+
+/** Longueur maximale d'un paraphe (« J.-P.M. »). */
+export const INITIALS_MAX_LENGTH = 8;
+
+/** Initiales d'un nom : « Leonce Yopa » → « L.Y. », « Jean-Pierre Martin » → « J.P.M. », 4 lettres au plus. */
+export function initialsOf(name: unknown): string {
+  if (typeof name !== 'string') return '';
+  const words = name.normalize('NFC').split(/[\s\-‐‑–—'’]+/).map((w) => w.replace(/[^\p{L}\p{N}]/gu, '')).filter(Boolean);
+  const letters = words.slice(0, 4).map((w) => [...w][0].toLocaleUpperCase('fr-FR'));
+  return letters.length ? `${letters.join('.')}.` : '';
+}
+
+/** Paraphe saisi : lettres, chiffres, points, tirets et espaces, en capitales, 8 caractères au plus ; vide sinon. */
+export function normalizeInitials(value: unknown): string {
+  if (typeof value !== 'string') return '';
+  const v = value.normalize('NFC').replace(/[^\p{L}\p{N}.\- ]/gu, '').replace(/\s+/g, ' ').trim().toLocaleUpperCase('fr-FR');
+  return [...v].slice(0, INITIALS_MAX_LENGTH).join('').trim();
+}
+
+/**
+ * Paraphe à imprimer pour une partie : vide tant qu'elle n'a pas signé ; sinon celui saisi à la
+ * signature, à défaut les initiales du signataire (nom saisi, nom tapé, représentant, nom de la partie).
+ */
+export function signatureInitials(
+  entry: { hash?: unknown; initials?: unknown; signerName?: unknown; type?: unknown; text?: unknown } | null | undefined,
+  party: { representative?: unknown; name?: unknown } | null | undefined,
+): string {
+  if (!entry || !entry.hash) return '';
+  const typed = entry.type === 'type' ? entry.text : undefined;
+  return normalizeInitials(entry.initials)
+    || initialsOf(entry.signerName) || initialsOf(typed) || initialsOf(party?.representative) || initialsOf(party?.name);
+}

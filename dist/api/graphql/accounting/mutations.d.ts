@@ -1,6 +1,12 @@
 declare const invoiceMutations: {
     /** Export comptable : archive ZIP (PDF + index CSV), lien signé d'une heure — service interne. */
     EXPORT_INVOICES: string;
+    /** Export asynchrone : lance l'export en tâche de fond, notification à la fin — service interne. */
+    REQUEST_INVOICE_EXPORT: string;
+    /** Export asynchrone : reprise d'un export en pause (STK insuffisants) après recharge — service interne. */
+    RESUME_INVOICE_EXPORT: string;
+    /** Export asynchrone : lien signé frais d'une archive livrée — service interne. */
+    DOWNLOAD_INVOICE_EXPORT: string;
     CREATE_INVOICE: string;
     UPDATE_INVOICE: string;
     UPDATE_INVOICE_DOWNLOAD_STATUS: string;
@@ -24,6 +30,7 @@ declare const paymentMutations: {
     CONFIRM_ORDER: string;
     MARK_ORDER_PAID: string;
     MARK_ORDER_DELIVERED: string;
+    RETRY_AGENT_EXECUTION: string;
     CANCEL_ORDER: string;
     EMIT_NEGOTIATION_PROPOSAL: string;
     EMIT_ESTIMATE_ACCEPTED: string;

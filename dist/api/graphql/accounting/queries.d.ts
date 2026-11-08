@@ -11,8 +11,15 @@ declare const estimateQueries: {
 };
 export { estimateQueries };
 declare const invoiceQueries: {
+    /**
+     * Montant dû pour régler une facture par lien de paiement (C115) : acheteur identifié de la
+     * facture, membre d'une de ses organisations, ou service interne.
+     */
+    INVOICE_PAYMENT_DUE: string;
     /** Export comptable : nombre de factures d'une période — service interne (`x-smp-internal-secret`). */
     INVOICE_EXPORT_PREVIEW: string;
+    /** Export asynchrone : état et avancement — service interne. */
+    INVOICE_EXPORT_STATUS: string;
     GET_INVOICE_BY_ID: string;
     GET_ALL_INVOICES: string;
     GET_INVOICES_BY_SELLER: string;

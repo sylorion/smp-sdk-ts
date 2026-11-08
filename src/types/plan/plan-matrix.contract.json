@@ -11,6 +11,7 @@
     "CREATE_ESTIMATE",
     "CREATE_INVOICE",
     "CREATE_CONTRACT",
+    "CREATE_CONTRACT_TEMPLATE",
     "USE_SERVICE_SUBSCRIPTIONS",
     "USE_AI_CREDITS",
     "USE_NATIVE_AGENT",
@@ -32,6 +33,7 @@
     "CREATE_ESTIMATE": "maxEstimatesPerMonth",
     "CREATE_INVOICE": "maxInvoicesPerMonth",
     "CREATE_CONTRACT": "maxContractsPerMonth",
+    "CREATE_CONTRACT_TEMPLATE": "maxContractTemplatesPerOrg",
     "USE_AI_CREDITS": "maxAiCreditsPerMonth",
     "USE_NATIVE_AGENT": "maxNativeAgents",
     "PERFORM_WITHDRAWAL": "maxWithdrawalsPerMonth",
@@ -53,6 +55,7 @@
     "maxEstimatesPerMonth": "organization",
     "maxInvoicesPerMonth": "organization",
     "maxContractsPerMonth": "organization",
+    "maxContractTemplatesPerOrg": "organization",
     "maxAiCreditsPerMonth": "organization",
     "maxNativeAgents": "organization",
     "maxWithdrawalsPerMonth": "organization"
@@ -66,7 +69,8 @@
     "hasDocumentPoweredByRemoval": "Retrait de la mention « Émis avec Services » sur les factures, avoirs, devis et bons de commande. Pro et Business uniquement (Starter personnalise mais garde la mention).",
     "hasAutoCountersign": "Contre-signature automatique des contrats des flows de service par le signataire par défaut de l'organisation. Pro et Business uniquement.",
     "hasOnSiteBooking": "Réservation sans paiement en ligne (paiement sur place) et page de réservation publique à partager, pour les services de réservation. Ouverte dès Starter.",
-    "hasEmailCustomization": "Charte e-mail de l'organisation et mise en forme des campagnes (mise en page, couleur, logo). Pro et Business. Sans elle, les e-mails partent dans la mise en forme standard de Services (contenu, bouton et signature restent ouverts à tous)."
+    "hasEmailCustomization": "Charte e-mail de l'organisation et mise en forme des campagnes (mise en page, couleur, logo). Pro et Business. Sans elle, les e-mails partent dans la mise en forme standard de Services (contenu, bouton et signature restent ouverts à tous).",
+    "maxContractTemplatesPerOrg": "Modèles de contrat enregistrés par l'organisation (« Enregistrer comme modèle »), supprimés non comptés. Stock, pas un quota mensuel. Créer un contrat depuis un modèle reste compté dans maxContractsPerMonth. Non affiché dans les vues de plans."
   },
   "matrix": {
     "standard": {
@@ -76,6 +80,7 @@
       "maxEstimatesPerMonth": 2,
       "maxInvoicesPerMonth": 1,
       "maxContractsPerMonth": 1,
+      "maxContractTemplatesPerOrg": 1,
       "maxAiCreditsPerMonth": 1300,
       "maxNativeAgents": 0,
       "maxWithdrawalsPerMonth": 1,
@@ -100,6 +105,7 @@
       "maxEstimatesPerMonth": 5,
       "maxInvoicesPerMonth": 5,
       "maxContractsPerMonth": 3,
+      "maxContractTemplatesPerOrg": 5,
       "maxAiCreditsPerMonth": 3900,
       "maxNativeAgents": 1,
       "maxWithdrawalsPerMonth": 2,
@@ -124,6 +130,7 @@
       "maxEstimatesPerMonth": 30,
       "maxInvoicesPerMonth": 30,
       "maxContractsPerMonth": 20,
+      "maxContractTemplatesPerOrg": 10,
       "maxAiCreditsPerMonth": 9750,
       "maxNativeAgents": 3,
       "maxWithdrawalsPerMonth": 5,
@@ -148,6 +155,7 @@
       "maxEstimatesPerMonth": -1,
       "maxInvoicesPerMonth": -1,
       "maxContractsPerMonth": -1,
+      "maxContractTemplatesPerOrg": 30,
       "maxAiCreditsPerMonth": 19500,
       "maxNativeAgents": -1,
       "maxWithdrawalsPerMonth": -1,

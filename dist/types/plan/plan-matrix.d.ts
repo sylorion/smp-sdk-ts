@@ -31,6 +31,8 @@ export interface PlanLimits {
     maxEstimatesPerMonth: number;
     maxInvoicesPerMonth: number;
     maxContractsPerMonth: number;
+    /** Modèles de contrat enregistrés par l'organisation (stock). Absent des vues de plans. */
+    maxContractTemplatesPerOrg: number;
     maxAiCreditsPerMonth: number;
     maxNativeAgents: number;
     maxWithdrawalsPerMonth: number;
@@ -87,6 +89,8 @@ export declare enum PlanAction {
     CREATE_ESTIMATE = "CREATE_ESTIMATE",
     CREATE_INVOICE = "CREATE_INVOICE",
     CREATE_CONTRACT = "CREATE_CONTRACT",
+    /** Enregistrer un contrat comme modèle (stock par organisation). */
+    CREATE_CONTRACT_TEMPLATE = "CREATE_CONTRACT_TEMPLATE",
     USE_AI_CREDITS = "USE_AI_CREDITS",
     USE_NATIVE_AGENT = "USE_NATIVE_AGENT",
     USE_FORM_AGENT = "USE_FORM_AGENT",

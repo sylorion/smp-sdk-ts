@@ -85,8 +85,15 @@ export const NOTIFICATION_TYPES = {
     'notification.invoice.paid.buyer': closes('invoices', ['view_invoice']),
     'notification.invoice.paid.seller': closes('invoices', ['view_invoice']),
     'invoice.fees.created': info('invoices', 'normal', ['view_invoice']),
+    // Export comptable asynchrone : archive prête (télécharger) ou en échec (relancer depuis la page).
+    'invoice.export.completed': info('invoices', 'normal', ['view_document']),
+    'invoice.export.failed': info('invoices', 'high', ['open']),
+    // Export arrêté faute de STK : à reprendre après une recharge.
+    'invoice.export.paused': todo('invoices', ['open'], 'high'),
     'notification.payment.receipt': info('invoices', 'normal', ['view_invoice']),
     'notification.order.paid.provider': info('marketplace', 'normal', ['open']),
+    // Achat commencé non finalisé (relance unique à 24 h, mu-billing) : rouvre le tunnel du service.
+    'notification.checkout.abandoned.reminder': info('marketplace', 'normal', ['open']),
     // Devis et négociations
     'notification.estimate.submitted.provider': todo('estimates', ['view_estimate']),
     'notification.estimate.submitted.client': todo('estimates', ['accept_estimate', 'refuse_estimate', 'view_estimate']),
@@ -134,6 +141,8 @@ export const NOTIFICATION_TYPES = {
     'engagement.reminder.due': info('services', 'high'),
     // Tâches et travail d'équipe
     'organization.task.assigned': todo('tasks', ['start_task', 'reassign_task', 'view_task']),
+    // Membre tagué (@) sur une tâche : il la voit et peut la commenter (02/11).
+    'organization.task.tagged': info('mentions', 'normal', ['view_task']),
     'organization.task.status.changed': info('tasks', 'normal', ['view_task']),
     'organization.task.commented': todo('mentions', ['reply_mention', 'view_task'], 'normal'),
     'organization.task.due.changed': info('tasks', 'high', ['view_task']),
@@ -163,7 +172,7 @@ export const NOTIFICATION_TYPES = {
     'notification.service.created': info('services'),
     'notification.performance.weekly': info('services', 'low'),
     'notification.performance.monthly': info('services', 'low'),
-    // IRO, agents et automatisations
+    // Iro, agents et automatisations
     'notification.agent.result': info('iro', 'normal', ['review_run']),
     'notification.agent.report': info('iro', 'normal', ['review_run']),
     'notification.automation.report': info('automations', 'normal', ['review_run']),
@@ -174,6 +183,13 @@ export const NOTIFICATION_TYPES = {
     'service.subscription.activated': info('marketplace'),
     'service.subscription.renewed': info('marketplace'),
     'service.subscription.cancelled': info('marketplace', 'high'),
+    // Prélèvement refusé : à traiter (mettre à jour le moyen de paiement), relance Stripe en cours.
+    'service.subscription.payment_failed': todo('marketplace', ['open'], 'urgent'),
+    'subscription.payment_failed': todo('marketplace', ['open'], 'urgent'),
+    // Facture d'abonnement au plan de la plateforme (mu-billing, PLAN-) : lecture seule.
+    'platform.subscription.invoiced': info('invoices', 'normal', ['view_invoice']),
+    // Facture STK- (achat de STK) ou reçu DEP- (rechargement) d'un wallet (mu-billing) : lecture seule.
+    'platform.topup.invoiced': info('invoices', 'normal', ['view_invoice']),
     'notification.marketing.campaign': info('marketplace', 'low'),
     'notification.campaign.send': info('marketplace', 'low'),
     'notification.newsletter.send': info('marketplace', 'low'),
@@ -313,7 +329,8 @@ export const NOTIFICATION_ENTITIES = {
     referral_partnership: { category: 'referrals', organizationPath: (o) => `/o/${enc(o)}/referrals`, personalPath: () => '/affiliation' },
     referral_commission: { category: 'referrals', organizationPath: (o) => `/o/${enc(o)}/referrals`, personalPath: () => '/affiliation' },
     affiliation: { category: 'referrals', organizationPath: null, personalPath: () => '/affiliation' },
-    service_subscription: { category: 'marketplace', organizationPath: (o) => `/o/${enc(o)}/services`, personalPath: () => '/billing' },
+    service_subscription: { category: 'marketplace', organizationPath: (o) => `/o/${enc(o)}/services`, personalPath: () => '/engagements' },
+    platform_subscription: { category: 'marketplace', organizationPath: null, personalPath: () => '/billing' },
     wallet: { category: 'wallet', organizationPath: (o) => `/o/${enc(o)}/accounting/transactions`, personalPath: () => '/billing' },
     organization: { category: 'account', organizationPath: (o) => `/o/${enc(o)}`, personalPath: null },
     user: { category: 'account', organizationPath: null, personalPath: () => '/details' },

@@ -1,4 +1,5 @@
 import { orderQueries } from '../../api/graphql/accounting/queries.js';
+import { paymentMutations } from '../../api/graphql/accounting/mutations.js';
 export class Order {
     constructor(client) {
         this.client = client;
@@ -39,5 +40,10 @@ export class Order {
     async getAgentExecutionStatus(orderId) {
         const response = await this.client.query(orderQueries.GET_AGENT_EXECUTION_STATUS, { orderId });
         return response.agentExecutionStatus;
+    }
+    /** Relance par le prestataire d'une réalisation en échec (membre de l'organisation vendeuse). */
+    async retryAgentExecution(orderId) {
+        const response = await this.client.mutate(paymentMutations.RETRY_AGENT_EXECUTION, { orderId });
+        return response.retryAgentExecution;
     }
 }

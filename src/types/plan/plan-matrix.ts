@@ -59,6 +59,8 @@ export interface PlanLimits {
   maxEstimatesPerMonth: number;
   maxInvoicesPerMonth: number;
   maxContractsPerMonth: number;
+  /** Modèles de contrat enregistrés par l'organisation (stock). Absent des vues de plans. */
+  maxContractTemplatesPerOrg: number;
   maxAiCreditsPerMonth: number;
   maxNativeAgents: number;
   maxWithdrawalsPerMonth: number;
@@ -108,6 +110,7 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     maxEstimatesPerMonth: 2,
     maxInvoicesPerMonth: 1,
     maxContractsPerMonth: 1,
+    maxContractTemplatesPerOrg: 1,
     maxAiCreditsPerMonth: 1_300,
     maxNativeAgents: 0,
     maxWithdrawalsPerMonth: 1,
@@ -132,6 +135,7 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     maxEstimatesPerMonth: 5,
     maxInvoicesPerMonth: 5,
     maxContractsPerMonth: 3,
+    maxContractTemplatesPerOrg: 5,
     maxAiCreditsPerMonth: 3_900,
     maxNativeAgents: 1,
     maxWithdrawalsPerMonth: 2,
@@ -156,6 +160,7 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     maxEstimatesPerMonth: 30,
     maxInvoicesPerMonth: 30,
     maxContractsPerMonth: 20,
+    maxContractTemplatesPerOrg: 10,
     maxAiCreditsPerMonth: 9_750,
     maxNativeAgents: 3,
     maxWithdrawalsPerMonth: 5,
@@ -180,6 +185,7 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     maxEstimatesPerMonth: UNLIMITED,
     maxInvoicesPerMonth: UNLIMITED,
     maxContractsPerMonth: UNLIMITED,
+    maxContractTemplatesPerOrg: 30,
     maxAiCreditsPerMonth: 19_500,
     maxNativeAgents: UNLIMITED,
     maxWithdrawalsPerMonth: UNLIMITED,
@@ -316,6 +322,8 @@ export enum PlanAction {
   CREATE_ESTIMATE = 'CREATE_ESTIMATE',
   CREATE_INVOICE = 'CREATE_INVOICE',
   CREATE_CONTRACT = 'CREATE_CONTRACT',
+  /** Enregistrer un contrat comme modèle (stock par organisation). */
+  CREATE_CONTRACT_TEMPLATE = 'CREATE_CONTRACT_TEMPLATE',
   USE_AI_CREDITS = 'USE_AI_CREDITS',
   USE_NATIVE_AGENT = 'USE_NATIVE_AGENT',
   USE_FORM_AGENT = 'USE_FORM_AGENT',
@@ -350,6 +358,7 @@ const ACTION_TO_LIMIT_KEY: Record<string, keyof PlanLimits | null> = {
   [PlanAction.CREATE_ESTIMATE]: 'maxEstimatesPerMonth',
   [PlanAction.CREATE_INVOICE]: 'maxInvoicesPerMonth',
   [PlanAction.CREATE_CONTRACT]: 'maxContractsPerMonth',
+  [PlanAction.CREATE_CONTRACT_TEMPLATE]: 'maxContractTemplatesPerOrg',
   [PlanAction.USE_AI_CREDITS]: 'maxAiCreditsPerMonth',
   [PlanAction.USE_NATIVE_AGENT]: 'maxNativeAgents',
   [PlanAction.PERFORM_WITHDRAWAL]: 'maxWithdrawalsPerMonth',

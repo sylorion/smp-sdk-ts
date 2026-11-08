@@ -92,6 +92,8 @@ export interface SignContractInput {
         text?: string;
         /** How the signature was captured */
         type?: SignatureType;
+        /** Paraphe du signataire, imprimé en bas de chaque page du contrat (« L.Y. »). */
+        initials?: string;
     };
 }
 export interface SendContractInput {
@@ -624,8 +626,13 @@ export interface CreateTransactionInput {
 }
 export interface CreatePaymentDto {
     transactionId?: string;
-    orderId: string;
+    orderId?: string;
+    /** PURCHASE (commande) ou DEPOSIT (rechargement d'un wallet, avec `walletId`). */
     type: string;
+    /** Rechargement : wallet à créditer (vérifié par mu-wallet : celui du payeur ou d'une organisation dont il est membre). */
+    walletId?: string;
+    /** Rechargement : convertir le montant en STK dès le crédit du wallet. */
+    convertToTokens?: boolean;
     amount: number;
     currency: string;
     customerEmail?: string;
@@ -653,3 +660,4 @@ export * from './Wallet.js';
 export * from './subscription.js';
 export * from './documentPresentation.js';
 export * from './invoiceExport.js';
+export * from './invoicePaymentDue.js';

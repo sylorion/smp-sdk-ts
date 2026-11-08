@@ -351,6 +351,8 @@ const organizationQueries = {
         members {
           userID
           role
+          roleName
+          roleID
           username
           email
           name

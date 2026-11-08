@@ -108,6 +108,8 @@ export interface SignContractInput {
         text?: string;
         /** How the signature was captured */
         type?: SignatureType;
+        /** Paraphe du signataire, imprimé en bas de chaque page du contrat (« L.Y. »). */
+        initials?: string;
     };
 }
 
