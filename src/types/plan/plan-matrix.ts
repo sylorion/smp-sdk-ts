@@ -64,6 +64,14 @@ export interface PlanLimits {
   maxAiCreditsPerMonth: number;
   maxNativeAgents: number;
   maxWithdrawalsPerMonth: number;
+  /** Campagnes e-mail enregistrées par l'organisation (stock, supprimées non comptées). mu-notification. */
+  maxEmailCampaignsPerOrg: number;
+  /** Destinataires d'un envoi (campagne ou e-mail direct) ; plafond technique de 500. mu-organization. */
+  maxRecipientsPerMailing: number;
+  /** Contacts différents joints par e-mailing dans le mois civil. mu-organization. */
+  maxMailingContactsPerMonth: number;
+  /** E-mails de campagne envoyés dans le mois civil (un par destinataire et par envoi). mu-organization. */
+  maxMailingEmailsPerMonth: number;
 }
 
 /** Boolean feature flags for a plan tier */
@@ -86,6 +94,8 @@ export interface PlanFeatures {
   hasOnSiteBooking: boolean;
   /** Charte e-mail de l'organisation et mise en forme des campagnes (Pro et Business). */
   hasEmailCustomization: boolean;
+  /** Retrait de l'en-tête « Services » des campagnes (logo et nom de l'organisation à la place). */
+  hasEmailBrandingRemoval: boolean;
 }
 
 export type PlanConfig = PlanLimits & PlanFeatures;
@@ -127,6 +137,11 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasAutoCountersign: false,
     hasOnSiteBooking: false,
     hasEmailCustomization: false,
+    hasEmailBrandingRemoval: false,
+    maxEmailCampaignsPerOrg: 1,
+    maxRecipientsPerMailing: 25,
+    maxMailingContactsPerMonth: 50,
+    maxMailingEmailsPerMonth: 100,
   },
   [PlanTier.STARTER]: {
     maxOrganizations: 1,
@@ -152,6 +167,11 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasAutoCountersign: false,
     hasOnSiteBooking: true,
     hasEmailCustomization: false,
+    hasEmailBrandingRemoval: false,
+    maxEmailCampaignsPerOrg: 5,
+    maxRecipientsPerMailing: 100,
+    maxMailingContactsPerMonth: 250,
+    maxMailingEmailsPerMonth: 500,
   },
   [PlanTier.PRO]: {
     maxOrganizations: 3,
@@ -177,6 +197,11 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasAutoCountersign: true,
     hasOnSiteBooking: true,
     hasEmailCustomization: true,
+    hasEmailBrandingRemoval: true,
+    maxEmailCampaignsPerOrg: 20,
+    maxRecipientsPerMailing: 250,
+    maxMailingContactsPerMonth: 1_000,
+    maxMailingEmailsPerMonth: 2_500,
   },
   [PlanTier.BUSINESS]: {
     maxOrganizations: 5,
@@ -202,6 +227,11 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     hasAutoCountersign: true,
     hasOnSiteBooking: true,
     hasEmailCustomization: true,
+    hasEmailBrandingRemoval: true,
+    maxEmailCampaignsPerOrg: 50,
+    maxRecipientsPerMailing: 500,
+    maxMailingContactsPerMonth: 3_000,
+    maxMailingEmailsPerMonth: 7_500,
   },
 };
 
@@ -348,6 +378,16 @@ export enum PlanAction {
   /** Réservation avec paiement sur place (Starter+). */
   USE_ON_SITE_BOOKING = 'USE_ON_SITE_BOOKING',
   CUSTOMIZE_EMAILS = 'CUSTOMIZE_EMAILS',
+  /** Créer une campagne e-mail (stock par organisation). */
+  CREATE_EMAIL_CAMPAIGN = 'CREATE_EMAIL_CAMPAIGN',
+  /** Destinataires d'un même envoi. */
+  MAILING_RECIPIENTS = 'MAILING_RECIPIENTS',
+  /** Contacts différents joints dans le mois. */
+  MAILING_CONTACTS_MONTHLY = 'MAILING_CONTACTS_MONTHLY',
+  /** E-mails de campagne envoyés dans le mois. */
+  MAILING_EMAILS_MONTHLY = 'MAILING_EMAILS_MONTHLY',
+  /** Retrait de l'en-tête « Services » des campagnes (Pro+). */
+  REMOVE_EMAIL_BRANDING = 'REMOVE_EMAIL_BRANDING',
 }
 
 /** Maps PlanAction to the relevant limit key in PlanLimits */
@@ -362,6 +402,10 @@ const ACTION_TO_LIMIT_KEY: Record<string, keyof PlanLimits | null> = {
   [PlanAction.USE_AI_CREDITS]: 'maxAiCreditsPerMonth',
   [PlanAction.USE_NATIVE_AGENT]: 'maxNativeAgents',
   [PlanAction.PERFORM_WITHDRAWAL]: 'maxWithdrawalsPerMonth',
+  [PlanAction.CREATE_EMAIL_CAMPAIGN]: 'maxEmailCampaignsPerOrg',
+  [PlanAction.MAILING_RECIPIENTS]: 'maxRecipientsPerMailing',
+  [PlanAction.MAILING_CONTACTS_MONTHLY]: 'maxMailingContactsPerMonth',
+  [PlanAction.MAILING_EMAILS_MONTHLY]: 'maxMailingEmailsPerMonth',
   // Feature-based (no numeric limit, check boolean)
   [PlanAction.USE_FORM_AGENT]: null,
   [PlanAction.VIEW_ADVANCED_ANALYTICS]: null,
@@ -373,6 +417,7 @@ const ACTION_TO_LIMIT_KEY: Record<string, keyof PlanLimits | null> = {
   [PlanAction.AUTO_COUNTERSIGN]: null,
   [PlanAction.USE_ON_SITE_BOOKING]: null,
   [PlanAction.CUSTOMIZE_EMAILS]: null,
+  [PlanAction.REMOVE_EMAIL_BRANDING]: null,
 };
 
 /** Maps PlanAction to the relevant feature key for boolean checks */
@@ -387,6 +432,7 @@ const ACTION_TO_FEATURE_KEY: Partial<Record<string, keyof PlanFeatures>> = {
   [PlanAction.AUTO_COUNTERSIGN]: 'hasAutoCountersign',
   [PlanAction.USE_ON_SITE_BOOKING]: 'hasOnSiteBooking',
   [PlanAction.CUSTOMIZE_EMAILS]: 'hasEmailCustomization',
+  [PlanAction.REMOVE_EMAIL_BRANDING]: 'hasEmailBrandingRemoval',
 };
 
 // ============================================================================
