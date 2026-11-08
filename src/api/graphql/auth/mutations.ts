@@ -250,3 +250,65 @@ export const MUTATION_UPDATE_PASSWORD = /* GraphQL */ `
   }
 `;
 
+
+// ─── Connexion sans mot de passe (08/11) : lien magique et Blitzscription ────────────────────
+
+const PASSWORDLESS_LOGIN_FIELDS = /* GraphQL */ `
+        accessToken
+        refreshToken
+        accessValidityDuration
+        refreshValidityDuration
+        user {
+          userID
+          uniqRef
+          slug
+          username
+          email
+          plan
+          profileID
+          lastLogin
+          loginDuration
+          state
+          updatedAt
+        }
+        message
+        errors {
+          code
+          field
+          message
+        }
+`;
+
+/** Demande d'un lien de connexion par e-mail pour un compte existant. Réponse neutre. */
+export const MUTATION_REQUEST_MAGIC_LINK = /* GraphQL */ `
+  mutation RequestMagicLink($input: EmailInput!) {
+    requestMagicLink(input: $input) {
+      success
+      message
+    }
+  }
+`;
+
+/** Consomme un lien magique (jeton « ml_… », 15 min, usage unique) et ouvre une session. */
+export const MUTATION_LOGIN_WITH_MAGIC_LINK = /* GraphQL */ `
+  mutation LoginWithMagicLink($token: String!) {
+    loginWithMagicLink(token: $token) {${PASSWORDLESS_LOGIN_FIELDS}    }
+  }
+`;
+
+/** Blitzscription, étape 1 : e-mail de confirmation portant un jeton signé ; rien n'est créé avant le clic. */
+export const MUTATION_REQUEST_BLITZ_SIGNUP = /* GraphQL */ `
+  mutation RequestBlitzSignup($input: EmailInput!) {
+    requestBlitzSignup(input: $input) {
+      success
+      message
+    }
+  }
+`;
+
+/** Blitzscription, étape 2 : le lien est cliqué, le compte est créé et une session ouverte. */
+export const MUTATION_COMPLETE_BLITZ_SIGNUP = /* GraphQL */ `
+  mutation CompleteBlitzSignup($token: String!) {
+    completeBlitzSignup(token: $token) {${PASSWORDLESS_LOGIN_FIELDS}    }
+  }
+`;
