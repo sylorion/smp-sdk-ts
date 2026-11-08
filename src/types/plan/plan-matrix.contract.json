@@ -24,7 +24,12 @@
     "REMOVE_DOCUMENT_POWERED_BY",
     "AUTO_COUNTERSIGN",
     "USE_ON_SITE_BOOKING",
-    "CUSTOMIZE_EMAILS"
+    "CUSTOMIZE_EMAILS",
+    "CREATE_EMAIL_CAMPAIGN",
+    "MAILING_RECIPIENTS",
+    "MAILING_CONTACTS_MONTHLY",
+    "MAILING_EMAILS_MONTHLY",
+    "REMOVE_EMAIL_BRANDING"
   ],
   "actionToKey": {
     "CREATE_ORGANIZATION": "maxOrganizations",
@@ -46,7 +51,12 @@
     "REMOVE_DOCUMENT_POWERED_BY": "hasDocumentPoweredByRemoval",
     "AUTO_COUNTERSIGN": "hasAutoCountersign",
     "USE_ON_SITE_BOOKING": "hasOnSiteBooking",
-    "CUSTOMIZE_EMAILS": "hasEmailCustomization"
+    "CUSTOMIZE_EMAILS": "hasEmailCustomization",
+    "CREATE_EMAIL_CAMPAIGN": "maxEmailCampaignsPerOrg",
+    "MAILING_RECIPIENTS": "maxRecipientsPerMailing",
+    "MAILING_CONTACTS_MONTHLY": "maxMailingContactsPerMonth",
+    "MAILING_EMAILS_MONTHLY": "maxMailingEmailsPerMonth",
+    "REMOVE_EMAIL_BRANDING": "hasEmailBrandingRemoval"
   },
   "scopes": {
     "maxOrganizations": "user",
@@ -58,7 +68,11 @@
     "maxContractTemplatesPerOrg": "organization",
     "maxAiCreditsPerMonth": "organization",
     "maxNativeAgents": "organization",
-    "maxWithdrawalsPerMonth": "organization"
+    "maxWithdrawalsPerMonth": "organization",
+    "maxEmailCampaignsPerOrg": "organization",
+    "maxRecipientsPerMailing": "organization",
+    "maxMailingContactsPerMonth": "organization",
+    "maxMailingEmailsPerMonth": "organization"
   },
   "notes": {
     "maxAiCreditsPerMonth": "STK par mois (jeton de la plateforme, 1 € = 657 STK) : équivalent mensuel (× 52 / 12) de l'allocation HEBDOMADAIRE réellement accordée par mu-wallet (libs/shared/credits, WEEKLY_CREDIT_ALLOWANCE : 300 / 900 / 2 250 / 4 500 par semaine). Valeur d'affichage : la consommation est tenue par le wallet.",
@@ -70,7 +84,12 @@
     "hasAutoCountersign": "Contre-signature automatique des contrats des flows de service par le signataire par défaut de l'organisation. Pro et Business uniquement.",
     "hasOnSiteBooking": "Réservation sans paiement en ligne (paiement sur place) et page de réservation publique à partager, pour les services de réservation. Ouverte dès Starter.",
     "hasEmailCustomization": "Charte e-mail de l'organisation et mise en forme des campagnes (mise en page, couleur, logo). Pro et Business. Sans elle, les e-mails partent dans la mise en forme standard de Services (contenu, bouton et signature restent ouverts à tous).",
-    "maxContractTemplatesPerOrg": "Modèles de contrat enregistrés par l'organisation (« Enregistrer comme modèle »), supprimés non comptés. Stock, pas un quota mensuel. Créer un contrat depuis un modèle reste compté dans maxContractsPerMonth. Non affiché dans les vues de plans."
+    "maxContractTemplatesPerOrg": "Modèles de contrat enregistrés par l'organisation (« Enregistrer comme modèle »), supprimés non comptés. Stock, pas un quota mensuel. Créer un contrat depuis un modèle reste compté dans maxContractsPerMonth. Non affiché dans les vues de plans.",
+    "maxEmailCampaignsPerOrg": "Campagnes e-mail enregistrées par l'organisation (brouillons, programmées, envoyées ; supprimées non comptées). Stock, pas un quota mensuel. Contrôlé par mu-notification à la création et à la duplication.",
+    "maxRecipientsPerMailing": "Destinataires d'un envoi (campagne ou e-mail direct aux contacts). Plafond technique de 500 quel que soit le plan. Contrôlé par mu-organization au lancement de l'envoi.",
+    "maxMailingContactsPerMonth": "Contacts différents joints par e-mailing dans le mois civil (date du dernier e-mail de chaque contact). Contrôlé par mu-organization au lancement de l'envoi.",
+    "maxMailingEmailsPerMonth": "E-mails de campagne et d'e-mailing envoyés dans le mois civil (un par destinataire et par envoi). Contrôlé par mu-organization au lancement de l'envoi.",
+    "hasEmailBrandingRemoval": "Retrait de l'en-tête « Services » des campagnes et e-mails aux contacts (l'en-tête porte alors le logo et le nom de l'organisation). Pro et Business uniquement."
   },
   "matrix": {
     "standard": {
@@ -96,7 +115,12 @@
       "hasDocumentPoweredByRemoval": false,
       "hasAutoCountersign": false,
       "hasOnSiteBooking": false,
-      "hasEmailCustomization": false
+      "hasEmailCustomization": false,
+      "maxEmailCampaignsPerOrg": 1,
+      "maxRecipientsPerMailing": 25,
+      "maxMailingContactsPerMonth": 50,
+      "maxMailingEmailsPerMonth": 100,
+      "hasEmailBrandingRemoval": false
     },
     "starter": {
       "maxOrganizations": 1,
@@ -121,7 +145,12 @@
       "hasDocumentPoweredByRemoval": false,
       "hasAutoCountersign": false,
       "hasOnSiteBooking": true,
-      "hasEmailCustomization": false
+      "hasEmailCustomization": false,
+      "maxEmailCampaignsPerOrg": 5,
+      "maxRecipientsPerMailing": 100,
+      "maxMailingContactsPerMonth": 250,
+      "maxMailingEmailsPerMonth": 500,
+      "hasEmailBrandingRemoval": false
     },
     "pro": {
       "maxOrganizations": 3,
@@ -146,7 +175,12 @@
       "hasDocumentPoweredByRemoval": true,
       "hasAutoCountersign": true,
       "hasOnSiteBooking": true,
-      "hasEmailCustomization": true
+      "hasEmailCustomization": true,
+      "maxEmailCampaignsPerOrg": 20,
+      "maxRecipientsPerMailing": 250,
+      "maxMailingContactsPerMonth": 1000,
+      "maxMailingEmailsPerMonth": 2500,
+      "hasEmailBrandingRemoval": true
     },
     "business": {
       "maxOrganizations": 5,
@@ -171,7 +205,12 @@
       "hasDocumentPoweredByRemoval": true,
       "hasAutoCountersign": true,
       "hasOnSiteBooking": true,
-      "hasEmailCustomization": true
+      "hasEmailCustomization": true,
+      "maxEmailCampaignsPerOrg": 50,
+      "maxRecipientsPerMailing": 500,
+      "maxMailingContactsPerMonth": 3000,
+      "maxMailingEmailsPerMonth": 7500,
+      "hasEmailBrandingRemoval": true
     }
   }
 }
