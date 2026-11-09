@@ -298,7 +298,7 @@ export const MUTATION_LOGIN_WITH_MAGIC_LINK = /* GraphQL */ `
 
 /** Blitzscription, étape 1 : e-mail de confirmation portant un jeton signé ; rien n'est créé avant le clic. */
 export const MUTATION_REQUEST_BLITZ_SIGNUP = /* GraphQL */ `
-  mutation RequestBlitzSignup($input: EmailInput!) {
+  mutation RequestBlitzSignup($input: BlitzSignupInput!) {
     requestBlitzSignup(input: $input) {
       success
       message

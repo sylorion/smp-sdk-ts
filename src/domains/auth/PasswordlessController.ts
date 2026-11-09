@@ -9,6 +9,16 @@ const {
     MUTATION_COMPLETE_BLITZ_SIGNUP,
 } = authMutations;
 
+/** Options d'une demande de lien : page où revenir après le clic (chemin relatif au site). */
+export interface LinkRequestOptions {
+    redirectPath?: string;
+}
+
+/** Options d'une Blitzscription : page de retour et lien de parrainage (`?ref=`). */
+export interface BlitzSignupOptions extends LinkRequestOptions {
+    affiliateToken?: string;
+}
+
 export interface PasswordlessRequestResponse {
     success: boolean;
     message?: string;
@@ -27,8 +37,8 @@ export class Passwordless {
     }
 
     /** Demande un lien de connexion. La réponse est la même que l'adresse ait un compte ou non. */
-    async requestMagicLink(email: string): Promise<PasswordlessRequestResponse> {
-        const response = await this.client.mutate(MUTATION_REQUEST_MAGIC_LINK, { input: { email } }) as { requestMagicLink: PasswordlessRequestResponse };
+    async requestMagicLink(email: string, options: LinkRequestOptions = {}): Promise<PasswordlessRequestResponse> {
+        const response = await this.client.mutate(MUTATION_REQUEST_MAGIC_LINK, { input: { email, ...options } }) as { requestMagicLink: PasswordlessRequestResponse };
         return response.requestMagicLink;
     }
 
@@ -39,8 +49,8 @@ export class Passwordless {
     }
 
     /** Blitzscription, étape 1 : e-mail de confirmation. Rien n'est créé avant le clic. */
-    async requestBlitzSignup(email: string): Promise<PasswordlessRequestResponse> {
-        const response = await this.client.mutate(MUTATION_REQUEST_BLITZ_SIGNUP, { input: { email } }) as { requestBlitzSignup: PasswordlessRequestResponse };
+    async requestBlitzSignup(email: string, options: BlitzSignupOptions = {}): Promise<PasswordlessRequestResponse> {
+        const response = await this.client.mutate(MUTATION_REQUEST_BLITZ_SIGNUP, { input: { email, ...options } }) as { requestBlitzSignup: PasswordlessRequestResponse };
         return response.requestBlitzSignup;
     }
 
