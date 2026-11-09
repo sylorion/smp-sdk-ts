@@ -308,7 +308,7 @@ export const MUTATION_REQUEST_BLITZ_SIGNUP = /* GraphQL */ `
 
 /** Blitzscription, étape 2 : le lien est cliqué, le compte est créé et une session ouverte. */
 export const MUTATION_COMPLETE_BLITZ_SIGNUP = /* GraphQL */ `
-  mutation CompleteBlitzSignup($token: String!) {
-    completeBlitzSignup(token: $token) {${PASSWORDLESS_LOGIN_FIELDS}    }
+  mutation CompleteBlitzSignup($token: String!, $profileID: ID) {
+    completeBlitzSignup(token: $token, profileID: $profileID) {${PASSWORDLESS_LOGIN_FIELDS}    }
   }
 `;

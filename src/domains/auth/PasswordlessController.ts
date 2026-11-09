@@ -44,9 +44,12 @@ export class Passwordless {
         return response.requestBlitzSignup;
     }
 
-    /** Blitzscription, étape 2 : compte créé et session ouverte, ou `errors` renseigné (lien invalide, compte déjà créé). */
-    async completeBlitzSignup(token: string): Promise<LogIn> {
-        const response = await this.client.mutate(MUTATION_COMPLETE_BLITZ_SIGNUP, { token }) as { completeBlitzSignup: LogIn };
+    /**
+     * Blitzscription, étape 2 : compte créé et session ouverte, ou `errors` renseigné (lien invalide,
+     * compte déjà créé). `profileID` : profil pré-créé dans mu-user-space, comme pour `signup`.
+     */
+    async completeBlitzSignup(token: string, profileID?: string | null): Promise<LogIn> {
+        const response = await this.client.mutate(MUTATION_COMPLETE_BLITZ_SIGNUP, { token, profileID: profileID ?? null }) as { completeBlitzSignup: LogIn };
         return response.completeBlitzSignup;
     }
 }
