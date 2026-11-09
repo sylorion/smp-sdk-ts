@@ -29,7 +29,8 @@
     "MAILING_RECIPIENTS",
     "MAILING_CONTACTS_MONTHLY",
     "MAILING_EMAILS_MONTHLY",
-    "REMOVE_EMAIL_BRANDING"
+    "REMOVE_EMAIL_BRANDING",
+    "ACTIVATE_AUTOMATION"
   ],
   "actionToKey": {
     "CREATE_ORGANIZATION": "maxOrganizations",
@@ -56,7 +57,8 @@
     "MAILING_RECIPIENTS": "maxRecipientsPerMailing",
     "MAILING_CONTACTS_MONTHLY": "maxMailingContactsPerMonth",
     "MAILING_EMAILS_MONTHLY": "maxMailingEmailsPerMonth",
-    "REMOVE_EMAIL_BRANDING": "hasEmailBrandingRemoval"
+    "REMOVE_EMAIL_BRANDING": "hasEmailBrandingRemoval",
+    "ACTIVATE_AUTOMATION": "maxActiveAutomations"
   },
   "scopes": {
     "maxOrganizations": "user",
@@ -72,7 +74,8 @@
     "maxEmailCampaignsPerOrg": "organization",
     "maxRecipientsPerMailing": "organization",
     "maxMailingContactsPerMonth": "organization",
-    "maxMailingEmailsPerMonth": "organization"
+    "maxMailingEmailsPerMonth": "organization",
+    "maxActiveAutomations": "organization"
   },
   "notes": {
     "maxAiCreditsPerMonth": "STK par mois (jeton de la plateforme, 1 € = 657 STK) : équivalent mensuel (× 52 / 12) de l'allocation HEBDOMADAIRE réellement accordée par mu-wallet (libs/shared/credits, WEEKLY_CREDIT_ALLOWANCE : 300 / 900 / 2 250 / 4 500 par semaine). Valeur d'affichage : la consommation est tenue par le wallet.",
@@ -89,7 +92,8 @@
     "maxRecipientsPerMailing": "Destinataires d'un envoi (campagne ou e-mail direct aux contacts). Plafond technique de 500 quel que soit le plan. Contrôlé par mu-organization au lancement de l'envoi.",
     "maxMailingContactsPerMonth": "Contacts différents joints par e-mailing dans le mois civil (date du dernier e-mail de chaque contact). Contrôlé par mu-organization au lancement de l'envoi.",
     "maxMailingEmailsPerMonth": "E-mails de campagne et d'e-mailing envoyés dans le mois civil (un par destinataire et par envoi). Contrôlé par mu-organization au lancement de l'envoi.",
-    "hasEmailBrandingRemoval": "Retrait de l'en-tête « Services » des campagnes et e-mails aux contacts (l'en-tête porte alors le logo et le nom de l'organisation). Pro et Business uniquement."
+    "hasEmailBrandingRemoval": "Retrait de l'en-tête « Services » des campagnes et e-mails aux contacts (l'en-tête porte alors le logo et le nom de l'organisation). Pro et Business uniquement.",
+    "maxActiveAutomations": "Automatisations ACTIVÉES en même temps dans l'organisation (désactivées non comptées : on peut en alterner autant qu'on veut). 3 en Standard et Starter, 10 en Pro, illimité en Business. Contrôlé par la webapp à la création et à l'activation."
   },
   "matrix": {
     "standard": {
@@ -120,7 +124,8 @@
       "maxRecipientsPerMailing": 25,
       "maxMailingContactsPerMonth": 50,
       "maxMailingEmailsPerMonth": 100,
-      "hasEmailBrandingRemoval": false
+      "hasEmailBrandingRemoval": false,
+      "maxActiveAutomations": 3
     },
     "starter": {
       "maxOrganizations": 1,
@@ -150,7 +155,8 @@
       "maxRecipientsPerMailing": 100,
       "maxMailingContactsPerMonth": 250,
       "maxMailingEmailsPerMonth": 500,
-      "hasEmailBrandingRemoval": false
+      "hasEmailBrandingRemoval": false,
+      "maxActiveAutomations": 3
     },
     "pro": {
       "maxOrganizations": 3,
@@ -180,7 +186,8 @@
       "maxRecipientsPerMailing": 250,
       "maxMailingContactsPerMonth": 1000,
       "maxMailingEmailsPerMonth": 2500,
-      "hasEmailBrandingRemoval": true
+      "hasEmailBrandingRemoval": true,
+      "maxActiveAutomations": 10
     },
     "business": {
       "maxOrganizations": 5,
@@ -210,7 +217,8 @@
       "maxRecipientsPerMailing": 500,
       "maxMailingContactsPerMonth": 3000,
       "maxMailingEmailsPerMonth": 7500,
-      "hasEmailBrandingRemoval": true
+      "hasEmailBrandingRemoval": true,
+      "maxActiveAutomations": -1
     }
   }
 }

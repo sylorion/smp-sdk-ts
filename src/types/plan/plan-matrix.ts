@@ -72,6 +72,8 @@ export interface PlanLimits {
   maxMailingContactsPerMonth: number;
   /** E-mails de campagne envoyés dans le mois civil (un par destinataire et par envoi). mu-organization. */
   maxMailingEmailsPerMonth: number;
+  /** Automatisations activées en même temps (désactivées non comptées). Contrôlé par la webapp. */
+  maxActiveAutomations: number;
 }
 
 /** Boolean feature flags for a plan tier */
@@ -142,6 +144,7 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     maxRecipientsPerMailing: 25,
     maxMailingContactsPerMonth: 50,
     maxMailingEmailsPerMonth: 100,
+    maxActiveAutomations: 3,
   },
   [PlanTier.STARTER]: {
     maxOrganizations: 1,
@@ -172,6 +175,7 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     maxRecipientsPerMailing: 100,
     maxMailingContactsPerMonth: 250,
     maxMailingEmailsPerMonth: 500,
+    maxActiveAutomations: 3,
   },
   [PlanTier.PRO]: {
     maxOrganizations: 3,
@@ -202,6 +206,7 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     maxRecipientsPerMailing: 250,
     maxMailingContactsPerMonth: 1_000,
     maxMailingEmailsPerMonth: 2_500,
+    maxActiveAutomations: 10,
   },
   [PlanTier.BUSINESS]: {
     maxOrganizations: 5,
@@ -232,6 +237,7 @@ export const PLAN_MATRIX: Record<PlanTier, PlanConfig> = {
     maxRecipientsPerMailing: 500,
     maxMailingContactsPerMonth: 3_000,
     maxMailingEmailsPerMonth: 7_500,
+    maxActiveAutomations: UNLIMITED,
   },
 };
 
@@ -388,6 +394,8 @@ export enum PlanAction {
   MAILING_EMAILS_MONTHLY = 'MAILING_EMAILS_MONTHLY',
   /** Retrait de l'en-tête « Services » des campagnes (Pro+). */
   REMOVE_EMAIL_BRANDING = 'REMOVE_EMAIL_BRANDING',
+  /** Activer une automatisation (activées en même temps). */
+  ACTIVATE_AUTOMATION = 'ACTIVATE_AUTOMATION',
 }
 
 /** Maps PlanAction to the relevant limit key in PlanLimits */
@@ -406,6 +414,7 @@ const ACTION_TO_LIMIT_KEY: Record<string, keyof PlanLimits | null> = {
   [PlanAction.MAILING_RECIPIENTS]: 'maxRecipientsPerMailing',
   [PlanAction.MAILING_CONTACTS_MONTHLY]: 'maxMailingContactsPerMonth',
   [PlanAction.MAILING_EMAILS_MONTHLY]: 'maxMailingEmailsPerMonth',
+  [PlanAction.ACTIVATE_AUTOMATION]: 'maxActiveAutomations',
   // Feature-based (no numeric limit, check boolean)
   [PlanAction.USE_FORM_AGENT]: null,
   [PlanAction.VIEW_ADVANCED_ANALYTICS]: null,
