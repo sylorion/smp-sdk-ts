@@ -7,6 +7,7 @@ import { Passwordless } from '../auth/PasswordlessController.js';
 import { Signup } from '../auth/SignupController.js';
 import { Social } from './SocialController.js';
 import { PlanController } from './PlanController.js';
+import { AccountBootstrapController } from './AccountBootstrapController.js';
 
 export class UserDomain {
   public profile: Profile;
@@ -18,6 +19,8 @@ export class UserDomain {
   public signup: Signup;
   public social: Social;
   public plan: PlanController;
+  /** Filet de sécurité de l'inscription (services internes seulement). */
+  public accountBootstrap: AccountBootstrapController;
 
   constructor(client: APIClient) {
     this.profile = new Profile(client);
@@ -28,5 +31,6 @@ export class UserDomain {
     this.signup = new Signup(client);
     this.social = new Social(client);
     this.plan = new PlanController(client);
+    this.accountBootstrap = new AccountBootstrapController(client);
   }
 }
