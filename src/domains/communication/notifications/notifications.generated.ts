@@ -46,6 +46,12 @@ export type NotificationTab = (typeof NOTIFICATION_TABS)[number];
  *                 livrable, confirmer un rendez-vous), puis la notification passe `done` ;
  *  - `navigate` : ouvre la page de l'objet — actions à choix, à texte, qui engagent (paiement,
  *                 signature, acceptation ou refus d'un devis, relance) ou dont la page porte le parcours.
+ * Une action `direct` dont l'objet n'est pas joignable (identifiant absent de la notification, objet
+ * sans route d'exécution sûre : contre-signature d'un contrat hors dossier de service) retombe
+ * en `navigate` côté webapp (`registry.ts`). Le droit d'agir n'est JAMAIS décidé ici ni par le
+ * navigateur : chaque route métier le revérifie (rôle de l'organisation, signataire).
+ * `send_invoice` est la suite de `create_deposit_invoice` (aucun type ne la liste : elle apparaît
+ * une fois la facture créée).
  * `completes` : l'action traite la notification (état `done`). Quand l'objet change ensuite (facture
  * payée, devis accepté…), c'est l'ÉVÉNEMENT métier qui clôt le fil, pas le clic.
  */
@@ -53,13 +59,14 @@ export const NOTIFICATION_ACTIONS = {
   pay_invoice: { mode: 'navigate', completes: false },
   remind_invoice: { mode: 'navigate', completes: false },
   view_invoice: { mode: 'navigate', completes: false },
-  create_deposit_invoice: { mode: 'navigate', completes: false },
+  create_deposit_invoice: { mode: 'direct', completes: false },
+  send_invoice: { mode: 'direct', completes: true },
   accept_estimate: { mode: 'navigate', completes: false },
   refuse_estimate: { mode: 'navigate', completes: false },
   view_estimate: { mode: 'navigate', completes: false },
   reply_negotiation: { mode: 'navigate', completes: false },
   sign_contract: { mode: 'navigate', completes: false },
-  countersign_contract: { mode: 'navigate', completes: false },
+  countersign_contract: { mode: 'direct', completes: true },
   read_contract: { mode: 'navigate', completes: false },
   start_task: { mode: 'direct', completes: true },
   reassign_task: { mode: 'navigate', completes: false },
