@@ -214,6 +214,8 @@ export class Invoice {
     invoiceId: string;
     email: string;
     message?: string;
+    /** Titre du modèle de message : objet de l'e-mail (150 caractères au plus). */
+    subject?: string;
     firstName?: string;
     lastName?: string;
     expirationDays?: number;
