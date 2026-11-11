@@ -45,7 +45,9 @@ export type NotificationTab = (typeof NOTIFICATION_TABS)[number];
  *  - `direct`   : un clic, exécutée par une route métier existante (démarrer une tâche, valider un
  *                 livrable, confirmer un rendez-vous), puis la notification passe `done` ;
  *  - `navigate` : ouvre la page de l'objet — actions à choix, à texte, qui engagent (paiement,
- *                 signature, acceptation ou refus d'un devis, relance) ou dont la page porte le parcours.
+ *                 signature, refus d'un devis, relance) ou dont la page porte le parcours.
+ *                 « Accepter » un devis est `direct` : le destinataire est connecté, la route de
+ *                 validation relit qu'il est bien le client du devis.
  * Une action `direct` dont l'objet n'est pas joignable (identifiant absent de la notification, objet
  * sans route d'exécution sûre : contre-signature d'un contrat hors dossier de service) retombe
  * en `navigate` côté webapp (`registry.ts`). Le droit d'agir n'est JAMAIS décidé ici ni par le
@@ -61,7 +63,7 @@ export const NOTIFICATION_ACTIONS = {
   view_invoice: { mode: 'navigate', completes: false },
   create_deposit_invoice: { mode: 'direct', completes: false },
   send_invoice: { mode: 'direct', completes: true },
-  accept_estimate: { mode: 'navigate', completes: false },
+  accept_estimate: { mode: 'direct', completes: true },
   refuse_estimate: { mode: 'navigate', completes: false },
   view_estimate: { mode: 'navigate', completes: false },
   reply_negotiation: { mode: 'navigate', completes: false },
